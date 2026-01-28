@@ -1,0 +1,6 @@
+# Include base requirements
+-r base.txt
+
+# Production
+gunicorn>=21.2.0
+sentry-sdk[fastapi]>=1.39.0
