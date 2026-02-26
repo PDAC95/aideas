@@ -1,10 +1,10 @@
 # Product Requirements Document (PRD)
 
-**Product:** aideas
-**Version:** 1.0
-**Date:** Enero 2026
+**Product:** AIDEAS
+**Version:** 2.0
+**Date:** February 2026
 **Owner:** [Por definir]
-**Status:** Planning
+**Status:** Development
 
 ---
 
@@ -23,6 +23,26 @@ Las pequeñas y medianas empresas pierden dinero en tareas repetitivas, tienen m
 
 > "Automatizaciones de IA que cuestan una fracción de lo que pagas en tareas manuales repetitivas. Soluciones 24/7 que trabajan mientras tú descansas."
 
+### Service Model
+
+**AIDEAS is NOT a DIY platform.** The customer portal is for monitoring and communication, not for building automations.
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                   AIDEAS SERVICE MODEL                       │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   Customer: "I need to automate X"                          │
+│        ↓                                                    │
+│   AIDEAS Team: Analyzes, designs, implements                │
+│        ↓                                                    │
+│   Customer: Monitors results via portal                     │
+│        ↓                                                    │
+│   AIDEAS Team: Maintains, updates, supports                 │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ### Market Opportunity
 
 - Momento "noble" del mercado - poco saturado
@@ -32,14 +52,14 @@ Las pequeñas y medianas empresas pierden dinero en tareas repetitivas, tienen m
 
 ### Success Definition
 
-| Timeframe | Clientes | Etapa |
-|-----------|----------|-------|
-| Meses 1-6 | 0 → 10 | Validación y product-market fit |
-| Meses 6-12 | 10 → 100 | Tracción y proceso de ventas |
-| Año 2 | 100 → 500 | Escala y expansión geográfica |
-| Año 3+ | 500 → 1000 | Consolidación |
+| Timeframe  | Clientes   | Etapa                           |
+| ---------- | ---------- | ------------------------------- |
+| Meses 1-6  | 0 → 10     | Validación y product-market fit |
+| Meses 6-12 | 10 → 100   | Tracción y proceso de ventas    |
+| Año 2      | 100 → 500  | Escala y expansión geográfica   |
+| Año 3+     | 500 → 1000 | Consolidación                   |
 
-*Filosofía: Metas mesuradas, celebrar si se superan.*
+_Filosofía: Metas mesuradas, celebrar si se superan._
 
 ---
 
@@ -76,18 +96,18 @@ Las pequeñas y medianas empresas pierden dinero en tareas repetitivas, tienen m
 
 ### Phase 1 - Primary Market
 
-| Region | Language | Priority |
-|--------|----------|----------|
-| United States | English | Primary |
-| Canada | English | Primary |
+| Region        | Language | Priority |
+| ------------- | -------- | -------- |
+| United States | English  | Primary  |
+| Canada        | English  | Primary  |
 
 ### Phase 2 - Expansion
 
-| Region | Language | Priority |
-|--------|----------|----------|
-| Latin America | Spanish | Secondary |
-| Brazil | Portuguese | Secondary |
-| Europe | ES/PT/FR | Tertiary |
+| Region        | Language   | Priority  |
+| ------------- | ---------- | --------- |
+| Latin America | Spanish    | Secondary |
+| Brazil        | Portuguese | Secondary |
+| Europe        | ES/PT/FR   | Tertiary  |
 
 **Technical Implication:** Multi-language support (i18n) must be built from day one.
 
@@ -102,7 +122,8 @@ Las pequeñas y medianas empresas pierden dinero en tareas repetitivas, tienen m
 │              WHAT CUSTOMER GETS                             │
 ├─────────────────────────────────────────────────────────────┤
 │  ✅ Access to RESULTS (working automation 24/7)             │
-│  ✅ Dashboard for metrics and configuration                 │
+│  ✅ Dashboard for metrics and monitoring                    │
+│  ✅ Real-time chat support with AIDEAS team                 │
 │  ✅ Support and maintenance included                        │
 │  ✅ Automatic updates                                       │
 ├─────────────────────────────────────────────────────────────┤
@@ -118,10 +139,10 @@ Las pequeñas y medianas empresas pierden dinero en tareas repetitivas, tienen m
 
 ### Revenue Model
 
-| Component | Description |
-|-----------|-------------|
-| Setup Fee (one-time) | Implementation, customization, training |
-| Monthly Fee (recurring) | Hosting, support, updates, monitoring |
+| Component               | Description                             |
+| ----------------------- | --------------------------------------- |
+| Setup Fee (one-time)    | Implementation, customization, training |
+| Monthly Fee (recurring) | Hosting, support, updates, monitoring   |
 
 ### Pricing Structure (Placeholders)
 
@@ -146,7 +167,7 @@ Las pequeñas y medianas empresas pierden dinero en tareas repetitivas, tienen m
 ### Pricing Philosophy
 
 - **Principle:** Customer savings must be GREATER than service cost
-- **Comparison:** Cost of employee doing repetitive tasks vs cost of aideas
+- **Comparison:** Cost of employee doing repetitive tasks vs cost of AIDEAS
 - **Goal:** Be accessible, not compete on price with employee salaries
 - **API Costs:** Included in service price, justified by 24/7 value delivered
 
@@ -157,66 +178,79 @@ Las pequeñas y medianas empresas pierden dinero en tareas repetitivas, tienen m
 ### Must Have (MVP)
 
 #### US-001: View Automation Catalog
+
 **As a** business owner
 **I want to** browse available automations with examples
 **So that** I can understand what solutions exist for my problems
 
 **Acceptance Criteria:**
+
 - AC1: Can view list of automation categories
 - AC2: Each automation shows description, use cases, and expected benefits
 - AC3: Can filter by industry or problem type
 - AC4: Available in English (Spanish/Portuguese for Phase 2)
 
 #### US-002: Request/Contract an Automation
+
 **As a** business owner
 **I want to** request an automation that fits my specific needs
 **So that** I can solve my business problem
 
 **Acceptance Criteria:**
+
 - AC1: Can describe my situation/problem
 - AC2: Receive confirmation that request was received
 - AC3: Can track status of my request
 - AC4: Clear communication of next steps and timeline
 
 #### US-003: View Automation Metrics
+
 **As a** business owner
 **I want to** see how my automations are performing
 **So that** I can measure ROI and value received
 
 **Acceptance Criteria:**
+
 - AC1: Dashboard shows active automations
 - AC2: Metrics include: executions, success rate, estimated time saved
 - AC3: Visual representation (charts/graphs)
 - AC4: Can filter by date range
 
 #### US-004: Manage Team Users
+
 **As a** business owner
 **I want to** add team members with different access levels
 **So that** I can delegate monitoring without losing control
 
 **Acceptance Criteria:**
+
 - AC1: Can invite users by email
 - AC2: Can assign roles: Admin, Operator, Viewer
 - AC3: Can remove or change user roles
 - AC4: Each role has appropriate access restrictions
 
-#### US-005: Contact Support
+#### US-005: Real-time Chat Support
+
 **As a** customer
-**I want to** easily contact support when I have issues
-**So that** problems are resolved quickly
+**I want to** chat in real-time with the AIDEAS team
+**So that** I can get immediate help and communicate my needs
 
 **Acceptance Criteria:**
-- AC1: Support contact accessible from any screen
-- AC2: Can submit support ticket with description
-- AC3: Can attach screenshots or files
-- AC4: Receive confirmation and ticket number
+
+- AC1: Chat accessible from dashboard
+- AC2: Messages delivered in real-time
+- AC3: Chat history preserved
+- AC4: File/screenshot attachments supported
+- AC5: Notifications for new messages
 
 #### US-006: View Billing History
+
 **As a** business owner
 **I want to** see my payment history and upcoming charges
 **So that** I can manage my budget
 
 **Acceptance Criteria:**
+
 - AC1: List of past invoices with amounts and dates
 - AC2: Can download invoices as PDF
 - AC3: View current plan and next billing date
@@ -226,14 +260,14 @@ Las pequeñas y medianas empresas pierden dinero en tareas repetitivas, tienen m
 
 ### Should Have (Post-MVP / Phase 2)
 
-| ID | User Story | Priority |
-|----|------------|----------|
-| US-007 | AI Chat to describe needs | High |
-| US-008 | Direct integrations (Slack, WhatsApp, CRMs) | High |
-| US-009 | Advanced exportable reports | Medium |
-| US-010 | Public API | Medium |
-| US-011 | Automation marketplace | Medium |
-| US-012 | Mobile app | Low |
+| ID     | User Story                                  | Priority |
+| ------ | ------------------------------------------- | -------- |
+| US-007 | AI Chat assistant for needs discovery       | High     |
+| US-008 | Direct integrations (Slack, WhatsApp, CRMs) | High     |
+| US-009 | Advanced exportable reports                 | Medium   |
+| US-010 | Public API                                  | Medium   |
+| US-011 | Automation marketplace                      | Medium   |
+| US-012 | Mobile app                                  | Low      |
 
 ---
 
@@ -241,38 +275,51 @@ Las pequeñas y medianas empresas pierden dinero en tareas repetitivas, tienen m
 
 ### In Scope (MVP)
 
-**Customer Portal (app.aideas.com)**
-- [ ] User authentication and authorization
+**Landing Page (aideas.com) - Static**
+
+- [x] Product information and value proposition
+- [x] Services/automations showcase
+- [x] Pricing display
+- [x] Contact form
+- [x] Registration CTA → redirects to app.aideas.com
+
+**Customer Portal (app.aideas.com) - Next.js**
+
+- [ ] User authentication (Supabase Auth)
 - [ ] Automation catalog with search/filter
 - [ ] Request automation workflow
-- [ ] Metrics dashboard
+- [ ] Metrics dashboard with real-time updates
 - [ ] Team management (roles)
-- [ ] Support ticketing
-- [ ] Billing and invoices
+- [ ] Real-time chat with AIDEAS team
+- [ ] Billing and invoices (Stripe)
 - [ ] Multi-language foundation (i18n)
+- [ ] Real-time notifications
 
-**Admin Portal (admin.aideas.com)**
+**API (api.aideas.com) - FastAPI**
+
+- [ ] REST API for all operations
+- [ ] Stripe webhooks
+- [ ] Background job processing
+- [ ] AI service integrations
+- [ ] Email notifications (Resend)
+
+**Admin Portal (Future - Phase 2)**
+
 - [ ] Customer management
 - [ ] Automation template library
 - [ ] Request/ticket management
 - [ ] Metrics and analytics
 - [ ] Billing management
 
-**Landing Page (aideas.com)**
-- [ ] Product information
-- [ ] Pricing display
-- [ ] Registration/signup flow
-- [ ] Contact form
-
 ### Out of Scope (MVP)
 
 - ❌ Public API
 - ❌ Mobile applications
-- ❌ AI chat for needs discovery
+- ❌ AI chat for needs discovery (Phase 2)
 - ❌ Marketplace for third-party automations
 - ❌ Direct integrations (Slack, WhatsApp, CRMs)
 - ❌ Advanced/exportable reports
-- ❌ Self-service automation builder
+- ❌ Self-service automation builder (NEVER - not our model)
 - ❌ White-label solutions
 
 ---
@@ -283,47 +330,75 @@ Las pequeñas y medianas empresas pierden dinero en tareas repetitivas, tienen m
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    PHASE 1 (MVP)                            │
+│                    AIDEAS ARCHITECTURE                       │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│   🌐 Landing Page        👤 Customer Portal                 │
-│   aideas.com             app.aideas.com                     │
-│   ┌─────────────┐        ┌─────────────┐                    │
-│   │ Marketing   │        │ Dashboard   │                    │
-│   │ Pricing     │        │ Metrics     │                    │
-│   │ Signup      │        │ Support     │                    │
-│   └─────────────┘        └─────────────┘                    │
-│                                                             │
-│   👨‍💼 Admin Portal                                           │
-│   admin.aideas.com                                          │
-│   ┌─────────────┐                                           │
-│   │ Customers   │                                           │
-│   │ Templates   │                                           │
-│   │ Operations  │                                           │
-│   └─────────────┘                                           │
-│                                                             │
-├─────────────────────────────────────────────────────────────┤
-│                    PHASE 2 (Scale)                          │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   🔌 Public API          📱 Mobile App                      │
-│   api.aideas.com         iOS / Android                      │
+│   🌐 Landing Page              👤 Customer Portal           │
+│   aideas.com                   app.aideas.com               │
+│   ┌─────────────────┐          ┌─────────────────┐          │
+│   │ Static HTML     │          │ Next.js 14      │          │
+│   │ Bootstrap 5     │          │ React 18        │          │
+│   │ SCSS/GSAP       │          │ TypeScript      │          │
+│   │ Hosted: Vercel  │          │ Hosted: Vercel  │          │
+│   └─────────────────┘          └─────────────────┘          │
+│                                        │                    │
+│                                        ▼                    │
+│                          ┌─────────────────┐                │
+│                          │ 🔌 API Backend  │                │
+│                          │ api.aideas.com  │                │
+│                          │ FastAPI/Python  │                │
+│                          │ Hosted: Railway │                │
+│                          └─────────────────┘                │
+│                                   │                         │
+│                                   ▼                         │
+│                          ┌─────────────────┐                │
+│                          │ 🗄️ Supabase     │                │
+│                          │ PostgreSQL      │                │
+│                          │ Auth + Realtime │                │
+│                          │ Storage         │                │
+│                          └─────────────────┘                │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Technical Requirements (High Level)
+### Technical Stack
 
-| Requirement | Description |
-|-------------|-------------|
-| Multi-language | i18n from day one (EN, ES, PT) |
-| Multi-tenant | Support multiple customers securely |
-| Role-based access | Admin, Operator, Viewer roles |
-| Responsive | Works on desktop, tablet, mobile browsers |
-| Secure | Industry-standard authentication, data encryption |
-| Scalable | Architecture ready to grow with customer base |
+| Component      | Technology                       | Hosting  |
+| -------------- | -------------------------------- | -------- |
+| Landing        | HTML/CSS/JS + Bootstrap 5 + GSAP | Vercel   |
+| Frontend       | Next.js 14 + React 18 + TS       | Vercel   |
+| Backend        | FastAPI + Python 3.12            | Railway  |
+| Database       | PostgreSQL                       | Supabase |
+| Authentication | Supabase Auth                    | Supabase |
+| Realtime       | Supabase Realtime                | Supabase |
+| Storage        | Supabase Storage                 | Supabase |
+| Payments       | Stripe                           | -        |
+| Email          | Resend                           | -        |
+| CDN/DNS        | Cloudflare                       | -        |
 
-*Detailed technical specifications will be in ARCHITECTURE.md*
+### Why This Architecture?
+
+| Requirement      | Solution                                    |
+| ---------------- | ------------------------------------------- |
+| Fast landing     | Static HTML loads instantly, best SEO       |
+| Real-time chat   | Supabase Realtime + React for instant UX    |
+| Scalable API     | FastAPI handles async, background jobs      |
+| Modern UX        | React components, smooth interactions       |
+| Cost effective   | ~$30-65/mo for MVP scale                    |
+| Developer speed  | TypeScript + Python = rapid development     |
+
+### Cost Structure (MVP)
+
+| Service           | Monthly Cost |
+| ----------------- | ------------ |
+| Vercel (Free)     | $0           |
+| Railway (Hobby)   | $5           |
+| Supabase (Pro)    | $25          |
+| Resend            | $0 (free tier)|
+| Cloudflare        | $0 (free)    |
+| **TOTAL**         | **~$30/mo**  |
+
+_Scales to ~$65/mo with growth. See ARCHITECTURE.md for details._
 
 ---
 
@@ -331,15 +406,15 @@ Las pequeñas y medianas empresas pierden dinero en tareas repetitivas, tienen m
 
 ### Customer Portal Roles
 
-| Permission | Admin | Operator | Viewer |
-|------------|-------|----------|--------|
-| View dashboard | ✅ | ✅ | ✅ |
-| View metrics | ✅ | ✅ | ✅ |
-| Request automations | ✅ | ❌ | ❌ |
-| Configure automations | ✅ | ✅ | ❌ |
-| Manage users | ✅ | ❌ | ❌ |
-| View billing | ✅ | ❌ | ❌ |
-| Contact support | ✅ | ✅ | ✅ |
+| Permission            | Admin | Operator | Viewer |
+| --------------------- | ----- | -------- | ------ |
+| View dashboard        | ✅    | ✅       | ✅     |
+| View metrics          | ✅    | ✅       | ✅     |
+| Request automations   | ✅    | ❌       | ❌     |
+| Configure automations | ✅    | ✅       | ❌     |
+| Manage users          | ✅    | ❌       | ❌     |
+| View billing          | ✅    | ❌       | ❌     |
+| Use chat support      | ✅    | ✅       | ✅     |
 
 ---
 
@@ -347,18 +422,18 @@ Las pequeñas y medianas empresas pierden dinero en tareas repetitivas, tienen m
 
 ### Strategy
 
-| Internal Reality | External Communication |
-|-----------------|------------------------|
+| Internal Reality         | External Communication                               |
+| ------------------------ | ---------------------------------------------------- |
 | "We don't give the code" | "We handle everything so you focus on your business" |
-| "It's on our servers" | "Enterprise infrastructure with 99.9% uptime" |
-| "They can't take it" | "Managed service with support included" |
-| "They depend on us" | "Dedicated technical team without hiring staff" |
+| "It's on our servers"    | "Enterprise infrastructure with 99.9% uptime"        |
+| "They can't take it"     | "Managed service with support included"              |
+| "They depend on us"      | "Dedicated technical team without hiring staff"      |
 
 ### Legal Framework
 
 - License of use, not ownership transfer
-- Customer owns their DATA, aideas owns the LOGIC
-- Exit clause: Data export available, code stays with aideas
+- Customer owns their DATA, AIDEAS owns the LOGIC
+- Exit clause: Data export available, code stays with AIDEAS
 
 ---
 
@@ -373,21 +448,21 @@ Las pequeñas y medianas empresas pierden dinero en tareas repetitivas, tienen m
 
 ### Risks
 
-| Risk | Impact | Probability | Mitigation |
-|------|--------|-------------|------------|
-| Finding first 10 customers | High | Medium | Focus on network, case studies, referrals |
-| Pricing too high or too low | Medium | Medium | Market research, A/B testing, customer feedback |
-| Template library not meeting needs | Medium | Low | Customer feedback loop, continuous expansion |
-| Technical scaling issues | Medium | Low | Cloud-native architecture, monitoring |
-| Competition entering market | Medium | Medium | First-mover advantage, customer relationships |
+| Risk                               | Impact | Probability | Mitigation                                      |
+| ---------------------------------- | ------ | ----------- | ----------------------------------------------- |
+| Finding first 10 customers         | High   | Medium      | Focus on network, case studies, referrals       |
+| Pricing too high or too low        | Medium | Medium      | Market research, A/B testing, customer feedback |
+| Template library not meeting needs | Medium | Low         | Customer feedback loop, continuous expansion    |
+| Technical scaling issues           | Medium | Low         | Cloud-native architecture, monitoring           |
+| Competition entering market        | Medium | Medium      | First-mover advantage, customer relationships   |
 
 ### Opportunities
 
-| Opportunity | Impact | Action |
-|-------------|--------|--------|
-| Market is "noble" (unsaturated) | High | Move fast, establish brand |
-| AI awareness growing | High | Education-focused marketing |
-| Remote work trend | Medium | Target distributed teams |
+| Opportunity                     | Impact | Action                      |
+| ------------------------------- | ------ | --------------------------- |
+| Market is "noble" (unsaturated) | High   | Move fast, establish brand  |
+| AI awareness growing            | High   | Education-focused marketing |
+| Remote work trend               | Medium | Target distributed teams    |
 
 ---
 
@@ -398,13 +473,16 @@ Las pequeñas y medianas empresas pierden dinero en tareas repetitivas, tienen m
 **Objective:** Launch functional product, acquire first 10 customers
 
 **Deliverables:**
-- Landing page (aideas.com)
-- Customer portal (app.aideas.com)
-- Admin portal (admin.aideas.com)
+
+- Landing page (aideas.com) - Static
+- Customer portal (app.aideas.com) - Next.js
+- API backend (api.aideas.com) - FastAPI
 - Core automation templates (top 10-20)
+- Real-time chat support
 - English language support
 
 **Success Criteria:**
+
 - 10 paying customers
 - Positive feedback and referrals
 - Core workflows validated
@@ -414,13 +492,16 @@ Las pequeñas y medianas empresas pierden dinero en tareas repetitivas, tienen m
 **Objective:** Grow to 100 customers, expand features
 
 **Deliverables:**
-- AI chat for needs discovery
+
+- AI chat assistant for needs discovery
 - Direct integrations (Slack, WhatsApp)
 - Spanish language support
+- Admin portal for AIDEAS team
 - Advanced reporting
 - Public API (beta)
 
 **Success Criteria:**
+
 - 100 paying customers
 - Expansion to LATAM market
 - Increased MRR
@@ -430,6 +511,7 @@ Las pequeñas y medianas empresas pierden dinero en tareas repetitivas, tienen m
 **Objective:** Establish market presence, 500+ customers
 
 **Deliverables:**
+
 - Portuguese language support
 - Marketplace for automations
 - Mobile applications
@@ -441,28 +523,29 @@ Las pequeñas y medianas empresas pierden dinero en tareas repetitivas, tienen m
 
 ### Business Metrics
 
-| Metric | Description | Target (Year 1) |
-|--------|-------------|-----------------|
-| Customers | Active paying customers | 100 |
-| MRR | Monthly Recurring Revenue | $XXX |
-| Churn | Monthly customer loss rate | < 5% |
-| NPS | Net Promoter Score | > 50 |
+| Metric    | Description                | Target (Year 1) |
+| --------- | -------------------------- | --------------- |
+| Customers | Active paying customers    | 100             |
+| MRR       | Monthly Recurring Revenue  | $XXX            |
+| Churn     | Monthly customer loss rate | < 5%            |
+| NPS       | Net Promoter Score         | > 50            |
 
 ### Product Metrics
 
-| Metric | Description | Target |
-|--------|-------------|--------|
-| Automation uptime | System availability | 99.5% |
-| Time to deploy | From request to live | < X days |
-| Support response | First response time | < 24 hours |
+| Metric            | Description          | Target     |
+| ----------------- | -------------------- | ---------- |
+| Automation uptime | System availability  | 99.5%      |
+| Time to deploy    | From request to live | < X days   |
+| Support response  | First response time  | < 24 hours |
+| Chat response     | Real-time messages   | < 5 min    |
 
 ### Customer Success Metrics
 
-| Metric | Description |
-|--------|-------------|
-| Time saved | Hours saved per customer per month |
-| Cost savings | $ saved vs manual process |
-| Automation usage | Executions per customer |
+| Metric           | Description                        |
+| ---------------- | ---------------------------------- |
+| Time saved       | Hours saved per customer per month |
+| Cost savings     | $ saved vs manual process          |
+| Automation usage | Executions per customer            |
 
 ---
 
@@ -478,22 +561,26 @@ Las pequeñas y medianas empresas pierden dinero en tareas repetitivas, tienen m
 
 ## 14. Document History
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0 | Jan 2026 | - | Initial PRD |
+| Version | Date     | Author | Changes                                               |
+| ------- | -------- | ------ | ----------------------------------------------------- |
+| 1.0     | Jan 2026 | -      | Initial PRD                                           |
+| 1.1     | Feb 2026 | -      | Updated technical stack (FastAPI + Supabase + AWS S3) |
+| 2.0     | Feb 2026 | -      | New architecture: Static Landing + Next.js + FastAPI  |
 
 ---
 
 ## Quick Reference
 
 **This PRD feeds:**
+
 - Product Backlog (all User Stories)
 - Sprint Planning (prioritize from backlog)
 - Architecture Document (technical specs)
+- Deployment Guide (infrastructure)
 
 **Review frequency:** Every 3 months or major change
 
 ---
 
-*Generated: January 2026*
-*Status: Planning*
+_Generated: February 2026_
+_Status: Development_

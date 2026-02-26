@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m venv:*)",
+      "Bash(venvScriptspip install -r requirementsbase.txt)",
+      "Bash(npx tailwindcss:*)",
+      "Bash(c:/dev/12ai/venv/Scripts/python.exe:*)",
+      "Bash(c:/dev/12ai/venv/Scripts/uvicorn.exe:*)",
+      "Bash(curl:*)",
+      "mcp__filesystem__list_directory",
+      "mcp__filesystem__read_multiple_files",
+      "mcp__filesystem__read_text_file",
+      "mcp__filesystem__directory_tree",
+      "mcp__sequential-thinking__sequentialthinking",
+      "Bash(python -m pytest:*)",
+      "Bash(python -m uvicorn:*)",
+      "Bash(timeout:*)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_take_screenshot",
+      "mcp__playwright__browser_fill_form",
+      "mcp__playwright__browser_click",
+      "mcp__filesystem__list_allowed_directories",
+      "Bash(dir:*)",
+      "Bash(powershell:*)",
+      "mcp__playwright__browser_wait_for",
+      "mcp__plugin_playwright_playwright__browser_console_messages",
+      "mcp__playwright__browser_evaluate",
+      "mcp__playwright__browser_run_code",
+      "Bash(npx supabase db push:*)",
+      "Bash(npx supabase link:*)",
+      "Bash(npx create-next-app:*)",
+      "Bash(npm install:*)",
+      "Bash(npx shadcn@latest init -d)",
+      "Bash(npx shadcn@latest add:*)",
+      "Bash(pip install:*)",
+      "Bash(npm run build:*)",
+      "Bash(python:*)"
+    ]
+  }
+}

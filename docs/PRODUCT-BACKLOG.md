@@ -1,9 +1,9 @@
 # Product Backlog
 
-**Product:** aideas
-**Version:** 1.0
-**Last Updated:** January 2026
-**Owner:** aideas Team
+**Product:** AIDEAS
+**Version:** 2.0
+**Last Updated:** February 2026
+**Owner:** AIDEAS Team
 **Sprint Duration:** 1 week
 
 ---
@@ -12,9 +12,9 @@
 
 | Metric | Value |
 |--------|-------|
-| **Total Items** | 35 |
+| **Total Items** | 32 |
 | **Total Épicas** | 6 |
-| **Must Have (MVP)** | 35 |
+| **Must Have (MVP)** | 32 |
 | **Estimated MVP Duration** | 12-16 sprints |
 
 ### Size Distribution
@@ -22,9 +22,38 @@
 | Size | Count | Capacity per Sprint | Description |
 |------|-------|---------------------|-------------|
 | XS | 2 | 4-5 items | Muy simple, pocas horas |
-| S | 10 | 3-4 items | Simple, 1-2 días |
-| M | 17 | 2-3 items | Moderado, 2-3 días |
-| L | 6 | 1-2 items | Complejo, casi todo el sprint |
+| S | 8 | 3-4 items | Simple, 1-2 días |
+| M | 15 | 2-3 items | Moderado, 2-3 días |
+| L | 7 | 1-2 items | Complejo, casi todo el sprint |
+
+---
+
+## Tech Stack Summary
+
+**Landing (aideas.com) - Static:**
+- HTML/CSS/JS
+- Bootstrap 5 + Custom SCSS
+- GSAP + jQuery
+- Hosted on Vercel
+
+**Frontend (app.aideas.com) - Next.js:**
+- Next.js 14 (App Router)
+- React 18 + TypeScript
+- Tailwind CSS + shadcn/ui
+- Supabase Client (Auth + Realtime)
+- Hosted on Vercel
+
+**Backend (api.aideas.com) - FastAPI:**
+- FastAPI + Python 3.12
+- Supabase (PostgreSQL)
+- Redis (optional, Railway)
+- Hosted on Railway
+
+**Services:**
+- Supabase (DB + Auth + Realtime + Storage)
+- Stripe (Payments)
+- Resend (Email)
+- Cloudflare (CDN + DNS)
 
 ---
 
@@ -37,32 +66,32 @@
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                         │
 │   ┌─────────────────────────────────────────────────────────────────┐   │
-│   │  ÉPICA 1: LANDING PAGE                     5 stories            │   │
+│   │  ÉPICA 1: LANDING PAGE (Static)              4 stories          │   │
 │   │  Lo primero que ve el mundo                                     │   │
 │   └─────────────────────────────────────────────────────────────────┘   │
 │                              ↓                                          │
 │   ┌─────────────────────────────────────────────────────────────────┐   │
-│   │  ÉPICA 2: AUTENTICACIÓN                    5 stories            │   │
+│   │  ÉPICA 2: AUTENTICACIÓN (Next.js + Supabase) 5 stories          │   │
 │   │  Entrada al sistema                                             │   │
 │   └─────────────────────────────────────────────────────────────────┘   │
 │                              ↓                                          │
 │   ┌─────────────────────────────────────────────────────────────────┐   │
-│   │  ÉPICA 3: PORTAL CLIENTE - CORE            5 stories            │   │
-│   │  Funcionalidades principales del cliente                        │   │
+│   │  ÉPICA 3: PORTAL CLIENTE - CORE              6 stories          │   │
+│   │  Dashboard, catálogo, automatizaciones                          │   │
 │   └─────────────────────────────────────────────────────────────────┘   │
 │                              ↓                                          │
 │   ┌─────────────────────────────────────────────────────────────────┐   │
-│   │  ÉPICA 4: PORTAL CLIENTE - GESTIÓN         8 stories            │   │
-│   │  Funcionalidades de administración del cliente                  │   │
+│   │  ÉPICA 4: PORTAL CLIENTE - GESTIÓN           7 stories          │   │
+│   │  Chat, team, billing, settings                                  │   │
 │   └─────────────────────────────────────────────────────────────────┘   │
 │                              ↓                                          │
 │   ┌─────────────────────────────────────────────────────────────────┐   │
-│   │  ÉPICA 5: ADMIN PANEL                      6 stories            │   │
-│   │  Panel de administración de aideas                              │   │
+│   │  ÉPICA 5: ADMIN PANEL                        5 stories          │   │
+│   │  Panel de administración de AIDEAS (Phase 2)                    │   │
 │   └─────────────────────────────────────────────────────────────────┘   │
 │                              ↓                                          │
 │   ┌─────────────────────────────────────────────────────────────────┐   │
-│   │  ÉPICA 6: BACKEND FOUNDATION               6 stories            │   │
+│   │  ÉPICA 6: BACKEND FOUNDATION                 5 stories          │   │
 │   │  Base técnica (se desarrolla en paralelo)                       │   │
 │   └─────────────────────────────────────────────────────────────────┘   │
 │                                                                         │
@@ -71,14 +100,14 @@
 
 ### Epic Summary Table
 
-| Epic | Name | Stories | Sizes | Priority |
-|------|------|---------|-------|----------|
-| 1 | Landing Page | 5 | 1 XS, 3 S, 1 M | 🔴 Must Have |
-| 2 | Autenticación | 5 | 1 XS, 2 S, 2 M | 🔴 Must Have |
-| 3 | Portal Cliente - Core | 5 | 1 S, 4 M | 🔴 Must Have |
-| 4 | Portal Cliente - Gestión | 8 | 4 S, 3 M, 1 L | 🔴 Must Have |
-| 5 | Admin Panel | 6 | 3 M, 3 L | 🔴 Must Have |
-| 6 | Backend Foundation | 6 | 4 M, 2 L | 🔴 Must Have |
+| Epic | Name | Stories | Priority |
+|------|------|---------|----------|
+| 1 | Landing Page (Static) | 4 | 🔴 Must Have |
+| 2 | Autenticación | 5 | 🔴 Must Have |
+| 3 | Portal Cliente - Core | 6 | 🔴 Must Have |
+| 4 | Portal Cliente - Gestión | 7 | 🔴 Must Have |
+| 5 | Admin Panel | 5 | 🟡 Should Have (Phase 2) |
+| 6 | Backend Foundation | 5 | 🔴 Must Have |
 
 ---
 
@@ -86,10 +115,12 @@
 
 ---
 
-## 🔴 ÉPICA 1: LANDING PAGE
+## 🔴 ÉPICA 1: LANDING PAGE (Static)
 
 **Objetivo:** Primera impresión del producto, captar leads, convertir visitantes en registros.
 **URL:** aideas.com
+**Stack:** HTML/CSS/JS + Bootstrap 5 + SCSS + GSAP
+**Hosting:** Vercel (Static)
 **Dependencies:** Ninguna (puede desarrollarse independientemente)
 
 ---
@@ -103,25 +134,25 @@
 **Status:** 📋 Backlog
 
 **Story:**
-Como visitante, quiero ver una página de inicio atractiva y clara para entender qué es aideas y cómo puede ayudar a mi negocio.
+Como visitante, quiero ver una página de inicio atractiva y clara para entender qué es AIDEAS y cómo puede ayudar a mi negocio.
 
 **Acceptance Criteria:**
 - [ ] Hero section con headline claro y CTA principal
 - [ ] Sección de propuesta de valor (3-4 beneficios clave)
 - [ ] Sección de cómo funciona (3 pasos)
-- [ ] Sección de automatizaciones destacadas (preview del catálogo)
-- [ ] Sección de testimonios/social proof (placeholder para MVP)
-- [ ] Sección de pricing preview con CTA
+- [ ] Sección de automatizaciones destacadas
+- [ ] Sección de testimonios/social proof (placeholder)
 - [ ] Footer con links, redes sociales, legal
 - [ ] Diseño responsive (mobile, tablet, desktop)
-- [ ] Animaciones sutiles (scroll reveal)
-- [ ] CTA buttons llevan a registro
+- [ ] Animaciones con GSAP
+- [ ] CTA buttons → app.aideas.com/signup
 
 **Technical Notes:**
-- Stack: Next.js + Tailwind + shadcn/ui
-- Components: Hero, FeatureGrid, HowItWorks, Testimonials, PricingPreview, Footer
-- i18n ready (next-intl)
-- SEO optimizado
+- Files: `landing/index.html`, `landing/assets/scss/`, `landing/assets/js/`
+- Stack: Bootstrap 5 + Custom SCSS + GSAP + jQuery
+- Template base: Xpovio template adaptado
+- SEO: Meta tags, Open Graph
+- Analytics: Google Analytics
 
 **Dependencies:** Ninguna
 
@@ -136,20 +167,21 @@ Como visitante, quiero ver una página de inicio atractiva y clara para entender
 **Status:** 📋 Backlog
 
 **Story:**
-Como visitante, quiero ver los planes y precios claramente para decidir si aideas se ajusta a mi presupuesto.
+Como visitante, quiero ver los planes y precios claramente para decidir si AIDEAS se ajusta a mi presupuesto.
 
 **Acceptance Criteria:**
 - [ ] 3 planes mostrados (Starter, Pro, Business)
 - [ ] Toggle mensual/anual (con descuento anual)
 - [ ] Tabla comparativa de features por plan
-- [ ] CTA por cada plan → registro
+- [ ] CTA por cada plan → app.aideas.com/signup?plan=X
 - [ ] FAQ section debajo de pricing
 - [ ] Responsive design
 
 **Technical Notes:**
-- Stack: Next.js + Tailwind
-- Precios desde config/constants (fácil de cambiar)
-- Componentes: PricingCard, PricingTable, FAQ
+- File: `landing/pages/pricing.html`
+- Stack: Bootstrap 5 + SCSS
+- Toggle: Vanilla JS o jQuery
+- Precios desde JSON config (fácil de cambiar)
 
 **Dependencies:** Ninguna
 
@@ -164,7 +196,7 @@ Como visitante, quiero ver los planes y precios claramente para decidir si aidea
 **Status:** 📋 Backlog
 
 **Story:**
-Como visitante, quiero explorar todas las funcionalidades de aideas para entender el valor completo del producto.
+Como visitante, quiero explorar todas las funcionalidades de AIDEAS para entender el valor completo del producto.
 
 **Acceptance Criteria:**
 - [ ] Lista de todas las categorías de automatizaciones
@@ -174,9 +206,9 @@ Como visitante, quiero explorar todas las funcionalidades de aideas para entende
 - [ ] Responsive design
 
 **Technical Notes:**
-- Stack: Next.js + Tailwind
-- Componentes: FeatureCategory, FeatureCard
-- Contenido desde MDX o JSON config
+- File: `landing/pages/features.html`
+- Stack: Bootstrap 5 + SCSS
+- Icons: Font Awesome o Lucide
 
 **Dependencies:** Ninguna
 
@@ -191,50 +223,20 @@ Como visitante, quiero explorar todas las funcionalidades de aideas para entende
 **Status:** 📋 Backlog
 
 **Story:**
-Como visitante, quiero poder contactar al equipo de aideas si tengo preguntas antes de registrarme.
+Como visitante, quiero poder contactar al equipo de AIDEAS si tengo preguntas antes de registrarme.
 
 **Acceptance Criteria:**
 - [ ] Formulario de contacto (nombre, email, empresa, mensaje)
-- [ ] Validación de campos
+- [ ] Validación de campos (HTML5 + JS)
+- [ ] Envío via Formspree o similar (no requiere backend)
 - [ ] Confirmación de envío
-- [ ] Email de notificación al equipo
-- [ ] Información de contacto alternativa
 - [ ] Responsive design
 
 **Technical Notes:**
-- Stack: Next.js + React Hook Form + Zod
-- Email: Resend API
-- Componentes: ContactForm
-
-**Dependencies:** 
-- Backend: endpoint para recibir contacto (puede ser serverless)
-
----
-
-### US-1.5: SEO + i18n Setup
-
-**ID:** US-1.5
-**Epic:** Landing Page
-**Size:** S
-**Priority:** 🔴 MUST HAVE
-**Status:** 📋 Backlog
-
-**Story:**
-Como equipo de aideas, queremos que la landing esté optimizada para SEO y preparada para múltiples idiomas.
-
-**Acceptance Criteria:**
-- [ ] Meta tags dinámicos por página (title, description, og:image)
-- [ ] Sitemap.xml generado automáticamente
-- [ ] robots.txt configurado
-- [ ] Estructura de URLs para i18n (/en, /es, /pt)
-- [ ] Traducciones para EN (completo) y ES (estructura lista)
-- [ ] Schema.org markup para SEO
-- [ ] Open Graph images
-
-**Technical Notes:**
-- Stack: Next.js metadata API + next-intl
-- Archivos de traducción en /messages
-- generateStaticParams para rutas i18n
+- File: `landing/pages/contact.html`
+- Stack: Bootstrap 5 + SCSS
+- Form submission: Formspree.io (free tier)
+- Validation: HTML5 + vanilla JS
 
 **Dependencies:** Ninguna
 
@@ -242,43 +244,45 @@ Como equipo de aideas, queremos que la landing esté optimizada para SEO y prepa
 
 ## 🔴 ÉPICA 2: AUTENTICACIÓN
 
-**Objetivo:** Permitir registro, login y gestión de acceso al sistema.
-**Provider:** Clerk
-**Dependencies:** Landing page (flujo de registro)
+**Objetivo:** Sistema de registro, login, y gestión de acceso.
+**Stack:** Next.js + Supabase Auth
+**Dependencies:** Supabase configurado
 
 ---
 
-### US-2.1: Sign Up
+### US-2.1: Registro de Usuario
 
 **ID:** US-2.1
 **Epic:** Autenticación
-**Size:** S
+**Size:** M
 **Priority:** 🔴 MUST HAVE
 **Status:** 📋 Backlog
 
 **Story:**
-Como visitante, quiero registrarme en aideas para comenzar a usar el servicio.
+Como visitante, quiero registrarme en AIDEAS para acceder a la plataforma.
 
 **Acceptance Criteria:**
-- [ ] Formulario de registro (email + password o social login)
-- [ ] Opciones de social login (Google, GitHub)
-- [ ] Validación de email único
-- [ ] Email de verificación enviado
-- [ ] Redirect a onboarding después de verificar
-- [ ] Diseño consistente con landing
-- [ ] Responsive
+- [ ] Página `/signup` con formulario
+- [ ] Campos: email, password, nombre, empresa
+- [ ] Validación con Zod
+- [ ] Crear cuenta con Supabase Auth
+- [ ] Email de verificación enviado (Supabase)
+- [ ] Redirect a `/verify-email`
+- [ ] Mensaje de error si email ya existe
+- [ ] Opción de login con Google (OAuth)
 
 **Technical Notes:**
-- Stack: Clerk + Next.js
-- Clerk components: SignUp
-- Custom styling con Clerk appearance API
+- Route: `web/app/(auth)/signup/page.tsx`
+- Stack: Next.js 14 + React Hook Form + Zod + Supabase
+- Components: shadcn/ui form components
+- OAuth: Supabase Social Auth
 
 **Dependencies:**
-- US-1.1 (CTA de registro desde landing)
+- US-6.3 (Supabase Auth configurado)
 
 ---
 
-### US-2.2: Sign In
+### US-2.2: Login de Usuario
 
 **ID:** US-2.2
 **Epic:** Autenticación
@@ -287,89 +291,86 @@ Como visitante, quiero registrarme en aideas para comenzar a usar el servicio.
 **Status:** 📋 Backlog
 
 **Story:**
-Como usuario registrado, quiero iniciar sesión para acceder a mi dashboard.
+Como usuario registrado, quiero hacer login para acceder al portal.
 
 **Acceptance Criteria:**
-- [ ] Formulario de login (email + password)
-- [ ] Opciones de social login
-- [ ] Remember me option
+- [ ] Página `/login` con formulario
+- [ ] Campos: email + password
+- [ ] Login con Supabase Auth
+- [ ] JWT manejado por Supabase client
+- [ ] Redirect a `/dashboard` después de login
+- [ ] Mensaje de error si credenciales incorrectas
 - [ ] Link a "Forgot password"
-- [ ] Redirect a dashboard después de login
-- [ ] Manejo de errores (credenciales incorrectas)
-- [ ] Responsive
+- [ ] Opción de login con Google
 
 **Technical Notes:**
-- Stack: Clerk + Next.js
-- Clerk components: SignIn
-- Middleware para proteger rutas autenticadas
+- Route: `web/app/(auth)/login/page.tsx`
+- Stack: Next.js + Supabase Auth
+- Session: Supabase handles JWT in cookies
 
-**Dependencies:** 
-- US-2.1 (necesita usuarios registrados)
+**Dependencies:**
+- US-6.3 (Supabase Auth)
 
 ---
 
-### US-2.3: Forgot Password
+### US-2.3: Recuperación de Contraseña
 
 **ID:** US-2.3
 **Epic:** Autenticación
-**Size:** XS
+**Size:** S
 **Priority:** 🔴 MUST HAVE
 **Status:** 📋 Backlog
 
 **Story:**
-Como usuario, quiero recuperar mi contraseña si la olvidé.
+Como usuario, quiero recuperar mi contraseña si la olvido.
 
 **Acceptance Criteria:**
-- [ ] Formulario para ingresar email
-- [ ] Email de reset enviado
-- [ ] Página para crear nueva contraseña
-- [ ] Confirmación de cambio exitoso
+- [ ] Página `/forgot-password` con input de email
+- [ ] Envío de email con link de reset (Supabase)
+- [ ] Página `/reset-password` con nuevo password
+- [ ] Validación de password strength
+- [ ] Confirmación de password cambiado
 - [ ] Redirect a login
 
 **Technical Notes:**
-- Stack: Clerk (built-in)
-- Clerk maneja todo el flujo automáticamente
+- Routes: `web/app/(auth)/forgot-password/`, `reset-password/`
+- Stack: Next.js + Supabase Auth
+- Password reset: Supabase handles magic links
 
 **Dependencies:**
-- US-2.1 (necesita usuarios)
+- US-6.3 (Supabase Auth)
 
 ---
 
-### US-2.4: Onboarding - Crear Organización
+### US-2.4: Verificación de Email
 
 **ID:** US-2.4
 **Epic:** Autenticación
-**Size:** M
+**Size:** S
 **Priority:** 🔴 MUST HAVE
 **Status:** 📋 Backlog
 
 **Story:**
-Como nuevo usuario, quiero crear mi organización para empezar a usar aideas con mi equipo.
+Como usuario, quiero verificar mi email para activar mi cuenta.
 
 **Acceptance Criteria:**
-- [ ] Formulario multi-step:
-  - Step 1: Nombre de la organización
-  - Step 2: Información del negocio (industria, tamaño)
-  - Step 3: Selección de plan (o trial)
-- [ ] Validación de slug único para organización
-- [ ] Creación de organización en DB
-- [ ] Usuario asignado como Admin de la org
-- [ ] Redirect a dashboard después de completar
-- [ ] Progress indicator
+- [ ] Email automático enviado al registrarse
+- [ ] Link de verificación en email
+- [ ] Página `/verify-email` de confirmación
+- [ ] Usuario puede hacer login solo después de verificar
+- [ ] Opción de reenviar email
 
 **Technical Notes:**
-- Stack: Next.js + React Hook Form + Zod
-- API: POST /organizations
-- Clerk: asociar user con org via metadata
-- UI: Multi-step form component
+- Route: `web/app/(auth)/verify-email/page.tsx`
+- Stack: Next.js + Supabase Auth
+- Email verification: Automatic via Supabase
 
 **Dependencies:**
-- US-2.1 (usuario debe estar registrado)
-- US-6.1, US-6.2 (backend y DB listos)
+- US-6.3 (Supabase Auth)
 
 ---
 
-### US-2.5: Invitar Miembros al Equipo
+### US-2.5: Invitaciones a Organización
 
 **ID:** US-2.5
 **Epic:** Autenticación
@@ -378,33 +379,36 @@ Como nuevo usuario, quiero crear mi organización para empezar a usar aideas con
 **Status:** 📋 Backlog
 
 **Story:**
-Como admin de una organización, quiero invitar a mi equipo para que puedan acceder al portal.
+Como admin de organización, quiero invitar miembros de mi equipo.
 
 **Acceptance Criteria:**
-- [ ] Formulario de invitación (email, rol)
-- [ ] Roles disponibles: Admin, Operator, Viewer
-- [ ] Email de invitación enviado
+- [ ] Formulario para enviar invitación (email + role)
+- [ ] Email de invitación enviado (Resend via API)
+- [ ] Link único de invitación
 - [ ] Página de aceptación de invitación
-- [ ] Crear cuenta si no existe, unir a org si existe
-- [ ] Lista de invitaciones pendientes
-- [ ] Opción de reenviar o cancelar invitación
+- [ ] Usuario invitado crea cuenta (o usa existente)
+- [ ] Usuario añadido a organización
+- [ ] Admin puede ver invitaciones pendientes
+- [ ] Admin puede cancelar invitación
 
 **Technical Notes:**
-- Stack: Next.js + Clerk Organizations
-- API: POST /organizations/:id/invitations
-- Email: Resend con template de invitación
+- Routes: `/team/invite`, `/invite/[token]`
+- Stack: Next.js + FastAPI (for email) + Supabase
+- Invitation tokens: JWT signed
+- Email: Resend via FastAPI endpoint
 
 **Dependencies:**
-- US-2.4 (organización debe existir)
-- US-6.5 (endpoints de invitaciones)
+- US-6.1 (API setup)
+- US-3.1 (Organization setup)
 
 ---
 
 ## 🔴 ÉPICA 3: PORTAL CLIENTE - CORE
 
-**Objetivo:** Funcionalidades principales que el cliente usa día a día.
+**Objetivo:** Dashboard principal y funcionalidades core del portal.
 **URL:** app.aideas.com
-**Dependencies:** Autenticación completa
+**Stack:** Next.js 14 + TypeScript + Tailwind + shadcn/ui
+**Dependencies:** Auth funcionando
 
 ---
 
@@ -417,29 +421,31 @@ Como admin de una organización, quiero invitar a mi equipo para que puedan acce
 **Status:** 📋 Backlog
 
 **Story:**
-Como cliente, quiero ver un resumen de mis automatizaciones y métricas al entrar al portal.
+Como usuario, quiero ver un dashboard con resumen de mis automatizaciones y métricas clave.
 
 **Acceptance Criteria:**
-- [ ] Saludo personalizado con nombre del usuario
-- [ ] Cards de resumen:
-  - Automatizaciones activas (número)
+- [ ] Layout con sidebar de navegación
+- [ ] Header con user profile dropdown
+- [ ] Cards con métricas principales:
+  - Automatizaciones activas
   - Ejecuciones este mes
   - Tiempo ahorrado estimado
-  - Solicitudes pendientes
-- [ ] Lista de automatizaciones recientes con status
-- [ ] Alertas o notificaciones importantes
-- [ ] Quick actions (solicitar nueva, ver catálogo)
-- [ ] Responsive layout
+  - Status general
+- [ ] Lista de automatizaciones recientes
+- [ ] Gráfico de ejecuciones (últimos 7 días)
+- [ ] CTAs: "Request automation", "View all"
+- [ ] Responsive design
 
 **Technical Notes:**
-- Stack: Next.js + shadcn/ui
-- API: GET /dashboard/summary
-- Components: StatsCard, RecentList, QuickActions
-- Real-time updates (opcional, phase 2)
+- Route: `web/app/(dashboard)/dashboard/page.tsx`
+- Layout: `web/app/(dashboard)/layout.tsx`
+- Components: Sidebar, Header, MetricCard, Chart (recharts)
+- Data: From Supabase via React Query
+- Charts: Recharts library
 
 **Dependencies:**
-- US-2.4 (onboarding completado)
-- US-6.5 (endpoint de dashboard)
+- US-2.1, US-2.2 (Auth)
+- US-6.1 (Database models)
 
 ---
 
@@ -452,35 +458,29 @@ Como cliente, quiero ver un resumen de mis automatizaciones y métricas al entra
 **Status:** 📋 Backlog
 
 **Story:**
-Como cliente, quiero explorar todas las automatizaciones disponibles para encontrar una que resuelva mi problema.
+Como usuario, quiero ver el catálogo de automatizaciones disponibles.
 
 **Acceptance Criteria:**
-- [ ] Grid/Lista de automatizaciones disponibles
-- [ ] Filtros por categoría
-- [ ] Búsqueda por nombre/descripción
-- [ ] Card de automatización muestra:
-  - Nombre
-  - Categoría
-  - Descripción corta
-  - Icono/imagen
-- [ ] Click lleva a detalle
-- [ ] Empty state si no hay resultados
-- [ ] Pagination o infinite scroll
-- [ ] Responsive
+- [ ] Lista de templates de automatizaciones
+- [ ] Categorías/filtros (por industria, tipo)
+- [ ] Cada card muestra: nombre, descripción, categoría
+- [ ] CTA: "Request this automation"
+- [ ] Búsqueda por keyword
+- [ ] Paginación
+- [ ] Responsive design
 
 **Technical Notes:**
-- Stack: Next.js + shadcn/ui
-- API: GET /automations?category=&search=&page=
-- Components: AutomationCard, FilterBar, SearchInput
-- Server-side filtering para performance
+- Route: `web/app/(dashboard)/catalog/page.tsx`
+- Components: CatalogFilters, AutomationCard, SearchInput
+- Data: From Supabase `automation_templates` table
+- Search: Client-side filtering or Supabase full-text search
 
 **Dependencies:**
-- US-6.5 (endpoint de automatizaciones)
-- US-5.4 (templates cargados en admin)
+- US-6.2 (Templates en database)
 
 ---
 
-### US-3.3: Detalle de Automatización
+### US-3.3: Detalle de Automatización Template
 
 **ID:** US-3.3
 **Epic:** Portal Cliente - Core
@@ -489,30 +489,25 @@ Como cliente, quiero explorar todas las automatizaciones disponibles para encont
 **Status:** 📋 Backlog
 
 **Story:**
-Como cliente, quiero ver los detalles de una automatización para decidir si la solicito.
+Como usuario, quiero ver detalles de una automatización para decidir si la necesito.
 
 **Acceptance Criteria:**
-- [ ] Nombre y descripción completa
-- [ ] Categoría y tags
-- [ ] Casos de uso / ejemplos
-- [ ] Beneficios esperados
-- [ ] Requisitos o integraciones necesarias
-- [ ] Botón "Solicitar esta automatización"
-- [ ] Breadcrumb para navegación
-- [ ] Responsive
+- [ ] Descripción completa
+- [ ] Casos de uso detallados
+- [ ] Beneficios/valor
+- [ ] CTA: "Request this automation"
+- [ ] Screenshots/ejemplos (si disponibles)
 
 **Technical Notes:**
-- Stack: Next.js + shadcn/ui
-- API: GET /automations/:id
-- Route: /automations/[id]
-- Components: AutomationDetail, BenefitsList
+- Route: `web/app/(dashboard)/catalog/[id]/page.tsx`
+- Data: From Supabase by template ID
 
 **Dependencies:**
-- US-3.2 (navegación desde catálogo)
+- US-3.2 (Catálogo)
 
 ---
 
-### US-3.4: Solicitar Nueva Automatización
+### US-3.4: Solicitar Automatización
 
 **ID:** US-3.4
 **Epic:** Portal Cliente - Core
@@ -521,77 +516,97 @@ Como cliente, quiero ver los detalles de una automatización para decidir si la 
 **Status:** 📋 Backlog
 
 **Story:**
-Como cliente, quiero solicitar una automatización describiendo mi necesidad para que el equipo de aideas la implemente.
+Como usuario, quiero solicitar una automatización para que AIDEAS la configure para mi organización.
 
 **Acceptance Criteria:**
-- [ ] Formulario de solicitud:
-  - Automatización seleccionada (si viene de catálogo)
-  - Descripción del problema/necesidad
-  - Contexto del negocio
-  - Urgencia (baja, media, alta)
-  - Archivos adjuntos (opcional)
-- [ ] Validación de campos requeridos
-- [ ] Confirmación de envío
-- [ ] Redirect a lista de solicitudes
-- [ ] Email de confirmación al cliente
-- [ ] Notificación al equipo aideas
+- [ ] Formulario:
+  - Template seleccionado (pre-filled)
+  - Descripción de necesidad específica
+  - Urgencia (baja/media/alta)
+- [ ] Validación de campos
+- [ ] Request guardado en database
+- [ ] Email de confirmación (via API)
+- [ ] Email de notificación al equipo AIDEAS
+- [ ] Redirect a "Request submitted"
+- [ ] Usuario puede ver status de request
 
 **Technical Notes:**
+- Route: `web/app/(dashboard)/request/page.tsx`
 - Stack: Next.js + React Hook Form + Zod
-- API: POST /automation-requests
-- File upload: Cloudflare R2
-- Components: RequestForm, FileUpload
+- Database: Supabase `automation_requests` table
+- Email: FastAPI endpoint → Resend
 
 **Dependencies:**
-- US-3.3 (puede venir desde detalle)
-- US-6.5 (endpoint de requests)
+- US-6.1 (API endpoint for email)
+- US-6.2 (Database models)
 
 ---
 
-### US-3.5: Mis Automatizaciones Activas
+### US-3.5: Mis Automatizaciones
 
 **ID:** US-3.5
+**Epic:** Portal Cliente - Core
+**Size:** S
+**Priority:** 🔴 MUST HAVE
+**Status:** 📋 Backlog
+
+**Story:**
+Como usuario, quiero ver todas mis automatizaciones activas y su estado.
+
+**Acceptance Criteria:**
+- [ ] Lista de automatizaciones de mi organización
+- [ ] Cada item: nombre, status, última ejecución, métricas
+- [ ] Filtros: status (activa/pausada/error)
+- [ ] Click → detalle
+- [ ] Opción de pausar/reactivar (si admin)
+- [ ] Responsive design
+
+**Technical Notes:**
+- Route: `web/app/(dashboard)/automations/page.tsx`
+- Data: From Supabase `automations` table (org filtered)
+- Real-time updates: Supabase Realtime subscription
+
+**Dependencies:**
+- US-3.1 (Dashboard setup)
+
+---
+
+### US-3.6: Detalle de Mi Automatización
+
+**ID:** US-3.6
 **Epic:** Portal Cliente - Core
 **Size:** M
 **Priority:** 🔴 MUST HAVE
 **Status:** 📋 Backlog
 
 **Story:**
-Como cliente, quiero ver todas mis automatizaciones activas y su estado actual.
+Como usuario, quiero ver detalles y métricas de una automatización específica.
 
 **Acceptance Criteria:**
-- [ ] Lista de automatizaciones contratadas
-- [ ] Por cada una mostrar:
-  - Nombre
-  - Status (active, paused, error)
-  - Última ejecución
-  - Métricas básicas (ejecuciones, éxitos)
-- [ ] Filtro por status
-- [ ] Click lleva a detalle de MI automatización
-- [ ] Empty state si no tiene ninguna
-- [ ] Acciones: pausar, ver métricas, configurar
+- [ ] Información general (nombre, status, creado)
+- [ ] Métricas: ejecuciones, tasa de éxito, tiempo ahorrado
+- [ ] Historial de ejecuciones recientes
+- [ ] Gráfico de ejecuciones over time
+- [ ] Logs de errores (si hay)
+- [ ] Acciones: pausar/reactivar (si admin)
 
 **Technical Notes:**
-- Stack: Next.js + shadcn/ui
-- API: GET /customer-automations
-- Route: /my-automations
-- Components: AutomationRow, StatusBadge
+- Route: `web/app/(dashboard)/automations/[id]/page.tsx`
+- Data: Supabase + `automation_executions` table
+- Charts: Recharts
 
 **Dependencies:**
-- US-6.5 (endpoint)
-- Requiere tener automatizaciones desplegadas (después de implementación)
+- US-3.5 (Lista de automatizaciones)
 
 ---
 
 ## 🔴 ÉPICA 4: PORTAL CLIENTE - GESTIÓN
 
-**Objetivo:** Funcionalidades de administración y gestión para el cliente.
-**URL:** app.aideas.com
-**Dependencies:** Portal Core
+**Objetivo:** Funcionalidades de administración: chat, team, billing, settings.
 
 ---
 
-### US-4.1: Métricas y Dashboard Analytics
+### US-4.1: Chat en Tiempo Real
 
 **ID:** US-4.1
 **Epic:** Portal Cliente - Gestión
@@ -600,64 +615,64 @@ Como cliente, quiero ver todas mis automatizaciones activas y su estado actual.
 **Status:** 📋 Backlog
 
 **Story:**
-Como cliente, quiero ver métricas detalladas de mis automatizaciones para medir el ROI.
+Como usuario, quiero chatear en tiempo real con el equipo AIDEAS para comunicar mis necesidades.
 
 **Acceptance Criteria:**
-- [ ] Selector de rango de fechas
-- [ ] Métricas globales:
-  - Total ejecuciones
-  - Tasa de éxito
-  - Tiempo ahorrado estimado
-  - Ahorro en $ estimado
-- [ ] Gráfica de ejecuciones por día/semana
-- [ ] Gráfica de éxito vs errores
-- [ ] Métricas por automatización individual
-- [ ] Export a CSV (opcional MVP)
-- [ ] Responsive
+- [ ] Página/componente de chat accesible desde dashboard
+- [ ] Mensajes en tiempo real (Supabase Realtime)
+- [ ] Historial de conversación preservado
+- [ ] Indicador de "typing"
+- [ ] Timestamps en mensajes
+- [ ] Soporte para attachments (imágenes, archivos)
+- [ ] Notificaciones de nuevos mensajes
+- [ ] Responsive design
 
 **Technical Notes:**
-- Stack: Next.js + shadcn/ui + Recharts (o similar)
-- API: GET /metrics?from=&to=&automation_id=
-- Components: MetricsChart, DateRangePicker, StatsGrid
-- Considerar caching para queries pesadas
+- Route: `web/app/(dashboard)/chat/page.tsx`
+- Stack: Next.js + Supabase Realtime
+- Database: `chat_messages` table
+- Storage: Supabase Storage for attachments
+- Realtime: Supabase Realtime subscriptions
 
 **Dependencies:**
-- US-3.5 (automatizaciones activas)
-- US-6.5 (endpoints de métricas)
+- US-6.2 (Database models)
+- Supabase Realtime configurado
 
 ---
 
-### US-4.2: Gestión de Equipo - CRUD
+### US-4.2: Gestión de Equipo
 
 **ID:** US-4.2
 **Epic:** Portal Cliente - Gestión
-**Size:** M
+**Size:** S
 **Priority:** 🔴 MUST HAVE
 **Status:** 📋 Backlog
 
 **Story:**
-Como admin de organización, quiero gestionar los miembros de mi equipo.
+Como admin, quiero gestionar los miembros de mi organización.
 
 **Acceptance Criteria:**
-- [ ] Tabla de miembros del equipo
-- [ ] Mostrar: nombre, email, rol, fecha de ingreso, status
-- [ ] Acciones: editar rol, remover miembro
-- [ ] Botón para invitar nuevo miembro
-- [ ] Confirmación antes de remover
-- [ ] Solo admins pueden ver esta sección
+- [ ] Lista de miembros actuales
+- [ ] Cada miembro: nombre, email, role, fecha join
+- [ ] Botón "Invite member" (modal)
+- [ ] Cambiar role de miembro
+- [ ] Remover miembro (con confirmación)
+- [ ] Solo admin puede gestionar equipo
+- [ ] Tabla de invitaciones pendientes
 
 **Technical Notes:**
-- Stack: Next.js + shadcn/ui (DataTable)
-- API: GET/PATCH/DELETE /organizations/:id/members
-- Components: MembersTable, InviteModal, ConfirmDialog
+- Route: `web/app/(dashboard)/team/page.tsx`
+- Components: MemberList, InviteModal, RoleSelector
+- Data: Supabase `organization_members` + `invitations`
+- Permissions: Check role in middleware
 
 **Dependencies:**
-- US-2.5 (invitaciones)
-- US-4.3 (roles)
+- US-2.5 (Invitaciones)
+- US-6.2 (Database models)
 
 ---
 
-### US-4.3: Roles y Permisos
+### US-4.3: Métricas y Analytics
 
 **ID:** US-4.3
 **Epic:** Portal Cliente - Gestión
@@ -666,137 +681,123 @@ Como admin de organización, quiero gestionar los miembros de mi equipo.
 **Status:** 📋 Backlog
 
 **Story:**
-Como admin, quiero asignar diferentes roles a mi equipo para controlar qué pueden ver y hacer.
+Como usuario, quiero ver métricas detalladas de mis automatizaciones.
 
 **Acceptance Criteria:**
-- [ ] 3 roles: Admin, Operator, Viewer
-- [ ] UI para cambiar rol de un miembro
-- [ ] Permisos aplicados en frontend (ocultar/mostrar)
-- [ ] Permisos aplicados en backend (autorización)
-- [ ] Tabla de permisos visible para referencia
-- [ ] No poder quitarse el rol de Admin a uno mismo si es el único
+- [ ] Página dedicada de analytics
+- [ ] Filtro por período (7d, 30d, 90d, custom)
+- [ ] Filtro por automatización
+- [ ] Métricas:
+  - Ejecuciones totales
+  - Tasa de éxito
+  - Tiempo ahorrado estimado
+  - Errores/fallas
+- [ ] Gráficos:
+  - Ejecuciones over time
+  - Success rate
+  - Top automations
+- [ ] Tabla de ejecuciones recientes
 
 **Technical Notes:**
-- Stack: Next.js + middleware de permisos
-- Permisos definidos en constantes compartidas
-- API valida permisos en cada endpoint
-- Frontend usa hook usePermissions()
-
-**Permission Matrix:**
-```
-| Permission        | Admin | Operator | Viewer |
-|-------------------|-------|----------|--------|
-| View dashboard    |   ✅  |    ✅    |   ✅   |
-| View automations  |   ✅  |    ✅    |   ✅   |
-| Request automation|   ✅  |    ❌    |   ❌   |
-| Configure auto    |   ✅  |    ✅    |   ❌   |
-| View billing      |   ✅  |    ❌    |   ❌   |
-| Manage team       |   ✅  |    ❌    |   ❌   |
-| Contact support   |   ✅  |    ✅    |   ✅   |
-```
+- Route: `web/app/(dashboard)/analytics/page.tsx`
+- Charts: Recharts
+- Data: From Supabase with aggregations
+- Date picker: shadcn/ui calendar
 
 **Dependencies:**
-- US-2.5 (miembros con roles)
+- US-3.5 (Mis automatizaciones)
 
 ---
 
-### US-4.4: Soporte - Crear Ticket
+### US-4.4: Billing - Ver Subscription
 
 **ID:** US-4.4
-**Epic:** Portal Cliente - Gestión
-**Size:** S
-**Priority:** 🔴 MUST HAVE
-**Status:** 📋 Backlog
-
-**Story:**
-Como cliente, quiero crear un ticket de soporte cuando tengo un problema o pregunta.
-
-**Acceptance Criteria:**
-- [ ] Formulario de ticket:
-  - Asunto
-  - Categoría (general, técnico, billing, otro)
-  - Prioridad (baja, normal, alta)
-  - Descripción
-  - Archivos adjuntos (opcional)
-- [ ] Validación de campos
-- [ ] Confirmación con número de ticket
-- [ ] Email de confirmación
-- [ ] Redirect a lista de tickets
-
-**Technical Notes:**
-- Stack: Next.js + React Hook Form
-- API: POST /support/tickets
-- Components: TicketForm, FileUpload
-
-**Dependencies:**
-- US-6.5 (endpoint)
-
----
-
-### US-4.5: Soporte - Ver Tickets y Mensajes
-
-**ID:** US-4.5
 **Epic:** Portal Cliente - Gestión
 **Size:** M
 **Priority:** 🔴 MUST HAVE
 **Status:** 📋 Backlog
 
 **Story:**
-Como cliente, quiero ver mis tickets y comunicarme con soporte para resolver mis problemas.
+Como admin, quiero ver mi plan actual y detalles de billing.
 
 **Acceptance Criteria:**
-- [ ] Lista de tickets con status
-- [ ] Filtro por status (abierto, en progreso, resuelto, cerrado)
-- [ ] Click en ticket abre detalle
-- [ ] Detalle muestra:
-  - Info del ticket
-  - Historial de mensajes (estilo chat)
-  - Campo para agregar mensaje
-  - Archivos adjuntos
-- [ ] Indicador de mensajes nuevos
-- [ ] Opción de cerrar ticket
+- [ ] Muestra plan actual (Starter/Pro/Business)
+- [ ] Features incluidas en el plan
+- [ ] Precio mensual/anual
+- [ ] Fecha del próximo cobro
+- [ ] Payment method (últimos 4 dígitos)
+- [ ] Botón "Manage billing" → Stripe Portal
+- [ ] Botón "Upgrade plan" → Stripe Checkout
 
 **Technical Notes:**
-- Stack: Next.js + shadcn/ui
-- API: GET /support/tickets, GET /support/tickets/:id, POST /support/tickets/:id/messages
-- Components: TicketList, TicketDetail, MessageThread
+- Route: `web/app/(dashboard)/billing/page.tsx`
+- Data: From FastAPI endpoint (Stripe API)
+- Customer Portal: FastAPI creates portal session
+- Checkout: FastAPI creates checkout session
 
 **Dependencies:**
-- US-4.4 (crear tickets)
+- US-6.4 (Stripe configurado)
 
 ---
 
-### US-4.6: Facturación - Historial
+### US-4.5: Billing - Ver Invoices
 
-**ID:** US-4.6
+**ID:** US-4.5
 **Epic:** Portal Cliente - Gestión
 **Size:** S
 **Priority:** 🔴 MUST HAVE
 **Status:** 📋 Backlog
 
 **Story:**
-Como admin, quiero ver mi historial de pagos y descargar facturas.
+Como admin, quiero ver mis facturas pasadas.
 
 **Acceptance Criteria:**
-- [ ] Tabla de facturas/invoices
-- [ ] Mostrar: fecha, monto, status, periodo
-- [ ] Botón para descargar PDF
-- [ ] Mostrar plan actual y próximo cobro
-- [ ] Link a portal de Stripe para gestión
-- [ ] Solo visible para Admin
+- [ ] Lista de invoices (newest first)
+- [ ] Cada invoice: date, amount, status, plan
+- [ ] Link para download PDF
+- [ ] Filtro por año
 
 **Technical Notes:**
-- Stack: Next.js + shadcn/ui
-- API: GET /billing/invoices (synced from Stripe)
-- Stripe: Invoice PDF URLs
-- Components: InvoiceTable
+- Route: `web/app/(dashboard)/billing/invoices/page.tsx`
+- Data: From FastAPI endpoint (Stripe `invoices.list()`)
+- PDF: Stripe invoice.pdf URL
 
 **Dependencies:**
-- US-6.4 (integración Stripe)
+- US-4.4 (Billing setup)
 
 ---
 
-### US-4.7: Facturación - Portal Stripe
+### US-4.6: Profile & Settings
+
+**ID:** US-4.6
+**Epic:** Portal Cliente - Gestión
+**Size:** M
+**Priority:** 🔴 MUST HAVE
+**Status:** 📋 Backlog
+
+**Story:**
+Como usuario, quiero actualizar mi perfil y configuraciones.
+
+**Acceptance Criteria:**
+- [ ] Ver/editar: nombre, apellido, email
+- [ ] Ver/editar: idioma preferido (EN/ES/PT)
+- [ ] Ver/editar: timezone
+- [ ] Cambiar contraseña (form separado)
+- [ ] Ver mi role en organización (read-only)
+- [ ] Botón "Save changes"
+- [ ] Confirmación de cambios guardados
+
+**Technical Notes:**
+- Route: `web/app/(dashboard)/settings/page.tsx`
+- Forms: React Hook Form + Zod
+- Update: Supabase Auth + database profile
+
+**Dependencies:**
+- US-2.1 (Auth setup)
+
+---
+
+### US-4.7: Notificaciones
 
 **ID:** US-4.7
 **Epic:** Portal Cliente - Gestión
@@ -805,304 +806,156 @@ Como admin, quiero ver mi historial de pagos y descargar facturas.
 **Status:** 📋 Backlog
 
 **Story:**
-Como admin, quiero gestionar mi suscripción y métodos de pago.
+Como usuario, quiero recibir notificaciones de eventos importantes.
 
 **Acceptance Criteria:**
-- [ ] Botón "Gestionar suscripción"
-- [ ] Redirect a Stripe Customer Portal
-- [ ] En portal pueden:
-  - Cambiar método de pago
-  - Cambiar plan
-  - Ver historial
-  - Cancelar suscripción
-- [ ] Return URL de vuelta a app
+- [ ] Bell icon en header con badge de count
+- [ ] Dropdown con lista de notificaciones recientes
+- [ ] Tipos: nuevo mensaje chat, automation status change, billing
+- [ ] Mark as read
+- [ ] Click → navega al recurso relacionado
+- [ ] Realtime updates (nuevas notificaciones)
 
 **Technical Notes:**
-- Stack: Stripe Customer Portal (no-code)
-- API: POST /billing/portal-session
-- Stripe maneja toda la UI
+- Component: `NotificationBell.tsx`
+- Data: Supabase `notifications` table
+- Realtime: Supabase Realtime subscription
 
 **Dependencies:**
-- US-6.4 (integración Stripe)
+- US-3.1 (Dashboard layout)
 
 ---
 
-### US-4.8: Configuración de Perfil
+## 🟡 ÉPICA 5: ADMIN PANEL (Phase 2)
 
-**ID:** US-4.8
-**Epic:** Portal Cliente - Gestión
-**Size:** S
-**Priority:** 🔴 MUST HAVE
-**Status:** 📋 Backlog
-
-**Story:**
-Como usuario, quiero actualizar mi información personal y preferencias.
-
-**Acceptance Criteria:**
-- [ ] Formulario de perfil:
-  - Nombre
-  - Avatar (upload)
-  - Idioma preferido
-  - Zona horaria
-  - Notificaciones (email on/off)
-- [ ] Cambiar contraseña (via Clerk)
-- [ ] Guardar cambios con confirmación
-- [ ] Preview de avatar antes de guardar
-
-**Technical Notes:**
-- Stack: Next.js + Clerk UserProfile
-- API: PATCH /users/me
-- File upload: Cloudflare R2
-
-**Dependencies:**
-- US-2.1 (usuario existe)
+**Objetivo:** Panel interno para equipo AIDEAS gestionar clientes y operaciones.
+**URL:** admin.aideas.com (o app.aideas.com/admin con route protection)
+**Priority:** Should Have (Post-MVP)
 
 ---
 
-## 🔴 ÉPICA 5: ADMIN PANEL
-
-**Objetivo:** Panel de administración para el equipo de aideas.
-**URL:** admin.aideas.com
-**Dependencies:** Backend completo, datos de clientes
-
----
-
-### US-5.1: Dashboard Admin
+### US-5.1: Admin Dashboard
 
 **ID:** US-5.1
 **Epic:** Admin Panel
-**Size:** L
-**Priority:** 🔴 MUST HAVE
+**Size:** M
+**Priority:** 🟡 SHOULD HAVE
 **Status:** 📋 Backlog
 
 **Story:**
-Como equipo aideas, queremos ver métricas globales de la plataforma.
+Como admin de AIDEAS, quiero un dashboard con overview del negocio.
 
 **Acceptance Criteria:**
-- [ ] Métricas principales:
-  - Total clientes activos
-  - MRR (Monthly Recurring Revenue)
-  - Automatizaciones desplegadas
-  - Solicitudes pendientes
-  - Tickets abiertos
-- [ ] Gráfica de crecimiento de clientes
-- [ ] Gráfica de ingresos por mes
-- [ ] Lista de actividad reciente
-- [ ] Alertas importantes
+- [ ] KPIs: Total customers, Active automations, MRR, Pending requests
+- [ ] Gráficos: New customers, Revenue, Top customers
+- [ ] Lista de requests recientes
+- [ ] Lista de chats activos
+- [ ] Quick actions
 
-**Technical Notes:**
-- Stack: Next.js + shadcn/ui + Recharts
-- API: GET /admin/dashboard
-- Requiere rol de admin de aideas (super admin)
-
-**Dependencies:**
-- US-6.5 (endpoints admin)
-- Datos de clientes existentes
+**Dependencies:** Post-MVP
 
 ---
 
-### US-5.2: Lista de Clientes
+### US-5.2: Customers Management
 
 **ID:** US-5.2
 **Epic:** Admin Panel
 **Size:** M
-**Priority:** 🔴 MUST HAVE
+**Priority:** 🟡 SHOULD HAVE
 **Status:** 📋 Backlog
 
 **Story:**
-Como equipo aideas, quiero ver todos los clientes/organizaciones registradas.
+Como admin de AIDEAS, quiero ver y gestionar clientes.
 
-**Acceptance Criteria:**
-- [ ] Tabla de organizaciones
-- [ ] Columnas: nombre, plan, MRR, miembros, automatizaciones, fecha registro
-- [ ] Búsqueda por nombre/email
-- [ ] Filtros por plan, status
-- [ ] Ordenar por columnas
-- [ ] Click lleva a detalle
-- [ ] Pagination
-
-**Technical Notes:**
-- Stack: Next.js + shadcn/ui DataTable
-- API: GET /admin/customers?search=&plan=&page=
-
-**Dependencies:**
-- Clientes registrados
+**Dependencies:** Post-MVP
 
 ---
 
-### US-5.3: Detalle de Cliente
+### US-5.3: Templates Management
 
 **ID:** US-5.3
 **Epic:** Admin Panel
-**Size:** M
-**Priority:** 🔴 MUST HAVE
+**Size:** L
+**Priority:** 🟡 SHOULD HAVE
 **Status:** 📋 Backlog
 
 **Story:**
-Como equipo aideas, quiero ver toda la información de un cliente específico.
+Como admin de AIDEAS, quiero gestionar los templates de automatizaciones.
 
-**Acceptance Criteria:**
-- [ ] Info de la organización
-- [ ] Lista de miembros
-- [ ] Plan y billing info
-- [ ] Automatizaciones activas
-- [ ] Historial de solicitudes
-- [ ] Tickets de soporte
-- [ ] Timeline de actividad
-- [ ] Acciones: contactar, ajustar plan, notas internas
-
-**Technical Notes:**
-- Stack: Next.js + shadcn/ui
-- API: GET /admin/customers/:id
-- Tabs para organizar información
-
-**Dependencies:**
-- US-5.2 (navegación)
+**Dependencies:** Post-MVP
 
 ---
 
-### US-5.4: Gestión de Templates
+### US-5.4: Requests Management
 
 **ID:** US-5.4
 **Epic:** Admin Panel
-**Size:** L
-**Priority:** 🔴 MUST HAVE
+**Size:** M
+**Priority:** 🟡 SHOULD HAVE
 **Status:** 📋 Backlog
 
 **Story:**
-Como equipo aideas, quiero gestionar el catálogo de automatizaciones disponibles.
+Como admin de AIDEAS, quiero gestionar requests de clientes.
 
-**Acceptance Criteria:**
-- [ ] Lista de templates existentes
-- [ ] CRUD completo:
-  - Crear nuevo template
-  - Editar template
-  - Activar/desactivar
-  - Eliminar (soft delete)
-- [ ] Campos:
-  - Nombre, slug
-  - Descripción corta y larga
-  - Categoría
-  - Icono/imagen
-  - Config schema (JSON)
-  - Status (draft, active, deprecated)
-- [ ] Preview de cómo se ve en catálogo
-
-**Technical Notes:**
-- Stack: Next.js + shadcn/ui + JSON editor
-- API: CRUD /admin/templates
-- File upload para imágenes
-
-**Dependencies:**
-- US-6.2 (schema de templates)
+**Dependencies:** Post-MVP
 
 ---
 
-### US-5.5: Solicitudes de Automatización
+### US-5.5: Analytics & Reporting
 
 **ID:** US-5.5
 **Epic:** Admin Panel
-**Size:** M
-**Priority:** 🔴 MUST HAVE
-**Status:** 📋 Backlog
-
-**Story:**
-Como equipo aideas, quiero gestionar las solicitudes de automatización de los clientes.
-
-**Acceptance Criteria:**
-- [ ] Lista de solicitudes
-- [ ] Filtros por status (pending, in_review, approved, deployed, rejected)
-- [ ] Detalle de solicitud:
-  - Info del cliente
-  - Template solicitado
-  - Descripción de necesidad
-  - Archivos adjuntos
-- [ ] Acciones:
-  - Cambiar status
-  - Agregar notas internas
-  - Asignar a equipo
-- [ ] Notificar al cliente cuando cambia status
-
-**Technical Notes:**
-- Stack: Next.js + shadcn/ui
-- API: GET/PATCH /admin/requests
-
-**Dependencies:**
-- US-3.4 (solicitudes de clientes)
-
----
-
-### US-5.6: Analytics de Plataforma
-
-**ID:** US-5.6
-**Epic:** Admin Panel
 **Size:** L
-**Priority:** 🔴 MUST HAVE
+**Priority:** 🟡 SHOULD HAVE
 **Status:** 📋 Backlog
 
 **Story:**
-Como equipo aideas, quiero ver analytics detallados para tomar decisiones de negocio.
+Como admin de AIDEAS, quiero ver analytics del negocio.
 
-**Acceptance Criteria:**
-- [ ] Reportes de:
-  - Crecimiento de usuarios (signups, churn)
-  - Revenue (MRR, ARR, growth rate)
-  - Uso de automatizaciones (más populares, ejecuciones)
-  - Soporte (tickets, tiempo respuesta)
-- [ ] Filtros por periodo
-- [ ] Comparativa vs periodo anterior
-- [ ] Export a CSV
-
-**Technical Notes:**
-- Stack: Next.js + Recharts
-- API: GET /admin/analytics
-- Queries optimizadas con caching
-
-**Dependencies:**
-- Datos históricos de uso
+**Dependencies:** Post-MVP
 
 ---
 
 ## 🔴 ÉPICA 6: BACKEND FOUNDATION
 
-**Objetivo:** Base técnica sobre la que se construye todo el sistema.
-**Stack:** Python 3.12 + FastAPI + PostgreSQL + Redis
-**Dependencies:** Se desarrolla en paralelo con frontend
+**Objetivo:** Base técnica del backend - database, auth, APIs, integrations.
 
 ---
 
-### US-6.1: Setup Proyecto FastAPI
+### US-6.1: API Setup & Core
 
 **ID:** US-6.1
 **Epic:** Backend Foundation
-**Size:** M
+**Size:** L
 **Priority:** 🔴 MUST HAVE
 **Status:** 📋 Backlog
 
 **Story:**
-Como desarrollador, quiero una estructura de proyecto backend bien organizada para desarrollar de manera eficiente.
+Como desarrollador, quiero la estructura base del API configurada.
 
 **Acceptance Criteria:**
+- [ ] FastAPI app inicializado
 - [ ] Estructura de carpetas según ARCHITECTURE.md
-- [ ] FastAPI app configurada
-- [ ] Configuración por ambiente (dev, staging, prod)
+- [ ] Configuración de settings (Pydantic Settings)
+- [ ] Supabase client configurado
 - [ ] CORS configurado
-- [ ] Health check endpoint
-- [ ] Logging estructurado
-- [ ] Error handling global
-- [ ] Docker + docker-compose para desarrollo
-- [ ] README con instrucciones de setup
+- [ ] Health check endpoint `/health`
+- [ ] OpenAPI docs en `/docs`
+- [ ] Requirements files (base, dev)
+- [ ] .env.example
+- [ ] README con setup instructions
 
 **Technical Notes:**
-- Stack: FastAPI + Uvicorn + Pydantic Settings
-- Estructura modular por features
-- .env.example con todas las variables
+- Stack: FastAPI + Supabase + Uvicorn
+- Config: Pydantic Settings con .env
+- Logging: structlog or loguru
+- Location: `api/` folder
 
 **Dependencies:** Ninguna
 
 ---
 
-### US-6.2: PostgreSQL + Migraciones
+### US-6.2: Database Models & Migrations
 
 **ID:** US-6.2
 **Epic:** Backend Foundation
@@ -1111,28 +964,36 @@ Como desarrollador, quiero una estructura de proyecto backend bien organizada pa
 **Status:** 📋 Backlog
 
 **Story:**
-Como desarrollador, quiero la base de datos configurada con todas las tablas necesarias.
+Como desarrollador, quiero todos los modelos de database definidos.
 
 **Acceptance Criteria:**
-- [ ] Conexión a PostgreSQL configurada
-- [ ] SQLAlchemy models para todas las entidades
-- [ ] Alembic configurado para migraciones
-- [ ] Migración inicial con schema completo
-- [ ] Seeds para datos de prueba
-- [ ] Índices optimizados
-- [ ] Connection pooling configurado
+- [ ] Supabase tables creados:
+  - organizations
+  - users (extends Supabase auth.users)
+  - organization_members
+  - automation_templates
+  - automations
+  - automation_executions
+  - automation_requests
+  - subscriptions
+  - chat_messages
+  - notifications
+  - invitations
+- [ ] RLS policies configuradas
+- [ ] Supabase migrations in `supabase/migrations/`
+- [ ] Seed script para development data
 
 **Technical Notes:**
-- Stack: SQLAlchemy 2.x + Alembic
-- Schema según ARCHITECTURE.md
-- Script de seed para desarrollo
+- Database: Supabase PostgreSQL
+- Migrations: Supabase CLI
+- RLS: Row Level Security policies
 
 **Dependencies:**
-- US-6.1 (proyecto base)
+- US-6.1 (Project setup)
 
 ---
 
-### US-6.3: Integración Clerk
+### US-6.3: Authentication Integration (Supabase)
 
 **ID:** US-6.3
 **Epic:** Backend Foundation
@@ -1141,67 +1002,60 @@ Como desarrollador, quiero la base de datos configurada con todas las tablas nec
 **Status:** 📋 Backlog
 
 **Story:**
-Como desarrollador, quiero validar autenticación de Clerk en el backend para proteger los endpoints.
+Como desarrollador, quiero integración completa con Supabase Auth.
 
 **Acceptance Criteria:**
-- [ ] Middleware de autenticación
-- [ ] Validación de JWT de Clerk
-- [ ] Extracción de user_id y org_id del token
-- [ ] Dependency para obtener current_user
-- [ ] Webhook handler para eventos de Clerk:
-  - user.created
-  - user.updated
-  - organization.created
-- [ ] Sync de usuarios a DB local
-- [ ] Tests de autenticación
+- [ ] Supabase project creado
+- [ ] Auth configurado (email/password + Google OAuth)
+- [ ] Email templates customizados
+- [ ] Redirect URLs configurados
+- [ ] JWT validation en FastAPI endpoints
+- [ ] Protected routes middleware
 
 **Technical Notes:**
-- Stack: python-jose + httpx (para validar con Clerk)
-- Webhook signature verification
+- Supabase Auth: Email + Social providers
+- FastAPI: JWT validation dependency
+- Next.js: @supabase/ssr for auth
 
 **Dependencies:**
-- US-6.1, US-6.2 (proyecto y DB)
-- Clerk account configurada
+- US-6.1, US-6.2
 
 ---
 
-### US-6.4: Integración Stripe
+### US-6.4: Payments Integration (Stripe)
 
 **ID:** US-6.4
 **Epic:** Backend Foundation
-**Size:** L
+**Size:** M
 **Priority:** 🔴 MUST HAVE
 **Status:** 📋 Backlog
 
 **Story:**
-Como desarrollador, quiero integrar Stripe para manejar suscripciones y pagos.
+Como desarrollador, quiero integración completa con Stripe.
 
 **Acceptance Criteria:**
-- [ ] Crear customer en Stripe al crear org
-- [ ] Crear checkout session para suscripción
-- [ ] Customer portal session
-- [ ] Webhook handler para eventos:
-  - checkout.session.completed
-  - customer.subscription.updated
-  - customer.subscription.deleted
-  - invoice.paid
-  - invoice.payment_failed
-- [ ] Sync de invoices a DB local
-- [ ] Productos y precios configurados en Stripe
-- [ ] Tests con Stripe CLI
+- [ ] Stripe account configurado
+- [ ] Products & Prices en Stripe Dashboard
+- [ ] FastAPI endpoints:
+  - POST /api/v1/billing/checkout-session
+  - POST /api/v1/billing/customer-portal
+  - GET /api/v1/billing/subscription
+  - GET /api/v1/billing/invoices
+- [ ] Webhook endpoint: POST /api/webhooks/stripe
+- [ ] Handle subscription events
+- [ ] Sync subscription status to Supabase
 
 **Technical Notes:**
-- Stack: stripe-python
-- Webhook signature verification
-- Idempotency keys para operaciones
+- Stack: Stripe Python SDK
+- Webhooks: Verify signature
+- Events: subscription.created, updated, deleted, invoice.paid
 
 **Dependencies:**
-- US-6.1, US-6.2 (proyecto y DB)
-- Stripe account configurada
+- US-6.1
 
 ---
 
-### US-6.5: Endpoints por Módulo
+### US-6.5: API Endpoints
 
 **ID:** US-6.5
 **Epic:** Backend Foundation
@@ -1210,100 +1064,40 @@ Como desarrollador, quiero integrar Stripe para manejar suscripciones y pagos.
 **Status:** 📋 Backlog
 
 **Story:**
-Como desarrollador, quiero todos los endpoints necesarios para las funcionalidades del MVP.
+Como desarrollador, quiero todos los endpoints necesarios para el MVP.
 
 **Acceptance Criteria:**
-- [ ] Auth module:
-  - GET /users/me
-  - PATCH /users/me
-- [ ] Organizations module:
-  - GET /organizations/:id
-  - PATCH /organizations/:id
-  - GET /organizations/:id/members
-  - POST /organizations/:id/invitations
-  - DELETE /organizations/:id/members/:uid
-- [ ] Automations module:
-  - GET /automations (catalog)
-  - GET /automations/:id
-  - GET /customer-automations
-  - GET /customer-automations/:id
-  - POST /automation-requests
-- [ ] Billing module:
-  - GET /billing/subscription
-  - POST /billing/checkout-session
-  - POST /billing/portal-session
-  - GET /billing/invoices
-- [ ] Support module:
-  - GET /support/tickets
-  - POST /support/tickets
-  - GET /support/tickets/:id
-  - POST /support/tickets/:id/messages
-- [ ] Admin module:
-  - GET /admin/dashboard
-  - GET /admin/customers
-  - GET /admin/customers/:id
-  - CRUD /admin/templates
-  - GET/PATCH /admin/requests
-  - GET /admin/analytics
-- [ ] Todos con validación, auth, y tests
+- [ ] Auth endpoints (via Supabase, minimal FastAPI)
+- [ ] Organizations endpoints
+- [ ] Automations endpoints
+- [ ] Requests endpoints
+- [ ] Billing endpoints (Stripe)
+- [ ] Email endpoints (Resend)
+- [ ] All with Pydantic validation
+- [ ] All with JWT auth middleware
+- [ ] OpenAPI documentation
 
 **Technical Notes:**
 - Stack: FastAPI routers
-- Pydantic schemas para request/response
-- Swagger docs generado automáticamente
+- Validation: Pydantic v2
+- Auth: JWT dependency injection
+- Docs: Auto-generated Swagger
 
 **Dependencies:**
 - US-6.1, US-6.2, US-6.3, US-6.4
 
 ---
 
-### US-6.6: Webhooks
-
-**ID:** US-6.6
-**Epic:** Backend Foundation
-**Size:** M
-**Priority:** 🔴 MUST HAVE
-**Status:** 📋 Backlog
-
-**Story:**
-Como desarrollador, quiero handlers de webhooks para mantener datos sincronizados con servicios externos.
-
-**Acceptance Criteria:**
-- [ ] POST /webhooks/clerk
-  - Signature verification
-  - Handle user events
-  - Handle org events
-- [ ] POST /webhooks/stripe
-  - Signature verification
-  - Handle subscription events
-  - Handle invoice events
-- [ ] Logging de todos los webhooks
-- [ ] Retry logic para failures
-- [ ] Idempotency (no procesar duplicados)
-- [ ] Tests con mocks
-
-**Technical Notes:**
-- Stack: FastAPI
-- Background tasks para procesamiento
-- Alertas si webhook falla repetidamente
-
-**Dependencies:**
-- US-6.3, US-6.4 (Clerk y Stripe configurados)
-
----
-
 ## 🟡 SHOULD HAVE (Post-MVP)
-
-Items para después del MVP inicial:
 
 | ID | Item | Size | Notes |
 |----|------|------|-------|
-| SH-1 | Chat con AI para describir necesidades | L | Requiere integración OpenAI |
-| SH-2 | Integraciones Slack | M | Notificaciones |
+| SH-1 | Chat con AI para describir necesidades | L | OpenAI integration |
+| SH-2 | Integraciones Slack | M | Notifications |
 | SH-3 | Integraciones WhatsApp | L | Business API |
-| SH-4 | Integraciones CRMs | L | Múltiples providers |
-| SH-5 | Reportes exportables (PDF/CSV) | M | Generación de documentos |
-| SH-6 | Multi-idioma completo (ES, PT) | M | Traducciones completas |
+| SH-4 | Advanced Reports (PDF/CSV) | M | Export functionality |
+| SH-5 | Multi-idioma completo (ES, PT) | M | Full translations |
+| SH-6 | Admin Panel completo | XL | Phase 2 priority |
 
 ---
 
@@ -1311,22 +1105,20 @@ Items para después del MVP inicial:
 
 | ID | Item | Size | Notes |
 |----|------|------|-------|
-| CH-1 | API pública documentada | L | Para integraciones de clientes |
+| CH-1 | Public API documentada | L | Customer integrations |
 | CH-2 | Marketplace de automatizaciones | XL | Third-party templates |
-| CH-3 | App móvil iOS | XL | React Native |
-| CH-4 | App móvil Android | XL | React Native |
-| CH-5 | Dashboard en tiempo real | M | WebSockets |
-| CH-6 | White-label solution | XL | Multi-tenant branding |
+| CH-3 | Mobile app (React Native) | XL | iOS + Android |
+| CH-4 | Advanced real-time dashboard | M | Live metrics |
 
 ---
 
-## ⚪ WON'T HAVE (Out of Scope for MVP)
+## ⚪ WON'T HAVE (Out of Scope)
 
-- Self-service automation builder (muy complejo)
-- Video tutorials integrados (crear contenido después)
-- Community forum (usar Discord/Slack)
-- Affiliate program (post-revenue)
-- Multiple payment methods (solo Stripe cards)
+- Self-service automation builder (NOT our model)
+- Video tutorials integrados
+- Community forum
+- Affiliate program
+- Multiple payment methods (solo Stripe)
 
 ---
 
@@ -1335,7 +1127,7 @@ Items para después del MVP inicial:
 Una User Story está "Ready" para Sprint cuando:
 
 - [ ] Tiene descripción clara (Como X, quiero Y, para Z)
-- [ ] Tiene criterios de aceptación específicos y testeables
+- [ ] Tiene criterios de aceptación específicos
 - [ ] Tiene estimación de tamaño (T-Shirt)
 - [ ] Dependencias identificadas y resueltas
 - [ ] Diseño/mockup disponible (si aplica)
@@ -1348,12 +1140,12 @@ Una User Story está "Ready" para Sprint cuando:
 Una User Story está "Done" cuando:
 
 - [ ] Todos los criterios de aceptación cumplidos
-- [ ] Código revisado (self-review para trabajo individual)
+- [ ] Código revisado
 - [ ] Tests escritos y pasando
 - [ ] Sin errores de lint/type
 - [ ] Deployado en staging
-- [ ] Funcionalidad verificada manualmente
-- [ ] Documentación actualizada (si aplica)
+- [ ] Funcionalidad verificada
+- [ ] Documentación actualizada
 
 ---
 
@@ -1368,21 +1160,21 @@ Una User Story está "Done" cuando:
 
 ### Orden sugerido de sprints
 
-**Sprint 1-2:** Backend Foundation (US-6.1, 6.2) + Landing básica (US-1.1, 1.4, 1.5)
+**Sprint 1-2:** Landing Page (US-1.1, 1.2, 1.3, 1.4)
 
-**Sprint 3-4:** Auth (US-6.3, 2.1, 2.2, 2.3, 2.4) + Landing completa (US-1.2, 1.3)
+**Sprint 3-4:** Backend Foundation (US-6.1, 6.2, 6.3) + Auth básica (US-2.1, 2.2)
 
-**Sprint 5-6:** Portal Core básico (US-3.1, 3.2, 3.3) + Stripe (US-6.4)
+**Sprint 5-6:** Auth completa (US-2.3, 2.4, 2.5) + Dashboard básico (US-3.1)
 
-**Sprint 7-8:** Portal Core completo (US-3.4, 3.5) + Billing (US-4.6, 4.7)
+**Sprint 7-8:** Portal Core (US-3.2, 3.3, 3.4, 3.5, 3.6)
 
-**Sprint 9-10:** Gestión (US-4.2, 4.3, 4.4, 4.5) + Invitaciones (US-2.5)
+**Sprint 9-10:** Chat (US-4.1) + Team (US-4.2) + Analytics (US-4.3)
 
-**Sprint 11-12:** Métricas (US-4.1) + Perfil (US-4.8) + Webhooks (US-6.6)
+**Sprint 11-12:** Billing (US-6.4, 4.4, 4.5) + Settings (US-4.6) + Notifications (US-4.7)
 
-**Sprint 13-14:** Admin básico (US-5.1, 5.2, 5.3, 5.4)
+**Sprint 13-14:** Polish + Testing + API (US-6.5)
 
-**Sprint 15-16:** Admin completo (US-5.5, 5.6) + Polish + Testing
+**Sprint 15-16:** Bug fixes + Launch preparation
 
 ---
 
@@ -1396,7 +1188,7 @@ Una User Story está "Done" cuando:
 | 4 | - | - | - |
 | 5 | - | - | - |
 
-**Average Velocity:** Calcular después de 3 sprints
+**Average Velocity:** Calculate after 3 sprints
 
 ---
 
@@ -1408,4 +1200,6 @@ Una User Story está "Done" cuando:
 
 ---
 
-*Last Updated: January 2026*
+**Document Version:** 2.0
+**Last Updated:** February 2026
+**Changes:** Updated to Static Landing + Next.js + FastAPI architecture

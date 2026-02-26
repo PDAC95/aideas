@@ -3,7 +3,7 @@
 **Product:** aideas
 **Sprint Number:** 1
 **Sprint Duration:** 1 week
-**Planning Date:** January 2026
+**Planning Date:** February 2026
 **Owner:** aideas Team
 
 ---
@@ -12,11 +12,12 @@
 
 ### Sprint Goal 🎯
 
-> **"Establecer la base técnica del proyecto (backend + database) y lanzar la primera versión de la landing page"**
+> **"Establecer la base técnica del proyecto (backend + database + templates) y lanzar la primera versión de la landing page"**
 
 Este sprint sienta las bases sobre las que se construirá todo el producto. Al finalizar tendremos:
-- Backend funcional con estructura profesional
-- Base de datos con esquema completo
+- Backend FastAPI funcional con estructura profesional
+- Base de datos Supabase configurada con esquema completo
+- Sistema de templates Jinja2 funcionando
 - Landing page publicada en producción
 
 ### Sprint Metrics
@@ -37,7 +38,7 @@ Este sprint sienta las bases sobre las que se construirá todo el producto. Al f
 
 ---
 
-#### ✅ US-6.1: Setup Proyecto FastAPI
+#### ✅ US-6.1: Setup Proyecto FastAPI + Supabase + Redis
 
 **Epic:** Backend Foundation
 **Priority in Sprint:** 1 (hacer primero)
@@ -52,52 +53,98 @@ Como desarrollador, quiero una estructura de proyecto backend bien organizada pa
 
 - [ ] Estructura de carpetas creada según ARCHITECTURE.md
   ```
-  apps/api/
+  aideas/
   ├── src/
   │   ├── main.py
   │   ├── config/
-  │   ├── modules/
+  │   │   ├── settings.py
+  │   │   ├── supabase.py
+  │   │   └── redis.py
+  │   ├── routes/
+  │   │   ├── web/
+  │   │   └── api/
+  │   ├── services/
   │   ├── core/
-  │   └── database/
+  │   └── utils/
+  ├── templates/
+  │   └── base.html
+  ├── static/
+  │   ├── css/
+  │   └── js/
   ├── tests/
   ├── requirements/
-  └── Dockerfile
+  └── docker-compose.yml
   ```
 - [ ] FastAPI app configurada y corriendo
+- [ ] Supabase client configurado y conectado
+- [ ] Redis client configurado y conectado
 - [ ] Configuración por ambiente (dev, staging, prod) con Pydantic Settings
-- [ ] CORS configurado para dominios de frontend
+- [ ] CORS configurado
 - [ ] Health check endpoint funcionando (`GET /health`)
-- [ ] Logging estructurado configurado
+- [ ] Logging estructurado configurado (structlog)
 - [ ] Error handling global implementado
-- [ ] Docker + docker-compose para desarrollo local
+- [ ] Jinja2 templates configurados
+- [ ] Static files serving configurado
+- [ ] Docker Compose para desarrollo local (solo Redis)
 - [ ] README con instrucciones de setup
 - [ ] .env.example con todas las variables necesarias
 
 **Technical Tasks:**
 
-- [ ] Crear estructura de carpetas
-- [ ] Configurar FastAPI con Uvicorn
-- [ ] Crear config/settings.py con Pydantic Settings
+- [ ] Crear estructura de carpetas según ARCHITECTURE.md
+- [ ] Instalar dependencias base:
+  ```
+  fastapi
+  uvicorn[standard]
+  pydantic-settings
+  supabase
+  redis
+  python-jose[cryptography]
+  jinja2
+  aiofiles
+  structlog
+  ```
+- [ ] Crear src/main.py con FastAPI app
+- [ ] Crear src/config/settings.py con Pydantic Settings
+- [ ] Crear src/config/supabase.py (Supabase client)
+- [ ] Crear src/config/redis.py (Redis client)
+- [ ] Configurar Jinja2Templates
+- [ ] Configurar StaticFiles mounting
 - [ ] Implementar middleware de CORS
-- [ ] Crear endpoint /health
-- [ ] Configurar logging con formato JSON
+- [ ] Crear endpoint /health (check Supabase + Redis)
+- [ ] Configurar structlog con formato JSON
 - [ ] Crear exception handlers globales
-- [ ] Crear Dockerfile
-- [ ] Crear docker-compose.yml (api + postgres + redis)
+- [ ] Crear docker-compose.yml (Redis only)
+- [ ] Crear templates/base.html básico
+- [ ] Crear static/css/main.css básico
 - [ ] Escribir README.md
-- [ ] Crear .env.example
+- [ ] Crear .env.example con todas las variables:
+  ```
+  # Supabase
+  SUPABASE_URL=
+  SUPABASE_KEY=
+  
+  # Redis
+  REDIS_URL=redis://localhost:6379
+  
+  # App
+  SECRET_KEY=
+  ENVIRONMENT=development
+  ALLOWED_HOSTS=localhost,127.0.0.1
+  ```
 
 **Dependencies:** Ninguna
 
 **Definition of Done:**
-- [ ] `docker-compose up` levanta el proyecto
-- [ ] `GET /health` responde 200
+- [ ] `uvicorn src.main:app --reload` levanta el proyecto
+- [ ] `GET /health` responde 200 con status de Supabase y Redis
 - [ ] Swagger UI disponible en `/docs`
 - [ ] Logs estructurados visibles en consola
+- [ ] Templates Jinja2 renderizan correctamente
 
 ---
 
-#### ✅ US-6.2: PostgreSQL + Migraciones
+#### ✅ US-6.2: Supabase Database Setup + Models
 
 **Epic:** Backend Foundation
 **Priority in Sprint:** 2
@@ -106,54 +153,105 @@ Como desarrollador, quiero una estructura de proyecto backend bien organizada pa
 **Owner:** Developer
 
 **Story:**
-Como desarrollador, quiero la base de datos configurada con todas las tablas necesarias.
+Como desarrollador, quiero la base de datos Supabase configurada con todas las tablas necesarias.
 
 **Acceptance Criteria:**
 
-- [ ] Conexión a PostgreSQL configurada y funcionando
-- [ ] SQLAlchemy 2.x configurado con async support
-- [ ] Alembic configurado para migraciones
-- [ ] Migración inicial con schema completo:
+- [ ] Proyecto Supabase creado (supabase.com)
+- [ ] Supabase CLI instalado localmente
+- [ ] Schema SQL completo creado:
   - [ ] organizations
-  - [ ] users
+  - [ ] users (extends auth.users)
   - [ ] organization_members
   - [ ] automation_templates
-  - [ ] customer_automations
+  - [ ] automations
   - [ ] automation_executions
   - [ ] automation_requests
   - [ ] support_tickets
-  - [ ] ticket_messages
+  - [ ] support_messages
+  - [ ] subscriptions
   - [ ] invoices
+  - [ ] invitations
+- [ ] Row Level Security (RLS) policies básicas configuradas
 - [ ] Índices creados según ARCHITECTURE.md
+- [ ] SQLAlchemy models creados (opcional - o usar Supabase client directo)
 - [ ] Script de seed para datos de prueba
 - [ ] Connection pooling configurado
 
 **Technical Tasks:**
 
-- [ ] Instalar SQLAlchemy + asyncpg + alembic
-- [ ] Crear database/base.py con Base class
-- [ ] Crear database/session.py con async session
-- [ ] Crear config/database.py con URL y pool settings
-- [ ] Crear models para cada entidad (en modules/*/models.py)
-- [ ] Inicializar Alembic (`alembic init`)
-- [ ] Configurar alembic/env.py para async
-- [ ] Generar migración inicial (`alembic revision --autogenerate`)
-- [ ] Ejecutar migración (`alembic upgrade head`)
+- [ ] Crear cuenta en supabase.com
+- [ ] Crear nuevo proyecto "aideas-dev"
+- [ ] Instalar Supabase CLI: `npm install -g supabase`
+- [ ] Init Supabase: `supabase init`
+- [ ] Crear migration file en `supabase/migrations/`
+- [ ] Escribir SQL schema completo:
+  ```sql
+  -- Enable UUID extension
+  CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+  
+  -- Organizations
+  CREATE TABLE organizations (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name VARCHAR(255) NOT NULL,
+    slug VARCHAR(100) UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+  );
+  
+  -- Users (extends Supabase auth.users)
+  CREATE TABLE public.users (
+    id UUID PRIMARY KEY REFERENCES auth.users(id),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+  );
+  
+  -- ... (resto de tablas según ARCHITECTURE.md)
+  ```
+- [ ] Aplicar migration: `supabase db push`
+- [ ] Configurar RLS policies básicas:
+  ```sql
+  -- Example: Users can only see their organization
+  CREATE POLICY "org_isolation" ON automations
+  FOR SELECT
+  USING (
+    organization_id IN (
+      SELECT organization_id 
+      FROM organization_members 
+      WHERE user_id = auth.uid()
+    )
+  );
+  ```
+- [ ] Crear índices:
+  ```sql
+  CREATE INDEX idx_automations_org ON automations(organization_id);
+  CREATE INDEX idx_executions_automation ON automation_executions(automation_id);
+  -- ... más índices
+  ```
+- [ ] Crear src/models/ (si usamos SQLAlchemy):
+  - [ ] models/user.py
+  - [ ] models/organization.py
+  - [ ] models/automation.py
+  - [ ] etc.
 - [ ] Crear scripts/seed_db.py
-- [ ] Probar conexión y queries básicas
+- [ ] Probar conexión: queries básicas con Supabase client
 
 **Dependencies:** 
 - US-6.1 (proyecto base debe existir)
 
 **Definition of Done:**
-- [ ] `alembic upgrade head` crea todas las tablas
-- [ ] `alembic downgrade base` elimina las tablas
+- [ ] Supabase Dashboard muestra todas las tablas
+- [ ] RLS policies activas
 - [ ] Script de seed inserta datos de prueba
-- [ ] Queries básicas funcionan (SELECT, INSERT)
+- [ ] Queries básicas funcionan desde FastAPI
+- [ ] Connection pooling configurado
 
 ---
 
-#### ✅ US-1.1: Home Page Landing
+#### ✅ US-1.1: Landing Home Page (Jinja2)
 
 **Epic:** Landing Page
 **Priority in Sprint:** 3
@@ -184,36 +282,67 @@ Como visitante, quiero ver una página de inicio atractiva y clara para entender
   - [ ] Copyright
   - [ ] Redes sociales (placeholders)
 - [ ] Diseño responsive (mobile, tablet, desktop)
-- [ ] Animaciones sutiles (scroll reveal)
+- [ ] Animaciones sutiles (CSS + Alpine.js opcional)
 
 **Technical Tasks:**
 
-- [ ] Crear app Next.js en apps/landing (si no existe)
-- [ ] Configurar Tailwind CSS
-- [ ] Instalar shadcn/ui
-- [ ] Crear componentes:
-  - [ ] components/Hero.tsx
-  - [ ] components/Features.tsx
-  - [ ] components/HowItWorks.tsx
-  - [ ] components/CTA.tsx
-  - [ ] components/Footer.tsx
-- [ ] Crear página principal app/page.tsx
-- [ ] Agregar animaciones con Framer Motion (opcional)
+- [ ] Crear route en src/routes/web/landing.py:
+  ```python
+  from fastapi import APIRouter, Request
+  from fastapi.templating import Jinja2Templates
+  
+  router = APIRouter()
+  templates = Jinja2Templates(directory="templates")
+  
+  @router.get("/")
+  async def home(request: Request):
+      return templates.TemplateResponse(
+          "landing/home.html",
+          {"request": request}
+      )
+  ```
+- [ ] Configurar Tailwind CSS:
+  - [ ] Instalar: `npm install -D tailwindcss postcss autoprefixer`
+  - [ ] Init: `npx tailwindcss init`
+  - [ ] Configurar tailwind.config.js
+  - [ ] Crear static/css/input.css con @tailwind directives
+  - [ ] Compilar: `npx tailwindcss -i static/css/input.css -o static/css/main.css`
+- [ ] Crear estructura de templates:
+  - [ ] templates/base.html (layout principal)
+  - [ ] templates/landing/base_landing.html (extiende base)
+  - [ ] templates/landing/home.html (home page)
+  - [ ] templates/components/_navbar.html
+  - [ ] templates/components/_footer.html
+- [ ] Crear componentes HTML:
+  - [ ] templates/landing/_hero.html
+  - [ ] templates/landing/_features.html
+  - [ ] templates/landing/_how_it_works.html
+  - [ ] templates/landing/_cta.html
+- [ ] Integrar todo en home.html usando {% include %}
+- [ ] Agregar Lucide Icons (CDN):
+  ```html
+  <script src="https://unpkg.com/lucide@latest"></script>
+  ```
+- [ ] Agregar Alpine.js para interactividad (opcional):
+  ```html
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  ```
 - [ ] Verificar responsive en todos los breakpoints
-- [ ] Optimizar imágenes
+- [ ] Optimizar imágenes (si se usan)
 
-**Dependencies:** Ninguna (frontend independiente)
+**Dependencies:** 
+- US-6.1 (FastAPI + templates configurados)
 
 **Definition of Done:**
-- [ ] Página carga correctamente en localhost:3000
+- [ ] Página carga correctamente en http://localhost:8000/
 - [ ] Todas las secciones visibles y funcionales
 - [ ] Responsive verificado en mobile/tablet/desktop
-- [ ] Lighthouse score > 90 (performance)
-- [ ] Desplegado en Vercel (preview)
+- [ ] Sin errores en consola del navegador
+- [ ] Tailwind CSS compilado correctamente
 
 ---
 
-#### ✅ US-1.4: Contact Page
+#### ✅ US-1.4: Contact Page (Jinja2 + Form)
 
 **Epic:** Landing Page
 **Priority in Sprint:** 4
@@ -231,32 +360,81 @@ Como visitante, quiero poder contactar al equipo de aideas si tengo preguntas an
   - [ ] Email (required, validación)
   - [ ] Empresa (optional)
   - [ ] Mensaje (required, textarea)
-- [ ] Validación client-side con feedback visual
-- [ ] Botón submit con loading state
+- [ ] Validación server-side con Pydantic
+- [ ] Validación client-side con HTML5
+- [ ] Botón submit con feedback
 - [ ] Mensaje de confirmación después de enviar
 - [ ] Email de notificación al equipo (Resend)
-- [ ] Información de contacto alternativa
+- [ ] CSRF protection
 - [ ] Responsive design
 
 **Technical Tasks:**
 
-- [ ] Crear página app/contact/page.tsx
-- [ ] Instalar React Hook Form + Zod
-- [ ] Crear componente ContactForm.tsx
-- [ ] Implementar validación con Zod schema
-- [ ] Crear API route app/api/contact/route.ts
-- [ ] Integrar Resend para envío de email
-- [ ] Crear template de email
-- [ ] Agregar toast de confirmación
+- [ ] Instalar dependencias:
+  ```
+  pip install python-multipart wtforms email-validator
+  ```
+- [ ] Crear template templates/landing/contact.html
+- [ ] Crear Pydantic schema para validación:
+  ```python
+  # src/schemas/contact.py
+  from pydantic import BaseModel, EmailStr
+  
+  class ContactForm(BaseModel):
+      name: str
+      email: EmailStr
+      company: str | None = None
+      message: str
+  ```
+- [ ] Crear routes en src/routes/web/landing.py:
+  ```python
+  @router.get("/contact")
+  async def contact_page(request: Request):
+      return templates.TemplateResponse(
+          "landing/contact.html",
+          {"request": request}
+      )
+  
+  @router.post("/contact")
+  async def contact_submit(
+      request: Request,
+      form_data: ContactForm
+  ):
+      # Validate
+      # Send email (Celery task)
+      # Return success message
+      pass
+  ```
+- [ ] Crear src/utils/email.py con Resend integration:
+  ```python
+  import resend
+  from src.config.settings import settings
+  
+  resend.api_key = settings.RESEND_API_KEY
+  
+  async def send_contact_email(name, email, company, message):
+      resend.Emails.send({
+          "from": "aideas@yourdomain.com",
+          "to": "team@aideas.com",
+          "subject": f"Contact Form: {name}",
+          "html": f"<p>From: {name} ({email})</p>..."
+      })
+  ```
+- [ ] Agregar CSRF token en formulario
+- [ ] Agregar validación HTML5 en inputs
 - [ ] Estilizar con Tailwind
+- [ ] Crear página de confirmación o modal
 
-**Dependencies:** Ninguna
+**Dependencies:** 
+- US-6.1 (FastAPI configurado)
+- Cuenta de Resend creada
 
 **Definition of Done:**
-- [ ] Formulario valida correctamente
+- [ ] Formulario valida correctamente (client + server)
 - [ ] Submit envía email al equipo
 - [ ] Usuario ve confirmación de envío
 - [ ] Funciona en mobile
+- [ ] CSRF protection activo
 
 ---
 
@@ -272,7 +450,7 @@ Como visitante, quiero poder contactar al equipo de aideas si tengo preguntas an
 **Razón:** Capacidad insuficiente para Sprint 1
 **Considerar para:** Sprint 2
 
-#### 📌 US-1.5: SEO + i18n Setup
+#### 📌 US-1.5: Legal Pages (Terms, Privacy)
 
 **Razón:** Mejor hacerlo cuando landing esté más completa
 **Considerar para:** Sprint 2
@@ -281,56 +459,66 @@ Como visitante, quiero poder contactar al equipo de aideas si tengo preguntas an
 
 ## Sprint Calendar
 
-### Week 1 (5 días)
-
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                         SPRINT 1 CALENDAR                               │
+│                        SPRINT 1 - WEEK PLAN                             │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                         │
 │   DÍA 1 (Lunes)                                        ~8 hrs           │
-│   ─────────────                                                         │
-│   □ US-6.1: Setup FastAPI                                               │
-│     • Estructura de carpetas                                            │
-│     • Configuración básica                                              │
-│     • Docker setup                                                      │
+│   ────────────                                                          │
+│   □ Setup inicial del proyecto                                          │
+│     • Crear repositorio Git                                             │
+│     • Crear estructura de carpetas                                      │
+│     • Instalar dependencias base                                        │
+│   □ US-6.1: Setup FastAPI (Parte 1)                                     │
+│     • FastAPI app básica                                                │
+│     • Pydantic Settings                                                 │
+│     • Docker Compose (Redis)                                            │
 │                                                                         │
 │   DÍA 2 (Martes)                                       ~8 hrs           │
-│   ──────────────                                                        │
-│   □ US-6.1: Completar setup                                             │
-│     • Error handling                                                    │
+│   ───────────────                                                       │
+│   □ US-6.1: Completar FastAPI Setup                                     │
+│     • Supabase client                                                   │
+│     • Redis client                                                      │
+│     • Jinja2 templates                                                  │
+│     • Static files                                                      │
 │     • Logging                                                           │
 │     • Health check                                                      │
-│   □ US-6.2: Iniciar PostgreSQL                                          │
-│     • SQLAlchemy config                                                 │
-│     • Alembic init                                                      │
+│   □ US-6.2: Iniciar Supabase                                            │
+│     • Crear proyecto Supabase                                           │
+│     • Install Supabase CLI                                              │
+│     • Comenzar migration SQL                                            │
 │                                                                         │
 │   DÍA 3 (Miércoles)                                    ~8 hrs           │
 │   ─────────────────                                                     │
 │   □ US-6.2: Completar Database                                          │
-│     • Todos los models                                                  │
-│     • Migración inicial                                                 │
+│     • Completar schema SQL                                              │
+│     • Aplicar migration                                                 │
+│     • Configurar RLS policies                                           │
+│     • Crear índices                                                     │
 │     • Seed script                                                       │
 │   ⭐ MID-SPRINT CHECK: Backend debe estar funcional                     │
 │                                                                         │
 │   DÍA 4 (Jueves)                                       ~8 hrs           │
 │   ──────────────                                                        │
 │   □ US-1.1: Home Page                                                   │
-│     • Setup Next.js + Tailwind                                          │
+│     • Setup Tailwind CSS                                                │
+│     • Crear templates structure                                         │
 │     • Hero section                                                      │
 │     • Features section                                                  │
-│     • How it Works                                                      │
+│     • How it Works section                                              │
 │                                                                         │
 │   DÍA 5 (Viernes)                                      ~8 hrs           │
 │   ───────────────                                                       │
 │   □ US-1.1: Completar Home Page                                         │
 │     • CTA section                                                       │
 │     • Footer                                                            │
-│     • Responsive                                                        │
+│     • Responsive polish                                                 │
 │   □ US-1.4: Contact Page                                                │
 │     • Formulario completo                                               │
-│     • Integración email                                                 │
-│   □ Deploy a Vercel (preview)                                           │
+│     • Integración Resend                                                │
+│     • Validación                                                        │
+│   □ Deploy preview (Railway staging)                                    │
 │   □ Sprint Review & Retrospective                                       │
 │                                                                         │
 └─────────────────────────────────────────────────────────────────────────┘
@@ -354,23 +542,24 @@ Como visitante, quiero poder contactar al equipo de aideas si tengo preguntas an
 
 | Risk | Probability | Impact | Mitigation |
 |------|-------------|--------|------------|
-| Primera vez con FastAPI | 🟡 Medium | 🟡 Medium | Seguir docs oficiales, usar templates |
-| Setup de Docker/DB toma más tiempo | 🟡 Medium | 🟢 Low | Buffer incluido en estimación |
-| Diseño de landing toma más tiempo | 🟡 Medium | 🟢 Low | Usar shadcn/ui components, no diseño custom |
+| Primera vez con FastAPI + Jinja2 | 🟡 Medium | 🟡 Medium | Seguir docs oficiales, templates simples |
+| Setup de Supabase toma más tiempo | 🟡 Medium | 🟢 Low | Buffer incluido en estimación |
+| Tailwind compilation issues | 🟢 Low | 🟢 Low | Usar CDN para MVP si falla |
 | Problemas con Resend/email | 🟢 Low | 🟢 Low | Dejar email para el final, MVP sin email OK |
 
 ### Blockers Anticipados
 
-- [ ] **Cuenta de Vercel** - Crear si no existe (10 min)
-- [ ] **Cuenta de Railway** - Crear si no existe (10 min)
-- [ ] **Cuenta de Resend** - Crear para emails (10 min)
+- [ ] **Cuenta de Supabase** - Crear (5 min)
+- [ ] **Cuenta de Railway** - Crear (5 min)
+- [ ] **Cuenta de Resend** - Crear para emails (5 min)
+- [ ] **Node.js** - Instalar para Tailwind compilation (10 min)
 - [ ] **Dominio aideas.com** - Verificar disponibilidad/compra
 
 ### Contingency Plan
 
 Si el tiempo no alcanza:
 1. **Prioridad 1:** Backend (US-6.1, US-6.2) - DEBE completarse
-2. **Prioridad 2:** Home page básica (US-1.1) - Puede ser más simple
+2. **Prioridad 2:** Home page básica (US-1.1) - Puede ser más simple, usar Tailwind CDN
 3. **Prioridad 3:** Contact page (US-1.4) - Puede moverse a Sprint 2
 
 ---
@@ -381,31 +570,29 @@ Si el tiempo no alcanza:
 
 **Herramientas a instalar:**
 - [ ] Python 3.12
-- [ ] Node.js 20 LTS
+- [ ] Node.js 20 LTS (para Tailwind)
 - [ ] Docker Desktop
-- [ ] pnpm (`npm install -g pnpm`)
+- [ ] Supabase CLI: `npm install -g supabase`
 - [ ] Git configurado
 
 **Cuentas a crear/configurar:**
-- [ ] GitHub repository (si no existe)
-- [ ] Vercel account
-- [ ] Railway account
-- [ ] Resend account (free tier)
+- [ ] GitHub repository
+- [ ] Supabase account (supabase.com)
+- [ ] Railway account (railway.app)
+- [ ] Resend account (resend.com) - free tier
 
-**Monorepo Setup:**
-- [ ] Inicializar Turborepo
-- [ ] Crear estructura de carpetas base
-- [ ] Configurar pnpm workspaces
-
-### Architecture Decisions (Ya resueltas)
+### Architecture Decisions (Confirmadas)
 
 | Decision | Choice | Rationale |
 |----------|--------|-----------|
 | Backend Framework | FastAPI | Async, performance, Python AI ecosystem |
-| ORM | SQLAlchemy 2.x | Industry standard, async support |
-| Frontend Framework | Next.js 14 | SSR, App Router, Vercel integration |
-| Styling | Tailwind + shadcn/ui | Speed, consistency, customizable |
-| Monorepo Tool | Turborepo | Vercel ecosystem, simple config |
+| Templates | Jinja2 | SSR, SEO-friendly, simple |
+| Database | Supabase (PostgreSQL) | Managed, Auth included, cost-effective |
+| Auth | Supabase Auth | Integrated with database, JWT, OAuth |
+| Storage | AWS S3 | Cost-effective, reliable, scalable |
+| Cache/Queue | Redis | Industry standard, fast |
+| CSS Framework | Tailwind CSS | Speed, consistency, customizable |
+| Deployment | Railway | Simple, affordable |
 
 ---
 
@@ -415,17 +602,20 @@ Una story está **Done** cuando:
 
 - [ ] Todos los Acceptance Criteria cumplidos
 - [ ] Código funcional y testeado manualmente
-- [ ] Sin errores en consola (frontend) o logs (backend)
+- [ ] Sin errores en consola o logs
 - [ ] Responsive verificado (si aplica)
 - [ ] Documentación básica incluida (README)
-- [ ] Deployable a staging/preview
+- [ ] Deployable a staging
 
 ### Sprint 1 Specific DoD:
 
-- [ ] Backend: `docker-compose up` funciona
+- [ ] Backend: `uvicorn src.main:app --reload` funciona
 - [ ] Backend: `/health` y `/docs` accesibles
-- [ ] Frontend: Preview URL de Vercel funcionando
-- [ ] Database: Migraciones aplicadas sin errores
+- [ ] Backend: Supabase connection funciona
+- [ ] Backend: Redis connection funciona
+- [ ] Frontend: Landing page renderiza en http://localhost:8000/
+- [ ] Database: Tables creadas en Supabase
+- [ ] Templates: Jinja2 rendering funciona correctamente
 
 ---
 
@@ -485,8 +675,8 @@ Una story está **Done** cuando:
 
 | Story | What to Demo |
 |-------|--------------|
-| US-6.1 | Swagger UI, health check, docker-compose up |
-| US-6.2 | Tables created, seed data, basic query |
+| US-6.1 | Swagger UI, health check, Supabase + Redis status |
+| US-6.2 | Supabase Dashboard with tables, RLS policies, seed data |
 | US-1.1 | Home page completa, responsive demo |
 | US-1.4 | Formulario, validación, envío de email |
 
@@ -495,6 +685,7 @@ Una story está **Done** cuando:
 - ¿Se cumplió el Sprint Goal?
 - ¿Qué quedó pendiente y por qué?
 - ¿El velocity establecido es realista para Sprint 2?
+- ¿El stack FastAPI + Jinja2 está funcionando bien?
 
 ---
 
@@ -551,7 +742,7 @@ Velocity:  ___ (usar para Sprint 2 planning)
 
 | Day | Expected Progress |
 |-----|-------------------|
-| 2 | US-6.1 casi completo |
+| 2 | US-6.1 completo |
 | 3 | Backend completo (US-6.1 + US-6.2) |
 | 4 | Home page 70% |
 | 5 | Todo completo + deploy |
@@ -561,6 +752,46 @@ Velocity:  ___ (usar para Sprint 2 planning)
 - Story sin progreso por 1+ días
 - Blocker no resuelto en 4 hrs
 - Día 3 y backend no funciona
+- Supabase connection issues
+
+---
+
+## Useful Commands
+
+### Development
+
+```bash
+# Start backend
+uvicorn src.main:app --reload
+
+# Start Redis (Docker)
+docker-compose up -d
+
+# Compile Tailwind CSS
+npx tailwindcss -i static/css/input.css -o static/css/main.css --watch
+
+# Run Supabase locally (optional)
+supabase start
+
+# Apply Supabase migrations
+supabase db push
+
+# Seed database
+python scripts/seed_db.py
+```
+
+### Testing
+
+```bash
+# Manual testing
+curl http://localhost:8000/health
+
+# Check Swagger docs
+open http://localhost:8000/docs
+
+# Check landing page
+open http://localhost:8000/
+```
 
 ---
 
@@ -569,15 +800,45 @@ Velocity:  ___ (usar para Sprint 2 planning)
 **Candidatos para Sprint 2:**
 - US-1.2: Pricing Page (S)
 - US-1.3: Features Page (S)
-- US-1.5: SEO + i18n Setup (S)
-- US-6.3: Integración Clerk (M)
-- US-2.1: Sign Up (S)
+- US-1.5: Legal Pages (S)
+- US-6.3: Supabase Auth Integration (M)
+- US-2.1: Sign Up (M)
 - US-2.2: Sign In (S)
 
 **Sprint 2 Goal (tentativo):**
-> "Completar landing page y habilitar registro/login de usuarios"
+> "Completar landing page y habilitar registro/login de usuarios con Supabase Auth"
 
 ---
 
-*Sprint 1 Created: January 2026*
+## Environment Variables Checklist
+
+Make sure .env has all these before starting:
+
+```bash
+# Supabase
+SUPABASE_URL=https://xxx.supabase.co
+SUPABASE_KEY=your-anon-key
+SUPABASE_SERVICE_KEY=your-service-key
+
+# Redis
+REDIS_URL=redis://localhost:6379
+
+# App
+SECRET_KEY=your-secret-key-min-32-chars
+ENVIRONMENT=development
+ALLOWED_HOSTS=localhost,127.0.0.1
+
+# Resend (for contact form)
+RESEND_API_KEY=re_...
+
+# AWS S3 (not needed for Sprint 1)
+# AWS_ACCESS_KEY_ID=
+# AWS_SECRET_ACCESS_KEY=
+# S3_BUCKET_NAME=
+```
+
+---
+
+*Sprint 1 Created: February 2026*
+*Updated for: FastAPI + Jinja2 + Supabase Stack*
 *Status: Ready to Execute*

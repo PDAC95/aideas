@@ -1,25 +1,19 @@
 # ARCHITECTURE.md - AIDEAS
 
-**Version:** 1.0
+**Version:** 3.0
 **Created:** January 2026
-**Last Updated:** January 2026
-**Maintained by:** aideas Team
+**Last Updated:** February 2026
+**Status:** Active Development
 
 ---
 
 ## Project Overview
 
-**Product:** aideas
-**Type:** Complete System (Landing + Customer Portal + Admin Portal + API)
-**Status:** 🟡 Planning
+**Product:** AIDEAS - AI Automation as a Service
+**Type:** Managed Service Platform (Landing + Customer Portal + API)
+**Business Model:** Service-based (not self-service)
 
-**MVP Scope:**
-- Landing page (aideas.com)
-- Customer portal (app.aideas.com)
-- Admin portal (admin.aideas.com)
-- REST API (api.aideas.com)
-- Multi-language support (EN, ES, PT)
-- Multi-tenant architecture
+**Key Insight:** AIDEAS is NOT a DIY platform. Customers describe their needs, AIDEAS implements the solution. The portal is for monitoring, not building.
 
 ---
 
@@ -28,1464 +22,612 @@
 ### High-Level Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                              CLOUDFLARE                                     │
-│                         (DNS + CDN + WAF + DDoS)                            │
-└────────────────────────────────────┬────────────────────────────────────────┘
-                                     │
-         ┌───────────────────────────┼───────────────────────────┐
-         │                           │                           │
-         ▼                           ▼                           ▼
-┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
-│     LANDING     │       │     PORTAL      │       │      ADMIN      │
-│   aideas.com    │       │  app.aideas.com │       │ admin.aideas.com│
-│                 │       │                 │       │                 │
-│    Next.js 14   │       │    Next.js 14   │       │    Next.js 14   │
-│    (Vercel)     │       │    (Vercel)     │       │    (Vercel)     │
-└─────────────────┘       └────────┬────────┘       └────────┬────────┘
-                                   │                         │
-                                   └────────────┬────────────┘
-                                                │
-                                                ▼
-                              ┌─────────────────────────────┐
-                              │         API GATEWAY         │
-                              │      api.aideas.com         │
-                              │                             │
-                              │     FastAPI (Railway)       │
-                              │     Python 3.12             │
-                              └──────────────┬──────────────┘
-                                             │
-                    ┌────────────────────────┼────────────────────────┐
-                    │                        │                        │
-                    ▼                        ▼                        ▼
-          ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-          │   PostgreSQL    │     │      Redis      │     │  Cloudflare R2  │
-          │   (Railway)     │     │   (Railway)     │     │    (Storage)    │
-          │                 │     │                 │     │                 │
-          │   Primary DB    │     │  Cache + Queue  │     │  Files/Assets   │
-          └─────────────────┘     └─────────────────┘     └─────────────────┘
-                    │
-                    ▼
-          ┌─────────────────┐
-          │    Backups      │
-          │  (Automated)    │
-          └─────────────────┘
+                                CLOUDFLARE
+                           (DNS + CDN + WAF)
+                                   │
+           ┌───────────────────────┼───────────────────────┐
+           │                       │                       │
+           ▼                       ▼                       ▼
+   ┌───────────────┐      ┌───────────────┐      ┌───────────────┐
+   │    LANDING    │      │   FRONTEND    │      │    BACKEND    │
+   │  aideas.com   │      │app.aideas.com │      │api.aideas.com │
+   │               │      │               │      │               │
+   │ Static HTML   │      │   Next.js     │      │   FastAPI     │
+   │ CSS/JS/SASS   │      │   React 18    │      │  Python 3.12  │
+   │               │      │   TypeScript  │      │               │
+   └───────────────┘      └───────┬───────┘      └───────┬───────┘
+           │                      │                      │
+           │                      │    ┌─────────────────┤
+           │                      │    │                 │
+           ▼                      ▼    ▼                 ▼
+   ┌───────────────┐      ┌───────────────┐      ┌───────────────┐
+   │  Vercel/CF    │      │   Supabase    │      │    Railway    │
+   │    Pages      │      │               │      │               │
+   │   (FREE)      │      │ • Auth        │      │ • FastAPI     │
+   │               │      │ • Database    │      │ • Background  │
+   │ Static Host   │      │ • Realtime    │      │   Jobs        │
+   │               │      │ • Storage     │      │ • Webhooks    │
+   └───────────────┘      └───────────────┘      └───────────────┘
+                                 │
+                                 ▼
+                          ┌───────────────┐
+                          │  PostgreSQL   │
+                          │  (Supabase)   │
+                          └───────────────┘
 ```
 
-### Architecture Principles
+### Cost Breakdown (MVP)
 
-| Principle | Description |
-|-----------|-------------|
-| **Separation of Concerns** | Frontend / Backend / Database clearly separated |
-| **API-First** | Backend exposes RESTful API consumed by all frontends |
-| **Multi-Tenant** | Single codebase serves multiple organizations |
-| **Stateless Backend** | No session state in API servers (JWT-based) |
-| **Security by Default** | Authentication required on all protected endpoints |
-| **Scalability** | Designed to scale horizontally when needed |
-| **i18n First** | Multi-language support built from day one |
+| Service | Purpose | Monthly Cost |
+|---------|---------|--------------|
+| Landing (Vercel/CF Pages) | Static hosting | $0 |
+| Frontend (Vercel) | Next.js app | $0-20 |
+| Backend (Railway) | FastAPI + Jobs | $5-20 |
+| Database (Supabase Pro) | PostgreSQL + Auth + Realtime | $25 |
+| **TOTAL** | | **~$30-65/mo** |
 
 ---
 
 ## Technology Stack
 
-### Frontend
+### Landing Page (`landing/`)
 
 ```yaml
-# Core
-Framework: Next.js 14 (App Router)
-Language: TypeScript 5.x
-Runtime: Node.js 20 LTS
+Type: Static Website
+Purpose: Marketing, SEO, lead generation
 
-# UI & Styling
-CSS Framework: Tailwind CSS 3.x
-Component Library: shadcn/ui
-Icons: Lucide React
-Animations: Framer Motion
+Technologies:
+  - HTML5
+  - SCSS/CSS (Bootstrap 5 based)
+  - JavaScript (jQuery + plugins)
+  - GSAP animations
 
-# State & Data
-State Management: Zustand (global) + React Query (server)
-HTTP Client: Axios
-Form Handling: React Hook Form + Zod
-Date Handling: date-fns
+Build:
+  - SASS compilation
+  - No framework needed
 
-# Internationalization
-i18n: next-intl
+Hosting:
+  - Vercel (preferred)
+  - Cloudflare Pages
+  - Netlify
 
-# Development
-Linting: ESLint + Prettier
-Testing: Vitest + React Testing Library
-E2E Testing: Playwright
-Build Tool: Turbopack (Next.js built-in)
-
-# Package Manager
-Package Manager: pnpm
+Features:
+  - 100/100 Lighthouse score
+  - SEO optimized
+  - Fast load times
+  - No server required
 ```
 
-### Backend
+### Frontend Application (`web/`)
 
 ```yaml
-# Core
-Language: Python 3.12
-Framework: FastAPI 0.109+
-ASGI Server: Uvicorn
+Type: React SPA with SSR capabilities
+Purpose: Customer portal (dashboard, chat, billing)
 
-# Database
-ORM: SQLAlchemy 2.x
-Migrations: Alembic
-Database: PostgreSQL 16
+Framework: Next.js 14+ (App Router)
+Language: TypeScript
+UI Library: React 18
 
-# Caching & Queues
-Cache: Redis 7.x
-Task Queue: Celery + Redis
-Rate Limiting: slowapi
+Key Dependencies:
+  - @supabase/ssr          # Auth & Realtime
+  - @tanstack/react-query  # Data fetching
+  - shadcn/ui              # Component library
+  - tailwindcss            # Styling
+  - zustand                # State management (if needed)
+  - socket.io-client       # Realtime (alternative to Supabase)
 
-# Authentication
-Auth Provider: Clerk (external)
-JWT Validation: python-jose
+Features:
+  - Server Components
+  - Client Components for interactivity
+  - Realtime chat with Supabase
+  - Realtime notifications
+  - Responsive design
 
-# Validation & Serialization
-Validation: Pydantic v2
-Serialization: Built-in Pydantic
-
-# API Documentation
-Docs: Swagger UI + ReDoc (FastAPI built-in)
-OpenAPI: 3.1
-
-# Development
-Linting: Ruff + Black
-Type Checking: mypy
-Testing: pytest + pytest-asyncio + httpx
-Coverage: pytest-cov
-
-# Package Manager
-Package Manager: pip + pip-tools (requirements.txt)
-Virtual Environment: venv
+Hosting: Vercel
 ```
 
-### Infrastructure & DevOps
+### Backend API (`api/`)
 
 ```yaml
-# Hosting
-Frontend Hosting: Vercel
-Backend Hosting: Railway
-Database Hosting: Railway (PostgreSQL)
-Cache Hosting: Railway (Redis)
-File Storage: Cloudflare R2
+Type: REST API + Background Jobs
+Purpose: Business logic, integrations, heavy processing
 
-# DNS & CDN
-DNS: Cloudflare
-CDN: Cloudflare
-SSL: Cloudflare (automatic)
-WAF: Cloudflare
+Framework: FastAPI
+Language: Python 3.12+
+Server: Uvicorn
 
-# Containerization
-Containers: Docker
-Orchestration: Docker Compose (development)
+Key Dependencies:
+  - fastapi               # Web framework
+  - supabase-py           # Database client
+  - pydantic              # Validation
+  - httpx                 # HTTP client
+  - celery + redis        # Background tasks (optional)
+  - stripe                # Payments
+  - resend                # Emails
+  - openai / anthropic    # AI integrations
 
-# CI/CD
-CI/CD: GitHub Actions
-Registry: GitHub Container Registry
+Features:
+  - REST API endpoints
+  - Webhook handlers (Stripe, Supabase)
+  - Background job processing
+  - AI automation execution
+  - Integration with external services
 
-# Version Control
-VCS: Git
-Repository: GitHub
-Branching: GitFlow (main + develop + feature/*)
-
-# Monitoring & Observability
-Error Tracking: Sentry
-Logging: Structured JSON logs
-Uptime Monitoring: Better Uptime (or similar)
+Hosting: Railway
 ```
 
-### External Services
+### Database & Auth (Supabase)
 
 ```yaml
-# Authentication
-Auth: Clerk
-  - Social logins (Google, GitHub)
-  - MFA support
-  - User management UI
-  - Webhook events
+Database: PostgreSQL 15
+Auth: Supabase Auth
+  - Email/Password
+  - Magic Links
+  - OAuth (Google, GitHub) - optional
 
-# Payments
-Payments: Stripe
-  - Subscriptions
-  - Invoicing
-  - Customer portal
-  - Webhooks
+Realtime: Supabase Realtime
+  - Chat messages
+  - Notifications
+  - Live updates
 
-# Email
-Transactional Email: Resend
-  - API-based sending
-  - Templates
-  - Analytics
+Storage: Supabase Storage
+  - User uploads
+  - Generated files
 
-# AI Services
-AI APIs:
-  - OpenAI (GPT-4, embeddings)
-  - Anthropic (Claude)
-
-# Analytics (Phase 2)
-Analytics: PostHog or Mixpanel
+Features:
+  - Row Level Security (RLS)
+  - Automatic backups
+  - Point-in-time recovery
 ```
 
 ---
 
 ## Repository Structure
 
-### Monorepo with Turborepo
-
 ```
 aideas/
 │
-├── apps/
+├── landing/                      # aideas.com (Static)
+│   ├── index.html               # Homepage
+│   ├── features.html            # Features page
+│   ├── pricing.html             # Pricing page
+│   ├── contact.html             # Contact page
+│   ├── 404.html                 # Error page
 │   │
-│   ├── landing/                      # aideas.com
-│   │   ├── src/
-│   │   │   ├── app/
-│   │   │   │   ├── [locale]/        # i18n routes
-│   │   │   │   │   ├── page.tsx     # Home
-│   │   │   │   │   ├── pricing/
-│   │   │   │   │   │   └── page.tsx
-│   │   │   │   │   ├── features/
-│   │   │   │   │   │   └── page.tsx
-│   │   │   │   │   ├── about/
-│   │   │   │   │   │   └── page.tsx
-│   │   │   │   │   ├── contact/
-│   │   │   │   │   │   └── page.tsx
-│   │   │   │   │   └── layout.tsx
-│   │   │   │   ├── api/
-│   │   │   │   │   └── webhook/     # Clerk/Stripe webhooks
-│   │   │   │   ├── layout.tsx
-│   │   │   │   └── not-found.tsx
-│   │   │   │
-│   │   │   ├── components/          # Landing-specific
-│   │   │   │   ├── Hero.tsx
-│   │   │   │   ├── Features.tsx
-│   │   │   │   ├── Pricing.tsx
-│   │   │   │   ├── Testimonials.tsx
-│   │   │   │   ├── CTA.tsx
-│   │   │   │   └── Footer.tsx
-│   │   │   │
-│   │   │   ├── lib/
-│   │   │   └── styles/
-│   │   │
-│   │   ├── public/
-│   │   │   ├── images/
-│   │   │   └── locales/
-│   │   ├── next.config.js
-│   │   ├── tailwind.config.js
-│   │   ├── tsconfig.json
-│   │   └── package.json
+│   ├── assets/
+│   │   ├── css/
+│   │   │   └── main.min.css     # Compiled CSS
+│   │   ├── scss/
+│   │   │   ├── main.scss        # Main SCSS entry
+│   │   │   ├── abstracts/       # Variables, mixins
+│   │   │   ├── base/            # Reset, typography
+│   │   │   ├── components/      # Buttons, forms
+│   │   │   ├── layout/          # Header, footer
+│   │   │   └── sections/        # Page sections
+│   │   ├── js/
+│   │   │   ├── main.js          # Main JavaScript
+│   │   │   └── plugins.js       # Plugin initializations
+│   │   ├── vendor/              # Third-party libs
+│   │   │   ├── bootstrap/
+│   │   │   ├── gsap/
+│   │   │   ├── jquery/
+│   │   │   └── ...
+│   │   └── images/
+│   │       ├── logo.png
+│   │       ├── favicon.ico
+│   │       └── ...
 │   │
-│   ├── portal/                       # app.aideas.com
-│   │   ├── src/
-│   │   │   ├── app/
-│   │   │   │   ├── [locale]/
-│   │   │   │   │   ├── (auth)/      # Auth layout group
-│   │   │   │   │   │   ├── sign-in/
-│   │   │   │   │   │   ├── sign-up/
-│   │   │   │   │   │   └── layout.tsx
-│   │   │   │   │   │
-│   │   │   │   │   ├── (dashboard)/ # Dashboard layout group
-│   │   │   │   │   │   ├── page.tsx # Dashboard home
-│   │   │   │   │   │   ├── automations/
-│   │   │   │   │   │   │   ├── page.tsx
-│   │   │   │   │   │   │   └── [id]/
-│   │   │   │   │   │   │       └── page.tsx
-│   │   │   │   │   │   ├── metrics/
-│   │   │   │   │   │   │   └── page.tsx
-│   │   │   │   │   │   ├── team/
-│   │   │   │   │   │   │   └── page.tsx
-│   │   │   │   │   │   ├── billing/
-│   │   │   │   │   │   │   └── page.tsx
-│   │   │   │   │   │   ├── support/
-│   │   │   │   │   │   │   └── page.tsx
-│   │   │   │   │   │   ├── settings/
-│   │   │   │   │   │   │   └── page.tsx
-│   │   │   │   │   │   └── layout.tsx
-│   │   │   │   │   │
-│   │   │   │   │   └── layout.tsx
-│   │   │   │   │
-│   │   │   │   └── api/
-│   │   │   │
-│   │   │   ├── features/            # Feature modules
-│   │   │   │   ├── auth/
-│   │   │   │   │   ├── components/
-│   │   │   │   │   ├── hooks/
-│   │   │   │   │   └── types.ts
-│   │   │   │   │
-│   │   │   │   ├── automations/
-│   │   │   │   │   ├── components/
-│   │   │   │   │   │   ├── AutomationCard.tsx
-│   │   │   │   │   │   ├── AutomationList.tsx
-│   │   │   │   │   │   ├── AutomationDetail.tsx
-│   │   │   │   │   │   └── RequestAutomationForm.tsx
-│   │   │   │   │   ├── hooks/
-│   │   │   │   │   │   ├── useAutomations.ts
-│   │   │   │   │   │   └── useAutomationMetrics.ts
-│   │   │   │   │   ├── services/
-│   │   │   │   │   │   └── automations.api.ts
-│   │   │   │   │   └── types.ts
-│   │   │   │   │
-│   │   │   │   ├── metrics/
-│   │   │   │   │   ├── components/
-│   │   │   │   │   ├── hooks/
-│   │   │   │   │   └── types.ts
-│   │   │   │   │
-│   │   │   │   ├── team/
-│   │   │   │   │   ├── components/
-│   │   │   │   │   ├── hooks/
-│   │   │   │   │   └── types.ts
-│   │   │   │   │
-│   │   │   │   ├── billing/
-│   │   │   │   │   ├── components/
-│   │   │   │   │   ├── hooks/
-│   │   │   │   │   └── types.ts
-│   │   │   │   │
-│   │   │   │   └── support/
-│   │   │   │       ├── components/
-│   │   │   │       ├── hooks/
-│   │   │   │       └── types.ts
-│   │   │   │
-│   │   │   ├── components/          # Shared portal components
-│   │   │   │   ├── layout/
-│   │   │   │   │   ├── Sidebar.tsx
-│   │   │   │   │   ├── Header.tsx
-│   │   │   │   │   └── MobileNav.tsx
-│   │   │   │   └── common/
-│   │   │   │
-│   │   │   ├── hooks/               # Shared hooks
-│   │   │   ├── lib/                 # Utilities
-│   │   │   └── styles/
-│   │   │
-│   │   ├── public/
-│   │   ├── next.config.js
-│   │   ├── tailwind.config.js
-│   │   ├── tsconfig.json
-│   │   └── package.json
-│   │
-│   ├── admin/                        # admin.aideas.com
-│   │   ├── src/
-│   │   │   ├── app/
-│   │   │   │   ├── [locale]/
-│   │   │   │   │   ├── (auth)/
-│   │   │   │   │   ├── (dashboard)/
-│   │   │   │   │   │   ├── page.tsx
-│   │   │   │   │   │   ├── customers/
-│   │   │   │   │   │   ├── automations/
-│   │   │   │   │   │   ├── templates/
-│   │   │   │   │   │   ├── requests/
-│   │   │   │   │   │   ├── analytics/
-│   │   │   │   │   │   └── settings/
-│   │   │   │   │   └── layout.tsx
-│   │   │   │   └── layout.tsx
-│   │   │   │
-│   │   │   ├── features/
-│   │   │   │   ├── customers/
-│   │   │   │   ├── automations/
-│   │   │   │   ├── templates/
-│   │   │   │   ├── requests/
-│   │   │   │   └── analytics/
-│   │   │   │
-│   │   │   ├── components/
-│   │   │   ├── hooks/
-│   │   │   └── lib/
-│   │   │
-│   │   └── package.json
-│   │
-│   └── api/                          # api.aideas.com (FastAPI)
-│       ├── src/
-│       │   ├── main.py              # FastAPI app entry
-│       │   │
-│       │   ├── config/
-│       │   │   ├── __init__.py
-│       │   │   ├── settings.py      # Pydantic settings
-│       │   │   └── database.py      # DB connection
-│       │   │
-│       │   ├── modules/             # Feature modules
-│       │   │   ├── __init__.py
-│       │   │   │
-│       │   │   ├── auth/
-│       │   │   │   ├── __init__.py
-│       │   │   │   ├── router.py
-│       │   │   │   ├── service.py
-│       │   │   │   ├── dependencies.py
-│       │   │   │   └── schemas.py
-│       │   │   │
-│       │   │   ├── users/
-│       │   │   │   ├── __init__.py
-│       │   │   │   ├── router.py
-│       │   │   │   ├── service.py
-│       │   │   │   ├── models.py
-│       │   │   │   └── schemas.py
-│       │   │   │
-│       │   │   ├── organizations/
-│       │   │   │   ├── __init__.py
-│       │   │   │   ├── router.py
-│       │   │   │   ├── service.py
-│       │   │   │   ├── models.py
-│       │   │   │   └── schemas.py
-│       │   │   │
-│       │   │   ├── automations/
-│       │   │   │   ├── __init__.py
-│       │   │   │   ├── router.py
-│       │   │   │   ├── service.py
-│       │   │   │   ├── models.py
-│       │   │   │   ├── schemas.py
-│       │   │   │   └── tasks.py     # Celery tasks
-│       │   │   │
-│       │   │   ├── billing/
-│       │   │   │   ├── __init__.py
-│       │   │   │   ├── router.py
-│       │   │   │   ├── service.py
-│       │   │   │   ├── models.py
-│       │   │   │   ├── schemas.py
-│       │   │   │   └── stripe.py    # Stripe integration
-│       │   │   │
-│       │   │   ├── support/
-│       │   │   │   ├── __init__.py
-│       │   │   │   ├── router.py
-│       │   │   │   ├── service.py
-│       │   │   │   ├── models.py
-│       │   │   │   └── schemas.py
-│       │   │   │
-│       │   │   └── templates/       # Automation templates
-│       │   │       ├── __init__.py
-│       │   │       ├── router.py
-│       │   │       ├── service.py
-│       │   │       ├── models.py
-│       │   │       └── schemas.py
-│       │   │
-│       │   ├── core/                # Shared core
-│       │   │   ├── __init__.py
-│       │   │   ├── security.py      # JWT, permissions
-│       │   │   ├── exceptions.py    # Custom exceptions
-│       │   │   ├── middleware.py    # CORS, logging, etc.
-│       │   │   ├── responses.py     # Standard responses
-│       │   │   └── pagination.py    # Pagination utils
-│       │   │
-│       │   ├── database/
-│       │   │   ├── __init__.py
-│       │   │   ├── base.py          # SQLAlchemy base
-│       │   │   ├── session.py       # DB session
-│       │   │   └── migrations/      # Alembic migrations
-│       │   │       ├── versions/
-│       │   │       ├── env.py
-│       │   │       └── alembic.ini
-│       │   │
-│       │   └── workers/             # Celery workers
-│       │       ├── __init__.py
-│       │       ├── celery_app.py
-│       │       └── tasks/
-│       │
-│       ├── tests/
-│       │   ├── conftest.py
-│       │   ├── unit/
-│       │   ├── integration/
-│       │   └── e2e/
-│       │
-│       ├── scripts/
-│       │   ├── seed_db.py
-│       │   └── create_admin.py
-│       │
-│       ├── requirements/
-│       │   ├── base.txt
-│       │   ├── dev.txt
-│       │   └── prod.txt
-│       │
-│       ├── Dockerfile
-│       ├── docker-compose.yml
-│       ├── pyproject.toml
-│       └── README.md
+│   └── package.json             # SASS build scripts only
 │
-├── packages/                         # Shared packages
+├── web/                          # app.aideas.com (Next.js)
+│   ├── app/
+│   │   ├── (auth)/
+│   │   │   ├── login/
+│   │   │   │   └── page.tsx
+│   │   │   ├── signup/
+│   │   │   │   └── page.tsx
+│   │   │   ├── forgot-password/
+│   │   │   │   └── page.tsx
+│   │   │   └── layout.tsx
+│   │   │
+│   │   ├── (portal)/
+│   │   │   ├── dashboard/
+│   │   │   │   └── page.tsx
+│   │   │   ├── automations/
+│   │   │   │   ├── page.tsx
+│   │   │   │   └── [id]/
+│   │   │   │       └── page.tsx
+│   │   │   ├── chat/
+│   │   │   │   └── page.tsx     # Realtime support chat
+│   │   │   ├── billing/
+│   │   │   │   └── page.tsx
+│   │   │   ├── settings/
+│   │   │   │   └── page.tsx
+│   │   │   └── layout.tsx       # Portal layout with sidebar
+│   │   │
+│   │   ├── layout.tsx           # Root layout
+│   │   ├── page.tsx             # Redirect to dashboard
+│   │   └── globals.css
 │   │
-│   ├── ui/                          # Shared UI components
-│   │   ├── src/
-│   │   │   ├── components/
-│   │   │   │   ├── Button/
-│   │   │   │   │   ├── Button.tsx
-│   │   │   │   │   ├── Button.test.tsx
-│   │   │   │   │   └── index.ts
-│   │   │   │   ├── Input/
-│   │   │   │   ├── Select/
-│   │   │   │   ├── Modal/
-│   │   │   │   ├── Card/
-│   │   │   │   ├── Table/
-│   │   │   │   ├── Badge/
-│   │   │   │   ├── Alert/
-│   │   │   │   ├── Spinner/
-│   │   │   │   └── index.ts
-│   │   │   └── index.ts
-│   │   ├── package.json
-│   │   └── tsconfig.json
+│   ├── components/
+│   │   ├── ui/                  # shadcn/ui components
+│   │   ├── chat/
+│   │   │   ├── chat-window.tsx
+│   │   │   ├── message-list.tsx
+│   │   │   └── message-input.tsx
+│   │   ├── dashboard/
+│   │   │   ├── stats-card.tsx
+│   │   │   └── activity-feed.tsx
+│   │   └── layout/
+│   │       ├── sidebar.tsx
+│   │       ├── header.tsx
+│   │       └── user-menu.tsx
 │   │
-│   ├── utils/                       # Shared utilities
-│   │   ├── src/
-│   │   │   ├── formatting/
-│   │   │   │   ├── date.ts
-│   │   │   │   ├── currency.ts
-│   │   │   │   └── number.ts
-│   │   │   ├── validation/
-│   │   │   │   └── schemas.ts
-│   │   │   ├── constants/
-│   │   │   │   └── index.ts
-│   │   │   └── index.ts
-│   │   └── package.json
+│   ├── lib/
+│   │   ├── supabase/
+│   │   │   ├── client.ts        # Browser client
+│   │   │   ├── server.ts        # Server client
+│   │   │   └── middleware.ts    # Auth middleware
+│   │   ├── api.ts               # FastAPI client
+│   │   └── utils.ts
 │   │
-│   ├── types/                       # Shared TypeScript types
-│   │   ├── src/
-│   │   │   ├── api.ts              # API response types
-│   │   │   ├── user.ts
-│   │   │   ├── organization.ts
-│   │   │   ├── automation.ts
-│   │   │   ├── billing.ts
-│   │   │   └── index.ts
-│   │   └── package.json
+│   ├── hooks/
+│   │   ├── use-auth.ts
+│   │   ├── use-chat.ts
+│   │   └── use-realtime.ts
 │   │
-│   └── config/                      # Shared configs
-│       ├── eslint/
-│       │   └── index.js
-│       ├── typescript/
-│       │   └── base.json
-│       └── tailwind/
-│           └── preset.js
+│   ├── types/
+│   │   └── index.ts
+│   │
+│   ├── package.json
+│   ├── next.config.js
+│   ├── tailwind.config.js
+│   └── tsconfig.json
 │
-├── docs/                            # Documentation
-│   ├── AIDEAS-proyecto.md
-│   ├── PRD-aideas.md
-│   ├── ARCHITECTURE.md
-│   ├── API.md
-│   ├── DEPLOYMENT.md
-│   └── CONTRIBUTING.md
+├── api/                          # api.aideas.com (FastAPI)
+│   ├── src/
+│   │   ├── main.py              # FastAPI entry point
+│   │   │
+│   │   ├── config/
+│   │   │   ├── settings.py      # Pydantic settings
+│   │   │   └── supabase.py      # Supabase client
+│   │   │
+│   │   ├── routers/
+│   │   │   ├── auth.py          # Auth endpoints
+│   │   │   ├── users.py         # User management
+│   │   │   ├── organizations.py # Org management
+│   │   │   ├── automations.py   # Automation CRUD
+│   │   │   ├── chat.py          # Chat/support
+│   │   │   ├── billing.py       # Stripe integration
+│   │   │   └── webhooks.py      # Stripe/Supabase webhooks
+│   │   │
+│   │   ├── services/
+│   │   │   ├── automation_service.py
+│   │   │   ├── billing_service.py
+│   │   │   ├── chat_service.py
+│   │   │   └── email_service.py
+│   │   │
+│   │   ├── models/
+│   │   │   └── schemas.py       # Pydantic models
+│   │   │
+│   │   ├── core/
+│   │   │   ├── security.py      # JWT validation
+│   │   │   ├── dependencies.py  # FastAPI deps
+│   │   │   └── exceptions.py
+│   │   │
+│   │   └── workers/             # Background tasks
+│   │       ├── celery_app.py
+│   │       └── tasks/
+│   │           ├── automation_tasks.py
+│   │           └── email_tasks.py
+│   │
+│   ├── tests/
+│   │   ├── conftest.py
+│   │   └── test_*.py
+│   │
+│   ├── requirements/
+│   │   ├── base.txt
+│   │   ├── dev.txt
+│   │   └── prod.txt
+│   │
+│   ├── Dockerfile
+│   ├── railway.toml
+│   └── pyproject.toml
+│
+├── supabase/
+│   ├── migrations/
+│   │   ├── 001_initial_schema.sql
+│   │   └── 002_chat_tables.sql
+│   ├── seed.sql
+│   └── config.toml
+│
+├── docs/
+│   ├── ARCHITECTURE.md          # This file
+│   ├── PRD-aideas.md           # Product requirements
+│   ├── DEPLOYMENT.md           # Deployment guide
+│   └── PRODUCT-BACKLOG.md      # Feature backlog
 │
 ├── .github/
-│   ├── workflows/
-│   │   ├── ci.yml                  # CI on PR
-│   │   ├── deploy-staging.yml      # Deploy to staging
-│   │   └── deploy-production.yml   # Deploy to production
-│   ├── PULL_REQUEST_TEMPLATE.md
-│   └── CODEOWNERS
+│   └── workflows/
+│       ├── deploy-landing.yml   # Deploy landing to Vercel
+│       ├── deploy-web.yml       # Deploy Next.js to Vercel
+│       └── deploy-api.yml       # Deploy FastAPI to Railway
 │
-├── scripts/
-│   ├── setup.sh                    # Initial setup
-│   └── clean.sh                    # Clean all
-│
-├── .env.example
 ├── .gitignore
-├── .prettierrc
-├── .eslintrc.js
-├── docker-compose.yml              # Local development
-├── turbo.json                      # Turborepo config
-├── pnpm-workspace.yaml             # pnpm workspaces
-├── package.json                    # Root package.json
 └── README.md
 ```
 
 ---
 
-## Code Conventions
-
-### Naming Conventions
-
-#### Frontend (TypeScript/React)
-
-```typescript
-// === FILES ===
-ComponentName.tsx        // React components (PascalCase)
-ComponentName.test.tsx   // Tests
-useCustomHook.ts         // Hooks (camelCase with 'use' prefix)
-userService.ts           // Services (camelCase)
-types.ts                 // Types/Interfaces
-constants.ts             // Constants
-utils.ts                 // Utilities
-
-// === CODE ===
-
-// Interfaces & Types (PascalCase)
-interface UserData {
-  id: string;
-  email: string;
-}
-
-type UserRole = 'admin' | 'operator' | 'viewer';
-
-// Constants (UPPER_SNAKE_CASE)
-const API_BASE_URL = 'https://api.aideas.com';
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
-
-// Functions (camelCase)
-function getUserById(id: string): Promise<User> {}
-const formatCurrency = (amount: number) => {};
-
-// Variables (camelCase)
-const currentUser = await getUser();
-let isLoading = false;
-
-// React Components (PascalCase, named export)
-export const UserProfile: React.FC<Props> = ({ userId }) => {
-  return <div>{/* ... */}</div>;
-};
-
-// Hooks (camelCase with 'use' prefix)
-export const useAuth = () => {
-  const [user, setUser] = useState<User | null>(null);
-  return { user, setUser };
-};
-
-// Event Handlers (handle prefix)
-const handleSubmit = (e: FormEvent) => {};
-const handleUserClick = () => {};
-```
-
-#### Backend (Python/FastAPI)
-
-```python
-# === FILES ===
-user_router.py          # Routers (snake_case)
-user_service.py         # Services
-user_models.py          # SQLAlchemy models
-user_schemas.py         # Pydantic schemas
-auth_dependencies.py    # Dependencies
-string_utils.py         # Utilities
-
-# === CODE ===
-
-# Classes (PascalCase)
-class UserService:
-    pass
-
-class UserNotFoundError(Exception):
-    pass
-
-# Pydantic Models (PascalCase)
-class UserCreate(BaseModel):
-    email: EmailStr
-    name: str
-
-class UserResponse(BaseModel):
-    id: UUID
-    email: str
-    created_at: datetime
-
-# SQLAlchemy Models (PascalCase)
-class User(Base):
-    __tablename__ = "users"
-    
-    id = Column(UUID, primary_key=True)
-    email = Column(String, unique=True)
-
-# Functions (snake_case)
-def get_user_by_id(user_id: UUID) -> User:
-    pass
-
-async def create_user(data: UserCreate) -> User:
-    pass
-
-# Variables (snake_case)
-current_user = get_current_user()
-is_active = True
-
-# Constants (UPPER_SNAKE_CASE)
-MAX_CONNECTIONS = 100
-DEFAULT_PAGE_SIZE = 20
-
-# Private (underscore prefix)
-def _validate_email(email: str) -> bool:
-    pass
-
-_cached_value = None
-```
-
-### Git Commit Convention
-
-Using **Conventional Commits**:
-
-```
-<type>(<scope>): <subject>
-
-<body> (optional)
-
-<footer> (optional)
-```
-
-**Types:**
-
-| Type | Description |
-|------|-------------|
-| `feat` | New feature |
-| `fix` | Bug fix |
-| `docs` | Documentation only |
-| `style` | Formatting, no code change |
-| `refactor` | Code refactoring |
-| `perf` | Performance improvement |
-| `test` | Adding tests |
-| `chore` | Build, configs, etc. |
-| `ci` | CI/CD changes |
-
-**Scopes:**
-
-| Scope | Description |
-|-------|-------------|
-| `landing` | Landing page app |
-| `portal` | Customer portal app |
-| `admin` | Admin portal app |
-| `api` | Backend API |
-| `ui` | Shared UI package |
-| `types` | Shared types package |
-| `deps` | Dependencies |
-
-**Examples:**
-
-```bash
-feat(portal): add automation request form
-fix(api): resolve null pointer in user service
-docs(readme): update installation instructions
-refactor(admin): simplify customer list component
-test(api): add unit tests for billing service
-chore(deps): update Next.js to 14.1.0
-ci: add staging deployment workflow
-```
-
----
-
-## API Design
-
-### RESTful API Structure
-
-```
-Base URL: https://api.aideas.com/v1
-
-# Health
-GET    /health                          # Health check
-
-# Authentication (Clerk webhooks)
-POST   /webhooks/clerk                   # Clerk webhook handler
-
-# Users
-GET    /users/me                         # Get current user
-PATCH  /users/me                         # Update current user
-
-# Organizations
-GET    /organizations/:id                # Get organization
-PATCH  /organizations/:id                # Update organization
-GET    /organizations/:id/members        # List members
-POST   /organizations/:id/members        # Invite member
-DELETE /organizations/:id/members/:uid   # Remove member
-
-# Automations
-GET    /automations                      # List automations (catalog)
-GET    /automations/:id                  # Get automation details
-POST   /automations/:id/request          # Request automation
-
-# Customer Automations (active)
-GET    /customer-automations             # List my automations
-GET    /customer-automations/:id         # Get automation details
-GET    /customer-automations/:id/metrics # Get metrics
-PATCH  /customer-automations/:id/config  # Update config
-
-# Templates (admin only)
-GET    /templates                        # List templates
-POST   /templates                        # Create template
-GET    /templates/:id                    # Get template
-PATCH  /templates/:id                    # Update template
-DELETE /templates/:id                    # Delete template
-
-# Billing
-GET    /billing/subscription             # Get subscription
-POST   /billing/subscription             # Create subscription
-PATCH  /billing/subscription             # Update subscription
-DELETE /billing/subscription             # Cancel subscription
-GET    /billing/invoices                 # List invoices
-GET    /billing/invoices/:id             # Get invoice
-POST   /billing/portal                   # Create Stripe portal session
-
-# Support
-GET    /support/tickets                  # List tickets
-POST   /support/tickets                  # Create ticket
-GET    /support/tickets/:id              # Get ticket
-POST   /support/tickets/:id/messages     # Add message
-
-# Admin endpoints (admin role required)
-GET    /admin/customers                  # List all customers
-GET    /admin/customers/:id              # Get customer details
-GET    /admin/requests                   # List automation requests
-PATCH  /admin/requests/:id               # Update request status
-GET    /admin/analytics                  # Platform analytics
-```
-
-### Request/Response Format
-
-#### Success Response
-
-```json
-{
-  "success": true,
-  "data": {
-    "id": "123e4567-e89b-12d3-a456-426614174000",
-    "name": "John Doe",
-    "email": "john@example.com"
-  },
-  "meta": {
-    "pagination": {
-      "page": 1,
-      "limit": 20,
-      "total": 100,
-      "totalPages": 5
-    }
-  }
-}
-```
-
-#### Error Response
-
-```json
-{
-  "success": false,
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "Validation failed",
-    "details": [
-      {
-        "field": "email",
-        "message": "Invalid email format"
-      }
-    ]
-  }
-}
-```
-
-### HTTP Status Codes
-
-| Code | Usage |
-|------|-------|
-| `200` | Success |
-| `201` | Created |
-| `204` | No Content (delete) |
-| `400` | Bad Request |
-| `401` | Unauthorized |
-| `403` | Forbidden |
-| `404` | Not Found |
-| `409` | Conflict |
-| `422` | Validation Error |
-| `429` | Rate Limited |
-| `500` | Server Error |
-
----
-
-## Database Design
-
-### Core Entities
-
-```sql
--- Organizations (tenants)
-CREATE TABLE organizations (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name VARCHAR(255) NOT NULL,
-    slug VARCHAR(100) UNIQUE NOT NULL,
-    plan VARCHAR(50) DEFAULT 'starter',
-    stripe_customer_id VARCHAR(255),
-    stripe_subscription_id VARCHAR(255),
-    settings JSONB DEFAULT '{}',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Users
-CREATE TABLE users (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    clerk_id VARCHAR(255) UNIQUE NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    name VARCHAR(255),
-    avatar_url VARCHAR(500),
-    locale VARCHAR(10) DEFAULT 'en',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Organization Members (junction)
-CREATE TABLE organization_members (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    organization_id UUID REFERENCES organizations(id) ON DELETE CASCADE,
-    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-    role VARCHAR(50) NOT NULL DEFAULT 'viewer', -- admin, operator, viewer
-    invited_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    joined_at TIMESTAMP,
-    UNIQUE(organization_id, user_id)
-);
-
--- Automation Templates (aideas library)
-CREATE TABLE automation_templates (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name VARCHAR(255) NOT NULL,
-    slug VARCHAR(100) UNIQUE NOT NULL,
-    description TEXT,
-    category VARCHAR(100),
-    config_schema JSONB, -- JSON Schema for configuration
-    is_active BOOLEAN DEFAULT true,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Customer Automations (deployed)
-CREATE TABLE customer_automations (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    organization_id UUID REFERENCES organizations(id) ON DELETE CASCADE,
-    template_id UUID REFERENCES automation_templates(id),
-    name VARCHAR(255) NOT NULL,
-    description TEXT,
-    config JSONB DEFAULT '{}',
-    status VARCHAR(50) DEFAULT 'pending', -- pending, active, paused, error
-    deployed_at TIMESTAMP,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Automation Executions (logs)
-CREATE TABLE automation_executions (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    automation_id UUID REFERENCES customer_automations(id) ON DELETE CASCADE,
-    status VARCHAR(50) NOT NULL, -- success, error
-    started_at TIMESTAMP NOT NULL,
-    completed_at TIMESTAMP,
-    duration_ms INTEGER,
-    input_data JSONB,
-    output_data JSONB,
-    error_message TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Automation Requests
-CREATE TABLE automation_requests (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    organization_id UUID REFERENCES organizations(id) ON DELETE CASCADE,
-    requested_by UUID REFERENCES users(id),
-    template_id UUID REFERENCES automation_templates(id),
-    description TEXT NOT NULL,
-    requirements JSONB,
-    status VARCHAR(50) DEFAULT 'pending', -- pending, in_review, approved, rejected, deployed
-    notes TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Support Tickets
-CREATE TABLE support_tickets (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    organization_id UUID REFERENCES organizations(id) ON DELETE CASCADE,
-    created_by UUID REFERENCES users(id),
-    subject VARCHAR(255) NOT NULL,
-    priority VARCHAR(50) DEFAULT 'normal', -- low, normal, high, urgent
-    status VARCHAR(50) DEFAULT 'open', -- open, in_progress, resolved, closed
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Ticket Messages
-CREATE TABLE ticket_messages (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    ticket_id UUID REFERENCES support_tickets(id) ON DELETE CASCADE,
-    user_id UUID REFERENCES users(id),
-    content TEXT NOT NULL,
-    is_internal BOOLEAN DEFAULT false,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Invoices (synced from Stripe)
-CREATE TABLE invoices (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    organization_id UUID REFERENCES organizations(id) ON DELETE CASCADE,
-    stripe_invoice_id VARCHAR(255) UNIQUE NOT NULL,
-    amount_cents INTEGER NOT NULL,
-    currency VARCHAR(3) DEFAULT 'USD',
-    status VARCHAR(50) NOT NULL,
-    invoice_url VARCHAR(500),
-    invoice_pdf VARCHAR(500),
-    period_start TIMESTAMP,
-    period_end TIMESTAMP,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Indexes
-CREATE INDEX idx_org_members_org ON organization_members(organization_id);
-CREATE INDEX idx_org_members_user ON organization_members(user_id);
-CREATE INDEX idx_customer_automations_org ON customer_automations(organization_id);
-CREATE INDEX idx_automation_executions_automation ON automation_executions(automation_id);
-CREATE INDEX idx_automation_executions_created ON automation_executions(created_at);
-CREATE INDEX idx_automation_requests_org ON automation_requests(organization_id);
-CREATE INDEX idx_support_tickets_org ON support_tickets(organization_id);
-CREATE INDEX idx_invoices_org ON invoices(organization_id);
-```
-
-### Entity Relationships
-
-```
-Organization (1) ──────< (N) OrganizationMember >────── (1) User
-      │
-      │ (1)
-      │
-      ├──────< (N) CustomerAutomation >────── (1) AutomationTemplate
-      │              │
-      │              └──────< (N) AutomationExecution
-      │
-      ├──────< (N) AutomationRequest
-      │
-      ├──────< (N) SupportTicket >────── (N) TicketMessage
-      │
-      └──────< (N) Invoice
-```
-
----
-
-## Security Standards
+## Data Flow
 
 ### Authentication Flow
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    AUTHENTICATION FLOW (Clerk)                          │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   1. User signs in via Clerk (frontend)                                 │
-│   2. Clerk returns session token (JWT)                                  │
-│   3. Frontend includes token in API requests                            │
-│   4. Backend validates token with Clerk                                 │
-│   5. Backend extracts user info and permissions                         │
-│                                                                         │
-│   ┌──────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐      │
-│   │  User    │────►│  Clerk   │────►│ Frontend │────►│  API     │      │
-│   │          │     │          │     │          │     │          │      │
-│   │ Sign In  │     │  Auth    │     │  Token   │     │ Validate │      │
-│   └──────────┘     └──────────┘     └──────────┘     └──────────┘      │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
+1. User visits app.aideas.com/login
+2. Next.js renders login page
+3. User submits credentials
+4. Supabase Auth validates
+5. Supabase returns JWT + refresh token
+6. Next.js stores tokens (httpOnly cookies)
+7. Subsequent requests include JWT
+8. FastAPI validates JWT with Supabase
 ```
 
-### Authorization (Role-Based)
+### Realtime Chat Flow
 
-```python
-# Roles and Permissions
-ROLES = {
-    'admin': [
-        'org:read', 'org:write', 'org:delete',
-        'members:read', 'members:write', 'members:delete',
-        'automations:read', 'automations:write',
-        'billing:read', 'billing:write',
-        'support:read', 'support:write',
-    ],
-    'operator': [
-        'org:read',
-        'members:read',
-        'automations:read', 'automations:write',
-        'support:read', 'support:write',
-    ],
-    'viewer': [
-        'org:read',
-        'automations:read',
-        'support:read',
-    ],
-}
+```
+1. User opens chat in portal
+2. Next.js subscribes to Supabase Realtime channel
+3. User sends message
+4. Message inserted into Supabase DB
+5. Supabase broadcasts to all subscribers
+6. Admin receives notification
+7. Admin responds (same flow)
+8. User sees response instantly
 ```
 
-### Security Measures
+### Automation Request Flow
 
-```python
-# CORS Configuration
-CORS_ORIGINS = [
-    "https://aideas.com",
-    "https://app.aideas.com",
-    "https://admin.aideas.com",
-]
-
-# Rate Limiting
-RATE_LIMITS = {
-    "default": "100/minute",
-    "auth": "10/minute",
-    "api": "1000/hour",
-}
-
-# Security Headers (via middleware)
-SECURITY_HEADERS = {
-    "X-Content-Type-Options": "nosniff",
-    "X-Frame-Options": "DENY",
-    "X-XSS-Protection": "1; mode=block",
-    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
-    "Content-Security-Policy": "default-src 'self'",
-}
+```
+1. User requests automation via portal
+2. Next.js calls FastAPI endpoint
+3. FastAPI creates request in Supabase
+4. FastAPI notifies admin (email/Slack)
+5. Admin implements automation
+6. Admin marks as complete
+7. User sees status update (realtime)
+8. Automation starts running
+9. Metrics flow to dashboard (realtime)
 ```
 
 ---
 
-## Environment Configuration
+## Database Schema (Core Tables)
 
-### Backend (.env)
+```sql
+-- Users (managed by Supabase Auth)
+-- auth.users table is automatic
 
+-- Organizations
+CREATE TABLE organizations (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name TEXT NOT NULL,
+    slug TEXT UNIQUE NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Organization Members
+CREATE TABLE organization_members (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    organization_id UUID REFERENCES organizations(id),
+    user_id UUID REFERENCES auth.users(id),
+    role TEXT NOT NULL CHECK (role IN ('admin', 'operator', 'viewer')),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(organization_id, user_id)
+);
+
+-- Automations
+CREATE TABLE automations (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    organization_id UUID REFERENCES organizations(id),
+    name TEXT NOT NULL,
+    description TEXT,
+    status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'active', 'paused', 'error')),
+    config JSONB,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Automation Executions
+CREATE TABLE automation_executions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    automation_id UUID REFERENCES automations(id),
+    status TEXT CHECK (status IN ('running', 'success', 'error')),
+    started_at TIMESTAMPTZ,
+    completed_at TIMESTAMPTZ,
+    result JSONB,
+    error TEXT
+);
+
+-- Chat Conversations
+CREATE TABLE chat_conversations (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    organization_id UUID REFERENCES organizations(id),
+    status TEXT DEFAULT 'open' CHECK (status IN ('open', 'closed')),
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Chat Messages
+CREATE TABLE chat_messages (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    conversation_id UUID REFERENCES chat_conversations(id),
+    user_id UUID REFERENCES auth.users(id),
+    content TEXT NOT NULL,
+    is_from_admin BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Subscriptions (Stripe)
+CREATE TABLE subscriptions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    organization_id UUID REFERENCES organizations(id),
+    stripe_subscription_id TEXT,
+    stripe_customer_id TEXT,
+    plan TEXT,
+    status TEXT,
+    current_period_end TIMESTAMPTZ,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+---
+
+## Security
+
+### Authentication
+- Supabase Auth (JWT-based)
+- httpOnly cookies for token storage
+- Automatic token refresh
+
+### Authorization
+- Row Level Security (RLS) in Supabase
+- Organization-based access control
+- Role-based permissions (admin/operator/viewer)
+
+### API Security
+- CORS configuration
+- Rate limiting
+- Input validation (Pydantic)
+- HTTPS only
+
+---
+
+## Deployment
+
+### Landing (Vercel/Cloudflare Pages)
+- Auto-deploy on push to `main`
+- Build: SASS compilation
+- CDN: Global edge network
+
+### Frontend (Vercel)
+- Auto-deploy on push to `main`
+- Build: Next.js build
+- Edge functions for middleware
+
+### Backend (Railway)
+- Auto-deploy on push to `main`
+- Docker container
+- Environment variables in Railway
+
+### Database (Supabase)
+- Managed PostgreSQL
+- Migrations via Supabase CLI
+- Automatic backups (Pro plan)
+
+---
+
+## Environment Variables
+
+### Landing
 ```bash
-# Application
-APP_ENV=development  # development, staging, production
-APP_DEBUG=true
-APP_SECRET_KEY=your-secret-key-here
-API_VERSION=v1
+# No env vars needed (static)
+```
 
-# Server
-HOST=0.0.0.0
-PORT=8000
-WORKERS=4
+### Frontend (Next.js)
+```bash
+NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+NEXT_PUBLIC_API_URL=https://api.aideas.com
+```
 
-# Database
-DATABASE_URL=postgresql://user:pass@localhost:5432/aideas
-DATABASE_POOL_SIZE=20
-DATABASE_MAX_OVERFLOW=10
+### Backend (FastAPI)
+```bash
+SUPABASE_URL=https://xxx.supabase.co
+SUPABASE_KEY=eyJ...
+SUPABASE_SERVICE_KEY=eyJ...
 
-# Redis
-REDIS_URL=redis://localhost:6379/0
-CELERY_BROKER_URL=redis://localhost:6379/1
-
-# Clerk
-CLERK_SECRET_KEY=sk_test_...
-CLERK_WEBHOOK_SECRET=whsec_...
-
-# Stripe
-STRIPE_SECRET_KEY=sk_test_...
+STRIPE_SECRET_KEY=sk_live_...
 STRIPE_WEBHOOK_SECRET=whsec_...
-STRIPE_PRICE_STARTER=price_...
-STRIPE_PRICE_PRO=price_...
-STRIPE_PRICE_BUSINESS=price_...
 
-# Email (Resend)
 RESEND_API_KEY=re_...
-EMAIL_FROM=noreply@aideas.com
 
-# Storage (Cloudflare R2)
-R2_ACCOUNT_ID=...
-R2_ACCESS_KEY_ID=...
-R2_SECRET_ACCESS_KEY=...
-R2_BUCKET_NAME=aideas-files
-
-# AI Services
 OPENAI_API_KEY=sk-...
-ANTHROPIC_API_KEY=sk-ant-...
-
-# Monitoring
-SENTRY_DSN=https://...
-
-# CORS
-CORS_ORIGINS=http://localhost:3000,http://localhost:3001,http://localhost:3002
 ```
 
-### Frontend (.env.local)
+---
+
+## Development Workflow
+
+### Local Setup
 
 ```bash
-# API
-NEXT_PUBLIC_API_URL=http://localhost:8000/v1
+# 1. Clone repo
+git clone https://github.com/yourorg/aideas.git
+cd aideas
 
-# Clerk
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
-CLERK_SECRET_KEY=sk_test_...
+# 2. Landing (optional - just open HTML files)
+cd landing
+npm install
+npm run scss:watch
 
-# Stripe
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+# 3. Frontend
+cd web
+npm install
+cp .env.example .env.local
+npm run dev
 
-# Analytics
-NEXT_PUBLIC_POSTHOG_KEY=phc_...
-
-# Sentry
-NEXT_PUBLIC_SENTRY_DSN=https://...
+# 4. Backend
+cd api
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+pip install -r requirements/dev.txt
+cp .env.example .env
+uvicorn src.main:app --reload
 ```
+
+### Access Points (Local)
+
+| Service | URL |
+|---------|-----|
+| Landing | Open `landing/index.html` in browser |
+| Frontend | http://localhost:3000 |
+| Backend | http://localhost:8000 |
+| API Docs | http://localhost:8000/docs |
 
 ---
 
-## Environments
+## Monitoring
 
-### Development
-
-```yaml
-Purpose: Local development
-URLs:
-  - Landing: http://localhost:3000
-  - Portal: http://localhost:3001
-  - Admin: http://localhost:3002
-  - API: http://localhost:8000
-
-Database: Local PostgreSQL (Docker)
-Redis: Local Redis (Docker)
-Debug: Enabled
-Hot Reload: Enabled
-External Services: Test mode / Mocked
-```
-
-### Staging
-
-```yaml
-Purpose: Pre-production testing
-URLs:
-  - Landing: https://staging.aideas.com
-  - Portal: https://app.staging.aideas.com
-  - Admin: https://admin.staging.aideas.com
-  - API: https://api.staging.aideas.com
-
-Database: Railway PostgreSQL (staging)
-Redis: Railway Redis (staging)
-Deploy Trigger: Push to 'develop' branch
-External Services: Test mode
-```
-
-### Production
-
-```yaml
-Purpose: Live application
-URLs:
-  - Landing: https://aideas.com
-  - Portal: https://app.aideas.com
-  - Admin: https://admin.aideas.com
-  - API: https://api.aideas.com
-
-Database: Railway PostgreSQL (production)
-Redis: Railway Redis (production)
-Deploy Trigger: Push to 'main' branch (manual approval)
-External Services: Live mode
-Backups: Automated daily
-```
+- **Errors:** Sentry (frontend + backend)
+- **Uptime:** Better Uptime / UptimeRobot
+- **Logs:** Railway logs (backend), Vercel logs (frontend)
+- **Database:** Supabase dashboard
+- **Analytics:** Vercel Analytics (frontend)
 
 ---
 
-## CI/CD Pipeline
+## Document History
 
-### GitHub Actions Workflows
-
-#### CI (on Pull Request)
-
-```yaml
-# .github/workflows/ci.yml
-name: CI
-
-on:
-  pull_request:
-    branches: [main, develop]
-
-jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v4
-      - run: pnpm install
-      - run: pnpm lint
-
-  typecheck:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v4
-      - run: pnpm install
-      - run: pnpm typecheck
-
-  test-frontend:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v4
-      - run: pnpm install
-      - run: pnpm test --filter=./apps/*
-
-  test-backend:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - run: pip install -r apps/api/requirements/dev.txt
-      - run: pytest apps/api/tests
-
-  build:
-    runs-on: ubuntu-latest
-    needs: [lint, typecheck, test-frontend, test-backend]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v4
-      - run: pnpm install
-      - run: pnpm build
-```
-
-#### Deploy Staging (on merge to develop)
-
-```yaml
-# .github/workflows/deploy-staging.yml
-name: Deploy Staging
-
-on:
-  push:
-    branches: [develop]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      # Deploy Frontend to Vercel
-      - name: Deploy Landing (Staging)
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_LANDING_PROJECT_ID }}
-          working-directory: ./apps/landing
-          
-      # Deploy Backend to Railway
-      - name: Deploy API (Staging)
-        uses: bervProject/railway-deploy@main
-        with:
-          railway_token: ${{ secrets.RAILWAY_TOKEN }}
-          service: api-staging
-          
-      # Notify
-      - name: Notify Slack
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          text: 'Staging deployed!'
-```
-
-#### Deploy Production (on merge to main)
-
-```yaml
-# .github/workflows/deploy-production.yml
-name: Deploy Production
-
-on:
-  push:
-    branches: [main]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    environment: production  # Requires approval
-    steps:
-      - uses: actions/checkout@v4
-      
-      # Deploy with --prod flag
-      - name: Deploy Landing (Production)
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-args: '--prod'
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_LANDING_PROJECT_ID }}
-          
-      # Similar for portal, admin, api...
-      
-      # Post-deploy verification
-      - name: Health Check
-        run: |
-          curl -f https://api.aideas.com/health || exit 1
-          
-      # Notify
-      - name: Notify Slack
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          text: 'Production deployed!'
-```
+| Version | Date | Changes |
+|---------|------|---------|
+| 1.0 | Jan 2026 | Initial (Next.js monorepo) |
+| 2.0 | Feb 2026 | FastAPI + Jinja2 SSR |
+| 3.0 | Feb 2026 | **Separated architecture:** Static landing + Next.js frontend + FastAPI backend |
 
 ---
 
-## Performance Targets
+## Quick Reference
 
-```yaml
-# API Performance
-Response Time (p95): < 200ms
-Response Time (p99): < 500ms
-Error Rate: < 0.1%
-Availability: 99.9%
+**Stack:**
+- Landing: Static HTML/CSS/JS
+- Frontend: Next.js 14 + React 18 + TypeScript
+- Backend: FastAPI + Python 3.12
+- Database: Supabase (PostgreSQL)
+- Auth: Supabase Auth
+- Realtime: Supabase Realtime
+- Hosting: Vercel (landing + frontend) + Railway (backend)
 
-# Frontend Performance
-First Contentful Paint: < 1.5s
-Largest Contentful Paint: < 2.5s
-Time to Interactive: < 3.5s
-Cumulative Layout Shift: < 0.1
-Lighthouse Score: > 90
+**Monthly Cost:** ~$30-65
 
-# Database
-Query Time (p95): < 50ms
-Connection Pool: 20 connections
-Max Connections: 100
-```
-
----
-
-## Monitoring & Logging
-
-### Error Tracking (Sentry)
-
-```python
-# Backend
-import sentry_sdk
-from sentry_sdk.integrations.fastapi import FastApiIntegration
-
-sentry_sdk.init(
-    dsn=settings.SENTRY_DSN,
-    environment=settings.APP_ENV,
-    integrations=[FastApiIntegration()],
-    traces_sample_rate=0.1,
-)
-```
-
-### Structured Logging
-
-```python
-# Backend logging format
-{
-    "timestamp": "2026-01-28T12:00:00Z",
-    "level": "INFO",
-    "message": "User created",
-    "context": {
-        "user_id": "123",
-        "organization_id": "456",
-        "request_id": "req_789"
-    }
-}
-```
-
----
-
-## Backup & Recovery
-
-```yaml
-Database Backups:
-  Frequency: Daily
-  Retention: 30 days
-  Storage: Cloudflare R2 (separate bucket)
-  
-Recovery:
-  RTO: 4 hours
-  RPO: 24 hours
-  Process: Documented in DEPLOYMENT.md
-```
-
----
-
-## Document Maintenance
-
-| Item | Schedule |
-|------|----------|
-| Review this document | Quarterly |
-| Update after major changes | Immediately |
-| Security audit | Bi-annually |
-
-### Version History
-
-| Version | Date | Changes | Author |
-|---------|------|---------|--------|
-| 1.0 | Jan 2026 | Initial architecture | aideas Team |
-
----
-
-**Last Updated:** January 2026
-**Next Review:** April 2026
+**Key Principle:** Customers don't build - they request. AIDEAS implements.
