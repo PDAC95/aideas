@@ -8,9 +8,9 @@
 ### Foundation
 
 - [ ] **FOUN-01**: All HTML pages use `lang="en"` (not `zxx`) with dynamic update via i18next
-- [ ] **FOUN-02**: SCSS override pattern uses `_variables-aideas.scss` and `_aideas.scss` without editing template files
+- [x] **FOUN-02**: SCSS override pattern uses `_variables-aideas.scss` and `_aideas.scss` without editing template files
 - [ ] **FOUN-03**: All template placeholder content (preloader text, demo links, agency copy) is replaced with AIDEAS content
-- [ ] **FOUN-04**: Google Fonts loads Outfit with `display=swap` and preconnect hints
+- [x] **FOUN-04**: Google Fonts loads Outfit with `display=swap` and preconnect hints
 - [ ] **FOUN-05**: All scripts load with `defer` attribute
 - [ ] **FOUN-06**: File structure matches architecture spec (index.html, automations.html, pricing.html, contact.html)
 
@@ -135,9 +135,9 @@
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | FOUN-01 | Phase 1 | Pending |
-| FOUN-02 | Phase 1 | Pending |
+| FOUN-02 | Phase 1 | Complete |
 | FOUN-03 | Phase 1 | Pending |
-| FOUN-04 | Phase 1 | Pending |
+| FOUN-04 | Phase 1 | Complete |
 | FOUN-05 | Phase 1 | Pending |
 | FOUN-06 | Phase 1 | Pending |
 | I18N-01 | Phase 2 | Pending |

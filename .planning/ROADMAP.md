@@ -16,7 +16,7 @@
 **Plans:** 3 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Build system setup (npm + sass) and SCSS override architecture
+- [x] 01-01-PLAN.md — Build system setup (npm + sass) and SCSS override architecture
 - [ ] 01-02-PLAN.md — Clean index.html template with AIDEAS branding and main.js cursor fix
 - [ ] 01-03-PLAN.md — Create 4 HTML pages, delete unused template pages, verify SWUP navigation
 
@@ -24,7 +24,7 @@ Plans:
 - [ ] 4 HTML pages exist: index.html, automations.html, pricing.html, contact.html
 - [ ] All pages use `lang="en"` (not `zxx`)
 - [ ] Preloader, navigation, footer contain AIDEAS content (no template placeholders)
-- [ ] SCSS override files created (`_variables-aideas.scss`, `_aideas.scss`)
+- [x] SCSS override files created (`_variables-aideas.scss`, `_aideas.scss`) — done in 01-01
 - [ ] Scripts load with `defer`, fonts use `display=swap` with preconnect
 - [ ] Custom cursor disabled on touch devices
 - [ ] All CTAs link to app.aideas.com/signup with `data-no-swup`
@@ -201,5 +201,5 @@ Phase 1 (Foundation)
 
 ---
 *Roadmap created: 2026-03-03*
-*Last updated: 2026-03-03 after initial definition*
+*Last updated: 2026-03-03 — 01-01 complete (npm build + SCSS override architecture)*
 *Phase 1 planned: 2026-03-03 — 3 plans in 2 waves*
