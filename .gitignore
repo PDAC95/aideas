@@ -79,6 +79,7 @@ template-source/
 # Compiled CSS (regenerated from SCSS)
 landing/assets/css/main.css
 landing/assets/css/main.min.css
+landing/css/style.css
 
 # Keep .env.example
 !.env.example
