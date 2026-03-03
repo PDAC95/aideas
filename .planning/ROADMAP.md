@@ -13,6 +13,13 @@
 
 **Requirements:** FOUN-01, FOUN-02, FOUN-03, FOUN-04, FOUN-05, FOUN-06, NAVL-01, NAVL-05, NAVL-06, NAVL-07, PERF-02
 
+**Plans:** 3 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Build system setup (npm + sass) and SCSS override architecture
+- [ ] 01-02-PLAN.md — Clean index.html template with AIDEAS branding and main.js cursor fix
+- [ ] 01-03-PLAN.md — Create 4 HTML pages, delete unused template pages, verify SWUP navigation
+
 **Success criteria:**
 - [ ] 4 HTML pages exist: index.html, automations.html, pricing.html, contact.html
 - [ ] All pages use `lang="en"` (not `zxx`)
@@ -195,3 +202,4 @@ Phase 1 (Foundation)
 ---
 *Roadmap created: 2026-03-03*
 *Last updated: 2026-03-03 after initial definition*
+*Phase 1 planned: 2026-03-03 — 3 plans in 2 waves*
