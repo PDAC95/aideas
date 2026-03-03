@@ -17,7 +17,7 @@
 
 Plans:
 - [x] 01-01-PLAN.md — Build system setup (npm + sass) and SCSS override architecture
-- [ ] 01-02-PLAN.md — Clean index.html template with AIDEAS branding and main.js cursor fix
+- [x] 01-02-PLAN.md — Clean index.html template with AIDEAS branding and main.js cursor fix
 - [ ] 01-03-PLAN.md — Create 4 HTML pages, delete unused template pages, verify SWUP navigation
 
 **Success criteria:**
@@ -201,5 +201,5 @@ Phase 1 (Foundation)
 
 ---
 *Roadmap created: 2026-03-03*
-*Last updated: 2026-03-03 — 01-01 complete (npm build + SCSS override architecture)*
+*Last updated: 2026-03-03 — 01-02 complete (AIDEAS branding: home-1.html + main.js cursor guard)*
 *Phase 1 planned: 2026-03-03 — 3 plans in 2 waves*

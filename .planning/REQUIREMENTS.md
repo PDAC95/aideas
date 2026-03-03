@@ -7,11 +7,11 @@
 
 ### Foundation
 
-- [ ] **FOUN-01**: All HTML pages use `lang="en"` (not `zxx`) with dynamic update via i18next
+- [x] **FOUN-01**: All HTML pages use `lang="en"` (not `zxx`) with dynamic update via i18next
 - [x] **FOUN-02**: SCSS override pattern uses `_variables-aideas.scss` and `_aideas.scss` without editing template files
-- [ ] **FOUN-03**: All template placeholder content (preloader text, demo links, agency copy) is replaced with AIDEAS content
+- [x] **FOUN-03**: All template placeholder content (preloader text, demo links, agency copy) is replaced with AIDEAS content
 - [x] **FOUN-04**: Google Fonts loads Outfit with `display=swap` and preconnect hints
-- [ ] **FOUN-05**: All scripts load with `defer` attribute
+- [x] **FOUN-05**: All scripts load with `defer` attribute
 - [ ] **FOUN-06**: File structure matches architecture spec (index.html, automations.html, pricing.html, contact.html)
 
 ### Internationalization
@@ -69,13 +69,13 @@
 
 ### Navigation & Layout
 
-- [ ] **NAVL-01**: Shared navigation across all pages with AIDEAS logo + links (Home, Automations, Pricing, Contact) + language selector + CTA button
+- [x] **NAVL-01**: Shared navigation across all pages with AIDEAS logo + links (Home, Automations, Pricing, Contact) + language selector + CTA button
 - [ ] **NAVL-02**: SWUP page transitions work between all pages with proper GSAP/Swiper/i18next reinit
 - [ ] **NAVL-03**: ScrollTrigger instances killed before reinit on every SWUP transition (no memory leak)
 - [ ] **NAVL-04**: Swiper instances destroyed before reinit on every SWUP transition
 - [ ] **NAVL-05**: Footer with nav links, social media links, language selector, legal links (Privacy, Terms)
-- [ ] **NAVL-06**: Custom cursor disabled on touch devices (`pointer: coarse` media query)
-- [ ] **NAVL-07**: All CTAs link to app.aideas.com/signup with `data-no-swup` attribute
+- [x] **NAVL-06**: Custom cursor disabled on touch devices (`pointer: coarse` media query)
+- [x] **NAVL-07**: All CTAs link to app.aideas.com/signup with `data-no-swup` attribute
 
 ### Responsive & Performance
 
@@ -134,11 +134,11 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FOUN-01 | Phase 1 | Pending |
+| FOUN-01 | Phase 1 | Complete |
 | FOUN-02 | Phase 1 | Complete |
-| FOUN-03 | Phase 1 | Pending |
+| FOUN-03 | Phase 1 | Complete |
 | FOUN-04 | Phase 1 | Complete |
-| FOUN-05 | Phase 1 | Pending |
+| FOUN-05 | Phase 1 | Complete |
 | FOUN-06 | Phase 1 | Pending |
 | I18N-01 | Phase 2 | Pending |
 | I18N-02 | Phase 2 | Pending |
@@ -178,13 +178,13 @@
 | CONT-05 | Phase 6 | Pending |
 | CONT-06 | Phase 6 | Pending |
 | CONT-07 | Phase 6 | Pending |
-| NAVL-01 | Phase 1 | Pending |
+| NAVL-01 | Phase 1 | Complete |
 | NAVL-02 | Phase 2 | Pending |
 | NAVL-03 | Phase 2 | Pending |
 | NAVL-04 | Phase 2 | Pending |
 | NAVL-05 | Phase 1 | Pending |
-| NAVL-06 | Phase 1 | Pending |
-| NAVL-07 | Phase 1 | Pending |
+| NAVL-06 | Phase 1 | Complete |
+| NAVL-07 | Phase 1 | Complete |
 | PERF-01 | Phase 7 | Pending |
 | PERF-02 | Phase 1 | Pending |
 | PERF-03 | Phase 4 | Pending |

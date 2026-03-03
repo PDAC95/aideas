@@ -1,14 +1,14 @@
 # Project State: AIDEAS Landing Page
 
-**Current phase:** 01-template-cleanup-foundation — Plan 01 complete, Plan 02 next
-**Last action:** Completed 01-01 (npm build system + SCSS override architecture)
+**Current phase:** 01-template-cleanup-foundation — Plan 02 complete, Plan 03 next
+**Last action:** Completed 01-02 (AIDEAS branding: home-1.html + main.js cursor guard)
 **Updated:** 2026-03-03
 
 ## Progress
 
 | Phase | Name | Status |
 |-------|------|--------|
-| 1 | Template Cleanup & Foundation | In progress (1/N plans done) |
+| 1 | Template Cleanup & Foundation | In progress (2/N plans done) |
 | 2 | i18next Integration | Not started |
 | 3 | Home Page | Not started |
 | 4 | Automations Catalog | Not started |
@@ -22,7 +22,7 @@
 - SWUP v2 reinit hook: `swup:contentReplaced` at main.js line 616
 - Critical fix needed: ScrollTrigger.getAll().kill() before reinit
 - Critical fix needed: Contact form has no action — integrate Formspree
-- Critical fix needed: lang="zxx" → lang="en" on all pages
+- lang="en" fixed in home-1.html (DONE in plan 02); other pages will be copies from this template
 - i18next: CDN via unpkg, 5 namespaces x 4 languages = 20 JSON files
 - Automations data: data/automations.json master file (150+ entries)
 - SCSS: override in _variables-aideas.scss and _aideas.scss, never edit template files
@@ -42,9 +42,12 @@
 | 2026-03-03 | Paginate catalog (24 items) | Prevents DOM bloat with 150+ cards |
 | 2026-03-03 | sass CLI npm devDependency over global | Reproducible, no global install required |
 | 2026-03-03 | Keep @import syntax (not @use) | Matches existing template files; mixing causes issues |
+| 2026-03-03 | defer on all 9 scripts | Safe: main.js uses jQuery $(function(){}) = DOMContentLoaded |
+| 2026-03-03 | data-no-swup on all external CTAs | Prevents SWUP from intercepting external navigation |
+| 2026-03-03 | pointer:coarse guard for cursor | Preserves desktop UX, disables phantom cursor on touch devices |
 
 ## Last Session
 
-- **Stopped at:** Completed 01-01-PLAN.md (npm build system + SCSS override architecture)
-- **Commits:** 815d67c (chore: npm build), 7241185 (feat: SCSS override architecture)
-- **Requirements completed:** FOUN-02, FOUN-04
+- **Stopped at:** Completed 01-02-PLAN.md (AIDEAS branding: home-1.html + main.js cursor guard)
+- **Commits:** 0f84cdc (feat: head fixes), 175ea83 (feat: branding), fe9124c (feat: footer + cursor)
+- **Requirements completed:** FOUN-01, FOUN-03, FOUN-04, FOUN-05, NAVL-01, NAVL-06, NAVL-07
