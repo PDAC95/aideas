@@ -12,7 +12,7 @@
 - [x] **FOUN-03**: All template placeholder content (preloader text, demo links, agency copy) is replaced with AIDEAS content
 - [x] **FOUN-04**: Google Fonts loads Outfit with `display=swap` and preconnect hints
 - [x] **FOUN-05**: All scripts load with `defer` attribute
-- [ ] **FOUN-06**: File structure matches architecture spec (index.html, automations.html, pricing.html, contact.html)
+- [x] **FOUN-06**: File structure matches architecture spec (index.html, automations.html, pricing.html, contact.html)
 
 ### Internationalization
 
@@ -73,14 +73,14 @@
 - [ ] **NAVL-02**: SWUP page transitions work between all pages with proper GSAP/Swiper/i18next reinit
 - [ ] **NAVL-03**: ScrollTrigger instances killed before reinit on every SWUP transition (no memory leak)
 - [ ] **NAVL-04**: Swiper instances destroyed before reinit on every SWUP transition
-- [ ] **NAVL-05**: Footer with nav links, social media links, language selector, legal links (Privacy, Terms)
+- [x] **NAVL-05**: Footer with nav links, social media links, language selector, legal links (Privacy, Terms)
 - [x] **NAVL-06**: Custom cursor disabled on touch devices (`pointer: coarse` media query)
 - [x] **NAVL-07**: All CTAs link to app.aideas.com/signup with `data-no-swup` attribute
 
 ### Responsive & Performance
 
 - [ ] **PERF-01**: Mobile responsive on all pages (Bootstrap grid breakpoints: 576, 768, 992, 1200)
-- [ ] **PERF-02**: Hamburger menu works on mobile with AIDEAS nav links
+- [x] **PERF-02**: Hamburger menu works on mobile with AIDEAS nav links
 - [ ] **PERF-03**: Catalog filter tabs horizontally scrollable on mobile
 - [ ] **PERF-04**: Pricing cards stack vertically on mobile with recommended plan first
 - [ ] **PERF-05**: Images use `loading="lazy"` below the fold
@@ -139,7 +139,7 @@
 | FOUN-03 | Phase 1 | Complete |
 | FOUN-04 | Phase 1 | Complete |
 | FOUN-05 | Phase 1 | Complete |
-| FOUN-06 | Phase 1 | Pending |
+| FOUN-06 | Phase 1 | Complete |
 | I18N-01 | Phase 2 | Pending |
 | I18N-02 | Phase 2 | Pending |
 | I18N-03 | Phase 2 | Pending |
@@ -182,11 +182,11 @@
 | NAVL-02 | Phase 2 | Pending |
 | NAVL-03 | Phase 2 | Pending |
 | NAVL-04 | Phase 2 | Pending |
-| NAVL-05 | Phase 1 | Pending |
+| NAVL-05 | Phase 1 | Complete |
 | NAVL-06 | Phase 1 | Complete |
 | NAVL-07 | Phase 1 | Complete |
 | PERF-01 | Phase 7 | Pending |
-| PERF-02 | Phase 1 | Pending |
+| PERF-02 | Phase 1 | Complete |
 | PERF-03 | Phase 4 | Pending |
 | PERF-04 | Phase 5 | Pending |
 | PERF-05 | Phase 7 | Pending |

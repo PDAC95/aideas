@@ -1,14 +1,14 @@
 # Project State: AIDEAS Landing Page
 
-**Current phase:** 01-template-cleanup-foundation — Plan 02 complete, Plan 03 next
-**Last action:** Completed 01-02 (AIDEAS branding: home-1.html + main.js cursor guard)
+**Current phase:** 01-template-cleanup-foundation — Plan 03 complete, Plan 04 next
+**Last action:** Completed 01-03 (4 pages + 404 with AIDEAS shell, 16 template pages deleted; awaiting SWUP human verification)
 **Updated:** 2026-03-03
 
 ## Progress
 
 | Phase | Name | Status |
 |-------|------|--------|
-| 1 | Template Cleanup & Foundation | In progress (2/N plans done) |
+| 1 | Template Cleanup & Foundation | In progress (3/N plans done) |
 | 2 | i18next Integration | Not started |
 | 3 | Home Page | Not started |
 | 4 | Automations Catalog | Not started |
@@ -22,7 +22,9 @@
 - SWUP v2 reinit hook: `swup:contentReplaced` at main.js line 616
 - Critical fix needed: ScrollTrigger.getAll().kill() before reinit
 - Critical fix needed: Contact form has no action — integrate Formspree
-- lang="en" fixed in home-1.html (DONE in plan 02); other pages will be copies from this template
+- lang="en" fixed in home-1.html (DONE in plan 02); all 5 pages now created from this template (DONE in plan 03)
+- home-1.html renamed to index.html; 16 template pages deleted (DONE in plan 03)
+- 4 AIDEAS pages + 404.html with correct per-page active states (DONE in plan 03)
 - i18next: CDN via unpkg, 5 namespaces x 4 languages = 20 JSON files
 - Automations data: data/automations.json master file (150+ entries)
 - SCSS: override in _variables-aideas.scss and _aideas.scss, never edit template files
@@ -45,9 +47,11 @@
 | 2026-03-03 | defer on all 9 scripts | Safe: main.js uses jQuery $(function(){}) = DOMContentLoaded |
 | 2026-03-03 | data-no-swup on all external CTAs | Prevents SWUP from intercepting external navigation |
 | 2026-03-03 | pointer:coarse guard for cursor | Preserves desktop UX, disables phantom cursor on touch devices |
+| 2026-03-03 | contact.html full rewrite | Old template had Ashley dropdowns/footer; fresh write safer than patching |
+| 2026-03-03 | 404.html keep banner content | mil-404-banner structure is template-agnostic; only shell replaced |
 
 ## Last Session
 
-- **Stopped at:** Completed 01-02-PLAN.md (AIDEAS branding: home-1.html + main.js cursor guard)
-- **Commits:** 0f84cdc (feat: head fixes), 175ea83 (feat: branding), fe9124c (feat: footer + cursor)
-- **Requirements completed:** FOUN-01, FOUN-03, FOUN-04, FOUN-05, NAVL-01, NAVL-06, NAVL-07
+- **Stopped at:** Checkpoint 01-03-PLAN.md Task 3 (SWUP visual verification — awaiting human)
+- **Commits:** 1ce17d6 (feat: index/automations/pricing), 5b23618 (feat: contact/404/delete pages)
+- **Requirements completed:** FOUN-06, NAVL-05, PERF-02
