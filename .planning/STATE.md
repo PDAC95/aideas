@@ -1,57 +1,61 @@
-# Project State: AIDEAS Landing Page
+# Project State
 
-**Current phase:** 01-template-cleanup-foundation — Plan 03 complete, Plan 04 next
-**Last action:** Completed 01-03 (4 pages + 404 with AIDEAS shell, 16 template pages deleted; awaiting SWUP human verification)
-**Updated:** 2026-03-03
+## Project Reference
 
-## Progress
+See: .planning/PROJECT.md (updated 2026-03-05)
 
-| Phase | Name | Status |
-|-------|------|--------|
-| 1 | Template Cleanup & Foundation | In progress (3/N plans done) |
-| 2 | i18next Integration | Not started |
-| 3 | Home Page | Not started |
-| 4 | Automations Catalog | Not started |
-| 5 | Pricing Page | Not started |
-| 6 | Contact Page | Not started |
-| 7 | Polish, SEO & Deploy | Not started |
+**Core value:** Customers can monitor automations, request new ones, and communicate with the AIDEAS team from a single dashboard that proves the ROI of their subscription
+**Current focus:** Phase 1 — API Foundation
 
-## Key Context
+## Current Position
 
-- Template: Ashley (millerDigitalDesign) — dark theme, orange accent, `mil-` CSS prefix
-- SWUP v2 reinit hook: `swup:contentReplaced` at main.js line 616
-- Critical fix needed: ScrollTrigger.getAll().kill() before reinit
-- Critical fix needed: Contact form has no action — integrate Formspree
-- lang="en" fixed in home-1.html (DONE in plan 02); all 5 pages now created from this template (DONE in plan 03)
-- home-1.html renamed to index.html; 16 template pages deleted (DONE in plan 03)
-- 4 AIDEAS pages + 404.html with correct per-page active states (DONE in plan 03)
-- i18next: CDN via unpkg, 5 namespaces x 4 languages = 20 JSON files
-- Automations data: data/automations.json master file (150+ entries)
-- SCSS: override in _variables-aideas.scss and _aideas.scss, never edit template files
-- Build: `npm run build` in landing/ (sass CLI) — replaces Prepros GUI
+Phase: 1 of 6 (API Foundation)
+Plan: 0 of 2 in current phase
+Status: Ready to plan
+Last activity: 2026-03-05 — Roadmap created, phases derived from 54 v1 requirements
 
-## Decisions Log
+Progress: [░░░░░░░░░░] 0%
 
-| Date | Decision | Rationale |
-|------|----------|-----------|
-| 2026-03-03 | Multi-page (not single-page) | Better SEO, matches template structure |
-| 2026-03-03 | i18next for i18n | Industry standard, scalable, namespace support |
-| 2026-03-03 | Keep dark + orange aesthetic | Fits AI/automation brand positioning |
-| 2026-03-03 | 8-10 automation categories | Balanced: impressive without overwhelming |
-| 2026-03-03 | CTAs → app.aideas.com/signup | Consistent with PRD architecture |
-| 2026-03-03 | Skip hreflang for MVP | Client-side i18n = single-URL per page |
-| 2026-03-03 | Formspree for form backend | Simplest static form solution |
-| 2026-03-03 | Paginate catalog (24 items) | Prevents DOM bloat with 150+ cards |
-| 2026-03-03 | sass CLI npm devDependency over global | Reproducible, no global install required |
-| 2026-03-03 | Keep @import syntax (not @use) | Matches existing template files; mixing causes issues |
-| 2026-03-03 | defer on all 9 scripts | Safe: main.js uses jQuery $(function(){}) = DOMContentLoaded |
-| 2026-03-03 | data-no-swup on all external CTAs | Prevents SWUP from intercepting external navigation |
-| 2026-03-03 | pointer:coarse guard for cursor | Preserves desktop UX, disables phantom cursor on touch devices |
-| 2026-03-03 | contact.html full rewrite | Old template had Ashley dropdowns/footer; fresh write safer than patching |
-| 2026-03-03 | 404.html keep banner content | mil-404-banner structure is template-agnostic; only shell replaced |
+## Performance Metrics
 
-## Last Session
+**Velocity:**
+- Total plans completed: 0
+- Average duration: —
+- Total execution time: 0 hours
 
-- **Stopped at:** Checkpoint 01-03-PLAN.md Task 3 (SWUP visual verification — awaiting human)
-- **Commits:** 1ce17d6 (feat: index/automations/pricing), 5b23618 (feat: contact/404/delete pages)
-- **Requirements completed:** FOUN-06, NAVL-05, PERF-02
+**By Phase:**
+
+| Phase | Plans | Total | Avg/Plan |
+|-------|-------|-------|----------|
+| - | - | - | - |
+
+**Recent Trend:**
+- Last 5 plans: —
+- Trend: —
+
+*Updated after each plan completion*
+
+## Accumulated Context
+
+### Decisions
+
+Decisions are logged in PROJECT.md Key Decisions table.
+Recent decisions affecting current work:
+
+- [Init]: Supabase for auth + DB + realtime (single service, reduces complexity)
+- [Init]: FastAPI over Next.js API routes (better for background jobs, Stripe webhooks, Python ecosystem)
+- [Init]: Managed service model — customers monitor and request, not build
+
+### Pending Todos
+
+None yet.
+
+### Blockers/Concerns
+
+None yet.
+
+## Session Continuity
+
+Last session: 2026-03-05
+Stopped at: Roadmap written, STATE.md initialized, REQUIREMENTS.md traceability updated — ready to run /gsd:plan-phase 1
+Resume file: None

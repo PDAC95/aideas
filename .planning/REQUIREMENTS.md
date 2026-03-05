@@ -132,13 +132,66 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| — | — | — |
+| API-01 | Phase 1 | Pending |
+| API-02 | Phase 1 | Pending |
+| API-03 | Phase 1 | Pending |
+| API-04 | Phase 1 | Pending |
+| API-05 | Phase 1 | Pending |
+| API-06 | Phase 1 | Pending |
+| API-07 | Phase 1 | Pending |
+| API-08 | Phase 1 | Pending |
+| API-09 | Phase 1 | Pending |
+| DB-01 | Phase 2 | Pending |
+| DB-02 | Phase 2 | Pending |
+| DB-03 | Phase 2 | Pending |
+| DB-04 | Phase 2 | Pending |
+| DB-05 | Phase 2 | Pending |
+| DB-06 | Phase 2 | Pending |
+| DB-07 | Phase 2 | Pending |
+| DB-08 | Phase 2 | Pending |
+| DB-09 | Phase 2 | Pending |
+| DB-10 | Phase 2 | Pending |
+| DB-11 | Phase 2 | Pending |
+| DB-12 | Phase 2 | Pending |
+| DB-13 | Phase 2 | Pending |
+| AUTH-01 | Phase 3 | Pending |
+| AUTH-02 | Phase 3 | Pending |
+| AUTH-03 | Phase 3 | Pending |
+| AUTH-04 | Phase 3 | Pending |
+| AUTH-05 | Phase 3 | Pending |
+| AUTH-06 | Phase 3 | Pending |
+| REG-01 | Phase 4 | Pending |
+| REG-02 | Phase 4 | Pending |
+| REG-03 | Phase 4 | Pending |
+| REG-04 | Phase 4 | Pending |
+| REG-05 | Phase 4 | Pending |
+| REG-06 | Phase 4 | Pending |
+| REG-07 | Phase 4 | Pending |
+| REG-08 | Phase 4 | Pending |
+| LOGIN-01 | Phase 5 | Pending |
+| LOGIN-02 | Phase 5 | Pending |
+| LOGIN-03 | Phase 5 | Pending |
+| LOGIN-04 | Phase 5 | Pending |
+| LOGIN-05 | Phase 5 | Pending |
+| LOGIN-06 | Phase 5 | Pending |
+| LOGIN-07 | Phase 5 | Pending |
+| PWD-01 | Phase 6 | Pending |
+| PWD-02 | Phase 6 | Pending |
+| PWD-03 | Phase 6 | Pending |
+| PWD-04 | Phase 6 | Pending |
+| PWD-05 | Phase 6 | Pending |
+| PWD-06 | Phase 6 | Pending |
+| VERIFY-01 | Phase 6 | Pending |
+| VERIFY-02 | Phase 6 | Pending |
+| VERIFY-03 | Phase 6 | Pending |
+| VERIFY-04 | Phase 6 | Pending |
+| VERIFY-05 | Phase 6 | Pending |
 
 **Coverage:**
-- v1 requirements: 47 total
-- Mapped to phases: 0
-- Unmapped: 47
+- v1 requirements: 54 total
+- Mapped to phases: 54
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-05*
-*Last updated: 2026-03-05 after initial definition*
+*Last updated: 2026-03-05 after roadmap creation*
