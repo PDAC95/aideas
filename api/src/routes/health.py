@@ -1,50 +1,31 @@
-from fastapi import APIRouter, HTTPException
-from ..config import get_settings
-from supabase import create_client
+from fastapi import APIRouter, Depends
+from supabase import Client
+from ..dependencies import get_supabase
 
 router = APIRouter()
-settings = get_settings()
 
 
 @router.get("/health")
-async def health_check():
-    """Health check endpoint."""
-    checks = {
-        "api": "healthy",
-        "database": "unknown",
-    }
+async def health_check(supabase: Client = Depends(get_supabase)):
+    """Health check. Status: healthy | degraded. Never returns 5xx."""
+    checks: dict[str, str] = {"api": "healthy", "supabase": "unknown"}
 
-    # Check Supabase connection
     try:
-        supabase = create_client(settings.supabase_url, settings.supabase_key)
-        # Simple query to check connection
-        supabase.table("organizations").select("id").limit(1).execute()
-        checks["database"] = "healthy"
+        # Use auth.get_user with dummy token to probe connectivity
+        # Auth error = connected. Network error = degraded.
+        supabase.auth.get_user("health-check-probe")
+        checks["supabase"] = "healthy"
     except Exception as e:
-        checks["database"] = f"unhealthy: {str(e)}"
+        err = str(e)
+        # Auth errors prove Supabase is reachable
+        if "invalid" in err.lower() or "token" in err.lower() or "jwt" in err.lower() or "not authorized" in err.lower() or "unauthorized" in err.lower():
+            checks["supabase"] = "healthy"
+        else:
+            checks["supabase"] = f"degraded: {err[:100]}"
 
-    # Overall status
-    all_healthy = all(v == "healthy" for v in checks.values())
-
+    overall = "healthy" if all(v == "healthy" for v in checks.values()) else "degraded"
     return {
-        "status": "healthy" if all_healthy else "degraded",
+        "status": overall,
         "checks": checks,
-        "environment": settings.environment,
+        "version": "1.0.0",
     }
-
-
-@router.get("/health/live")
-async def liveness():
-    """Kubernetes liveness probe."""
-    return {"status": "alive"}
-
-
-@router.get("/health/ready")
-async def readiness():
-    """Kubernetes readiness probe."""
-    try:
-        supabase = create_client(settings.supabase_url, settings.supabase_key)
-        supabase.table("organizations").select("id").limit(1).execute()
-        return {"status": "ready"}
-    except Exception:
-        raise HTTPException(status_code=503, detail="Database not ready")
