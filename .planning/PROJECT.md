@@ -1,12 +1,12 @@
-# AIDEAS Landing Page
+# AIDEAS Customer Portal
 
 ## What This Is
 
-A multi-page marketing website for AIDEAS — an AI automation managed service for small and medium businesses (PyMEs/SMBs). The landing page communicates AIDEAS's value proposition, showcases a catalog of 150+ pre-designed automations organized by category, presents pricing plans, and drives visitors to sign up or request a demo. Built by adapting the existing "Ashley" HTML template in `landing/` with i18next multi-language support (Spanish, English, Portuguese, French).
+A customer portal (app.aideas.com) for AIDEAS — an AI automation managed service for SMBs. The portal lets customers monitor their automations, browse the catalog, request new automations, communicate with the AIDEAS team via real-time chat, manage their team, and handle billing. Built with Next.js 14 + FastAPI + Supabase.
 
 ## Core Value
 
-Visitors immediately understand that AIDEAS saves them money by replacing expensive manual tasks with affordable AI automations — and can browse the full catalog, see pricing, and sign up in minutes.
+Customers can monitor their automations' performance, request new ones, and communicate with the AIDEAS team — all from a single dashboard that proves the ROI of their subscription.
 
 ## Requirements
 
@@ -16,66 +16,70 @@ Visitors immediately understand that AIDEAS saves them money by replacing expens
 
 ### Active
 
-- [ ] Home page with hero, value proposition, how-it-works, category preview, and CTAs
-- [ ] Automations catalog page with 150+ automations organized by 8-10 categories with search/filter
-- [ ] Pricing page with plan comparison (Starter/Pro/Business) and monthly/annual toggle
-- [ ] Contact/Demo page with lead capture form
-- [ ] Multi-language support via i18next (ES, EN, PT, FR) with language selector
-- [ ] All CTAs link to app.aideas.com/signup
-- [ ] Dark + orange aesthetic adapted from Ashley template
-- [ ] SWUP page transitions between pages
-- [ ] GSAP scroll animations (fade-up, parallax, custom cursor)
-- [ ] Mobile responsive design
-- [ ] SEO meta tags and Open Graph for all pages and languages
+- [ ] FastAPI backend with Supabase integration, CORS, health checks, structured logging
+- [ ] Database schema: organizations, users, automation_templates, automations, executions, requests, subscriptions, chat_messages, notifications, invitations
+- [ ] RLS policies and Supabase migrations
+- [ ] Supabase Auth integration (email/password + Google OAuth)
+- [ ] JWT validation in FastAPI endpoints
+- [ ] User registration with email verification
+- [ ] User login with session persistence
+- [ ] Password recovery flow
+- [ ] Email verification flow
+- [ ] Dashboard with automation metrics and status overview
+- [ ] Automation catalog with search/filter
+- [ ] Request automation workflow
+- [ ] My automations list with real-time status
+- [ ] Real-time chat with AIDEAS team
+- [ ] Team management (invite, roles, remove)
+- [ ] Billing integration (Stripe checkout, portal, invoices)
+- [ ] Profile and settings management
+- [ ] In-app notifications
 
 ### Out of Scope
 
-- Blog/newsletter section — defer to future milestone, not core to conversion
-- Team page — not relevant for service company landing
-- Portfolio/case studies — no real client data yet for launch
-- Backend integration — landing is static HTML, no server-side rendering
-- User authentication on landing — authentication lives at app.aideas.com
-- Payment processing on landing — handled in the app portal
+- Self-service automation builder — NOT the AIDEAS model, customers don't build automations
+- Admin panel — Phase 2 (US-5.x)
+- Public API — Phase 2+
+- Mobile app — Phase 2+
+- AI chat assistant for needs discovery — Phase 2
+- Direct integrations (Slack, WhatsApp) — Phase 2
+- Advanced exportable reports — Phase 2
 
 ## Context
 
-**Existing codebase:** AIDEAS is a monorepo with a Next.js portal (`web/`), FastAPI backend (`api/`), and Supabase database. The landing page (`landing/`) is a separate static site deployed independently to Vercel at `aideas.com`.
+**Monorepo structure:** AIDEAS is a monorepo with `landing/` (static marketing site), `web/` (Next.js portal), `api/` (FastAPI backend), and `supabase/` (migrations).
 
-**Template base:** The Ashley template (by millerDigitalDesign) is a premium creative agency HTML template featuring:
-- Bootstrap Grid (no Bootstrap components) + custom SCSS with `mil-` prefix namespace
-- GSAP + ScrollTrigger for scroll animations, parallax, and custom cursor
-- SWUP for SPA-like page transitions
-- Swiper.js for carousels/sliders
-- Outfit font (Google Fonts), weights 100-900
-- Dark/light section alternation with orange accent (`rgba(255,152,0,1)`)
+**Existing scaffold:**
+- `web/`: Next.js 14 with App Router, login/signup page shells, dashboard layout shell, Supabase client/server utilities, middleware for auth, 5 shadcn/ui components (button, card, input, label, form)
+- `api/`: FastAPI with main.py, config.py (Pydantic Settings), health route, auth route skeleton, empty models/ and services/ dirs
+- `supabase/`: Empty migrations directory
 
-**Automation reference:** Categories and automations inspired by the awesome-n8n-templates repository, covering: email/Gmail, documents/PDF, customer service, marketing/social media, sales/CRM, HR/recruitment, DevOps, database, analytics, and more.
+**Service model:** AIDEAS is a managed service — customers describe their problem, AIDEAS builds and maintains the automation. The portal is for monitoring and communication, NOT for building automations.
 
-**Business model:** AIDEAS is a managed service — customers describe their problem, AIDEAS builds and maintains the automation. No self-service builder. Dual revenue: one-time setup fee + recurring monthly subscription.
+**Business model:** Dual revenue — one-time setup fee + recurring monthly subscription (Starter/Pro/Business plans).
 
-**Target markets:** Phase 1: US/Canada (EN). Phase 2: Latin America (ES), Brazil (PT), Europe (FR).
+**Target market:** Phase 1 = US/Canada (English). Phase 2 = LATAM (Spanish), Brazil (Portuguese), Europe (French).
 
 ## Constraints
 
-- **Tech stack**: Static HTML + SCSS + JS only. No frameworks (React, Vue). Must work with the existing Ashley template foundation.
-- **Hosting**: Vercel free tier (or Cloudflare Pages). No server required.
-- **i18n**: i18next library for client-side translation switching. All 4 languages must share the same HTML structure.
-- **Performance**: Target Lighthouse score 90+ on mobile. Optimize images, minimize JS bundles.
-- **Browser support**: Modern browsers (Chrome, Firefox, Safari, Edge). No IE11.
-- **Accessibility**: Basic WCAG 2.1 AA compliance (alt texts, color contrast, keyboard nav).
-- **SEO**: Proper meta tags, hreflang tags for multi-language, semantic HTML.
-- **Dependencies**: Must use existing template's JS libraries (jQuery, GSAP, Swiper, SWUP, Fancybox).
+- **Frontend stack**: Next.js 14 + React 18 + TypeScript + Tailwind CSS + shadcn/ui
+- **Backend stack**: FastAPI + Python 3.12 + Supabase (PostgreSQL + Auth + Realtime + Storage)
+- **Payments**: Stripe (checkout, customer portal, webhooks)
+- **Email**: Resend for transactional emails
+- **Hosting**: Vercel (frontend), Railway (backend), Supabase (database)
+- **Auth**: Supabase Auth handles registration, login, OAuth, email verification
+- **Realtime**: Supabase Realtime for chat and notifications
+- **Budget**: ~$30-65/mo for MVP infrastructure
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Multi-page over single-page | Better SEO, matches template structure, cleaner navigation | — Pending |
-| i18next for translations | Industry standard, scalable, separation of content from markup | — Pending |
-| Keep dark + orange aesthetic | Sophisticated tech feel matches AI/automation brand positioning | — Pending |
-| 8-10 automation categories | Balanced: impressive catalog without overwhelming visitors | — Pending |
-| CTAs → app.aideas.com/signup | Consistent with PRD architecture, single registration flow | — Pending |
-| Static site (no SSR) | Fast loading, free hosting, simple deployment, template compatibility | — Pending |
+| Supabase for auth + DB + realtime | Single service for multiple concerns, reduces complexity | — Pending |
+| FastAPI over Next.js API routes | Better for background jobs, Stripe webhooks, email sending, Python ecosystem | — Pending |
+| shadcn/ui component library | Customizable, accessible, works with Tailwind, no vendor lock-in | — Pending |
+| Managed service model (no DIY builder) | Core business differentiator — simplicity for customer, IP retention for AIDEAS | — Pending |
+| Phase 1 English only | Primary market is US/Canada, i18n built from day one but translations later | — Pending |
 
 ---
-*Last updated: 2026-03-02 after initialization*
+*Last updated: 2026-03-05 after initialization*
