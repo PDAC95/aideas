@@ -12,11 +12,11 @@ Requirements for initial release (Phase 1: Backend Foundation + Auth).
 - [x] **API-01**: FastAPI app initialized with proper folder structure (routes, services, models)
 - [x] **API-02**: Pydantic Settings configuration with .env support
 - [x] **API-03**: Supabase client configured and connected
-- [ ] **API-04**: CORS configured for app.aideas.com and localhost origins
-- [ ] **API-05**: Health check endpoint at `/health` returns service status
-- [ ] **API-06**: OpenAPI docs available at `/docs`
+- [x] **API-04**: CORS configured for app.aideas.com and localhost origins
+- [x] **API-05**: Health check endpoint at `/health` returns service status
+- [x] **API-06**: OpenAPI docs available at `/docs`
 - [x] **API-07**: Requirements files (base.txt, dev.txt) with pinned dependencies
-- [ ] **API-08**: Structured logging with loguru or structlog
+- [x] **API-08**: Structured logging with loguru or structlog
 - [x] **API-09**: .env.example with all required variables documented
 
 ### Database
@@ -135,11 +135,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | API-01 | Phase 1 | Complete |
 | API-02 | Phase 1 | Complete |
 | API-03 | Phase 1 | Complete |
-| API-04 | Phase 1 | Pending |
-| API-05 | Phase 1 | Pending |
-| API-06 | Phase 1 | Pending |
+| API-04 | Phase 1 | Complete |
+| API-05 | Phase 1 | Complete |
+| API-06 | Phase 1 | Complete |
 | API-07 | Phase 1 | Complete |
-| API-08 | Phase 1 | Pending |
+| API-08 | Phase 1 | Complete |
 | API-09 | Phase 1 | Complete |
 | DB-01 | Phase 2 | Pending |
 | DB-02 | Phase 2 | Pending |

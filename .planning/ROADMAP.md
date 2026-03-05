@@ -12,7 +12,7 @@ This milestone delivers the backend foundation and complete authentication syste
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: API Foundation** - FastAPI app production-ready with configuration, logging, health checks, and Supabase client
+- [x] **Phase 1: API Foundation** - FastAPI app production-ready with configuration, logging, health checks, and Supabase client (completed 2026-03-05)
 - [ ] **Phase 2: Database Schema** - All 11 Supabase tables created with RLS policies, migrations committed, seed data available
 - [ ] **Phase 3: Auth Integration** - Supabase Auth configured for email/password + Google OAuth, JWT validation wired into FastAPI
 - [ ] **Phase 4: User Registration** - New users can sign up with email or Google, organization created automatically, verification email sent
@@ -123,7 +123,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. API Foundation | 1/2 | In Progress|  |
+| 1. API Foundation | 2/2 | Complete   | 2026-03-05 |
 | 2. Database Schema | 0/3 | Not started | - |
 | 3. Auth Integration | 0/2 | Not started | - |
 | 4. User Registration | 0/2 | Not started | - |

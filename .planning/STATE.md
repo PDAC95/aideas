@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-05)
 ## Current Position
 
 Phase: 1 of 6 (API Foundation)
-Plan: 1 of 2 in current phase
+Plan: 2 of 2 in current phase
 Status: In progress
-Last activity: 2026-03-05 — Completed 01-01: config, logging, dependencies, Dockerfile, railway.json
+Last activity: 2026-03-05 — Completed 01-02: main.py lifespan, CORS, logging middleware, health check, auth stub
 
-Progress: [█░░░░░░░░░] 8%
+Progress: [██░░░░░░░░] 17%
 
 ## Performance Metrics
 
@@ -49,6 +49,9 @@ Recent decisions affecting current work:
 - [01-01]: debug=False default — production-safe, avoids exposing /docs on Railway deployment
 - [01-01]: Path(__file__).parent.parent for env_file — cwd-independent, works inside Docker /app
 - [01-01]: loguru colorize=False — Railway log aggregation handles plain text; ANSI codes corrupt log viewers
+- [01-02]: Always-on /docs — removed debug gating (API-06); docs always available for Railway testing workflow
+- [01-02]: Supabase probe via auth.get_user with dummy token — auth errors prove reachability without needing a real DB table
+- [01-02]: auth.py simplified to stub — /me and UserInfo deferred to Phase 3 with proper JWT middleware
 
 ### Pending Todos
 
@@ -61,5 +64,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-05
-Stopped at: Completed 01-01-PLAN.md — config/logging/deps/Dockerfile/railway.json complete. Ready for 01-02-PLAN.md (health endpoint + main.py update)
+Stopped at: Completed 01-02-PLAN.md — main.py lifespan/CORS/logging/docs, health check with Supabase probe, auth stub. Phase 1 complete. Ready for Phase 2.
 Resume file: None
