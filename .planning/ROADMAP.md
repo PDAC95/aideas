@@ -46,12 +46,12 @@ Plans:
   2. An authenticated user can only read rows in `organizations` and `profiles` that belong to their own org (RLS enforced)
   3. Running the seed script creates a sample organization, two users, and at least three automation templates visible in the Supabase table editor
   4. The `chat_messages` table has Realtime enabled and a new insert appears in a subscribed client without polling
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 02-01: Core identity tables (organizations, profiles, organization_members) with RLS
-- [ ] 02-02: Automation and business tables (automation_templates, automations, executions, requests, subscriptions) with RLS
-- [ ] 02-03: Communication and support tables (chat_messages, notifications, invitations) with RLS plus seed script
+- [ ] 02-01-PLAN.md — Core identity tables (organizations, profiles, organization_members) with RLS, profiles trigger, utility functions
+- [ ] 02-02-PLAN.md — Automation and business tables (automation_templates, automations, executions, requests, subscriptions) with RLS
+- [ ] 02-03-PLAN.md — Communication tables (chat_messages, notifications, invitations) with RLS, Realtime, and seed script
 
 ### Phase 3: Auth Integration
 **Goal**: Supabase Auth is fully configured for both email/password and Google OAuth, email templates carry AIDEAS branding, and FastAPI validates JWTs on every protected route
