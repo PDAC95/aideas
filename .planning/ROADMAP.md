@@ -31,11 +31,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Every request logs a structured line (timestamp, level, route, status) readable in the Railway console
   4. Supabase client connects using environment variables and rejects startup if variables are missing
   5. CORS allows requests from `app.aideas.com` and `localhost` origins and blocks all others
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 01-01: Project structure, configuration, and Supabase client
-- [ ] 01-02: Routes, middleware, logging, and health check
+- [ ] 01-01-PLAN.md — Project structure, configuration, Supabase client, requirements, deploy config
+- [ ] 01-02-PLAN.md — Routes, middleware, logging, health check, CORS
 
 ### Phase 2: Database Schema
 **Goal**: Every table the portal needs exists in Supabase with correct RLS policies, all changes live in versioned migrations, and developers can seed a local environment with realistic data
