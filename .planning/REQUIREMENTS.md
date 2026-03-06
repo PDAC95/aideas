@@ -24,11 +24,11 @@ Requirements for initial release (Phase 1: Backend Foundation + Auth).
 - [x] **DB-01**: Supabase `organizations` table with RLS policies
 - [x] **DB-02**: Supabase `profiles` table extending auth.users with RLS policies
 - [x] **DB-03**: Supabase `organization_members` table with role enum (admin/operator/viewer) and RLS
-- [ ] **DB-04**: Supabase `automation_templates` table with category, name, description and RLS
-- [ ] **DB-05**: Supabase `automations` table linked to org with status tracking and RLS
-- [ ] **DB-06**: Supabase `automation_executions` table with metrics and RLS
-- [ ] **DB-07**: Supabase `automation_requests` table with urgency levels and RLS
-- [ ] **DB-08**: Supabase `subscriptions` table synced with Stripe and RLS
+- [x] **DB-04**: Supabase `automation_templates` table with category, name, description and RLS
+- [x] **DB-05**: Supabase `automations` table linked to org with status tracking and RLS
+- [x] **DB-06**: Supabase `automation_executions` table with metrics and RLS
+- [x] **DB-07**: Supabase `automation_requests` table with urgency levels and RLS
+- [x] **DB-08**: Supabase `subscriptions` table synced with Stripe and RLS
 - [ ] **DB-09**: Supabase `chat_messages` table with realtime enabled and RLS
 - [ ] **DB-10**: Supabase `notifications` table with read/unread status and RLS
 - [ ] **DB-11**: Supabase `invitations` table with token and expiry and RLS
@@ -144,11 +144,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DB-01 | Phase 2 | Complete |
 | DB-02 | Phase 2 | Complete |
 | DB-03 | Phase 2 | Complete |
-| DB-04 | Phase 2 | Pending |
-| DB-05 | Phase 2 | Pending |
-| DB-06 | Phase 2 | Pending |
-| DB-07 | Phase 2 | Pending |
-| DB-08 | Phase 2 | Pending |
+| DB-04 | Phase 2 | Complete |
+| DB-05 | Phase 2 | Complete |
+| DB-06 | Phase 2 | Complete |
+| DB-07 | Phase 2 | Complete |
+| DB-08 | Phase 2 | Complete |
 | DB-09 | Phase 2 | Pending |
 | DB-10 | Phase 2 | Pending |
 | DB-11 | Phase 2 | Pending |

@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: in_progress
-last_updated: "2026-03-06T00:43:10Z"
+status: unknown
+last_updated: "2026-03-06T00:47:47.886Z"
 progress:
-  total_phases: 6
+  total_phases: 2
   completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
+  total_plans: 5
+  completed_plans: 4
 ---
 
 # Project State
@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-03-05)
 ## Current Position
 
 Phase: 2 of 6 (Database Schema)
-Plan: 1 of ? in current phase
+Plan: 2 of ? in current phase
 Status: In progress
-Last activity: 2026-03-06 — Completed 02-01: core identity migration (organizations, profiles, organization_members), deleted legacy migrations
+Last activity: 2026-03-06 — Completed 02-02: automation_templates, automations, automation_executions, automation_requests, subscriptions tables with hybrid write RLS
 
-Progress: [███░░░░░░░] 25%
+Progress: [████░░░░░░] 33%
 
 ## Performance Metrics
 
@@ -41,10 +41,10 @@ Progress: [███░░░░░░░] 25%
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-api-foundation | 1 | 2 min | 2 min |
-| 02-database-schema | 1 | 1 min | 1 min |
+| 02-database-schema | 2 | 2 min | 1 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (2 min), 02-01 (1 min)
+- Last 5 plans: 01-01 (2 min), 02-01 (1 min), 02-02 (1 min)
 - Trend: —
 
 *Updated after each plan completion*
@@ -71,6 +71,9 @@ Recent decisions affecting current work:
 - [02-01]: organization_members uses is_active boolean (not deleted_at) — cleaner membership suspension semantics
 - [02-01]: handle_new_user uses SECURITY DEFINER SET search_path = '' — security best practice for trigger functions
 - [02-01]: No INSERT/UPDATE/DELETE RLS policies on system tables — service_role key for writes only
+- [Phase 02-02]: automation_templates uses is_active (not deleted_at) for hiding — global catalog simplicity
+- [Phase 02-02]: automation_executions joins through automations table for org-scoped RLS — avoids direct org_id column, preserves immutability
+- [Phase 02-02]: UNIQUE(organization_id) on subscriptions enforces one-subscription-per-org at DB level
 
 ### Pending Todos
 
@@ -83,5 +86,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-06
-Stopped at: Completed 02-01-PLAN.md — core identity migration (organizations, profiles, organization_members), deleted 3 legacy migrations, established RLS patterns. Ready for 02-02.
+Stopped at: Completed 02-02-PLAN.md — automation_templates, automations, automation_executions, automation_requests, subscriptions tables with hybrid write RLS. Ready for 02-03 seed data.
 Resume file: None
