@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: unknown
-last_updated: "2026-03-05T21:50:08.475Z"
+status: in_progress
+last_updated: "2026-03-06T00:43:10Z"
 progress:
-  total_phases: 1
+  total_phases: 6
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  total_plans: 3
+  completed_plans: 3
 ---
 
 # Project State
@@ -18,16 +18,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-05)
 
 **Core value:** Customers can monitor automations, request new ones, and communicate with the AIDEAS team from a single dashboard that proves the ROI of their subscription
-**Current focus:** Phase 1 — API Foundation
+**Current focus:** Phase 2 — Database Schema
 
 ## Current Position
 
-Phase: 1 of 6 (API Foundation)
-Plan: 2 of 2 in current phase
+Phase: 2 of 6 (Database Schema)
+Plan: 1 of ? in current phase
 Status: In progress
-Last activity: 2026-03-05 — Completed 01-02: main.py lifespan, CORS, logging middleware, health check, auth stub
+Last activity: 2026-03-06 — Completed 02-01: core identity migration (organizations, profiles, organization_members), deleted legacy migrations
 
-Progress: [██░░░░░░░░] 17%
+Progress: [███░░░░░░░] 25%
 
 ## Performance Metrics
 
@@ -41,9 +41,10 @@ Progress: [██░░░░░░░░] 17%
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-api-foundation | 1 | 2 min | 2 min |
+| 02-database-schema | 1 | 1 min | 1 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (2 min)
+- Last 5 plans: 01-01 (2 min), 02-01 (1 min)
 - Trend: —
 
 *Updated after each plan completion*
@@ -65,6 +66,11 @@ Recent decisions affecting current work:
 - [01-02]: Always-on /docs — removed debug gating (API-06); docs always available for Railway testing workflow
 - [01-02]: Supabase probe via auth.get_user with dummy token — auth errors prove reachability without needing a real DB table
 - [01-02]: auth.py simplified to stub — /me and UserInfo deferred to Phase 3 with proper JWT middleware
+- [02-01]: organization_members RLS uses direct user_id check — no self-referencing subquery to prevent infinite recursion
+- [02-01]: role column uses CHECK constraint (not Postgres ENUM) — easier future value additions
+- [02-01]: organization_members uses is_active boolean (not deleted_at) — cleaner membership suspension semantics
+- [02-01]: handle_new_user uses SECURITY DEFINER SET search_path = '' — security best practice for trigger functions
+- [02-01]: No INSERT/UPDATE/DELETE RLS policies on system tables — service_role key for writes only
 
 ### Pending Todos
 
@@ -76,6 +82,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-05
-Stopped at: Completed 01-02-PLAN.md — main.py lifespan/CORS/logging/docs, health check with Supabase probe, auth stub. Phase 1 complete. Ready for Phase 2.
+Last session: 2026-03-06
+Stopped at: Completed 02-01-PLAN.md — core identity migration (organizations, profiles, organization_members), deleted 3 legacy migrations, established RLS patterns. Ready for 02-02.
 Resume file: None
