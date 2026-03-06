@@ -29,11 +29,11 @@ Requirements for initial release (Phase 1: Backend Foundation + Auth).
 - [x] **DB-06**: Supabase `automation_executions` table with metrics and RLS
 - [x] **DB-07**: Supabase `automation_requests` table with urgency levels and RLS
 - [x] **DB-08**: Supabase `subscriptions` table synced with Stripe and RLS
-- [ ] **DB-09**: Supabase `chat_messages` table with realtime enabled and RLS
-- [ ] **DB-10**: Supabase `notifications` table with read/unread status and RLS
-- [ ] **DB-11**: Supabase `invitations` table with token and expiry and RLS
+- [x] **DB-09**: Supabase `chat_messages` table with realtime enabled and RLS
+- [x] **DB-10**: Supabase `notifications` table with read/unread status and RLS
+- [x] **DB-11**: Supabase `invitations` table with token and expiry and RLS
 - [x] **DB-12**: All migrations in `supabase/migrations/` directory
-- [ ] **DB-13**: Seed script for development data (sample org, users, templates)
+- [x] **DB-13**: Seed script for development data (sample org, users, templates)
 
 ### Auth Integration
 
@@ -149,11 +149,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DB-06 | Phase 2 | Complete |
 | DB-07 | Phase 2 | Complete |
 | DB-08 | Phase 2 | Complete |
-| DB-09 | Phase 2 | Pending |
-| DB-10 | Phase 2 | Pending |
-| DB-11 | Phase 2 | Pending |
+| DB-09 | Phase 2 | Complete |
+| DB-10 | Phase 2 | Complete |
+| DB-11 | Phase 2 | Complete |
 | DB-12 | Phase 2 | Complete |
-| DB-13 | Phase 2 | Pending |
+| DB-13 | Phase 2 | Complete |
 | AUTH-01 | Phase 3 | Pending |
 | AUTH-02 | Phase 3 | Pending |
 | AUTH-03 | Phase 3 | Pending |
