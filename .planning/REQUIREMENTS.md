@@ -41,8 +41,8 @@ Requirements for initial release (Phase 1: Backend Foundation + Auth).
 - [ ] **AUTH-02**: Supabase Auth configured for Google OAuth
 - [ ] **AUTH-03**: Email templates customized with AIDEAS branding
 - [ ] **AUTH-04**: Redirect URLs configured for local dev and production
-- [ ] **AUTH-05**: JWT validation dependency in FastAPI (extracts user from token)
-- [ ] **AUTH-06**: Protected route middleware in FastAPI (rejects unauthenticated requests)
+- [x] **AUTH-05**: JWT validation dependency in FastAPI (extracts user from token)
+- [x] **AUTH-06**: Protected route middleware in FastAPI (rejects unauthenticated requests)
 
 ### User Registration
 
@@ -158,8 +158,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-02 | Phase 3 | Pending |
 | AUTH-03 | Phase 3 | Pending |
 | AUTH-04 | Phase 3 | Pending |
-| AUTH-05 | Phase 3 | Pending |
-| AUTH-06 | Phase 3 | Pending |
+| AUTH-05 | Phase 3 | Complete |
+| AUTH-06 | Phase 3 | Complete |
 | REG-01 | Phase 4 | Pending |
 | REG-02 | Phase 4 | Pending |
 | REG-03 | Phase 4 | Pending |
