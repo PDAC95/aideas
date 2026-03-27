@@ -3,10 +3,13 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 from supabase import create_client, Client
 
 from .config import get_settings
 from .logging_config import setup_logging, logger
+from .middleware import limiter
 from .routes import health, auth
 
 
@@ -33,6 +36,10 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# Rate limiting — in-memory, ~5/min on auth endpoints
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
 # CORS — explicit origins from settings (defaults to localhost:3000)
 app.add_middleware(
     CORSMiddleware,
@@ -55,6 +62,9 @@ async def log_requests(request: Request, call_next):
 # Routes — all under /api/v1/
 app.include_router(health.router, prefix="/api/v1", tags=["Health"])
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["Auth"])
+# Future protected routers will use router-level dependency:
+# protected_router = APIRouter(dependencies=[Depends(get_current_user)])
+# app.include_router(protected_router, prefix="/api/v1/...", tags=["..."])
 
 
 @app.get("/")
