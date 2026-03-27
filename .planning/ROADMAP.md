@@ -62,11 +62,11 @@ Plans:
   2. Google OAuth login redirects correctly to `localhost:3000` in dev and `app.aideas.com` in production
   3. The verification email received during signup shows the AIDEAS logo and brand colors, not the Supabase default template
   4. The authenticated user's ID is extractable from `request.state.user` inside any FastAPI route handler
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 03-01: Supabase Auth configuration (email/password, Google OAuth, email templates, redirect URLs)
-- [ ] 03-02: FastAPI JWT validation dependency and protected route middleware
+- [ ] 03-01-PLAN.md — Supabase Auth configuration (email/password, Google OAuth, email templates, redirect URLs)
+- [ ] 03-02-PLAN.md — FastAPI JWT validation dependency, rate limiting, and protected route middleware
 
 ### Phase 4: User Registration
 **Goal**: A new visitor can create an account using email/password or Google, land on the verify-email holding page, and find their organization automatically created
