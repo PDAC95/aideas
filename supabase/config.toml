@@ -21,7 +21,14 @@ api_url = "http://localhost"
 [auth]
 enabled = true
 site_url = "http://localhost:3000"
-additional_redirect_urls = ["http://localhost:3000/auth/callback"]
+additional_redirect_urls = [
+  "http://localhost:3000/auth/callback",
+  "http://localhost:3000/login",
+  "http://localhost:3000/reset-password",
+  "https://app.aideas.com/auth/callback",
+  "https://app.aideas.com/login",
+  "https://app.aideas.com/reset-password"
+]
 jwt_expiry = 3600
 enable_signup = true
 enable_anonymous_sign_ins = false
@@ -31,8 +38,51 @@ enable_signup = true
 double_confirm_changes = true
 enable_confirmations = true
 
+[auth.email.template.confirmation]
+subject = "Confirm your AIDEAS account"
+content_path = "./supabase/templates/confirmation.html"
+
+[auth.email.template.recovery]
+subject = "Reset your AIDEAS password"
+content_path = "./supabase/templates/recovery.html"
+
+[auth.email.template.invite]
+subject = "You've been invited to AIDEAS"
+content_path = "./supabase/templates/invite.html"
+
+[auth.email.template.magic_link]
+subject = "Your AIDEAS sign-in link"
+content_path = "./supabase/templates/magic_link.html"
+
+[auth.email.template.email_change]
+subject = "Confirm your new AIDEAS email"
+content_path = "./supabase/templates/email_change.html"
+
+[auth.email.template.confirmation_es]
+subject = "Confirma tu cuenta de AIDEAS"
+content_path = "./supabase/templates/confirmation_es.html"
+
+[auth.email.template.recovery_es]
+subject = "Restablece tu contraseña de AIDEAS"
+content_path = "./supabase/templates/recovery_es.html"
+
+[auth.email.template.invite_es]
+subject = "Has sido invitado a AIDEAS"
+content_path = "./supabase/templates/invite_es.html"
+
+[auth.email.template.magic_link_es]
+subject = "Tu enlace de acceso a AIDEAS"
+content_path = "./supabase/templates/magic_link_es.html"
+
+[auth.email.template.email_change_es]
+subject = "Confirma tu nuevo correo de AIDEAS"
+content_path = "./supabase/templates/email_change_es.html"
+
 [auth.external.google]
-enabled = false
+enabled = true
+client_id = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID)"
+secret = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET)"
+skip_nonce_check = false
 
 [storage]
 enabled = true
