@@ -37,10 +37,10 @@ Requirements for initial release (Phase 1: Backend Foundation + Auth).
 
 ### Auth Integration
 
-- [ ] **AUTH-01**: Supabase Auth configured for email/password signup
-- [ ] **AUTH-02**: Supabase Auth configured for Google OAuth
-- [ ] **AUTH-03**: Email templates customized with AIDEAS branding
-- [ ] **AUTH-04**: Redirect URLs configured for local dev and production
+- [x] **AUTH-01**: Supabase Auth configured for email/password signup
+- [x] **AUTH-02**: Supabase Auth configured for Google OAuth
+- [x] **AUTH-03**: Email templates customized with AIDEAS branding
+- [x] **AUTH-04**: Redirect URLs configured for local dev and production
 - [x] **AUTH-05**: JWT validation dependency in FastAPI (extracts user from token)
 - [x] **AUTH-06**: Protected route middleware in FastAPI (rejects unauthenticated requests)
 
@@ -154,10 +154,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DB-11 | Phase 2 | Complete |
 | DB-12 | Phase 2 | Complete |
 | DB-13 | Phase 2 | Complete |
-| AUTH-01 | Phase 3 | Pending |
-| AUTH-02 | Phase 3 | Pending |
-| AUTH-03 | Phase 3 | Pending |
-| AUTH-04 | Phase 3 | Pending |
+| AUTH-01 | Phase 3 | Complete |
+| AUTH-02 | Phase 3 | Complete |
+| AUTH-03 | Phase 3 | Complete |
+| AUTH-04 | Phase 3 | Complete |
 | AUTH-05 | Phase 3 | Complete |
 | AUTH-06 | Phase 3 | Complete |
 | REG-01 | Phase 4 | Pending |
