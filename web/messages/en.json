@@ -73,6 +73,36 @@
     },
     "backToSignup": "Back to sign up"
   },
+  "login": {
+    "title": "Welcome back",
+    "subtitle": "Sign in to your account",
+    "email": "Email",
+    "emailPlaceholder": "you@company.com",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot your password?",
+    "submit": "Sign in",
+    "submitting": "Signing in...",
+    "noAccount": "Don't have an account?",
+    "register": "Sign up",
+    "or": "or",
+    "errors": {
+      "invalidCredentials": "Invalid email or password.",
+      "emailNotVerified": "Please verify your email before signing in.",
+      "tooManyAttempts": "Too many attempts. Try again in {minutes} minutes.",
+      "generic": "Something went wrong. Please try again.",
+      "authError": "Authentication failed. Please try again."
+    },
+    "sessionExpired": "Your session has expired. Please sign in again.",
+    "branding": {
+      "headline": "Welcome back",
+      "subheadline": "Your automations are running. Check in on your business.",
+      "highlight1": "Real-time automation monitoring",
+      "highlight2": "Track ROI and time saved",
+      "highlight3": "Collaborate with your team"
+    }
+  },
   "common": {
     "language": "Language",
     "or": "or"
