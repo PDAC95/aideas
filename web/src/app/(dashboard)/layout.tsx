@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { DashboardNav } from "@/components/dashboard/nav";
+import { AuthSync } from "@/components/auth/auth-sync";
 
 export default async function DashboardLayout({
   children,
@@ -8,7 +9,9 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) {
     redirect("/login");
@@ -16,11 +19,10 @@ export default async function DashboardLayout({
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <AuthSync />
       <DashboardNav user={user} />
       <main className="lg:pl-64">
-        <div className="p-4 lg:p-8">
-          {children}
-        </div>
+        <div className="p-4 lg:p-8">{children}</div>
       </main>
     </div>
   );

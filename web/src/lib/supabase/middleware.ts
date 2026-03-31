@@ -6,6 +6,11 @@ export async function updateSession(request: NextRequest) {
     request,
   });
 
+  // Read remember-me preference before creating the Supabase client
+  const rememberMe = request.cookies.get("sb-remember-me")?.value;
+  const cookieMaxAge =
+    rememberMe === "false" ? undefined : 60 * 60 * 24 * 30;
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -22,7 +27,10 @@ export async function updateSession(request: NextRequest) {
             request,
           });
           cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
+            supabaseResponse.cookies.set(name, value, {
+              ...options,
+              maxAge: cookieMaxAge,
+            })
           );
         },
       },
@@ -40,7 +48,8 @@ export async function updateSession(request: NextRequest) {
   // Protected routes - redirect to login if not authenticated
   if (
     !user &&
-    request.nextUrl.pathname.startsWith("/dashboard")
+    (request.nextUrl.pathname.startsWith("/dashboard") ||
+      request.nextUrl.pathname.startsWith("/app/"))
   ) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";

@@ -3,24 +3,26 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import type { User } from "@supabase/supabase-js";
 
-const navigation = [
-  { name: "Dashboard", href: "/dashboard", icon: "📊" },
-  { name: "Automations", href: "/dashboard/automations", icon: "⚡" },
-  { name: "Catalog", href: "/dashboard/catalog", icon: "📚" },
-  { name: "Chat", href: "/dashboard/chat", icon: "💬" },
-  { name: "Team", href: "/dashboard/team", icon: "👥" },
-  { name: "Billing", href: "/dashboard/billing", icon: "💳" },
-  { name: "Settings", href: "/dashboard/settings", icon: "⚙️" },
-];
-
 export function DashboardNav({ user }: { user: User }) {
+  const t = useTranslations("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
   const supabase = createClient();
+
+  const navigation = [
+    { name: t("nav.dashboard"), href: "/dashboard", icon: "📊" },
+    { name: t("nav.automations"), href: "/dashboard/automations", icon: "⚡" },
+    { name: t("nav.catalog"), href: "/dashboard/catalog", icon: "📚" },
+    { name: t("nav.chat"), href: "/dashboard/chat", icon: "💬" },
+    { name: t("nav.team"), href: "/dashboard/team", icon: "👥" },
+    { name: t("nav.billing"), href: "/dashboard/billing", icon: "💳" },
+    { name: t("nav.settings"), href: "/dashboard/settings", icon: "⚙️" },
+  ];
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -68,7 +70,7 @@ export function DashboardNav({ user }: { user: User }) {
           <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
             {navigation.map((item) => (
               <Link
-                key={item.name}
+                key={item.href}
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
                 className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
@@ -97,7 +99,7 @@ export function DashboardNav({ user }: { user: User }) {
               className="w-full"
               onClick={handleSignOut}
             >
-              Sign out
+              {t("signOut")}
             </Button>
           </div>
         </div>

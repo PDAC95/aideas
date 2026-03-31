@@ -103,6 +103,21 @@
       "highlight3": "Colabora con tu equipo"
     }
   },
+  "dashboard": {
+    "greeting": "¡Bienvenido de nuevo!",
+    "greetingWithName": "¡Bienvenido de nuevo, {name}!",
+    "subtitle": "Tus automatizaciones están activas. El contenido real del panel llegará en una fase futura.",
+    "signOut": "Cerrar sesión",
+    "nav": {
+      "dashboard": "Panel",
+      "automations": "Automatizaciones",
+      "catalog": "Catálogo",
+      "chat": "Chat",
+      "team": "Equipo",
+      "billing": "Facturación",
+      "settings": "Configuración"
+    }
+  },
   "common": {
     "language": "Idioma",
     "or": "o"

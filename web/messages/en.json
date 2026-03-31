@@ -103,6 +103,21 @@
       "highlight3": "Collaborate with your team"
     }
   },
+  "dashboard": {
+    "greeting": "Welcome back!",
+    "greetingWithName": "Welcome back, {name}!",
+    "subtitle": "Your automations are running. Real dashboard content comes in a future phase.",
+    "signOut": "Sign out",
+    "nav": {
+      "dashboard": "Dashboard",
+      "automations": "Automations",
+      "catalog": "Catalog",
+      "chat": "Chat",
+      "team": "Team",
+      "billing": "Billing",
+      "settings": "Settings"
+    }
+  },
   "common": {
     "language": "Language",
     "or": "or"
