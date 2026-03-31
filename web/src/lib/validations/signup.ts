@@ -13,8 +13,8 @@ export const signupSchema = z.object({
     .min(8, 'Password must be at least 8 characters')
     .regex(/[A-Z]/, 'Must contain at least one uppercase letter')
     .regex(/[0-9]/, 'Must contain at least one number'),
-  termsAccepted: z.literal(true, {
-    error: 'You must accept the Terms of Service',
+  termsAccepted: z.coerce.boolean().refine((val) => val === true, {
+    message: 'You must accept the Terms of Service',
   }),
   locale: z.enum(['en', 'es']).optional(),
   termsAcceptedAt: z.string().datetime().optional(),
