@@ -1,171 +1,98 @@
-"use client";
+import Image from "next/image";
+import { getTranslations } from "next-intl/server";
+import { Zap, Shield, BarChart3 } from "lucide-react";
+import { SignupForm } from "@/components/auth/signup-form";
+import { LanguageSwitcher } from "@/components/auth/language-switcher";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+export default async function SignupPage() {
+  const t = await getTranslations("signup");
 
-export default function SignupPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [company, setCompany] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-  const supabase = createClient();
-
-  const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          first_name: firstName,
-          last_name: lastName,
-          company: company,
-        },
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
-
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-      return;
-    }
-
-    setSuccess(true);
-    setLoading(false);
-  };
-
-  if (success) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
-        <Card className="w-full max-w-md">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-center">
-              Check your email
-            </CardTitle>
-            <CardDescription className="text-center">
-              We&apos;ve sent you a confirmation link to <strong>{email}</strong>
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="text-center">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Click the link in the email to verify your account and get started.
-            </p>
-          </CardContent>
-          <CardFooter className="justify-center">
-            <Link href="/login" className="text-blue-600 hover:underline text-sm">
-              Back to login
-            </Link>
-          </CardFooter>
-        </Card>
-      </div>
-    );
-  }
+  const benefits = [
+    { icon: Zap, text: t("branding.benefit1") },
+    { icon: Shield, text: t("branding.benefit2") },
+    { icon: BarChart3, text: t("branding.benefit3") },
+  ];
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4 py-8">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">
-            Create an account
-          </CardTitle>
-          <CardDescription className="text-center">
-            Start automating your business today
-          </CardDescription>
-        </CardHeader>
-        <form onSubmit={handleSignup}>
-          <CardContent className="space-y-4">
-            {error && (
-              <div className="p-3 text-sm text-red-500 bg-red-50 dark:bg-red-900/20 rounded-md">
-                {error}
-              </div>
-            )}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="firstName">First name</Label>
-                <Input
-                  id="firstName"
-                  placeholder="John"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="lastName">Last name</Label>
-                <Input
-                  id="lastName"
-                  placeholder="Doe"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="company">Company</Label>
-              <Input
-                id="company"
-                placeholder="Acme Inc."
-                value={company}
-                onChange={(e) => setCompany(e.target.value)}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                minLength={8}
-                required
-              />
-              <p className="text-xs text-gray-500">
-                Minimum 8 characters
-              </p>
-            </div>
-          </CardContent>
-          <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Creating account..." : "Create account"}
-            </Button>
-            <p className="text-sm text-center text-gray-600 dark:text-gray-400">
-              Already have an account?{" "}
-              <Link href="/login" className="text-blue-600 hover:underline">
-                Sign in
-              </Link>
+    <div className="min-h-screen flex">
+      {/* Left branding panel — hidden on mobile */}
+      <div className="hidden lg:flex lg:w-1/2 flex-col items-center justify-center p-12 bg-[#111] text-white relative overflow-hidden">
+        {/* Subtle grid pattern */}
+        <div
+          className="absolute inset-0 opacity-5"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)",
+            backgroundSize: "40px 40px",
+          }}
+        />
+
+        <div className="relative z-10 max-w-md w-full space-y-10">
+          {/* Logo */}
+          <div>
+            <Image
+              src="/logo.png"
+              alt="AIDEAS"
+              width={120}
+              height={40}
+              className="brightness-0 invert"
+              priority
+            />
+          </div>
+
+          {/* Headline */}
+          <div className="space-y-3">
+            <h1 className="text-4xl font-bold leading-tight tracking-tight">
+              {t("branding.headline")}
+            </h1>
+            <p className="text-white/60 text-lg leading-relaxed">
+              {t("branding.subheadline")}
             </p>
-          </CardFooter>
-        </form>
-      </Card>
+          </div>
+
+          {/* Benefits list */}
+          <ul className="space-y-4">
+            {benefits.map(({ icon: Icon, text }, i) => (
+              <li key={i} className="flex items-center gap-3">
+                <span className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-white/10">
+                  <Icon className="size-4 text-white" />
+                </span>
+                <span className="text-white/80 text-sm">{text}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      {/* Right form panel */}
+      <div className="relative w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12">
+        {/* Language switcher — absolute top right */}
+        <div className="absolute top-4 right-4">
+          <LanguageSwitcher />
+        </div>
+
+        <div className="w-full max-w-md space-y-6">
+          {/* Mobile-only logo (shown when left panel is hidden) */}
+          <div className="flex justify-center lg:hidden">
+            <Image
+              src="/logo.png"
+              alt="AIDEAS"
+              width={100}
+              height={32}
+              priority
+            />
+          </div>
+
+          {/* Form header */}
+          <div className="space-y-1">
+            <h2 className="text-2xl font-bold tracking-tight">{t("title")}</h2>
+            <p className="text-muted-foreground text-sm">{t("subtitle")}</p>
+          </div>
+
+          {/* Signup form */}
+          <SignupForm />
+        </div>
+      </div>
     </div>
   );
 }

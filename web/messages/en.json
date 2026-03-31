@@ -1,0 +1,67 @@
+{
+  "signup": {
+    "title": "Create your account",
+    "subtitle": "Start automating your business today",
+    "firstName": "First name",
+    "firstNamePlaceholder": "John",
+    "lastName": "Last name",
+    "lastNamePlaceholder": "Doe",
+    "company": "Company name",
+    "companyPlaceholder": "Acme Inc.",
+    "email": "Work email",
+    "emailPlaceholder": "you@company.com",
+    "password": "Password",
+    "passwordPlaceholder": "Min. 8 characters",
+    "terms": "I accept the",
+    "termsLink": "Terms of Service",
+    "and": "and",
+    "privacyLink": "Privacy Policy",
+    "submit": "Create account",
+    "submitting": "Creating account...",
+    "googleButton": "Continue with Google",
+    "hasAccount": "Already have an account?",
+    "signIn": "Sign in",
+    "or": "or",
+    "errors": {
+      "emailExists": "This email is already registered.",
+      "emailExistsLink": "Want to log in?",
+      "disposableEmail": "Please use a work or personal email",
+      "captchaFailed": "Verification failed. Please try again.",
+      "generic": "Something went wrong. Please try again."
+    },
+    "passwordStrength": {
+      "weak": "Weak",
+      "medium": "Medium",
+      "strong": "Strong"
+    },
+    "branding": {
+      "headline": "Automate your business with AI",
+      "subheadline": "Join hundreds of SMBs already saving hours every week.",
+      "benefit1": "Automate repetitive workflows instantly",
+      "benefit2": "Secure and compliant by default",
+      "benefit3": "Real-time insights on every automation"
+    }
+  },
+  "verifyEmail": {
+    "title": "Check your inbox",
+    "subtitle": "We sent a verification link to",
+    "sentTo": "Sent to",
+    "resend": "Resend email",
+    "resending": "Sending...",
+    "cooldown": "Resend in {seconds}s",
+    "tip": "Can't find it? Check your spam or junk folder",
+    "logout": "Use a different account",
+    "settingUp": "We're setting up your account"
+  },
+  "completeRegistration": {
+    "title": "One last step",
+    "subtitle": "Tell us about your company to finish setting up your account",
+    "company": "Company name",
+    "submit": "Complete setup",
+    "submitting": "Setting up..."
+  },
+  "common": {
+    "language": "Language",
+    "or": "or"
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "signup": {
+    "title": "Crea tu cuenta",
+    "subtitle": "Empieza a automatizar tu negocio hoy",
+    "firstName": "Nombre",
+    "firstNamePlaceholder": "Juan",
+    "lastName": "Apellido",
+    "lastNamePlaceholder": "García",
+    "company": "Nombre de empresa",
+    "companyPlaceholder": "Mi Empresa S.A.",
+    "email": "Correo laboral",
+    "emailPlaceholder": "tu@empresa.com",
+    "password": "Contraseña",
+    "passwordPlaceholder": "Mín. 8 caracteres",
+    "terms": "Acepto los",
+    "termsLink": "Términos de Servicio",
+    "and": "y la",
+    "privacyLink": "Política de Privacidad",
+    "submit": "Crear cuenta",
+    "submitting": "Creando cuenta...",
+    "googleButton": "Continuar con Google",
+    "hasAccount": "¿Ya tienes cuenta?",
+    "signIn": "Inicia sesión",
+    "or": "o",
+    "errors": {
+      "emailExists": "Este correo ya está registrado.",
+      "emailExistsLink": "¿Quieres iniciar sesión?",
+      "disposableEmail": "Por favor usa un correo laboral o personal",
+      "captchaFailed": "Verificación fallida. Inténtalo de nuevo.",
+      "generic": "Algo salió mal. Por favor inténtalo de nuevo."
+    },
+    "passwordStrength": {
+      "weak": "Débil",
+      "medium": "Media",
+      "strong": "Fuerte"
+    },
+    "branding": {
+      "headline": "Automatiza tu negocio con IA",
+      "subheadline": "Cientos de PYMEs ya ahorran horas cada semana.",
+      "benefit1": "Automatiza flujos repetitivos al instante",
+      "benefit2": "Seguro y cumplidor por defecto",
+      "benefit3": "Métricas en tiempo real de cada automatización"
+    }
+  },
+  "verifyEmail": {
+    "title": "Revisa tu bandeja",
+    "subtitle": "Enviamos un enlace de verificación a",
+    "sentTo": "Enviado a",
+    "resend": "Reenviar correo",
+    "resending": "Enviando...",
+    "cooldown": "Reenviar en {seconds}s",
+    "tip": "¿No lo encuentras? Revisa tu carpeta de spam o correo no deseado",
+    "logout": "Usar otra cuenta",
+    "settingUp": "Estamos configurando tu cuenta"
+  },
+  "completeRegistration": {
+    "title": "Un último paso",
+    "subtitle": "Cuéntanos sobre tu empresa para terminar de configurar tu cuenta",
+    "company": "Nombre de empresa",
+    "submit": "Completar configuración",
+    "submitting": "Configurando..."
+  },
+  "common": {
+    "language": "Idioma",
+    "or": "o"
+  }
+}
