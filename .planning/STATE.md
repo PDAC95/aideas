@@ -2,12 +2,12 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: in_progress
-last_updated: "2026-03-31T15:14:00Z"
+status: unknown
+last_updated: "2026-03-31T15:23:36.075Z"
 progress:
-  total_phases: 6
+  total_phases: 4
   completed_phases: 3
-  total_plans: 12
+  total_plans: 11
   completed_plans: 10
 ---
 
@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-03-05)
 ## Current Position
 
 Phase: 4 of 6 (User Registration) — IN PROGRESS
-Plan: 2 of 4 in current phase — COMPLETE (Plans 01 and 02 both complete)
-Status: Phase 4 plan 01 complete — DB migration (profiles extension, owner role, atomic org trigger), next-intl i18n, Zod schema
-Last activity: 2026-03-31 — Completed 04-01: DB migration for user registration schema, next-intl cookie-based i18n, signupSchema
+Plan: 3 of 4 in current phase — COMPLETE (Plans 01, 02, and 03 complete)
+Status: Phase 4 plan 03 complete — Server Actions (signUpWithEmail, completeRegistration, resendVerificationEmail), reCAPTCHA v3 wiring, OAuth callback new-user detection, complete-registration page
+Last activity: 2026-03-31 — Completed 04-03: Server Actions for email signup + complete-registration, wired signup form to Server Action, updated OAuth callback, created /complete-registration page
 
-Progress: [████████░░] 77%
+Progress: [█████████░] 83%
 
 ## Performance Metrics
 
@@ -43,10 +43,10 @@ Progress: [████████░░] 77%
 | 01-api-foundation | 1 | 2 min | 2 min |
 | 02-database-schema | 3 | 5 min | 2 min |
 | 03-auth-integration | 2 | 6 min | 3 min |
-| 04-user-registration | 2 | ~18 min | 9 min |
+| 04-user-registration | 3 | ~22 min | 7 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-03 (3 min), 03-01 (3 min), 03-02 (3 min), 04-02 (7 min), 04-01 (8 min)
+- Last 5 plans: 03-01 (3 min), 03-02 (3 min), 04-02 (7 min), 04-01 (8 min), 04-03 (4 min)
 - Trend: stable
 
 *Updated after each plan completion*
@@ -56,6 +56,7 @@ Progress: [████████░░] 77%
 | Phase 03-auth-integration P02 | 3 | 2 tasks | 5 files |
 | Phase 04-user-registration P02 | 7 | 2 tasks | 13 files |
 | Phase 04-user-registration P01 | 8 | 2 tasks | 8 files |
+| Phase 04-user-registration P03 | 4 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -102,6 +103,8 @@ Recent decisions affecting current work:
 - [04-01]: Profile UPDATE statements moved out of migration into seed — migrations run before seed data exists
 - [04-01]: locale field stays .optional() in signupSchema — zodResolver generic requires input/output type alignment with useForm<SignupFormData>
 - [04-01]: handle_new_user EXCEPTION block uses RAISE WARNING not RAISE EXCEPTION — signup continues even if trigger body fails
+- [Phase 04-03]: New OAuth user detection uses user_metadata.company_name absence + google provider check
+- [Phase 04-03]: RecaptchaProvider extracted to client component wrapper — signup page stays Server Component
 
 ### Pending Todos
 
@@ -114,5 +117,5 @@ None — Plan 01 (04-01) blocker resolved. DB migration for profiles extension, 
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Completed 04-01-PLAN.md — DB migration for user registration (profiles extension, owner role, atomic org trigger), next-intl i18n config, Zod signup schema, EN/ES translations.
+Stopped at: Completed 04-03-PLAN.md — Server Actions (signUpWithEmail, completeRegistration, resendVerificationEmail), reCAPTCHA v3 wiring, signup form wired to Server Action, OAuth callback updated, /complete-registration page created.
 Resume file: None

@@ -48,11 +48,11 @@ Requirements for initial release (Phase 1: Backend Foundation + Auth).
 
 - [x] **REG-01**: Signup page at `/signup` with form (email, password, name, company)
 - [x] **REG-02**: Form validation with Zod schema
-- [ ] **REG-03**: Account creation via Supabase Auth
+- [x] **REG-03**: Account creation via Supabase Auth
 - [x] **REG-04**: Organization auto-created on first signup with user as admin
-- [ ] **REG-05**: Email verification sent automatically
+- [x] **REG-05**: Email verification sent automatically
 - [ ] **REG-06**: Redirect to `/verify-email` after signup
-- [ ] **REG-07**: Error message if email already exists
+- [x] **REG-07**: Error message if email already exists
 - [x] **REG-08**: Google OAuth signup option
 
 ### User Login
@@ -162,11 +162,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-06 | Phase 3 | Complete |
 | REG-01 | Phase 4 | Complete |
 | REG-02 | Phase 4 | Complete |
-| REG-03 | Phase 4 | Pending |
+| REG-03 | Phase 4 | Complete |
 | REG-04 | Phase 4 | Complete |
-| REG-05 | Phase 4 | Pending |
+| REG-05 | Phase 4 | Complete |
 | REG-06 | Phase 4 | Pending |
-| REG-07 | Phase 4 | Pending |
+| REG-07 | Phase 4 | Complete |
 | REG-08 | Phase 4 | Complete |
 | LOGIN-01 | Phase 5 | Pending |
 | LOGIN-02 | Phase 5 | Pending |
