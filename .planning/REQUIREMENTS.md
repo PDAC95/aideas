@@ -49,7 +49,7 @@ Requirements for initial release (Phase 1: Backend Foundation + Auth).
 - [x] **REG-01**: Signup page at `/signup` with form (email, password, name, company)
 - [x] **REG-02**: Form validation with Zod schema
 - [ ] **REG-03**: Account creation via Supabase Auth
-- [ ] **REG-04**: Organization auto-created on first signup with user as admin
+- [x] **REG-04**: Organization auto-created on first signup with user as admin
 - [ ] **REG-05**: Email verification sent automatically
 - [ ] **REG-06**: Redirect to `/verify-email` after signup
 - [ ] **REG-07**: Error message if email already exists
@@ -163,7 +163,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | REG-01 | Phase 4 | Complete |
 | REG-02 | Phase 4 | Complete |
 | REG-03 | Phase 4 | Pending |
-| REG-04 | Phase 4 | Pending |
+| REG-04 | Phase 4 | Complete |
 | REG-05 | Phase 4 | Pending |
 | REG-06 | Phase 4 | Pending |
 | REG-07 | Phase 4 | Pending |

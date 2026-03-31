@@ -43,10 +43,10 @@ Progress: [████████░░] 77%
 | 01-api-foundation | 1 | 2 min | 2 min |
 | 02-database-schema | 3 | 5 min | 2 min |
 | 03-auth-integration | 2 | 6 min | 3 min |
-| 04-user-registration | 2 | ~10 min | 5 min |
+| 04-user-registration | 2 | ~18 min | 9 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-02 (1 min), 02-03 (3 min), 03-01 (3 min), 03-02 (3 min), 04-02 (7 min)
+- Last 5 plans: 02-03 (3 min), 03-01 (3 min), 03-02 (3 min), 04-02 (7 min), 04-01 (8 min)
 - Trend: stable
 
 *Updated after each plan completion*
@@ -55,6 +55,7 @@ Progress: [████████░░] 77%
 | Phase 03-auth-integration P01 | 3 | 2 tasks | 12 files |
 | Phase 03-auth-integration P02 | 3 | 2 tasks | 5 files |
 | Phase 04-user-registration P02 | 7 | 2 tasks | 13 files |
+| Phase 04-user-registration P01 | 8 | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -97,6 +98,10 @@ Recent decisions affecting current work:
 - [04-02]: SignupForm onSubmit is a prop (optional) — Plan 02 builds UI only, Plan 03 wires Server Action
 - [04-02]: Google button placed below form fields + divider — email form is primary CTA per UX convention
 - [04-02]: captchaToken not optional in schema — Plan 03 will populate it via reCAPTCHA v3
+- [04-01]: Seed disables on_auth_user_created trigger during auth.users insert — fixed UUIDs required for FK stability; trigger re-enabled after
+- [04-01]: Profile UPDATE statements moved out of migration into seed — migrations run before seed data exists
+- [04-01]: locale field stays .optional() in signupSchema — zodResolver generic requires input/output type alignment with useForm<SignupFormData>
+- [04-01]: handle_new_user EXCEPTION block uses RAISE WARNING not RAISE EXCEPTION — signup continues even if trigger body fails
 
 ### Pending Todos
 
@@ -104,10 +109,10 @@ None yet.
 
 ### Blockers/Concerns
 
-- Plan 01 (04-01) was skipped — DB migration for profiles extension and org owner role NOT yet applied. Plan 03 will depend on this. Need to run 04-01 before 04-03.
+None — Plan 01 (04-01) blocker resolved. DB migration for profiles extension, owner role, and atomic org trigger now complete.
 
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Completed 04-02-PLAN.md — signup page UI, form components (SignupForm, PasswordStrengthBar, GoogleOAuthButton, LanguageSwitcher), next-intl i18n setup, Zod schema, EN/ES translations.
+Stopped at: Completed 04-01-PLAN.md — DB migration for user registration (profiles extension, owner role, atomic org trigger), next-intl i18n config, Zod signup schema, EN/ES translations.
 Resume file: None
