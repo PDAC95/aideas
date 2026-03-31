@@ -16,7 +16,7 @@ export const signupSchema = z.object({
   termsAccepted: z.literal(true, {
     error: 'You must accept the Terms of Service',
   }),
-  locale: z.enum(['en', 'es']).default('en'),
+  locale: z.enum(['en', 'es']).optional(),
   termsAcceptedAt: z.string().datetime().optional(),
   captchaToken: z.string().min(1, 'Verification required'),
 })
