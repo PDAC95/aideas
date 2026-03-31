@@ -2,11 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations, useLocale } from "next-intl";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { signupSchema, type SignupFormData } from "@/lib/validations/signup";
+import { signUpWithEmail } from "@/lib/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,15 +17,11 @@ import { PasswordStrengthBar } from "@/components/auth/password-strength-bar";
 import { GoogleOAuthButton } from "@/components/auth/google-oauth-button";
 import { cn } from "@/lib/utils";
 
-interface SignupFormProps {
-  onSubmit?: (
-    data: SignupFormData
-  ) => Promise<{ error?: string; field?: string } | void>;
-}
-
-export function SignupForm({ onSubmit }: SignupFormProps) {
+export function SignupForm() {
   const t = useTranslations("signup");
   const locale = useLocale();
+  const router = useRouter();
+  const { executeRecaptcha } = useGoogleReCaptcha();
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -37,29 +36,66 @@ export function SignupForm({ onSubmit }: SignupFormProps) {
     reValidateMode: "onChange",
     defaultValues: {
       locale: locale as "en" | "es",
+      captchaToken: "pending", // will be replaced before submission
     },
   });
 
   const watchedPassword = watch("password") ?? "";
 
   const handleFormSubmit = async (data: SignupFormData) => {
-    // Stamp terms acceptance time and locale
+    // 1. Get reCAPTCHA token
+    if (!executeRecaptcha) {
+      setError("root", { message: t("errors.captchaFailed") });
+      return;
+    }
+    const captchaToken = await executeRecaptcha("signup");
+    if (!captchaToken) {
+      setError("root", { message: t("errors.captchaFailed") });
+      return;
+    }
+
+    // 2. Build final payload
     const payload: SignupFormData = {
       ...data,
+      captchaToken,
       termsAcceptedAt: new Date().toISOString(),
       locale: locale as "en" | "es",
     };
 
-    if (!onSubmit) return;
+    // 3. Call Server Action
+    const result = await signUpWithEmail(payload);
 
-    const result = await onSubmit(payload);
-    if (result?.error) {
-      const field = result.field as keyof SignupFormData | undefined;
-      if (field) {
-        setError(field, { message: result.error });
-      } else {
-        setError("root", { message: result.error });
+    if ("error" in result) {
+      switch (result.error) {
+        case "email_exists":
+          setError("email", {
+            type: "server",
+            message: "email_exists",
+          });
+          break;
+        case "disposable_email":
+          setError("email", {
+            type: "server",
+            message: t("errors.disposableEmail"),
+          });
+          break;
+        case "captcha_failed":
+          setError("root", { message: t("errors.captchaFailed") });
+          break;
+        default:
+          setError("root", {
+            message: result.error ?? t("errors.generic"),
+          });
       }
+      return;
+    }
+
+    // 4. Success — redirect
+    const email = encodeURIComponent(payload.email);
+    if (result.setupPending) {
+      router.push(`/verify-email?setup=pending&email=${email}`);
+    } else {
+      router.push(`/verify-email?email=${email}`);
     }
   };
 
@@ -231,12 +267,14 @@ export function SignupForm({ onSubmit }: SignupFormProps) {
 
         {/* Hidden locale field */}
         <input type="hidden" {...register("locale")} value={locale} />
+        {/* Hidden captchaToken field — value set programmatically before submit */}
+        <input type="hidden" {...register("captchaToken")} />
 
         {/* Submit button */}
         <Button
           type="submit"
           className="w-full"
-          disabled={!isValid || isSubmitting}
+          disabled={isSubmitting}
         >
           {isSubmitting ? (
             <>

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Zap, Shield, BarChart3 } from "lucide-react";
+import { RecaptchaProvider } from "@/components/auth/recaptcha-provider";
 import { SignupForm } from "@/components/auth/signup-form";
 import { LanguageSwitcher } from "@/components/auth/language-switcher";
 
@@ -89,8 +90,10 @@ export default async function SignupPage() {
             <p className="text-muted-foreground text-sm">{t("subtitle")}</p>
           </div>
 
-          {/* Signup form */}
-          <SignupForm />
+          {/* Signup form wrapped in reCAPTCHA provider */}
+          <RecaptchaProvider>
+            <SignupForm />
+          </RecaptchaProvider>
         </div>
       </div>
     </div>
