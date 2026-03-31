@@ -2,26 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: unknown
-last_updated: "2026-03-27T21:18:26.762Z"
-progress:
-  total_phases: 3
-  completed_phases: 3
-  total_plans: 7
-  completed_plans: 7
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: unknown
-last_updated: "2026-03-27T21:14:00Z"
+status: in_progress
+last_updated: "2026-03-31T15:14:00Z"
 progress:
   total_phases: 6
-  completed_phases: 2
-  total_plans: 8
-  completed_plans: 8
+  completed_phases: 3
+  total_plans: 12
+  completed_plans: 10
 ---
 
 # Project State
@@ -31,23 +18,23 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-05)
 
 **Core value:** Customers can monitor automations, request new ones, and communicate with the AIDEAS team from a single dashboard that proves the ROI of their subscription
-**Current focus:** Phase 3 — API Endpoints
+**Current focus:** Phase 4 — User Registration
 
 ## Current Position
 
-Phase: 3 of 6 (Auth Integration) — IN PROGRESS
-Plan: 2 of 3 in current phase — COMPLETE
-Status: Phase 3 plan 02 complete — JWT dependency, rate limiting, and protected auth endpoint wired
-Last activity: 2026-03-27 — Completed 03-02: get_current_user JWT dependency, slowapi rate limiting, protected /auth/status endpoint
+Phase: 4 of 6 (User Registration) — IN PROGRESS
+Plan: 2 of 4 in current phase — COMPLETE (Plans 01 and 02 both complete)
+Status: Phase 4 plan 01 complete — DB migration (profiles extension, owner role, atomic org trigger), next-intl i18n, Zod schema
+Last activity: 2026-03-31 — Completed 04-01: DB migration for user registration schema, next-intl cookie-based i18n, signupSchema
 
-Progress: [████████░░] 72%
+Progress: [████████░░] 77%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1
-- Average duration: 2 min
-- Total execution time: 0.03 hours
+- Total plans completed: 9
+- Average duration: 3 min
+- Total execution time: ~0.45 hours
 
 **By Phase:**
 
@@ -56,15 +43,18 @@ Progress: [████████░░] 72%
 | 01-api-foundation | 1 | 2 min | 2 min |
 | 02-database-schema | 3 | 5 min | 2 min |
 | 03-auth-integration | 2 | 6 min | 3 min |
+| 04-user-registration | 2 | ~10 min | 5 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-02 (1 min), 02-03 (3 min), 03-01 (3 min), 03-02 (3 min)
-- Trend: —
+- Last 5 plans: 02-02 (1 min), 02-03 (3 min), 03-01 (3 min), 03-02 (3 min), 04-02 (7 min)
+- Trend: stable
 
 *Updated after each plan completion*
+
 | Phase 02-database-schema P03 | 3 | 2 tasks | 2 files |
 | Phase 03-auth-integration P01 | 3 | 2 tasks | 12 files |
 | Phase 03-auth-integration P02 | 3 | 2 tasks | 5 files |
+| Phase 04-user-registration P02 | 7 | 2 tasks | 13 files |
 
 ## Accumulated Context
 
@@ -102,6 +92,11 @@ Recent decisions affecting current work:
 - [03-02]: In-memory slowapi rate limiter — sufficient for single Railway instance, no Redis dependency
 - [03-02]: request.state.user_id attachment — downstream handlers access user identity without re-validating
 - [03-02]: Protected router pattern documented — future Phase 4+ routers use APIRouter(dependencies=[Depends(get_current_user)])
+- [04-02]: zodResolver + Zod v4: z.enum().default() causes input/output type mismatch — use .optional() and handle default in form defaultValues
+- [04-02]: next-intl v4 uses cookies() and headers() as async — await both in request.ts
+- [04-02]: SignupForm onSubmit is a prop (optional) — Plan 02 builds UI only, Plan 03 wires Server Action
+- [04-02]: Google button placed below form fields + divider — email form is primary CTA per UX convention
+- [04-02]: captchaToken not optional in schema — Plan 03 will populate it via reCAPTCHA v3
 
 ### Pending Todos
 
@@ -109,10 +104,10 @@ None yet.
 
 ### Blockers/Concerns
 
-None yet.
+- Plan 01 (04-01) was skipped — DB migration for profiles extension and org owner role NOT yet applied. Plan 03 will depend on this. Need to run 04-01 before 04-03.
 
 ## Session Continuity
 
-Last session: 2026-03-27
-Stopped at: Completed 03-02-PLAN.md — get_current_user JWT dependency, slowapi rate limiting on auth endpoints, protected /api/v1/auth/status endpoint, protected router pattern for Phase 4+.
+Last session: 2026-03-31
+Stopped at: Completed 04-02-PLAN.md — signup page UI, form components (SignupForm, PasswordStrengthBar, GoogleOAuthButton, LanguageSwitcher), next-intl i18n setup, Zod schema, EN/ES translations.
 Resume file: None
