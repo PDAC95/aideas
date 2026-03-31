@@ -7,6 +7,7 @@ import {
   completeRegistrationSchema,
 } from '@/lib/validations/signup'
 import { isDisposableEmailDomain } from 'disposable-email-domains-js'
+import { cookies } from 'next/headers'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helpers
@@ -225,5 +226,59 @@ export async function resendVerificationEmail(
   if (error) {
     return { error: error.message }
   }
+  return { success: true }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// signInWithEmail
+// ─────────────────────────────────────────────────────────────────────────────
+
+type LoginResult =
+  | { success: true }
+  | { error: 'invalid_credentials' | 'email_not_verified' | 'generic' }
+
+export async function signInWithEmail(formData: {
+  email: string
+  password: string
+  rememberMe?: boolean
+}): Promise<LoginResult> {
+  const supabase = await createServerClient()
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: formData.email,
+    password: formData.password,
+  })
+
+  if (error) {
+    const msg = error.message?.toLowerCase() ?? ''
+    if (msg.includes('email not confirmed') || msg.includes('not confirmed')) {
+      return { error: 'email_not_verified' }
+    }
+    return { error: 'invalid_credentials' }
+  }
+
+  // Defensive check: email_confirmed_at may be null even without error
+  if (data.user && !data.user.email_confirmed_at) {
+    return { error: 'email_not_verified' }
+  }
+
+  // Set "remember me" cookie to control session duration in middleware
+  const cookieStore = await cookies()
+  if (formData.rememberMe) {
+    cookieStore.set('sb-remember-me', 'true', {
+      maxAge: 60 * 60 * 24 * 30,
+      path: '/',
+      httpOnly: true,
+      sameSite: 'lax',
+    })
+  } else {
+    // Session cookie (no maxAge) — deleted when browser closes
+    cookieStore.set('sb-remember-me', 'false', {
+      path: '/',
+      httpOnly: true,
+      sameSite: 'lax',
+    })
+  }
+
   return { success: true }
 }

@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { loginSchema, type LoginFormData } from "@/lib/validations/login";
+import { signInWithEmail } from "@/lib/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,16 +21,17 @@ interface LoginFormProps {
 
 export function LoginForm({ sessionExpired, authError }: LoginFormProps) {
   const t = useTranslations("login");
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showAuthError, setShowAuthError] = useState(authError ?? false);
   const [showSessionExpired, setShowSessionExpired] = useState(
     sessionExpired ?? false
   );
 
-  // Rate limiting state (Plan 02 activates)
-  const [, setFailedAttempts] = useState(0);
+  // Rate limiting state
+  const [failedAttempts, setFailedAttempts] = useState(0);
   const [lockedUntil, setLockedUntil] = useState<number | null>(null);
-  const [remainingMinutes, setRemainingMinutes] = useState(0);
+  const [lockoutMinutes, setLockoutMinutes] = useState(0);
 
   const isLocked = lockedUntil !== null && Date.now() < lockedUntil;
 
@@ -44,6 +47,26 @@ export function LoginForm({ sessionExpired, authError }: LoginFormProps) {
     reValidateMode: "onChange",
     defaultValues: { rememberMe: false },
   });
+
+  // Initialize rate limit state from localStorage on mount
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("login_failed_attempts");
+      if (!stored) return;
+      const { count, lockedUntil: until } = JSON.parse(stored) as {
+        count: number;
+        lockedUntil: number | null;
+      };
+      if (until && Date.now() < until) {
+        setFailedAttempts(count);
+        setLockedUntil(until);
+      } else {
+        localStorage.removeItem("login_failed_attempts");
+      }
+    } catch {
+      /* ignore corrupt localStorage */
+    }
+  }, []);
 
   // Auto-dismiss auth error after 5 seconds
   useEffect(() => {
@@ -61,38 +84,71 @@ export function LoginForm({ sessionExpired, authError }: LoginFormProps) {
     }
   }, [showSessionExpired]);
 
-  // Countdown timer for lockout
+  // Countdown timer for lockout display
   useEffect(() => {
-    if (!isLocked || lockedUntil === null) return;
-
-    const interval = setInterval(() => {
-      const remaining = lockedUntil - Date.now();
+    if (!lockedUntil) return;
+    const update = () => {
+      const remaining = Math.max(0, lockedUntil - Date.now());
+      setLockoutMinutes(Math.ceil(remaining / 60000));
       if (remaining <= 0) {
         setLockedUntil(null);
-        setRemainingMinutes(0);
-        clearInterval(interval);
-      } else {
-        setRemainingMinutes(Math.ceil(remaining / 60000));
+        setFailedAttempts(0);
+        localStorage.removeItem("login_failed_attempts");
       }
-    }, 1000);
-
+    };
+    update();
+    const interval = setInterval(update, 1000);
     return () => clearInterval(interval);
-  }, [isLocked, lockedUntil]);
+  }, [lockedUntil]);
 
   const handleFormSubmit = async (data: LoginFormData) => {
-    // Plan 02 will wire the actual Server Action here
-    // For now, placeholder so the form is testable
-    console.log("Login submit:", data);
+    // Check rate limit lock
+    if (lockedUntil && Date.now() < lockedUntil) return;
 
-    // Stub: prepare error handler pattern for Plan 02
-    // On auth failure Plan 02 will call:
-    //   setFailedAttempts((n) => n + 1)
-    //   setValue("password", "")
-    //   setError("root", { message: "invalidCredentials" })
-    void setFailedAttempts;
-    void setLockedUntil;
-    void setValue;
-    void setError;
+    const result = await signInWithEmail({
+      email: data.email,
+      password: data.password,
+      rememberMe: data.rememberMe ?? false,
+    });
+
+    if ("error" in result) {
+      if (result.error === "email_not_verified") {
+        router.push(`/verify-email?email=${encodeURIComponent(data.email)}`);
+        return;
+      }
+
+      if (result.error === "invalid_credentials") {
+        setValue("password", ""); // Clear password field per CONTEXT.md
+        const newCount = failedAttempts + 1;
+        setFailedAttempts(newCount);
+
+        if (newCount >= 5) {
+          const until = Date.now() + 10 * 60 * 1000; // 10 minutes lockout
+          setLockedUntil(until);
+          localStorage.setItem(
+            "login_failed_attempts",
+            JSON.stringify({ count: newCount, lockedUntil: until })
+          );
+        } else {
+          localStorage.setItem(
+            "login_failed_attempts",
+            JSON.stringify({ count: newCount, lockedUntil: null })
+          );
+          setError("root", { message: "invalidCredentials" });
+        }
+        return;
+      }
+
+      // Generic error
+      setError("root", { message: "generic" });
+      return;
+    }
+
+    // Success — clear rate limit state and redirect
+    localStorage.removeItem("login_failed_attempts");
+    setFailedAttempts(0);
+    setLockedUntil(null);
+    router.push("/dashboard");
   };
 
   // Resolve root error message: if it matches a known i18n key, translate it; otherwise show raw
@@ -148,18 +204,16 @@ export function LoginForm({ sessionExpired, authError }: LoginFormProps) {
         )}
 
         {/* Root / server error */}
-        {errors.root && (
+        {errors.root && !isLocked && (
           <div className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
-            {isLocked
-              ? t("errors.tooManyAttempts", { minutes: remainingMinutes })
-              : rootErrorMessage}
+            {rootErrorMessage}
           </div>
         )}
 
-        {/* Lockout banner (no root error set, just locked) */}
-        {isLocked && !errors.root && (
+        {/* Lockout banner */}
+        {isLocked && (
           <div className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
-            {t("errors.tooManyAttempts", { minutes: remainingMinutes })}
+            {t("errors.tooManyAttempts", { minutes: lockoutMinutes })}
           </div>
         )}
 
