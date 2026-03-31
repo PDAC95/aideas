@@ -78,11 +78,13 @@ Plans:
   3. Submitting the signup form with an already-registered email shows an inline error message without a page reload
   4. Clicking "Continue with Google" on the signup page completes the OAuth flow and lands the user on `/verify-email`
   5. Leaving the password field empty or using a short password shows a Zod validation error before the form submits
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 04-01: Signup page UI (form, Zod validation, error states, Google OAuth button)
-- [ ] 04-02: Registration logic (Supabase Auth call, org creation, redirect to verify-email)
+- [ ] 04-01-PLAN.md — Database migration (profiles extension, owner role, org-creation trigger) + i18n foundation + Zod schema
+- [ ] 04-02-PLAN.md — Signup page UI (split layout, form with blur validation, password strength bar, Google OAuth button, language switcher)
+- [ ] 04-03-PLAN.md — Registration logic (Server Actions, reCAPTCHA, disposable email blocking, auth callback update, complete-registration page)
+- [ ] 04-04-PLAN.md — Verify-email waiting page (resend timer, logout, tips) + legal placeholder pages
 
 ### Phase 5: User Login
 **Goal**: A registered and verified user can log in with email/password or Google, land on the dashboard, and remain logged in across browser refreshes and new tabs
@@ -126,6 +128,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 1. API Foundation | 2/2 | Complete   | 2026-03-05 |
 | 2. Database Schema | 3/3 | Complete   | 2026-03-06 |
 | 3. Auth Integration | 2/2 | Complete   | 2026-03-27 |
-| 4. User Registration | 0/2 | Not started | - |
+| 4. User Registration | 0/4 | Not started | - |
 | 5. User Login | 0/2 | Not started | - |
 | 6. Password Recovery and Email Verification | 0/2 | Not started | - |
