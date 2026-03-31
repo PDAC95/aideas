@@ -21,7 +21,7 @@ A registered and verified user can log in with email/password or Google OAuth, l
 - Checkbox "Recordarme" (Remember me) below the password field
 - Password field has show/hide toggle (eye icon)
 - "¿Olvidaste tu contraseña?" link below the password field, right-aligned
-- "¿No tienes cuenta? Regístrate" link below the login button, linking to /register
+- "¿No tienes cuenta? Regístrate" link below the login button, linking to /signup (canonical route from Phase 4)
 - Language selector (ES | EN) identical to registration: top-right corner, auto-detect from browser
 
 ### Error handling and states
