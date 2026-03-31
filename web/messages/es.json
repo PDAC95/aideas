@@ -60,6 +60,19 @@
     "submit": "Completar configuración",
     "submitting": "Configurando..."
   },
+  "legal": {
+    "terms": {
+      "title": "Términos de Servicio",
+      "placeholder": "Estos términos de servicio están siendo preparados. Por favor vuelve pronto.",
+      "updated": "Última actualización: Marzo 2026"
+    },
+    "privacy": {
+      "title": "Política de Privacidad",
+      "placeholder": "Nuestra política de privacidad está siendo preparada. Por favor vuelve pronto.",
+      "updated": "Última actualización: Marzo 2026"
+    },
+    "backToSignup": "Volver al registro"
+  },
   "common": {
     "language": "Idioma",
     "or": "o"

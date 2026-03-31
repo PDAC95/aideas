@@ -60,6 +60,19 @@
     "submit": "Complete setup",
     "submitting": "Setting up..."
   },
+  "legal": {
+    "terms": {
+      "title": "Terms of Service",
+      "placeholder": "These terms of service are being prepared. Please check back soon.",
+      "updated": "Last updated: March 2026"
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "placeholder": "Our privacy policy is being prepared. Please check back soon.",
+      "updated": "Last updated: March 2026"
+    },
+    "backToSignup": "Back to sign up"
+  },
   "common": {
     "language": "Language",
     "or": "or"
