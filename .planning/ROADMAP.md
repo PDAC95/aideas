@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: API Foundation** - FastAPI app production-ready with configuration, logging, health checks, and Supabase client (completed 2026-03-05)
 - [x] **Phase 2: Database Schema** - All 11 Supabase tables created with RLS policies, migrations committed, seed data available (completed 2026-03-06)
 - [x] **Phase 3: Auth Integration** - Supabase Auth configured for email/password + Google OAuth, JWT validation wired into FastAPI (completed 2026-03-27)
-- [ ] **Phase 4: User Registration** - New users can sign up with email or Google, organization created automatically, verification email sent
+- [x] **Phase 4: User Registration** - New users can sign up with email or Google, organization created automatically, verification email sent (completed 2026-03-31)
 - [ ] **Phase 5: User Login** - Users can log in and maintain persistent sessions across browser refreshes
 - [ ] **Phase 6: Password Recovery and Email Verification** - Users can recover a forgotten password and verify their email address
 
@@ -128,6 +128,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 1. API Foundation | 2/2 | Complete   | 2026-03-05 |
 | 2. Database Schema | 3/3 | Complete   | 2026-03-06 |
 | 3. Auth Integration | 2/2 | Complete   | 2026-03-27 |
-| 4. User Registration | 3/4 | In Progress|  |
+| 4. User Registration | 4/4 | Complete   | 2026-03-31 |
 | 5. User Login | 0/2 | Not started | - |
 | 6. Password Recovery and Email Verification | 0/2 | Not started | - |

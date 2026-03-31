@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-31T15:23:36.075Z"
+last_updated: "2026-03-31T15:31:15.880Z"
 progress:
   total_phases: 4
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 11
-  completed_plans: 10
+  completed_plans: 11
 ---
 
 # Project State
@@ -22,12 +22,12 @@ See: .planning/PROJECT.md (updated 2026-03-05)
 
 ## Current Position
 
-Phase: 4 of 6 (User Registration) — IN PROGRESS
-Plan: 3 of 4 in current phase — COMPLETE (Plans 01, 02, and 03 complete)
-Status: Phase 4 plan 03 complete — Server Actions (signUpWithEmail, completeRegistration, resendVerificationEmail), reCAPTCHA v3 wiring, OAuth callback new-user detection, complete-registration page
-Last activity: 2026-03-31 — Completed 04-03: Server Actions for email signup + complete-registration, wired signup form to Server Action, updated OAuth callback, created /complete-registration page
+Phase: 4 of 6 (User Registration) — COMPLETE
+Plan: 4 of 4 in current phase — COMPLETE (All plans complete)
+Status: Phase 4 complete — verify-email page, ResendEmailTimer, SignOutButton, /terms and /privacy legal pages
+Last activity: 2026-03-31 — Completed 04-04: verify-email waiting room, placeholder legal pages (/terms, /privacy), i18n keys for legal namespace
 
-Progress: [█████████░] 83%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -43,7 +43,7 @@ Progress: [█████████░] 83%
 | 01-api-foundation | 1 | 2 min | 2 min |
 | 02-database-schema | 3 | 5 min | 2 min |
 | 03-auth-integration | 2 | 6 min | 3 min |
-| 04-user-registration | 3 | ~22 min | 7 min |
+| 04-user-registration | 4 | ~24 min | 6 min |
 
 **Recent Trend:**
 - Last 5 plans: 03-01 (3 min), 03-02 (3 min), 04-02 (7 min), 04-01 (8 min), 04-03 (4 min)
@@ -57,6 +57,7 @@ Progress: [█████████░] 83%
 | Phase 04-user-registration P02 | 7 | 2 tasks | 13 files |
 | Phase 04-user-registration P01 | 8 | 2 tasks | 8 files |
 | Phase 04-user-registration P03 | 4 | 2 tasks | 7 files |
+| Phase 04-user-registration P04 | 2 min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -105,6 +106,8 @@ Recent decisions affecting current work:
 - [04-01]: handle_new_user EXCEPTION block uses RAISE WARNING not RAISE EXCEPTION — signup continues even if trigger body fails
 - [Phase 04-03]: New OAuth user detection uses user_metadata.company_name absence + google provider check
 - [Phase 04-03]: RecaptchaProvider extracted to client component wrapper — signup page stays Server Component
+- [Phase 04-04]: verify-email page reads email from searchParams — no session required, works immediately after signup redirect
+- [Phase 04-04]: Legal pages in (legal) route group — no shared layout needed, inherits root layout
 
 ### Pending Todos
 
@@ -117,5 +120,5 @@ None — Plan 01 (04-01) blocker resolved. DB migration for profiles extension, 
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Completed 04-03-PLAN.md — Server Actions (signUpWithEmail, completeRegistration, resendVerificationEmail), reCAPTCHA v3 wiring, signup form wired to Server Action, OAuth callback updated, /complete-registration page created.
+Stopped at: Completed 04-04-PLAN.md — verify-email page, ResendEmailTimer, SignOutButton, /terms and /privacy legal pages, legal i18n keys. Phase 4 complete.
 Resume file: None
