@@ -34,7 +34,10 @@
       "Bash(npx shadcn@latest add:*)",
       "Bash(pip install:*)",
       "Bash(npm run build:*)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__query-docs",
+      "mcp__brave-search__brave_web_search"
     ]
   }
 }

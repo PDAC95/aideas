@@ -1,397 +1,1750 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>
+            AIDEAS — AI Automation for Your Business
+        </title>
+        <meta content="" name="description">
+        <meta content="" name="author">
+        <meta content="" name="keywords">
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+        <!-- Oneex v1.2 || ex nihilo || July 2021 -->
+        <!-- style start -->
+        <link href="css/plugins.css" media="all" rel="stylesheet" type="text/css">
+        <link href="css/style.css" media="all" rel="stylesheet" type="text/css">
+        <!-- style end -->
+        <!-- toolbar + AIDEAS design system -->
+        <style>
+            /* ===== TOOLBAR (removed — controls inside nav menu) ===== */
+            .top-toolbar { display: none !important; }
 
-<head>
+            /* ===== FORCE VIDEO VISIBILITY (plugins.js hides it) ===== */
+            #videoContainment { display: block !important; }
+            #bgndVideo { display: block !important; }
+            .nav-menu-toolbar-item { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 5px; }
+            .nav-menu-toolbar-item a { display: inline-flex; align-items: center; }
+            .nav-toolbar-sep { opacity: 0.3; font-size: 12px; }
+            .theme-toggle-icon-menu { width: 16px; height: 16px; fill: currentColor; stroke: currentColor; stroke-width: 2; display: block; }
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+            /* ===== MENU DOTS — prevent resize on scroll ===== */
+            .round-menu.direction {
+                top: 37px !important;
+                right: 34px !important;
+                width: 60px !important;
+                height: 60px !important;
+                background: none !important;
+            }
+            .round-menu.direction::before {
+                width: 60px !important;
+                height: 60px !important;
+            }
+            body.body-dark .round-menu.direction {
+                background: none !important;
+            }
+            .round-menu.direction .dot-1,
+            .round-menu.direction .dot-2,
+            .round-menu.direction .dot-3 {
+                width: 5px !important;
+                height: 5px !important;
+            }
+            body.body-dark .round-menu.direction .dot-1,
+            body.body-dark .round-menu.direction .dot-2,
+            body.body-dark .round-menu.direction .dot-3 {
+                background: #fff !important;
+            }
 
-    <!-- google fonts preconnect -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- bootstrap grid css -->
-    <link rel="stylesheet" href="css/plugins/bootstrap-grid.css">
-    <!-- font awesome css -->
-    <link rel="stylesheet" href="css/plugins/font-awesome.min.css">
-    <!-- swiper css -->
-    <link rel="stylesheet" href="css/plugins/swiper.min.css">
-    <!-- fancybox css -->
-    <link rel="stylesheet" href="css/plugins/fancybox.min.css">
-    <!-- aideas scss -->
-    <link rel="stylesheet" href="css/style.css">
-    <!-- page name -->
-    <title>AIDEAS — AI Automations for Your Business</title>
+            /* ===== DESIGN SYSTEM TOKENS ===== */
+            :root {
+                --ai-magenta: #c73586;
+                --ai-purple: #7b2d8e;
+                --ai-navy: #1a2744;
+                --ai-dark-bg: #08080c;
+                --ai-dark-surface: #0f0f14;
+                --ai-dark-card: #141419;
+                --ai-dark-border: rgba(255,255,255,0.06);
+                --ai-text: rgba(255,255,255,0.5);
+                --ai-text-bright: rgba(255,255,255,0.9);
+                --ai-gradient: linear-gradient(135deg, var(--ai-magenta), var(--ai-purple));
+                --ai-glow: rgba(199,53,134,0.15);
+                --ai-radius: 16px;
+                --ai-radius-sm: 10px;
+                --ai-section-py: 140px;
+                --ai-container: 1200px;
+            }
+            .body-light {
+                --ai-dark-bg: #f7f7fa;
+                --ai-dark-surface: #eeeef2;
+                --ai-dark-card: #ffffff;
+                --ai-dark-border: rgba(0,0,0,0.07);
+                --ai-text: rgba(0,0,0,0.5);
+                --ai-text-bright: rgba(0,0,0,0.88);
+                --ai-glow: rgba(199,53,134,0.08);
+            }
 
-</head>
+            /* ===== ANIMATIONS ===== */
+            @keyframes ai-fadeUp {
+                from { opacity: 0; transform: translateY(32px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes ai-fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            .ai-reveal {
+                opacity: 0;
+                transform: translateY(32px);
+                transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1);
+            }
+            .ai-reveal.is-visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            .ai-reveal-delay-1 { transition-delay: 0.1s; }
+            .ai-reveal-delay-2 { transition-delay: 0.2s; }
+            .ai-reveal-delay-3 { transition-delay: 0.3s; }
+            .ai-reveal-delay-4 { transition-delay: 0.4s; }
 
-<body>
+            /* ===== SHARED ===== */
+            .ai-section {
+                padding: var(--ai-section-py) 0;
+                position: relative;
+                overflow: hidden;
+            }
+            .ai-section--surface { background: var(--ai-dark-surface); }
+            .ai-container {
+                max-width: var(--ai-container);
+                margin: 0 auto;
+                padding: 0 48px;
+            }
+            .ai-section-header { margin-bottom: 72px; }
+            .ai-section-header--center { text-align: center; }
+            .ai-section-subtitle {
+                font-family: 'Raleway', sans-serif;
+                font-size: 12px;
+                font-weight: 600;
+                letter-spacing: 5px;
+                text-transform: uppercase;
+                color: var(--ai-magenta);
+                margin-bottom: 16px;
+            }
+            .ai-section-title {
+                font-family: 'Oswald', sans-serif;
+                font-size: 56px;
+                font-weight: 300;
+                color: var(--ai-text-bright);
+                text-transform: uppercase;
+                letter-spacing: 3px;
+                line-height: 1.15;
+            }
+            .ai-text {
+                font-family: 'Raleway', sans-serif;
+                font-size: 16px;
+                line-height: 1.85;
+                color: var(--ai-text);
+                font-weight: 300;
+            }
+            .ai-text a.link-effect {
+                color: var(--ai-magenta);
+                text-decoration: none;
+                border-bottom: 1px solid rgba(199,53,134,0.3);
+                transition: border-color 0.3s;
+            }
+            .ai-text a.link-effect:hover { border-color: var(--ai-magenta); }
 
-    <!-- wrapper -->
-    <div class="mil-wrapper" id="top">
+            /* ===== BUTTONS ===== */
+            .ai-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                padding: 16px 40px;
+                background: var(--ai-gradient);
+                color: #fff;
+                font-family: 'Raleway', sans-serif;
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 3px;
+                text-transform: uppercase;
+                text-decoration: none;
+                border-radius: 50px;
+                border: none;
+                cursor: pointer;
+                transition: transform 0.35s cubic-bezier(0.16,1,0.3,1), box-shadow 0.35s ease;
+                position: relative;
+                overflow: hidden;
+            }
+            .ai-btn::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+                opacity: 0;
+                transition: opacity 0.3s;
+            }
+            .ai-btn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 16px 40px rgba(199,53,134,0.35);
+                color: #fff;
+                text-decoration: none;
+            }
+            .ai-btn:hover::before { opacity: 1; }
+            .ai-btn-outline {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 13px 30px;
+                border: 1px solid rgba(199,53,134,0.3);
+                color: var(--ai-magenta);
+                font-family: 'Raleway', sans-serif;
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 3px;
+                text-transform: uppercase;
+                text-decoration: none;
+                border-radius: 50px;
+                transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+                background: transparent;
+            }
+            .ai-btn-outline:hover {
+                background: var(--ai-gradient);
+                color: #fff;
+                border-color: transparent;
+                text-decoration: none;
+                transform: translateY(-2px);
+                box-shadow: 0 12px 32px rgba(199,53,134,0.25);
+            }
 
-        <!-- cursor -->
-        <div class="mil-ball">
-            <span class="mil-icon-1">
-                <svg viewBox="0 0 128 128">
-                    <path d="M106.1,41.9c-1.2-1.2-3.1-1.2-4.2,0c-1.2,1.2-1.2,3.1,0,4.2L116.8,61H11.2l14.9-14.9c1.2-1.2,1.2-3.1,0-4.2	c-1.2-1.2-3.1-1.2-4.2,0l-20,20c-1.2,1.2-1.2,3.1,0,4.2l20,20c0.6,0.6,1.4,0.9,2.1,0.9s1.5-0.3,2.1-0.9c1.2-1.2,1.2-3.1,0-4.2	L11.2,67h105.5l-14.9,14.9c-1.2,1.2-1.2,3.1,0,4.2c0.6,0.6,1.4,0.9,2.1,0.9s1.5-0.3,2.1-0.9l20-20c1.2-1.2,1.2-3.1,0-4.2L106.1,41.9	z" />
-                </svg>
-            </span>
-            <div class="mil-more-text">More</div>
-            <div class="mil-choose-text">Сhoose</div>
-        </div>
-        <!-- cursor end -->
+            /* ===== ABOUT ===== */
+            .ai-about-surface {
+                background: var(--ai-dark-surface);
+                border: 1px solid var(--ai-dark-border);
+                border-radius: 24px;
+                padding: 64px;
+            }
+            .ai-about-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 72px;
+                align-items: center;
+            }
+            .ai-about-content .ai-section-title { margin-bottom: 8px; }
+            .ai-about-role {
+                font-family: 'Raleway', sans-serif;
+                font-size: 13px;
+                font-weight: 600;
+                letter-spacing: 4px;
+                text-transform: uppercase;
+                color: var(--ai-magenta);
+                margin-bottom: 32px;
+            }
+            .ai-about-bio { margin-bottom: 44px; }
+            .ai-detail-pills {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 12px;
+                margin-bottom: 44px;
+            }
+            .ai-detail-pill {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                padding: 14px 20px;
+                background: var(--ai-dark-card);
+                border: 1px solid var(--ai-dark-border);
+                border-radius: var(--ai-radius-sm);
+                min-width: 130px;
+                transition: border-color 0.3s;
+            }
+            .ai-detail-pill:hover { border-color: rgba(199,53,134,0.25); }
+            .ai-detail-pill-label {
+                font-family: 'Raleway', sans-serif;
+                font-size: 10px;
+                font-weight: 700;
+                letter-spacing: 3px;
+                text-transform: uppercase;
+                color: var(--ai-magenta);
+            }
+            .ai-detail-pill-value {
+                font-family: 'Raleway', sans-serif;
+                font-size: 14px;
+                font-weight: 400;
+                color: var(--ai-text-bright);
+            }
+            .ai-about-stats {
+                display: flex;
+                align-items: baseline;
+                gap: 14px;
+                margin-bottom: 36px;
+            }
+            .ai-about-stats-number {
+                font-family: 'Oswald', sans-serif;
+                font-size: 88px;
+                font-weight: 300;
+                background: var(--ai-gradient);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                line-height: 1;
+            }
+            .ai-about-stats-label {
+                font-family: 'Oswald', sans-serif;
+                font-size: 20px;
+                font-weight: 300;
+                color: var(--ai-text);
+                text-transform: uppercase;
+                letter-spacing: 3px;
+            }
+            /* About — Abstract Visual */
+            .ai-about-visual {
+                position: relative;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 420px;
+            }
+            .ai-about-visual-inner {
+                position: relative;
+                width: 100%;
+                height: 420px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .ai-about-visual-glow {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 300px;
+                height: 300px;
+                background: radial-gradient(circle, rgba(199,53,134,0.2) 0%, rgba(123,45,142,0.08) 50%, transparent 70%);
+                border-radius: 50%;
+                animation: ai-pulse-glow 4s ease-in-out infinite;
+            }
+            @keyframes ai-pulse-glow {
+                0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+                50% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+            }
+            .ai-about-visual-center {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, var(--ai-magenta), var(--ai-purple));
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 3;
+                box-shadow: 0 0 40px rgba(199,53,134,0.3), 0 0 80px rgba(123,45,142,0.15);
+            }
+            .ai-about-visual-center span {
+                font-family: 'Oswald', sans-serif;
+                font-size: 22px;
+                font-weight: 700;
+                color: #fff;
+                letter-spacing: 2px;
+            }
+            .ai-about-visual-orbit {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 220px;
+                height: 220px;
+                border-radius: 50%;
+                border: 1px solid rgba(199,53,134,0.15);
+                animation: ai-orbit-spin 20s linear infinite;
+            }
+            .ai-about-visual-orbit-2 {
+                width: 320px;
+                height: 320px;
+                border-color: rgba(123,45,142,0.08);
+                animation-duration: 30s;
+                animation-direction: reverse;
+            }
+            @keyframes ai-orbit-spin {
+                from { transform: translate(-50%, -50%) rotate(0deg); }
+                to { transform: translate(-50%, -50%) rotate(360deg); }
+            }
+            .ai-about-visual-orbit::before {
+                content: '';
+                position: absolute;
+                top: -4px;
+                left: 50%;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: var(--ai-magenta);
+                box-shadow: 0 0 12px var(--ai-magenta);
+            }
+            .ai-about-visual-orbit-2::before {
+                background: var(--ai-purple);
+                box-shadow: 0 0 12px var(--ai-purple);
+                top: auto;
+                bottom: -4px;
+                left: 30%;
+            }
+            .ai-about-visual-stat {
+                position: absolute;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 4px;
+                z-index: 2;
+                background: var(--ai-dark-card);
+                border: 1px solid var(--ai-dark-border);
+                border-radius: 12px;
+                padding: 16px 20px;
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+            }
+            .ai-about-visual-stat-num {
+                font-family: 'Oswald', sans-serif;
+                font-size: 24px;
+                font-weight: 300;
+                background: linear-gradient(135deg, var(--ai-magenta), var(--ai-purple));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+            .ai-about-visual-stat-txt {
+                font-family: 'Raleway', sans-serif;
+                font-size: 10px;
+                font-weight: 600;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                color: var(--ai-text);
+            }
+            .ai-about-visual-stat-1 { top: 20px; right: 10%; animation: ai-float 6s ease-in-out infinite; }
+            .ai-about-visual-stat-2 { bottom: 30px; left: 5%; animation: ai-float 6s ease-in-out infinite 2s; }
+            .ai-about-visual-stat-3 { top: 50%; right: 0; transform: translateY(-50%); animation: ai-float 6s ease-in-out infinite 4s; }
+            @keyframes ai-float {
+                0%, 100% { transform: translateY(0); }
+                50% { transform: translateY(-8px); }
+            }
+            .ai-about-visual-stat-3 {
+                animation: ai-float-3 6s ease-in-out infinite 4s;
+            }
+            @keyframes ai-float-3 {
+                0%, 100% { transform: translateY(-50%); }
+                50% { transform: translateY(calc(-50% - 8px)); }
+            }
+            body.body-light .ai-about-visual-stat {
+                background: rgba(255,255,255,0.9);
+                border-color: rgba(0,0,0,0.08);
+            }
+            body.body-light .ai-about-visual-glow {
+                background: radial-gradient(circle, rgba(199,53,134,0.12) 0%, rgba(123,45,142,0.05) 50%, transparent 70%);
+            }
+            @media (max-width: 768px) {
+                .ai-about-visual { min-height: 320px; }
+                .ai-about-visual-inner { height: 320px; }
+                .ai-about-visual-glow { width: 200px; height: 200px; }
+                .ai-about-visual-orbit { width: 160px; height: 160px; }
+                .ai-about-visual-orbit-2 { width: 240px; height: 240px; }
+                .ai-about-visual-stat { padding: 12px 16px; }
+                .ai-about-visual-stat-num { font-size: 20px; }
+            }
 
-        <!-- preloader -->
-        <div class="mil-preloader">
-            <div class="mil-preloader-animation">
-                <div class="mil-pos-abs mil-animation-1">
-                    <p class="mil-h3 mil-muted mil-thin">Automate</p>
-                    <p class="mil-h3 mil-muted">Save Time</p>
-                    <p class="mil-h3 mil-muted mil-thin">Scale</p>
-                </div>
-                <div class="mil-pos-abs mil-animation-2">
-                    <div class="mil-reveal-frame">
-                        <p class="mil-reveal-box"></p>
-                        <p class="mil-h3 mil-muted mil-thin">aideas.com</p>
-                    </div>
+            /* ===== PROCESS / SKILLS ===== */
+            .ai-process-wrap { margin-bottom: 80px; }
+            .ai-process-timeline {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 0;
+                position: relative;
+            }
+            .ai-process-timeline::before {
+                content: '';
+                position: absolute;
+                top: 32px;
+                left: 10%;
+                right: 10%;
+                height: 2px;
+                background: var(--ai-gradient);
+                opacity: 0.3;
+            }
+            .ai-process-step {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                padding: 0 16px;
+                position: relative;
+            }
+            .ai-process-number {
+                width: 64px;
+                height: 64px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: 'Oswald', sans-serif;
+                font-size: 22px;
+                font-weight: 300;
+                color: var(--ai-text-bright);
+                background: var(--ai-dark-card);
+                border: 2px solid transparent;
+                background-clip: padding-box;
+                position: relative;
+                margin-bottom: 24px;
+                z-index: 2;
+                transition: all 0.35s;
+            }
+            .ai-process-number::before {
+                content: '';
+                position: absolute;
+                inset: -2px;
+                border-radius: 50%;
+                background: var(--ai-gradient);
+                z-index: -1;
+                opacity: 0.4;
+                transition: opacity 0.35s;
+            }
+            .ai-process-step:hover .ai-process-number::before { opacity: 1; }
+            .ai-process-step-title {
+                font-family: 'Raleway', sans-serif;
+                font-size: 13px;
+                font-weight: 600;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                color: var(--ai-text-bright);
+                margin-bottom: 10px;
+                line-height: 1.5;
+            }
+            .ai-process-step-desc {
+                font-family: 'Raleway', sans-serif;
+                font-size: 13px;
+                line-height: 1.7;
+                color: var(--ai-text);
+                font-weight: 300;
+                max-width: 200px;
+            }
+            .ai-tools-row {
+                display: flex;
+                justify-content: center;
+                gap: 14px;
+                flex-wrap: wrap;
+            }
+            .ai-tool-pill {
+                padding: 10px 22px;
+                background: var(--ai-dark-card);
+                border: 1px solid var(--ai-dark-border);
+                border-radius: 50px;
+                font-family: 'Raleway', sans-serif;
+                font-size: 12px;
+                font-weight: 600;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                color: var(--ai-text);
+                transition: all 0.3s;
+            }
+            .ai-tool-pill:hover {
+                border-color: rgba(199,53,134,0.3);
+                color: var(--ai-text-bright);
+            }
+
+            /* ===== SERVICES ===== */
+            .ai-services-grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 24px;
+            }
+            .ai-service-card {
+                padding: 48px 32px 40px;
+                background: var(--ai-dark-card);
+                border: 1px solid var(--ai-dark-border);
+                border-radius: var(--ai-radius);
+                text-align: center;
+                position: relative;
+                overflow: hidden;
+                transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s, border-color 0.4s;
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+            }
+            .ai-service-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+                background: var(--ai-gradient);
+                opacity: 0;
+                transition: opacity 0.4s;
+            }
+            .ai-service-card:hover {
+                transform: translateY(-6px);
+                box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+                border-color: rgba(199,53,134,0.2);
+            }
+            .ai-service-card:hover::before { opacity: 1; }
+            .ai-service-icon {
+                font-size: 40px;
+                background: var(--ai-gradient);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                margin-bottom: 28px;
+                display: block;
+            }
+            .ai-service-subtitle {
+                font-family: 'Raleway', sans-serif;
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 4px;
+                text-transform: uppercase;
+                color: var(--ai-magenta);
+                margin-bottom: 6px;
+            }
+            .ai-service-title {
+                font-family: 'Oswald', sans-serif;
+                font-size: 24px;
+                font-weight: 300;
+                color: var(--ai-text-bright);
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                margin-bottom: 18px;
+            }
+            .ai-service-desc {
+                font-family: 'Raleway', sans-serif;
+                font-size: 14px;
+                line-height: 1.75;
+                color: var(--ai-text);
+                font-weight: 300;
+            }
+
+            /* ===== FACTS ===== */
+            .ai-facts-section {
+                position: relative;
+                overflow: hidden;
+            }
+            .ai-facts-glow {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 600px;
+                height: 600px;
+                transform: translate(-50%, -50%);
+                background: radial-gradient(circle, rgba(199,53,134,0.08) 0%, transparent 70%);
+                pointer-events: none;
+            }
+            .ai-facts-content { position: relative; z-index: 2; }
+            .ai-facts-grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 48px;
+                text-align: center;
+            }
+            .ai-fact-item { padding: 24px 0; }
+            .ai-fact-number {
+                font-family: 'Oswald', sans-serif;
+                font-size: 76px;
+                font-weight: 300;
+                background: var(--ai-gradient);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                line-height: 1.05;
+                margin-bottom: 12px;
+            }
+            .ai-fact-suffix { font-size: 40px; }
+            .ai-fact-label {
+                font-family: 'Raleway', sans-serif;
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: 3px;
+                text-transform: uppercase;
+                color: var(--ai-text);
+            }
+
+            /* ===== TESTIMONIALS ===== */
+            .ai-testimonials-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 28px;
+            }
+            .ai-testimonial-card {
+                padding: 44px 36px;
+                background: var(--ai-dark-card);
+                border: 1px solid var(--ai-dark-border);
+                border-radius: var(--ai-radius);
+                border-left: 2px solid;
+                border-image: var(--ai-gradient) 1;
+                position: relative;
+                transition: transform 0.35s cubic-bezier(0.16,1,0.3,1), box-shadow 0.35s;
+            }
+            .ai-testimonial-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 16px 40px rgba(0,0,0,0.2);
+            }
+            .ai-testimonial-quote-icon {
+                font-family: Georgia, serif;
+                font-size: 72px;
+                line-height: 1;
+                background: var(--ai-gradient);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                opacity: 0.2;
+                position: absolute;
+                top: 20px;
+                right: 28px;
+            }
+            .ai-testimonial-text {
+                font-family: 'Raleway', sans-serif;
+                font-size: 15px;
+                line-height: 1.85;
+                color: var(--ai-text);
+                font-weight: 300;
+                margin-bottom: 28px;
+                position: relative;
+                z-index: 1;
+            }
+            .ai-testimonial-text a.link-effect { color: var(--ai-magenta); text-decoration: none; }
+            .ai-testimonial-author {
+                font-family: 'Raleway', sans-serif;
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 3px;
+                text-transform: uppercase;
+                color: var(--ai-magenta);
+            }
+
+            /* ===== CATALOG / WORKS ===== */
+            .ai-catalog-grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
+            }
+            .ai-catalog-card {
+                background: var(--ai-dark-card);
+                border: 1px solid var(--ai-dark-border);
+                border-radius: var(--ai-radius);
+                padding: 40px 28px 36px;
+                text-align: center;
+                transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s, border-color 0.4s;
+                position: relative;
+                overflow: hidden;
+            }
+            .ai-catalog-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 16px 40px rgba(0,0,0,0.25);
+                border-color: rgba(199,53,134,0.2);
+            }
+            .ai-catalog-card--special {
+                background: linear-gradient(135deg, rgba(199,53,134,0.06), rgba(123,45,142,0.06));
+                border-color: rgba(199,53,134,0.25);
+            }
+            .ai-catalog-card--special:hover {
+                background: linear-gradient(135deg, rgba(199,53,134,0.1), rgba(123,45,142,0.1));
+                border-color: rgba(199,53,134,0.5);
+            }
+            .ai-catalog-icon {
+                font-size: 36px;
+                background: var(--ai-gradient);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                margin-bottom: 20px;
+                display: block;
+            }
+            .ai-catalog-title {
+                font-family: 'Oswald', sans-serif;
+                font-size: 16px;
+                font-weight: 400;
+                text-transform: uppercase;
+                letter-spacing: 1.5px;
+                color: var(--ai-text-bright);
+                margin-bottom: 10px;
+            }
+            .ai-catalog-count {
+                display: inline-block;
+                padding: 4px 14px;
+                background: rgba(199,53,134,0.1);
+                border-radius: 50px;
+                font-family: 'Raleway', sans-serif;
+                font-size: 10px;
+                font-weight: 700;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                color: var(--ai-magenta);
+                margin-bottom: 18px;
+            }
+            .ai-catalog-desc {
+                font-family: 'Raleway', sans-serif;
+                font-size: 13px;
+                line-height: 1.7;
+                color: var(--ai-text);
+                font-weight: 300;
+                margin: 0;
+            }
+            .ai-works-caption {
+                text-align: center;
+                margin-top: 48px;
+                max-width: 700px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .ai-works-caption p {
+                font-family: 'Raleway', sans-serif;
+                font-size: 15px;
+                line-height: 1.8;
+                color: var(--ai-text);
+                font-weight: 300;
+            }
+
+            /* ===== USE CASES / NEWS ===== */
+            .ai-cases-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 28px;
+            }
+            .ai-case-card {
+                padding: 44px;
+                background: var(--ai-dark-card);
+                border: 1px solid var(--ai-dark-border);
+                border-radius: var(--ai-radius);
+                transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s, border-color 0.4s;
+            }
+            .ai-case-card:hover {
+                transform: translateY(-4px);
+                border-color: rgba(199,53,134,0.2);
+                box-shadow: 0 16px 40px rgba(0,0,0,0.2), 0 0 0 1px rgba(199,53,134,0.1);
+            }
+            .ai-case-badge {
+                display: inline-block;
+                padding: 6px 16px;
+                background: rgba(199,53,134,0.1);
+                color: var(--ai-magenta);
+                font-family: 'Raleway', sans-serif;
+                font-size: 10px;
+                font-weight: 700;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                border-radius: 50px;
+                margin-bottom: 24px;
+            }
+            .ai-case-title {
+                font-family: 'Oswald', sans-serif;
+                font-size: 26px;
+                font-weight: 300;
+                color: var(--ai-text-bright);
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                margin-bottom: 18px;
+                line-height: 1.25;
+            }
+            .ai-case-text {
+                font-family: 'Raleway', sans-serif;
+                font-size: 15px;
+                line-height: 1.85;
+                color: var(--ai-text);
+                font-weight: 300;
+                margin-bottom: 28px;
+            }
+            .ai-case-text a.link-effect {
+                color: var(--ai-magenta);
+                text-decoration: none;
+                border-bottom: 1px solid rgba(199,53,134,0.3);
+            }
+            .ai-case-meta {
+                display: flex;
+                gap: 32px;
+                margin-bottom: 28px;
+                flex-wrap: wrap;
+            }
+            .ai-case-meta-item { display: flex; flex-direction: column; gap: 4px; }
+            .ai-case-meta-label {
+                font-family: 'Raleway', sans-serif;
+                font-size: 10px;
+                font-weight: 700;
+                letter-spacing: 3px;
+                text-transform: uppercase;
+                color: var(--ai-magenta);
+            }
+            .ai-case-meta-value {
+                font-family: 'Raleway', sans-serif;
+                font-size: 14px;
+                font-weight: 400;
+                color: var(--ai-text-bright);
+            }
+
+            /* ===== CONTACT ===== */
+            .ai-contact-grid {
+                display: grid;
+                grid-template-columns: 1fr 1.4fr;
+                gap: 80px;
+                align-items: start;
+            }
+            .ai-contact-info-block { margin-bottom: 40px; }
+            .ai-contact-info-icon {
+                font-size: 22px;
+                background: var(--ai-gradient);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                margin-bottom: 12px;
+                display: block;
+            }
+            .ai-contact-info-label {
+                font-family: 'Raleway', sans-serif;
+                font-size: 10px;
+                font-weight: 700;
+                letter-spacing: 4px;
+                text-transform: uppercase;
+                color: var(--ai-magenta);
+                margin-bottom: 6px;
+            }
+            .ai-contact-info-title {
+                font-family: 'Oswald', sans-serif;
+                font-size: 22px;
+                font-weight: 300;
+                color: var(--ai-text-bright);
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                margin-bottom: 8px;
+            }
+            .ai-contact-info-value {
+                font-family: 'Raleway', sans-serif;
+                font-size: 15px;
+                font-weight: 300;
+                color: var(--ai-text);
+            }
+            .ai-contact-info-value a {
+                color: var(--ai-text);
+                text-decoration: none;
+                transition: color 0.3s;
+            }
+            .ai-contact-info-value a:hover { color: var(--ai-magenta); }
+            .ai-contact-social {
+                display: flex;
+                gap: 18px;
+                margin-top: 24px;
+            }
+            .ai-contact-social a {
+                width: 42px;
+                height: 42px;
+                border-radius: 50%;
+                border: 1px solid var(--ai-dark-border);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 16px;
+                color: var(--ai-text);
+                transition: all 0.3s;
+                text-decoration: none;
+            }
+            .ai-contact-social a:hover {
+                color: #fff;
+                border-color: var(--ai-magenta);
+                background: var(--ai-gradient);
+            }
+            .ai-form {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+            }
+            .ai-form-row {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+            .ai-form input, .ai-form textarea {
+                width: 100%;
+                padding: 18px 24px;
+                background: var(--ai-dark-surface);
+                border: 1px solid var(--ai-dark-border);
+                border-radius: var(--ai-radius-sm);
+                color: var(--ai-text-bright);
+                font-family: 'Raleway', sans-serif;
+                font-size: 15px;
+                font-weight: 300;
+                outline: none;
+                transition: border-color 0.3s, box-shadow 0.3s;
+                box-sizing: border-box;
+            }
+            .ai-form input:focus, .ai-form textarea:focus {
+                border-color: var(--ai-magenta);
+                box-shadow: 0 0 0 3px rgba(199,53,134,0.1);
+            }
+            .ai-form input::placeholder, .ai-form textarea::placeholder { color: var(--ai-text); }
+            .ai-form textarea { min-height: 160px; resize: vertical; }
+            .ai-form-status {
+                font-family: 'Raleway', sans-serif;
+                font-size: 13px;
+                font-weight: 500;
+                margin-top: 8px;
+                display: none;
+            }
+            .ai-form-status.success { color: #4caf50; display: block; }
+            .ai-form-status.error { color: #f44336; display: block; }
+
+            /* ===== FOOTER ===== */
+            .ai-footer {
+                padding: 48px 0;
+                text-align: center;
+                border-top: 1px solid var(--ai-dark-border);
+            }
+            .ai-footer-text {
+                font-family: 'Raleway', sans-serif;
+                font-size: 12px;
+                font-weight: 400;
+                letter-spacing: 3px;
+                text-transform: uppercase;
+                color: var(--ai-text);
+            }
+
+            /* ===== RESPONSIVE ===== */
+            @media (max-width: 1100px) {
+                .ai-services-grid { grid-template-columns: repeat(2, 1fr); }
+                .ai-catalog-grid { grid-template-columns: repeat(2, 1fr); }
+                .ai-process-timeline { grid-template-columns: repeat(2, 1fr); gap: 40px; }
+                .ai-process-timeline::before { display: none; }
+            }
+            @media (max-width: 768px) {
+                :root { --ai-section-py: 100px; }
+                .ai-container { padding: 0 24px; }
+                .ai-section-title { font-size: 40px; }
+                .ai-about-surface { padding: 36px 24px; border-radius: 16px; }
+                .ai-about-grid { grid-template-columns: 1fr; gap: 40px; }
+                .ai-about-visual { min-height: 280px; }
+                .ai-process-timeline { grid-template-columns: 1fr 1fr; gap: 36px; }
+                .ai-services-grid { grid-template-columns: 1fr; }
+                .ai-facts-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+                .ai-testimonials-grid { grid-template-columns: 1fr; }
+                .ai-cases-grid { grid-template-columns: 1fr; }
+                .ai-contact-grid { grid-template-columns: 1fr; gap: 48px; }
+                .ai-form-row { grid-template-columns: 1fr; }
+            }
+            @media (max-width: 480px) {
+                :root { --ai-section-py: 80px; }
+                .ai-section-title { font-size: 32px; }
+                .ai-about-stats-number { font-size: 64px; }
+                .ai-catalog-grid { grid-template-columns: 1fr; }
+                .ai-facts-grid { grid-template-columns: 1fr; gap: 24px; }
+                .ai-fact-number { font-size: 56px; }
+                .ai-process-timeline { grid-template-columns: 1fr; }
+                .ai-detail-pills { flex-direction: column; }
+                .ai-case-card { padding: 28px; }
+            }
+        </style>
+        <!-- google fonts start -->
+        <link href="https://fonts.googleapis.com/css?family=Raleway:100,200,300,400,500,600,700,800,900%7COswald:300,400,700" rel="stylesheet" type="text/css">
+        <!-- google fonts end -->
+    </head>
+    <body class="body-dark">
+        <!-- top toolbar removed — controls are inside the nav menu -->
+        <!-- preloader start -->
+        <div class="preloader-bg"></div>
+        <div id="preloader">
+            <div id="preloader-status">
+                <div class="preloader-position loader">
+                    <span></span>
                 </div>
             </div>
         </div>
         <!-- preloader end -->
-
-        <!-- scrollbar progress -->
-        <div class="mil-progress-track">
-            <div class="mil-progress"></div>
-        </div>
-        <!-- scrollbar progress end -->
-
-        <!-- menu -->
-        <div class="mil-menu-frame">
-            <!-- frame clone -->
-            <div class="mil-frame-top">
-                <a href="index.html" class="mil-logo">AIDEAS</a>
-                <div class="mil-menu-btn">
-                    <span></span>
-                </div>
-            </div>
-            <!-- frame clone end -->
-            <div class="container">
-                <div class="mil-menu-content">
-                    <div class="row">
-                        <div class="col-xl-5">
-
-                            <nav class="mil-main-menu" id="swupMenu">
-                                <ul>
-                                    <li class="mil-active"><a href="index.html">Home</a></li>
-                                    <li><a href="automations.html">Automations</a></li>
-                                    <li><a href="pricing.html">Pricing</a></li>
-                                    <li><a href="contact.html">Contact</a></li>
-                                </ul>
-                            </nav>
-
-                        </div>
-                        <div class="col-xl-7">
-
-                            <div class="mil-menu-right-frame">
-                                <div class="mil-animation-in">
-                                    <div class="mil-animation-frame">
-                                        <div class="mil-animation mil-position-1 mil-scale" data-value-1="2" data-value-2="2"></div>
-                                    </div>
-                                </div>
-                                <div class="mil-menu-right">
-                                    <div class="row">
-                                        <div class="col-lg-8 mil-mb-60">
-                                            <h6 class="mil-muted mil-mb-30">Quick Links</h6>
-                                            <ul class="mil-menu-list">
-                                                <li><a href="automations.html" class="mil-light-soft">Browse Automations</a></li>
-                                                <li><a href="pricing.html" class="mil-light-soft">See Pricing</a></li>
-                                                <li><a href="contact.html" class="mil-light-soft">Request a Demo</a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="col-lg-4 mil-mb-60">
-                                            <h6 class="mil-muted mil-mb-30">Legal</h6>
-                                            <ul class="mil-menu-list">
-                                                <li><a href="#" class="mil-light-soft">Privacy Policy</a></li>
-                                                <li><a href="#" class="mil-light-soft">Terms of Service</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="mil-divider mil-mb-60"></div>
-                                    <div class="row">
-                                        <div class="col-lg-12 mil-mb-60">
-                                            <a href="https://app.aideas.com/signup" data-no-swup class="mil-button mil-arrow-place">
-                                                <span>Get Started Free</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
+        <!-- vertical lines start -->
+        <div class="vertical-lines-out">
+            <div class="vertical-lines-wrapper-e">
+                <div class="vertical-lines-e"></div>
             </div>
         </div>
-        <!-- menu -->
-        
-        <!-- curtain -->
-        <div class="mil-curtain"></div>
-        <!-- curtain end -->
-
-        <!-- frame -->
-        <div class="mil-frame">
-            <div class="mil-frame-top">
-                <a href="index.html" class="mil-logo">AIDEAS</a>
-                <div class="mil-menu-btn">
-                    <span></span>
-                </div>
+        <!-- vertical lines end -->
+        <!-- logo start -->
+        <a class="logo" href="#">
+            <div class="logo-img"></div>
+        </a>
+        <!-- logo end -->
+        <!-- header start -->
+        <div id="header">
+            <!-- navigation start -->
+            <!-- navigation button start -->
+            <div class="round-menu navigation-fire">
+                <span class="dot-1"></span><span class="dot-2"></span><span class="dot-3"></span>
             </div>
-            <div class="mil-frame-bottom">
-                <div class="mil-current-page"></div>
-                <div class="mil-back-to-top">
-                    <a href="#top" class="mil-link mil-dark mil-arrow-place">
-                        <span>Back to top</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <!-- frame end -->
-
-        <!-- content -->
-        <div class="mil-content">
-            <div id="swupMain" class="mil-main-transition">
-
-                <!-- banner -->
-                <section class="mil-banner mil-dark-bg">
-                    <div class="mi-invert-fix">
-                        <div class="mil-animation-frame">
-                            <div class="mil-animation mil-position-1 mil-scale" data-value-1="7" data-value-2="1.6"></div>
-                            <div class="mil-animation mil-position-2 mil-scale" data-value-1="4" data-value-2="1"></div>
-                            <div class="mil-animation mil-position-3 mil-scale" data-value-1="1.2" data-value-2=".1"></div>
-                        </div>
-
-                        <div class="mil-gradient"></div>
-
-                        <div class="container">
-                            <div class="mil-banner-content mil-up">
-                                <h1 class="mil-muted mil-mb-60">AI Automations <span class="mil-thin">That</span><br>Save You <span class="mil-thin">Time &amp; Money</span></h1>
-                                <div class="row">
-                                    <div class="col-md-7 col-lg-5">
-                                        <p class="mil-light-soft mil-mb-60">Replace expensive manual tasks with affordable AI automations. Browse 150+ ready-to-deploy workflows and start saving from day one.</p>
+            <!-- navigation button end -->
+            <!-- center container start -->
+            <div class="center-container-menu">
+                <!-- center block start -->
+                <div class="center-block-menu">
+                    <!-- navigation menu start -->
+                    <nav class="navigation-menu">
+                        <!-- navigation menu wrapper start -->
+                        <div class="nav-menu-wrapper">
+                            <!-- navigation menu animation start -->
+                            <div class="nav-menu-animation">
+                                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
+                                    <path d="M49.9,2.5C23.6,2.8,2.1,24.4,2.5,50.4C2.9,76.5,24.7,98,50.3,97.5c26.4-0.6,47.4-21.8,47.2-47.7
+                                        C97.3,23.7,75.7,2.3,49.9,2.5"/>
+                                </svg>
+                            </div>
+                            <!-- navigation menu animation end -->
+                            <!-- center container start -->
+                            <div class="center-container">
+                                <!-- center block start -->
+                                <div class="center-block">
+                                    <!-- navigation menu links start -->
+                                    <div class="nav-menu-links">
+                                        <ul class="menu">
+                                            <li>
+                                                <a class="page-scroll" href="#home" data-i18n="nav.home">Home</a>
+                                            </li>
+                                            <li>
+                                                <a class="page-scroll" href="#about" data-i18n="nav.about">About</a>
+                                            </li>
+                                            <li>
+                                                <a class="page-scroll" href="#works" data-i18n="nav.works">Works</a>
+                                            </li>
+                                            <li>
+                                                <a class="page-scroll" href="#news" data-i18n="nav.news">News</a>
+                                            </li>
+                                            <li>
+                                                <a class="page-scroll" href="#contact" data-i18n="nav.contact">Contact</a>
+                                            </li>
+                                            <li class="nav-menu-toolbar-item">
+                                                <a href="#" id="lang-toggle-mobile" data-lang="es" class="lang-switch-btn-mobile">ES</a>
+                                                <span class="nav-toolbar-sep">|</span>
+                                                <a href="#" id="theme-toggle-mobile" aria-label="Toggle theme">
+                                                    <svg class="theme-toggle-icon-menu" id="icon-sun-mobile" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                        <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3" stroke-linecap="round"/><line x1="12" y1="21" x2="12" y2="23" stroke-linecap="round"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke-linecap="round"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke-linecap="round"/><line x1="1" y1="12" x2="3" y2="12" stroke-linecap="round"/><line x1="21" y1="12" x2="23" y2="12" stroke-linecap="round"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke-linecap="round"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke-linecap="round"/>
+                                                    </svg>
+                                                    <svg class="theme-toggle-icon-menu" id="icon-moon-mobile" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="display:none;">
+                                                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                                                    </svg>
+                                                </a>
+                                            </li>
                                     </div>
+                                    <!-- navigation menu links end -->
                                 </div>
-                                <a href="https://app.aideas.com/signup" data-no-swup class="mil-button mil-arrow-place mil-btn-space">
-                                    <span>Get Started Free</span>
-                                </a>
-                                <a href="automations.html" class="mil-link mil-muted mil-arrow-place">
-                                    <span>Browse Automations</span>
-                                </a>
+                                <!-- center block end -->
                             </div>
+                            <!-- center container end -->
                         </div>
-                    </div>
-                </section>
-                <!-- banner end -->
-
-                <!-- Phase 3: Home page content sections will be built here -->
-
-                <!-- footer -->
-                <footer class="mil-dark-bg mil-p-120-60">
-                    <div class="mi-invert-fix">
-                    <div class="container">
-                        <div class="row justify-content-between mil-mb-60">
-
-                            <div class="col-lg-4 mil-mb-60">
-                                <a href="index.html" class="mil-logo mil-mb-30 mil-up">AIDEAS</a>
-                                <p class="mil-light-soft mil-mb-30">AI automations that replace expensive manual tasks. Save time, reduce costs, and scale your business.</p>
-                                <div class="mil-social-icons mil-up">
-                                    <a href="https://linkedin.com/company/aideas" data-no-swup target="_blank" rel="noopener" class="mil-social-icon">
-                                        <i class="fab fa-linkedin-in"></i>
-                                    </a>
-                                    <a href="https://twitter.com/aideas_com" data-no-swup target="_blank" rel="noopener" class="mil-social-icon">
-                                        <i class="fab fa-twitter"></i>
-                                    </a>
-                                    <a href="https://instagram.com/aideas_com" data-no-swup target="_blank" rel="noopener" class="mil-social-icon">
-                                        <i class="fab fa-instagram"></i>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-2 col-md-4 mil-mb-60">
-                                <h6 class="mil-muted mil-mb-30">Pages</h6>
-                                <ul class="mil-footer-list">
-                                    <li><a href="index.html" class="mil-light-soft">Home</a></li>
-                                    <li><a href="automations.html" class="mil-light-soft">Automations</a></li>
-                                    <li><a href="pricing.html" class="mil-light-soft">Pricing</a></li>
-                                    <li><a href="contact.html" class="mil-light-soft">Contact</a></li>
-                                </ul>
-                            </div>
-
-                            <div class="col-lg-2 col-md-4 mil-mb-60">
-                                <h6 class="mil-muted mil-mb-30">Legal</h6>
-                                <ul class="mil-footer-list">
-                                    <li><a href="#" class="mil-light-soft">Privacy Policy</a></li>
-                                    <li><a href="#" class="mil-light-soft">Terms of Service</a></li>
-                                </ul>
-                            </div>
-
-                            <div class="col-lg-2 col-md-4 mil-mb-60">
-                                <h6 class="mil-muted mil-mb-30">Language</h6>
-                                <!-- Phase 2: i18next language selector will be injected here -->
-                                <div class="aideas-lang-selector-placeholder">
-                                    <p class="mil-light-soft">EN / ES / PT / FR</p>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="mil-divider mil-mb-30"></div>
-
-                        <div class="row justify-content-between">
-                            <div class="col-auto">
-                                <p class="mil-light-soft">© 2024 AIDEAS. All Rights Reserved.</p>
-                            </div>
-                            <div class="col-auto">
-                                <a href="https://app.aideas.com/signup" data-no-swup class="mil-light-soft">Get Started</a>
-                            </div>
-                        </div>
-
-                    </div>
-                    </div>
-                </footer>
-                <!-- footer end -->
-
-                <!-- hidden elements -->
-                <div class="mil-hidden-elements">
-                    <div class="mil-dodecahedron">
-                        <div class="mil-pentagon">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                        <div class="mil-pentagon">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                        <div class="mil-pentagon">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                        <div class="mil-pentagon">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                        <div class="mil-pentagon">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                        <div class="mil-pentagon">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                        <div class="mil-pentagon">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                        <div class="mil-pentagon">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                        <div class="mil-pentagon">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                        <div class="mil-pentagon">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                        <div class="mil-pentagon">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                        <div class="mil-pentagon">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                    </div>
-
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="mil-arrow">
-                        <path d="M 14 5.3417969 C 13.744125 5.3417969 13.487969 5.4412187 13.292969 5.6367188 L 13.207031 5.7226562 C 12.816031 6.1136563 12.816031 6.7467188 13.207031 7.1367188 L 17.070312 11 L 4 11 C 3.448 11 3 11.448 3 12 C 3 12.552 3.448 13 4 13 L 17.070312 13 L 13.207031 16.863281 C 12.816031 17.254281 12.816031 17.887344 13.207031 18.277344 L 13.292969 18.363281 C 13.683969 18.754281 14.317031 18.754281 14.707031 18.363281 L 20.363281 12.707031 C 20.754281 12.316031 20.754281 11.682969 20.363281 11.292969 L 14.707031 5.6367188 C 14.511531 5.4412187 14.255875 5.3417969 14 5.3417969 z" />
-                    </svg>
-
-                    <svg width="250" viewBox="0 0 300 1404" fill="none" xmlns="http://www.w3.org/2000/svg" class="mil-lines">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M1 892L1 941H299V892C299 809.71 232.29 743 150 743C67.7096 743 1 809.71 1 892ZM0 942H300V892C300 809.157 232.843 742 150 742C67.1573 742 0 809.157 0 892L0 942Z" class="mil-move" />
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M299 146V97L1 97V146C1 228.29 67.7096 295 150 295C232.29 295 299 228.29 299 146ZM300 96L0 96V146C0 228.843 67.1573 296 150 296C232.843 296 300 228.843 300 146V96Z" class="mil-move" />
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M299 1H1V1403H299V1ZM0 0V1404H300V0H0Z" />
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M150 -4.37115e-08L150 1404L149 1404L149 0L150 -4.37115e-08Z" />
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M150 1324C232.29 1324 299 1257.29 299 1175C299 1092.71 232.29 1026 150 1026C67.7096 1026 1 1092.71 1 1175C1 1257.29 67.7096 1324 150 1324ZM150 1325C232.843 1325 300 1257.84 300 1175C300 1092.16 232.843 1025 150 1025C67.1573 1025 0 1092.16 0 1175C0 1257.84 67.1573 1325 150 1325Z" class="mil-move" />
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M300 1175H0V1174H300V1175Z" class="mil-move" />
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M150 678C232.29 678 299 611.29 299 529C299 446.71 232.29 380 150 380C67.7096 380 1 446.71 1 529C1 611.29 67.7096 678 150 678ZM150 679C232.843 679 300 611.843 300 529C300 446.157 232.843 379 150 379C67.1573 379 0 446.157 0 529C0 611.843 67.1573 679 150 679Z" class="mil-move" />
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M299 380H1V678H299V380ZM0 379V679H300V379H0Z" class="mil-move" />
-                    </svg>
+                        <!-- navigation menu wrapper end -->
+                    </nav>
+                    <!-- navigation menu end -->
                 </div>
-                <!-- hidden elements end -->
+                <!-- center block end -->
+            </div>
+            <!-- center container end -->
+            <!-- navigation end -->
+        </div>
+        <!-- header end -->
+        <!-- home start -->
+        <section id="home" class="home-section">
+            <!-- center container start -->
+            <div class="center-container">
+                <!-- center block start -->
+                <div class="center-block">
+                    <div class="extra-margin-home">
+                        <!-- circle wrapper start -->
+                        <div class="circle-wrapper-half">
+                            <div class="carousel-item-all item-home-01">
+                                <!-- local video start -->
+                                <div id="videoContainment">
+                                    <video autoplay loop muted playsinline id="bgndVideo" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:1;">
+                                        <source src="img/home/main_video.mp4" type="video/mp4">
+                                    </video>
+                                </div>
+                                <!-- local video end -->
+                                <div class="gradient-overlay gradient-overlay-home" style="z-index:2;"></div>
+                            </div>
+                            <div class="circle-spinner">
+                                <div class="circle-spinner-inner"></div>
+                            </div>
+                        </div>
+                        <!-- circle wrapper end -->
+                    </div>
+                </div>
+                <!-- center block end -->
+            </div>
+            <!-- center container end -->
+            <!-- home item txt start -->
+            <div class="circle-wrapper-half-txt">
+                <!-- section title start -->
+                <div class="subtitle subtitle-lead introduction" data-i18n="home.subtitle_lead">
+                    Johnny
+                </div>
+                <!-- section title end -->
+                <!-- divider start -->
+                <div class="divider-m"></div>
+                <!-- divider end -->
+                <!-- section title start -->
+                <div class="main-title introduction">
+                    <h1 class="main-title-line">
+                        <span data-i18n="home.title">Oneex</span>
+                    </h1>
+                </div>
+                <!-- section title end -->
+                <!-- divider start -->
+                <div class="divider-m"></div>
+                <!-- divider end -->
+                <!-- section title start -->
+                <div class="subtitle introduction" data-i18n="home.subtitle">
+                    Los Angeles-based photographer
+                </div>
+                <!-- section title end -->
+            </div>
+            <!-- home item txt end -->
+            <!-- bottom credits start -->
+            <div class="bottom-credits">
+                <a href="#" data-i18n="home.credits">Oneex</a> &copy; All Rights Reserved.
+            </div>
+            <!-- bottom credits end -->
+            <!-- social icons start -->
+            <div class="social-icons-wrapper-share">
+                <div class="social-toggle-wrap">
+                    <div class="social-toggle">
+                        <i class="ion-share"></i>
+                    </div>
+                    <div class="social-widgets-wrap">
+                        <div class="social-widgets">
+                            <ul>
+                                <li class="social-icon">
+                                    <a class="ion-social-twitter" href="#"></a>
+                                </li>
+                                <li class="social-icon">
+                                    <a class="ion-social-facebook" href="#"></a>
+                                </li>
+                                <li class="social-icon">
+                                    <a class="ion-social-youtube" href="#"></a>
+                                </li>
+                                <li class="social-icon">
+                                    <a class="ion-social-linkedin" href="#"></a>
+                                </li>
+                                <li class="social-icon">
+                                    <a class="ion-social-instagram" href="#"></a>
+                                </li>
+                                <li class="social-icon">
+                                    <a class="ion-social-pinterest" href="#"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- social icons end -->
+        </section>
+        <!-- home end -->
 
+        <!-- ============================================================ -->
+        <!-- ===== REDESIGNED SECTIONS START ===== -->
+        <!-- ============================================================ -->
+
+        <!-- about start -->
+        <section id="about" class="ai-section">
+            <div class="ai-container">
+                <div class="ai-about-surface">
+                    <div class="ai-about-grid">
+                        <div class="ai-about-content">
+                            <h2 class="ai-section-title ai-reveal" data-i18n="about.name">About AIDEAS</h2>
+                            <div class="ai-about-role ai-reveal ai-reveal-delay-1" data-i18n="about.role">Your AI Partner</div>
+                            <div class="ai-about-bio ai-text ai-reveal ai-reveal-delay-2" data-i18n-html="about.bio">
+                                Tell us what slows your business down — we'll build the automation to fix it. From <a class="link-effect" href="#contact">ready-to-deploy solutions</a> to fully custom systems built from scratch, our team handles the entire process. You describe the problem, we deliver the result.
+                            </div>
+                            <div class="ai-detail-pills ai-reveal ai-reveal-delay-2">
+                                <div class="ai-detail-pill">
+                                    <span class="ai-detail-pill-label" data-i18n="about.label_born">Focus</span>
+                                    <span class="ai-detail-pill-value" data-i18n="about.born">Your Results</span>
+                                </div>
+                                <div class="ai-detail-pill">
+                                    <span class="ai-detail-pill-label" data-i18n="about.label_age">Approach</span>
+                                    <span class="ai-detail-pill-value" data-i18n="about.age">AI-First</span>
+                                </div>
+                                <div class="ai-detail-pill">
+                                    <span class="ai-detail-pill-label" data-i18n="about.label_education">Solutions</span>
+                                    <span class="ai-detail-pill-value" data-i18n="about.education">Custom & Ready-Made</span>
+                                </div>
+                                <div class="ai-detail-pill">
+                                    <span class="ai-detail-pill-label" data-i18n="about.label_experience">Support</span>
+                                    <span class="ai-detail-pill-value" data-i18n="about.experience">24/7 Support</span>
+                                </div>
+                                <div class="ai-detail-pill">
+                                    <span class="ai-detail-pill-label" data-i18n="about.label_position">Model</span>
+                                    <span class="ai-detail-pill-value" data-i18n="about.position">Fully Managed</span>
+                                </div>
+                                <div class="ai-detail-pill">
+                                    <span class="ai-detail-pill-label" data-i18n="about.label_location">Reach</span>
+                                    <span class="ai-detail-pill-value" data-i18n="about.location">Remote — Worldwide</span>
+                                </div>
+                            </div>
+                            <div class="ai-about-stats ai-reveal ai-reveal-delay-3">
+                                <span class="ai-about-stats-number" data-i18n="about.years_count">17</span>
+                                <span class="ai-about-stats-label" data-i18n="about.years_label">Industries</span>
+                            </div>
+                            <a href="#contact" class="ai-btn page-scroll ai-reveal ai-reveal-delay-3" data-i18n="about.download_cv">Get Started</a>
+                        </div>
+                        <div class="ai-about-visual ai-reveal ai-reveal-delay-2">
+                            <div class="ai-about-visual-inner">
+                                <div class="ai-about-visual-glow"></div>
+                                <div class="ai-about-visual-stat ai-about-visual-stat-1">
+                                    <span class="ai-about-visual-stat-num">194+</span>
+                                    <span class="ai-about-visual-stat-txt">Automations</span>
+                                </div>
+                                <div class="ai-about-visual-stat ai-about-visual-stat-2">
+                                    <span class="ai-about-visual-stat-num">50+</span>
+                                    <span class="ai-about-visual-stat-txt">Integrations</span>
+                                </div>
+                                <div class="ai-about-visual-stat ai-about-visual-stat-3">
+                                    <span class="ai-about-visual-stat-num">24/7</span>
+                                    <span class="ai-about-visual-stat-txt">Support</span>
+                                </div>
+                                <div class="ai-about-visual-orbit"></div>
+                                <div class="ai-about-visual-orbit ai-about-visual-orbit-2"></div>
+                                <div class="ai-about-visual-center">
+                                    <span>AI</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- about end -->
+
+        <!-- process / skills start -->
+        <section id="skills" class="ai-section ai-section--surface">
+            <div class="ai-container">
+                <div class="ai-section-header ai-section-header--center ai-reveal">
+                    <div class="ai-section-subtitle"><span data-i18n="skills.languages_subtitle">How we</span> <span data-i18n="skills.languages_title">Work</span></div>
+                    <h2 class="ai-section-title">Our Process</h2>
+                </div>
+                <div class="ai-process-wrap">
+                    <div class="ai-process-timeline">
+                        <div class="ai-process-step ai-reveal ai-reveal-delay-1">
+                            <div class="ai-process-number">01</div>
+                            <div class="ai-process-step-title" data-i18n="skills.lang_1">1. Tell us your problem</div>
+                            <div class="ai-process-step-desc">Share what slows your business down. We listen and map out the pain points.</div>
+                        </div>
+                        <div class="ai-process-step ai-reveal ai-reveal-delay-2">
+                            <div class="ai-process-number">02</div>
+                            <div class="ai-process-step-title" data-i18n="skills.lang_2">2. We design the solution</div>
+                            <div class="ai-process-step-desc">Our team architects the right automation, picking the best tools and approach.</div>
+                        </div>
+                        <div class="ai-process-step ai-reveal ai-reveal-delay-3">
+                            <div class="ai-process-number">03</div>
+                            <div class="ai-process-step-title" data-i18n="skills.lang_3">3. We build & deploy it</div>
+                            <div class="ai-process-step-desc">We build, test, and deploy your solution into your existing stack.</div>
+                        </div>
+                        <div class="ai-process-step ai-reveal ai-reveal-delay-4">
+                            <div class="ai-process-number">04</div>
+                            <div class="ai-process-step-title" data-i18n="skills.lang_4">4. We maintain & optimize</div>
+                            <div class="ai-process-step-desc">Ongoing monitoring, tweaks, and improvements as your business evolves.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ai-section-header ai-section-header--center ai-reveal" style="margin-bottom:36px;">
+                    <div class="ai-section-subtitle"><span data-i18n="skills.skills_subtitle">What we</span> <span data-i18n="skills.skills_title">Use</span></div>
+                </div>
+                <div class="ai-tools-row ai-reveal">
+                    <span class="ai-tool-pill" data-i18n="skills.skill_1">AI & Machine Learning</span>
+                    <span class="ai-tool-pill" data-i18n="skills.skill_2">Custom Integrations</span>
+                    <span class="ai-tool-pill" data-i18n="skills.skill_3">Workflow Automation</span>
+                    <span class="ai-tool-pill" data-i18n="skills.skill_4">Data & Analytics</span>
+                </div>
+            </div>
+        </section>
+        <!-- process / skills end -->
+
+        <!-- services start -->
+        <section id="services" class="ai-section">
+            <div class="ai-container">
+                <div class="ai-services-grid">
+                    <div class="ai-service-card ai-reveal ai-reveal-delay-1">
+                        <i class="ion-ios-gear-outline ai-service-icon"></i>
+                        <div class="ai-service-subtitle" data-i18n="services.service_1_subtitle">Business</div>
+                        <div class="ai-service-title" data-i18n="services.service_1_title">Automation</div>
+                        <p class="ai-service-desc" data-i18n="service_descs.desc_1">Streamline operations with intelligent workflows that handle repetitive tasks, approvals, and data processing automatically.</p>
+                    </div>
+                    <div class="ai-service-card ai-reveal ai-reveal-delay-2">
+                        <i class="ion-ios-chatboxes-outline ai-service-icon"></i>
+                        <div class="ai-service-subtitle" data-i18n="services.service_2_subtitle">Customer</div>
+                        <div class="ai-service-title" data-i18n="services.service_2_title">Experience</div>
+                        <p class="ai-service-desc" data-i18n="service_descs.desc_2">Deploy AI assistants that understand your business and respond to customers instantly across every channel.</p>
+                    </div>
+                    <div class="ai-service-card ai-reveal ai-reveal-delay-3">
+                        <i class="ion-ios-compose-outline ai-service-icon"></i>
+                        <div class="ai-service-subtitle" data-i18n="services.service_3_subtitle">Content</div>
+                        <div class="ai-service-title" data-i18n="services.service_3_title">at Scale</div>
+                        <p class="ai-service-desc" data-i18n="service_descs.desc_3">Generate, optimize, and publish content across all your channels with AI-powered pipelines that maintain your brand voice.</p>
+                    </div>
+                    <div class="ai-service-card ai-reveal ai-reveal-delay-4">
+                        <i class="ion-ios-analytics-outline ai-service-icon"></i>
+                        <div class="ai-service-subtitle" data-i18n="services.service_4_subtitle">Data</div>
+                        <div class="ai-service-title" data-i18n="services.service_4_title">Intelligence</div>
+                        <p class="ai-service-desc" data-i18n="service_descs.desc_4">Transform raw data into actionable insights with automated reporting, forecasting, and anomaly detection systems.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- services end -->
+
+        <!-- facts start -->
+        <section class="ai-section ai-facts-section ai-section--surface" id="facts">
+            <div class="ai-facts-glow"></div>
+            <div class="ai-facts-content">
+                <div class="ai-container">
+                    <div class="ai-section-header ai-section-header--center ai-reveal">
+                        <div class="ai-section-subtitle" data-i18n="facts.subtitle">Built for impact</div>
+                        <h2 class="ai-section-title" data-i18n="facts.title">Why AIDEAS</h2>
+                    </div>
+                    <div class="ai-facts-grid">
+                        <div class="ai-fact-item ai-reveal ai-reveal-delay-1">
+                            <div class="ai-fact-number">194</div>
+                            <div class="ai-fact-label" data-i18n="facts.fact_1_label">Ready-to-Deploy Automations</div>
+                        </div>
+                        <div class="ai-fact-item ai-reveal ai-reveal-delay-2">
+                            <div class="ai-fact-number">50<span class="ai-fact-suffix">+</span></div>
+                            <div class="ai-fact-label" data-i18n="facts.fact_2_label">Integrations</div>
+                        </div>
+                        <div class="ai-fact-item ai-reveal ai-reveal-delay-3">
+                            <div class="ai-fact-number">1000<span class="ai-fact-suffix">+</span></div>
+                            <div class="ai-fact-label" data-i18n="facts.fact_3_label">Hours Saved Monthly</div>
+                        </div>
+                        <div class="ai-fact-item ai-reveal ai-reveal-delay-4">
+                            <div class="ai-fact-number">99.9</div>
+                            <div class="ai-fact-label" data-i18n="facts.fact_4_label">% Uptime</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- facts end -->
+
+        <!-- testimonials start -->
+        <section id="testimonials" class="ai-section">
+            <div class="ai-container">
+                <div class="ai-section-header ai-section-header--center ai-reveal">
+                    <div class="ai-section-subtitle">What they say</div>
+                    <h2 class="ai-section-title">Testimonials</h2>
+                </div>
+                <div class="ai-testimonials-grid">
+                    <div class="ai-testimonial-card ai-reveal ai-reveal-delay-1">
+                        <div class="ai-testimonial-quote-icon">&ldquo;</div>
+                        <div class="ai-testimonial-text" data-i18n-html="testimonials.quote_1">
+                            We spent 20 hours a week processing emails manually. AIDEAS analyzed our workflow, built a custom automation, and now it runs itself — classification, responses, and escalation. <a class="link-effect" href="#contact">Completely hands-off</a>.
+                        </div>
+                        <div class="ai-testimonial-author" data-i18n="testimonials.author_1">Marketing Agency</div>
+                    </div>
+                    <div class="ai-testimonial-card ai-reveal ai-reveal-delay-2">
+                        <div class="ai-testimonial-quote-icon">&ldquo;</div>
+                        <div class="ai-testimonial-text" data-i18n="testimonials.quote_2">
+                            Our support response time dropped from hours to seconds. AIDEAS deployed an AI assistant that understands our products and handles 80% of customer inquiries without human intervention.
+                        </div>
+                        <div class="ai-testimonial-author" data-i18n="testimonials.author_2">E-commerce Brand</div>
+                    </div>
+                    <div class="ai-testimonial-card ai-reveal ai-reveal-delay-3">
+                        <div class="ai-testimonial-quote-icon">&ldquo;</div>
+                        <div class="ai-testimonial-text" data-i18n="testimonials.quote_3">
+                            We needed a content engine, not just a tool. AIDEAS built an end-to-end pipeline — from research to publishing — that runs our social media on autopilot while we focus on strategy.
+                        </div>
+                        <div class="ai-testimonial-author" data-i18n="testimonials.author_3">Digital Startup</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- testimonials end -->
+
+        <!-- works / catalog start -->
+        <section id="works" class="ai-section ai-section--surface">
+            <div class="ai-container">
+                <div class="ai-section-header ai-section-header--center ai-reveal">
+                    <div class="ai-section-subtitle" data-i18n="works.subtitle">194+ automations ready to deploy</div>
+                    <h2 class="ai-section-title" data-i18n="works.title">Solutions Catalog</h2>
+                </div>
+                <div class="ai-catalog-grid">
+                    <div class="ai-catalog-card ai-reveal ai-reveal-delay-1">
+                        <i class="ion-ios-email-outline ai-catalog-icon"></i>
+                        <div class="ai-catalog-title">Email & Communications</div>
+                        <div class="ai-catalog-count">25+ automations</div>
+                        <p class="ai-catalog-desc">Auto-classification, smart responses, inbox routing, follow-up sequences, newsletter automation</p>
+                    </div>
+                    <div class="ai-catalog-card ai-reveal ai-reveal-delay-1">
+                        <i class="ion-ios-paper-outline ai-catalog-icon"></i>
+                        <div class="ai-catalog-title">Documents & PDF</div>
+                        <div class="ai-catalog-count">20+ automations</div>
+                        <p class="ai-catalog-desc">Invoice processing, contract analysis, resume parsing, OCR extraction, document generation</p>
+                    </div>
+                    <div class="ai-catalog-card ai-reveal ai-reveal-delay-2">
+                        <i class="ion-ios-people-outline ai-catalog-icon"></i>
+                        <div class="ai-catalog-title">CRM & Sales</div>
+                        <div class="ai-catalog-count">30+ automations</div>
+                        <p class="ai-catalog-desc">Lead qualification, pipeline automation, customer scoring, deal tracking, sales reporting</p>
+                    </div>
+                    <div class="ai-catalog-card ai-reveal ai-reveal-delay-2">
+                        <i class="ion-ios-chatboxes-outline ai-catalog-icon"></i>
+                        <div class="ai-catalog-title">Chatbots & Support</div>
+                        <div class="ai-catalog-count">22+ automations</div>
+                        <p class="ai-catalog-desc">WhatsApp bots, Telegram assistants, website chat, RAG-powered knowledge base, ticket routing</p>
+                    </div>
+                    <div class="ai-catalog-card ai-reveal ai-reveal-delay-3">
+                        <i class="ion-social-instagram-outline ai-catalog-icon"></i>
+                        <div class="ai-catalog-title">Social Media & Content</div>
+                        <div class="ai-catalog-count">28+ automations</div>
+                        <p class="ai-catalog-desc">Content generation, scheduling, sentiment analysis, trend monitoring, multi-platform publishing</p>
+                    </div>
+                    <div class="ai-catalog-card ai-reveal ai-reveal-delay-3">
+                        <i class="ion-ios-analytics-outline ai-catalog-icon"></i>
+                        <div class="ai-catalog-title">Data & Analytics</div>
+                        <div class="ai-catalog-count">35+ automations</div>
+                        <p class="ai-catalog-desc">Web scraping, ETL pipelines, reporting dashboards, anomaly detection, predictive analytics</p>
+                    </div>
+                    <div class="ai-catalog-card ai-reveal ai-reveal-delay-4">
+                        <i class="ion-ios-cloud-outline ai-catalog-icon"></i>
+                        <div class="ai-catalog-title">Integrations & APIs</div>
+                        <div class="ai-catalog-count">20+ automations</div>
+                        <p class="ai-catalog-desc">Connect any system — ERPs, databases, legacy software, custom APIs, third-party services</p>
+                    </div>
+                    <div class="ai-catalog-card ai-catalog-card--special ai-reveal ai-reveal-delay-4">
+                        <i class="ion-ios-lightbulb-outline ai-catalog-icon"></i>
+                        <div class="ai-catalog-title">Custom Solutions</div>
+                        <div class="ai-catalog-count">Unlimited</div>
+                        <p class="ai-catalog-desc">Don't see what you need? We build it from scratch — Python, AI, machine learning, whatever it takes</p>
+                    </div>
+                </div>
+                <div class="ai-works-caption ai-reveal">
+                    <p data-i18n="works.caption">These are just examples. We have 194+ ready-to-deploy automations — and if your need isn't covered, we build it from scratch. Whatever your challenge, we have a solution.</p>
+                </div>
+            </div>
+        </section>
+        <!-- works / catalog end -->
+
+        <!-- use cases / news start -->
+        <section id="news" class="ai-section">
+            <div class="ai-container">
+                <div class="ai-section-header ai-reveal">
+                    <div class="ai-section-subtitle" data-i18n="news.subtitle">Real results from real businesses</div>
+                    <h2 class="ai-section-title" data-i18n="news.title">Use Cases</h2>
+                </div>
+                <div class="ai-cases-grid">
+                    <div class="ai-case-card ai-reveal ai-reveal-delay-1">
+                        <span class="ai-case-badge" data-i18n="news.news_1_date">Email & Inbox</span>
+                        <div class="ai-case-title" data-i18n="news.news_1_title">Intelligent Email Workflows</div>
+                        <div class="ai-case-text" data-i18n-html="news.news_1_txt">
+                            From auto-classification to AI-drafted responses, we build systems that manage your inbox so your team can focus on <a class="link-effect" href="#contact">work that matters</a>.
+                        </div>
+                        <div class="ai-case-meta">
+                            <div class="ai-case-meta-item">
+                                <span class="ai-case-meta-label" data-i18n="news.label_client">Platforms</span>
+                                <span class="ai-case-meta-value" data-i18n="news.client_name">Multiple</span>
+                            </div>
+                            <div class="ai-case-meta-item">
+                                <span class="ai-case-meta-label" data-i18n="news.label_duration">Timeline</span>
+                                <span class="ai-case-meta-value" data-i18n="news.duration_value">1-2 Weeks</span>
+                            </div>
+                        </div>
+                        <a href="#contact" class="ai-btn-outline page-scroll" data-i18n="news.website_btn">Get Started</a>
+                    </div>
+                    <div class="ai-case-card ai-reveal ai-reveal-delay-2">
+                        <span class="ai-case-badge" data-i18n="news.news_2_date">Documents & Data</span>
+                        <div class="ai-case-title" data-i18n="news.news_2_title">Document Intelligence</div>
+                        <div class="ai-case-text" data-i18n-html="news.news_2_txt">
+                            Invoices, contracts, resumes — we build AI systems that read, extract, and organize your documents automatically. No more <a class="link-effect" href="#contact">manual data entry</a>.
+                        </div>
+                        <div class="ai-case-meta">
+                            <div class="ai-case-meta-item">
+                                <span class="ai-case-meta-label" data-i18n="news.label_client">Platforms</span>
+                                <span class="ai-case-meta-value" data-i18n="news.client_name">Multiple</span>
+                            </div>
+                            <div class="ai-case-meta-item">
+                                <span class="ai-case-meta-label" data-i18n="news.label_duration">Timeline</span>
+                                <span class="ai-case-meta-value" data-i18n="news.duration_value">1-2 Weeks</span>
+                            </div>
+                        </div>
+                        <a href="#contact" class="ai-btn-outline page-scroll" data-i18n="news.website_btn">Get Started</a>
+                    </div>
+                    <div class="ai-case-card ai-reveal ai-reveal-delay-3">
+                        <span class="ai-case-badge" data-i18n="news.news_3_date">Customer Support</span>
+                        <div class="ai-case-title" data-i18n="news.news_3_title">AI-Powered Support</div>
+                        <div class="ai-case-text" data-i18n-html="news.news_3_txt">
+                            We deploy smart assistants on WhatsApp, Telegram, or your website — trained on your business, answering customers <a class="link-effect" href="#contact">around the clock</a>.
+                        </div>
+                        <div class="ai-case-meta">
+                            <div class="ai-case-meta-item">
+                                <span class="ai-case-meta-label" data-i18n="news.label_client">Platforms</span>
+                                <span class="ai-case-meta-value" data-i18n="news.client_name">Multiple</span>
+                            </div>
+                            <div class="ai-case-meta-item">
+                                <span class="ai-case-meta-label" data-i18n="news.label_duration">Timeline</span>
+                                <span class="ai-case-meta-value" data-i18n="news.duration_value">1-2 Weeks</span>
+                            </div>
+                        </div>
+                        <a href="#contact" class="ai-btn-outline page-scroll" data-i18n="news.website_btn">Get Started</a>
+                    </div>
+                    <div class="ai-case-card ai-reveal ai-reveal-delay-4">
+                        <span class="ai-case-badge" data-i18n="news.news_4_date">Marketing & Content</span>
+                        <div class="ai-case-title" data-i18n="news.news_4_title">Content Engine</div>
+                        <div class="ai-case-text" data-i18n-html="news.news_4_txt">
+                            We build automated pipelines that research, create, and publish content across your channels. Your brand voice, <a class="link-effect" href="#contact">powered by AI</a>.
+                        </div>
+                        <div class="ai-case-meta">
+                            <div class="ai-case-meta-item">
+                                <span class="ai-case-meta-label" data-i18n="news.label_client">Platforms</span>
+                                <span class="ai-case-meta-value" data-i18n="news.client_name">Multiple</span>
+                            </div>
+                            <div class="ai-case-meta-item">
+                                <span class="ai-case-meta-label" data-i18n="news.label_duration">Timeline</span>
+                                <span class="ai-case-meta-value" data-i18n="news.duration_value">1-2 Weeks</span>
+                            </div>
+                        </div>
+                        <a href="#contact" class="ai-btn-outline page-scroll" data-i18n="news.website_btn">Get Started</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- use cases / news end -->
+
+        <!-- contact start -->
+        <section id="contact" class="ai-section ai-section--surface">
+            <div class="ai-container">
+                <div class="ai-section-header ai-reveal">
+                    <div class="ai-section-subtitle" data-i18n="contact.subtitle">Have an idea? A problem? A process you hate?</div>
+                    <h2 class="ai-section-title" data-i18n="contact.title">Let's Talk</h2>
+                </div>
+                <div class="ai-contact-grid">
+                    <div class="ai-contact-info ai-reveal ai-reveal-delay-1">
+                        <div class="ai-contact-info-block">
+                            <i class="ion-ios-location-outline ai-contact-info-icon"></i>
+                            <div class="ai-contact-info-label" data-i18n="contact.address_subtitle">Coverage</div>
+                            <div class="ai-contact-info-title" data-i18n="contact.address_title">Location</div>
+                            <div class="ai-contact-info-value" data-i18n="contact.address_text">United States & Canada</div>
+                        </div>
+                        <div class="ai-contact-info-block">
+                            <i class="ion-ios-email-outline ai-contact-info-icon"></i>
+                            <div class="ai-contact-info-label" data-i18n="contact.email_subtitle">Write Us</div>
+                            <div class="ai-contact-info-title" data-i18n="contact.email_title">E-mail</div>
+                            <div class="ai-contact-info-value">
+                                <a href="mailto:hello@aideas.ca">hello@aideas.ca</a>
+                            </div>
+                        </div>
+                        <div class="ai-contact-info-block">
+                            <i class="ion-ios-telephone-outline ai-contact-info-icon"></i>
+                            <div class="ai-contact-info-label" data-i18n="contact.phone_subtitle">Call Us</div>
+                            <div class="ai-contact-info-title" data-i18n="contact.phone_title">Phone</div>
+                            <div class="ai-contact-info-value">
+                                <a href="tel:+11234567890">+1 (123) 456-7890</a>
+                            </div>
+                        </div>
+                        <div class="ai-contact-social">
+                            <a class="ion-social-twitter" href="#" aria-label="Twitter"></a>
+                            <a class="ion-social-facebook" href="#" aria-label="Facebook"></a>
+                            <a class="ion-social-linkedin" href="#" aria-label="LinkedIn"></a>
+                            <a class="ion-social-instagram" href="#" aria-label="Instagram"></a>
+                        </div>
+                    </div>
+                    <div class="ai-contact-form-wrap ai-reveal ai-reveal-delay-2">
+                        <form class="ai-form" id="contact-form-ai" action="contact.php" method="post">
+                            <div class="ai-form-row">
+                                <input type="text" name="name" data-i18n="[placeholder]contact.form_name" placeholder="Name" required>
+                                <input type="email" name="email" data-i18n="[placeholder]contact.form_email" placeholder="Email" required>
+                            </div>
+                            <textarea name="message" data-i18n="[placeholder]contact.form_message" placeholder="Describe the problem you want solved — no matter how unique, we'll find a way to automate it" required></textarea>
+                            <div>
+                                <button type="submit" class="ai-btn" data-i18n="contact.form_send">Send Message</button>
+                            </div>
+                            <div class="ai-form-status" id="ai-form-success" data-i18n="contact.form_success">Message sent! We'll reach out within 24 hours.</div>
+                            <div class="ai-form-status" id="ai-form-error" data-i18n="contact.form_error">Something went wrong. Please try again.</div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- contact end -->
+
+        <!-- footer start -->
+        <div class="ai-footer">
+            <div class="ai-container">
+                <div class="ai-footer-text">AIDEAS &copy; 2026. All Rights Reserved.</div>
             </div>
         </div>
-        <!-- content -->
-    </div>
-    <!-- wrapper end -->
+        <!-- footer end -->
 
-    <!-- jQuery js -->
-    <script src="js/plugins/jquery.min.js" defer></script>
-    <!-- swup js -->
-    <script src="js/plugins/swup.min.js" defer></script>
-    <!-- swiper js -->
-    <script src="js/plugins/swiper.min.js" defer></script>
-    <!-- fancybox js -->
-    <script src="js/plugins/fancybox.min.js" defer></script>
-    <!-- gsap js -->
-    <script src="js/plugins/gsap.min.js" defer></script>
-    <!-- scroll smoother -->
-    <script src="js/plugins/smooth-scroll.js" defer></script>
-    <!-- scroll trigger js -->
-    <script src="js/plugins/ScrollTrigger.min.js" defer></script>
-    <!-- scroll to js -->
-    <script src="js/plugins/ScrollTo.min.js" defer></script>
-    <!-- aideas js -->
-    <script src="js/main.js" defer></script>
+        <!-- ============================================================ -->
+        <!-- ===== REDESIGNED SECTIONS END ===== -->
+        <!-- ============================================================ -->
 
-</body>
-
+        <!-- photoSwipe background start -->
+        <div aria-hidden="true" class="pswp" role="dialog" tabindex="-1">
+            <div class="pswp__bg"></div>
+            <div class="pswp__scroll-wrap">
+                <div class="pswp__container">
+                    <div class="pswp__item"></div>
+                    <div class="pswp__item"></div>
+                    <div class="pswp__item"></div>
+                </div>
+                <div class="pswp__ui pswp__ui--hidden">
+                    <div class="pswp__top-bar">
+                        <div class="pswp__counter"></div>
+                        <button class="pswp__button pswp__button--close" title="Close (Esc)"></button> <button class="pswp__button pswp__button--share" title=
+                            "Share"></button> <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button> <button class="pswp__button pswp__button--zoom" title=
+                            "Zoom in/out"></button>
+                        <div class="pswp__preloader">
+                            <div class="pswp__preloader__icn">
+                                <div class="pswp__preloader__cut">
+                                    <div class="pswp__preloader__donut"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                        <div class="pswp__share-tooltip"></div>
+                    </div>
+                    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button> <button class="pswp__button pswp__button--arrow--right" title=
+                        "Next (arrow right)"></button>
+                    <div class="pswp__caption">
+                        <div class="pswp__caption__center"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- photoSwipe background end -->
+        <!-- to top arrow start -->
+        <a class="page-scroll" href="#home">
+            <div class="to-top-arrow">
+                <span class="ion-ios-arrow-up"></span>
+            </div>
+        </a>
+        <!-- to top arrow end -->
+        <!-- scripts start -->
+        <script src="js/plugins.js"></script>
+        <script src="js/oneex.js"></script>
+        <!-- scripts end -->
+        <!-- scroll reveal animation -->
+        <script>
+            (function() {
+                var observer = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                        }
+                    });
+                }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+                document.querySelectorAll('.ai-reveal').forEach(function(el) {
+                    observer.observe(el);
+                });
+            })();
+        </script>
+        <!-- i18n start -->
+        <script src="js/i18n.js"></script>
+        <!-- i18n end -->
+        <!-- force local video playback (plugins.js expects YouTube) -->
+        <script>
+        (function() {
+            function forceVideo() {
+                var v = document.getElementById('bgndVideo');
+                if (!v) return;
+                v.style.display = 'block';
+                v.parentElement.style.display = 'block';
+                v.play().catch(function() {});
+            }
+            if (document.readyState === 'complete') { setTimeout(forceVideo, 500); }
+            else { window.addEventListener('load', function() { setTimeout(forceVideo, 500); }); }
+        })();
+        </script>
+    </body>
 </html>

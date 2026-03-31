@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx live-server:*)",
+      "Bash(npx serve:*)",
+      "Bash(start //b npx serve -l 8420 .)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(cp index.html index-light.html)",
+      "Bash(sed -i 's/body class=\"\"body-dark\"\"/body class=\"\"body-light\"\"/' index-light.html)",
+      "Bash(python -c \":*)",
+      "Bash(ls -la \"c:/dev/12ai/landing/img/\"*.png)",
+      "Bash(ls -la \"c:/dev/12ai/landing/img/\"*.PNG)",
+      "Bash(ls -la \"c:/dev/12ai/landing/img/\"*.svg)"
+    ],
+    "additionalDirectories": [
+      "c:\\dev\\12ai\\landing"
+    ]
+  }
+}
