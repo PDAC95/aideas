@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-31T15:36:34.865Z"
+last_updated: "2026-03-31T15:38:00Z"
 progress:
-  total_phases: 4
+  total_phases: 6
   completed_phases: 4
-  total_plans: 11
-  completed_plans: 11
+  total_plans: 13
+  completed_plans: 12
 ---
 
 # Project State
@@ -18,16 +18,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-05)
 
 **Core value:** Customers can monitor automations, request new ones, and communicate with the AIDEAS team from a single dashboard that proves the ROI of their subscription
-**Current focus:** Phase 4 — User Registration
+**Current focus:** Phase 5 — User Login
 
 ## Current Position
 
-Phase: 4 of 6 (User Registration) — COMPLETE
-Plan: 4 of 4 in current phase — COMPLETE (All plans complete)
-Status: Phase 4 complete — verify-email page, ResendEmailTimer, SignOutButton, /terms and /privacy legal pages
-Last activity: 2026-03-31 — Completed 04-04: verify-email waiting room, placeholder legal pages (/terms, /privacy), i18n keys for legal namespace
+Phase: 5 of 6 (User Login) — IN PROGRESS
+Plan: 1 of 2 in current phase — COMPLETE
+Status: Phase 5 Plan 01 complete — login page UI with split layout, LoginForm, Zod schema, i18n EN/ES
+Last activity: 2026-03-31 — Completed 05-01: login page, LoginForm, loginSchema, bilingual translations, signup.ts z.input fix
 
-Progress: [██████████] 100%
+Progress: [████████░░] 80%
 
 ## Performance Metrics
 
@@ -108,6 +108,10 @@ Recent decisions affecting current work:
 - [Phase 04-03]: RecaptchaProvider extracted to client component wrapper — signup page stays Server Component
 - [Phase 04-04]: verify-email page reads email from searchParams — no session required, works immediately after signup redirect
 - [Phase 04-04]: Legal pages in (legal) route group — no shared layout needed, inherits root layout
+- [Phase 05-01]: LoginFormData uses z.input<typeof loginSchema> — zodResolver requires input type alignment (consistent with Phase 4 pattern)
+- [Phase 05-01]: handleFormSubmit placeholder (console.log) — Plan 02 wires Supabase signInWithEmail Server Action
+- [Phase 05-01]: searchParams typed as Promise<{}> and awaited — Next.js 16 async searchParams requirement
+- [Phase 05-01]: Auto-dismiss banners via useState + useEffect setTimeout(5000) — form component manages its own banner lifecycle
 
 ### Pending Todos
 
@@ -115,10 +119,10 @@ None yet.
 
 ### Blockers/Concerns
 
-None — Plan 01 (04-01) blocker resolved. DB migration for profiles extension, owner role, and atomic org trigger now complete.
+None.
 
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Completed 04-04-PLAN.md — verify-email page, ResendEmailTimer, SignOutButton, /terms and /privacy legal pages, legal i18n keys. Phase 4 complete.
+Stopped at: Completed 05-01-PLAN.md — login page UI, LoginForm, loginSchema, bilingual i18n, fixed signup.ts z.input type.
 Resume file: None

@@ -57,12 +57,12 @@ Requirements for initial release (Phase 1: Backend Foundation + Auth).
 
 ### User Login
 
-- [ ] **LOGIN-01**: Login page at `/login` with email + password form
+- [x] **LOGIN-01**: Login page at `/login` with email + password form
 - [ ] **LOGIN-02**: Login via Supabase Auth with JWT in cookies
 - [ ] **LOGIN-03**: Redirect to `/dashboard` after successful login
-- [ ] **LOGIN-04**: Error message for incorrect credentials
-- [ ] **LOGIN-05**: Link to forgot password page
-- [ ] **LOGIN-06**: Google OAuth login option
+- [x] **LOGIN-04**: Error message for incorrect credentials
+- [x] **LOGIN-05**: Link to forgot password page
+- [x] **LOGIN-06**: Google OAuth login option
 - [ ] **LOGIN-07**: Session persists across browser refresh
 
 ### Password Recovery
@@ -168,12 +168,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | REG-06 | Phase 4 | Complete |
 | REG-07 | Phase 4 | Complete |
 | REG-08 | Phase 4 | Complete |
-| LOGIN-01 | Phase 5 | Pending |
+| LOGIN-01 | Phase 5 | Complete |
 | LOGIN-02 | Phase 5 | Pending |
 | LOGIN-03 | Phase 5 | Pending |
-| LOGIN-04 | Phase 5 | Pending |
-| LOGIN-05 | Phase 5 | Pending |
-| LOGIN-06 | Phase 5 | Pending |
+| LOGIN-04 | Phase 5 | Complete |
+| LOGIN-05 | Phase 5 | Complete |
+| LOGIN-06 | Phase 5 | Complete |
 | LOGIN-07 | Phase 5 | Pending |
 | PWD-01 | Phase 6 | Pending |
 | PWD-02 | Phase 6 | Pending |
