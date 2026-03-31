@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-31T15:38:00Z"
+last_updated: "2026-03-31T20:07:39.735Z"
 progress:
-  total_phases: 6
-  completed_phases: 4
+  total_phases: 5
+  completed_phases: 5
   total_plans: 13
-  completed_plans: 12
+  completed_plans: 13
 ---
 
 # Project State
@@ -22,12 +22,12 @@ See: .planning/PROJECT.md (updated 2026-03-05)
 
 ## Current Position
 
-Phase: 5 of 6 (User Login) — IN PROGRESS
-Plan: 1 of 2 in current phase — COMPLETE
-Status: Phase 5 Plan 01 complete — login page UI with split layout, LoginForm, Zod schema, i18n EN/ES
-Last activity: 2026-03-31 — Completed 05-01: login page, LoginForm, loginSchema, bilingual translations, signup.ts z.input fix
+Phase: 5 of 6 (User Login) — COMPLETE
+Plan: 2 of 2 in current phase — COMPLETE
+Status: Phase 5 complete — full login flow: Server Action, error handling, rate limiting, remember-me session, AuthSync, middleware, dashboard i18n
+Last activity: 2026-03-31 — Completed 05-02: signInWithEmail, LoginForm wired, AuthSync, middleware /app/*, dashboard stripped + i18n
 
-Progress: [████████░░] 80%
+Progress: [█████████░] 90%
 
 ## Performance Metrics
 
@@ -58,6 +58,7 @@ Progress: [████████░░] 80%
 | Phase 04-user-registration P01 | 8 | 2 tasks | 8 files |
 | Phase 04-user-registration P03 | 4 | 2 tasks | 7 files |
 | Phase 04-user-registration P04 | 2 min | 2 tasks | 7 files |
+| Phase 05-user-login P02 | 12 | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -112,6 +113,9 @@ Recent decisions affecting current work:
 - [Phase 05-01]: handleFormSubmit placeholder (console.log) — Plan 02 wires Supabase signInWithEmail Server Action
 - [Phase 05-01]: searchParams typed as Promise<{}> and awaited — Next.js 16 async searchParams requirement
 - [Phase 05-01]: Auto-dismiss banners via useState + useEffect setTimeout(5000) — form component manages its own banner lifecycle
+- [Phase 05-user-login]: signInWithEmail uses discriminated union LoginResult for type-safe error handling without exceptions
+- [Phase 05-02]: sb-remember-me cookie set by Server Action, read by middleware to override Supabase cookie maxAge (30d vs session)
+- [Phase 05-02]: greetingWithName + greeting as separate i18n keys instead of ICU select syntax
 
 ### Pending Todos
 
@@ -124,5 +128,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Completed 05-01-PLAN.md — login page UI, LoginForm, loginSchema, bilingual i18n, fixed signup.ts z.input type.
+Stopped at: Completed 05-02-PLAN.md — signInWithEmail Server Action, LoginForm wired, AuthSync, middleware /app/*, dashboard i18n.
 Resume file: None
