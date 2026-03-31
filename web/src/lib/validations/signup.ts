@@ -21,7 +21,7 @@ export const signupSchema = z.object({
   captchaToken: z.string().min(1, 'Verification required'),
 })
 
-export type SignupFormData = z.infer<typeof signupSchema>
+export type SignupFormData = z.input<typeof signupSchema>
 
 export const completeRegistrationSchema = z.object({
   companyName: z.string().min(1, 'Company name is required').max(100),
