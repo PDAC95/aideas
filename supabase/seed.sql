@@ -4,10 +4,12 @@
 -- =============================================================================
 -- Coverage: 2 orgs, 5 users (4 seed + 1 dev), varied automation states,
 --           chat messages, notifications, invitations
--- FK order: auth.users -> organizations -> organization_members ->
+-- FK order: auth.users -> organizations -> profiles -> organization_members ->
 --           automation_templates -> automations -> automation_executions ->
 --           automation_requests -> subscriptions -> chat_messages ->
 --           notifications -> invitations
+-- Note: on_auth_user_created trigger is disabled during auth.users insert so
+--       profiles/orgs/members can be inserted with fixed UUIDs for FK stability.
 -- Usage: Applied automatically by `supabase db reset`
 -- =============================================================================
 
@@ -16,8 +18,11 @@ BEGIN;
 -- =============================================================================
 -- 1. auth.users (5 users: 4 seed + 1 dev user)
 -- =============================================================================
--- The on_auth_user_created trigger will auto-create matching profiles rows.
--- Fixed UUIDs for reproducibility across resets.
+-- Disable the on_auth_user_created trigger so the seed can insert auth.users
+-- with fixed UUIDs and then manually create organizations, profiles, and
+-- organization_members with deterministic IDs for FK stability across resets.
+
+ALTER TABLE auth.users DISABLE TRIGGER on_auth_user_created;
 
 INSERT INTO auth.users (
     instance_id, id, aud, role, email, encrypted_password,
@@ -31,7 +36,7 @@ VALUES
      'authenticated', 'authenticated',
      'alice@acmecorp.com',
      crypt('Password123', gen_salt('bf')),
-     NOW(), '{"full_name": "Alice Johnson"}'::jsonb,
+     NOW(), '{"full_name": "Alice Johnson", "first_name": "Alice", "last_name": "Johnson"}'::jsonb,
      NOW(), NOW(), '', ''),
 
     ('00000000-0000-0000-0000-000000000000',
@@ -39,7 +44,7 @@ VALUES
      'authenticated', 'authenticated',
      'bob@acmecorp.com',
      crypt('Password123', gen_salt('bf')),
-     NOW(), '{"full_name": "Bob Martinez"}'::jsonb,
+     NOW(), '{"full_name": "Bob Martinez", "first_name": "Bob", "last_name": "Martinez"}'::jsonb,
      NOW(), NOW(), '', ''),
 
     -- GlobalTech users
@@ -48,7 +53,7 @@ VALUES
      'authenticated', 'authenticated',
      'carol@globaltech.io',
      crypt('Password123', gen_salt('bf')),
-     NOW(), '{"full_name": "Carol Chen"}'::jsonb,
+     NOW(), '{"full_name": "Carol Chen", "first_name": "Carol", "last_name": "Chen"}'::jsonb,
      NOW(), NOW(), '', ''),
 
     ('00000000-0000-0000-0000-000000000000',
@@ -56,7 +61,7 @@ VALUES
      'authenticated', 'authenticated',
      'dave@globaltech.io',
      crypt('Password123', gen_salt('bf')),
-     NOW(), '{"full_name": "Dave Wilson"}'::jsonb,
+     NOW(), '{"full_name": "Dave Wilson", "first_name": "Dave", "last_name": "Wilson"}'::jsonb,
      NOW(), NOW(), '', ''),
 
     -- Dev user (from project instructions: dev@jappi.ca / Password123)
@@ -65,10 +70,12 @@ VALUES
      'authenticated', 'authenticated',
      'dev@jappi.ca',
      crypt('Password123', gen_salt('bf')),
-     NOW(), '{"full_name": "Dev User"}'::jsonb,
+     NOW(), '{"full_name": "Dev User", "first_name": "Dev", "last_name": "User"}'::jsonb,
      NOW(), NOW(), '', '')
 
 ON CONFLICT (id) DO NOTHING;
+
+ALTER TABLE auth.users ENABLE TRIGGER on_auth_user_created;
 
 -- =============================================================================
 -- 2. auth.identities (required by Supabase auth for email login)
@@ -132,7 +139,36 @@ VALUES
 ON CONFLICT (id) DO NOTHING;
 
 -- =============================================================================
--- 4. organization_members (5 members: 4 seed users + dev user)
+-- 4. profiles (manually inserted — trigger disabled above)
+-- =============================================================================
+-- Insert profiles with first_name, last_name, org_id now that organizations exist.
+
+INSERT INTO public.profiles (id, email, full_name, first_name, last_name, org_id)
+VALUES
+    ('a1111111-1111-1111-1111-111111111111',
+     'alice@acmecorp.com', 'Alice Johnson', 'Alice', 'Johnson',
+     'aaaaaaaa-0000-0000-0000-000000000001'),
+
+    ('a2222222-2222-2222-2222-222222222222',
+     'bob@acmecorp.com', 'Bob Martinez', 'Bob', 'Martinez',
+     'aaaaaaaa-0000-0000-0000-000000000001'),
+
+    ('b1111111-1111-1111-1111-111111111111',
+     'carol@globaltech.io', 'Carol Chen', 'Carol', 'Chen',
+     'bbbbbbbb-0000-0000-0000-000000000001'),
+
+    ('b2222222-2222-2222-2222-222222222222',
+     'dave@globaltech.io', 'Dave Wilson', 'Dave', 'Wilson',
+     'bbbbbbbb-0000-0000-0000-000000000001'),
+
+    ('de000000-0000-0000-0000-000000000001',
+     'dev@jappi.ca', 'Dev User', 'Dev', 'User',
+     'aaaaaaaa-0000-0000-0000-000000000001')
+
+ON CONFLICT (id) DO NOTHING;
+
+-- =============================================================================
+-- 5. organization_members (5 members: 4 seed users + dev user)
 -- =============================================================================
 
 INSERT INTO public.organization_members (id, organization_id, user_id, role, is_active)
@@ -141,7 +177,7 @@ VALUES
     ('mm111111-0000-0000-0000-000000000001',
      'aaaaaaaa-0000-0000-0000-000000000001',
      'a1111111-1111-1111-1111-111111111111',
-     'admin', true),    -- Alice: admin
+     'owner', true),    -- Alice: owner (first user = org creator)
 
     ('mm111111-0000-0000-0000-000000000002',
      'aaaaaaaa-0000-0000-0000-000000000001',
@@ -152,7 +188,7 @@ VALUES
     ('mm222222-0000-0000-0000-000000000001',
      'bbbbbbbb-0000-0000-0000-000000000001',
      'b1111111-1111-1111-1111-111111111111',
-     'admin', true),    -- Carol: admin
+     'owner', true),    -- Carol: owner (first user = org creator)
 
     ('mm222222-0000-0000-0000-000000000002',
      'bbbbbbbb-0000-0000-0000-000000000001',
@@ -576,7 +612,8 @@ COMMIT;
 --   auth.users:            5 (Alice, Bob, Carol, Dave, Dev)
 --   auth.identities:       5
 --   organizations:         2 (Acme Corp, GlobalTech)
---   organization_members:  5
+--   profiles:              5 (with first_name, last_name, org_id)
+--   organization_members:  5 (Alice+Carol as owner, others unchanged)
 --   automation_templates:  8
 --   automations:           6 (active/paused/draft/active/failed/pending_review)
 --   automation_executions: 4 (2 success, 1 success, 1 error)
