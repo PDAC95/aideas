@@ -112,11 +112,11 @@ Plans:
   3. A newly registered user on `/verify-email` can click "Resend verification email" and receive a new email immediately
   4. Clicking the verification link in the email marks the account as verified and allows login; an unverified user who tries to log in is redirected to `/verify-email`
   5. The reset password form rejects passwords below the minimum strength requirement before submitting
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 06-01: Forgot-password and reset-password pages with Supabase Auth password reset flow
-- [ ] 06-02: Verify-email page, resend logic, and login guard for unverified accounts
+- [ ] 06-01-PLAN.md — Auth callback extension, Server Actions, Zod schemas, forgot-password page, reset-password page, i18n
+- [ ] 06-02-PLAN.md — Middleware email verification gate, verify-email page enhancements, login page verified banner
 
 ## Progress
 
