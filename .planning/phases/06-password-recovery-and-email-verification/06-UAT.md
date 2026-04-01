@@ -1,5 +1,5 @@
 ---
-status: complete
+status: diagnosed
 phase: 06-password-recovery-and-email-verification
 source: [06-01-SUMMARY.md, 06-02-SUMMARY.md]
 started: 2026-04-01T16:00:00Z
@@ -68,17 +68,29 @@ skipped: 1
   reason: "User reported: no llego ningun correo"
   severity: blocker
   test: 5
-  root_cause: ""
-  artifacts: []
-  missing: []
-  debug_session: ""
+  root_cause: "NEXT_PUBLIC_SITE_URL not set in web/.env.local — resetPasswordForEmail redirectTo evaluates to 'undefined/auth/callback?type=recovery'. Supabase silently fails. Error swallowed by enumeration protection (always returns success)."
+  artifacts:
+    - path: "web/src/lib/actions/auth.ts"
+      issue: "Line 240-241: redirectTo uses undefined NEXT_PUBLIC_SITE_URL"
+    - path: "web/.env.local"
+      issue: "Missing NEXT_PUBLIC_SITE_URL"
+  missing:
+    - "Add NEXT_PUBLIC_SITE_URL=http://localhost:3000 to web/.env.local"
+  debug_session: ".planning/debug/password-reset-email-not-sent.md"
 
 - truth: "Unverified user accessing /dashboard is redirected to /verify-email with masked email"
   status: failed
   reason: "User reported: me marca este error - Verification failed. Please try again."
   severity: major
   test: 7
-  root_cause: ""
-  artifacts: []
-  missing: []
-  debug_session: ""
+  root_cause: "reCAPTCHA env vars not set — NEXT_PUBLIC_RECAPTCHA_SITE_KEY missing causes executeRecaptcha to be null. signup-form.tsx:47 hard-blocks submission when executeRecaptcha is null, showing 'Verification failed'. Server-side has graceful bypass but request never reaches it."
+  artifacts:
+    - path: "web/src/components/auth/signup-form.tsx"
+      issue: "Lines 47-49: hard-fails when executeRecaptcha is null, no dev bypass"
+    - path: "web/src/components/auth/recaptcha-provider.tsx"
+      issue: "Line 10: falls back to empty string site key"
+    - path: "web/.env.local"
+      issue: "Missing NEXT_PUBLIC_RECAPTCHA_SITE_KEY and RECAPTCHA_SECRET_KEY"
+  missing:
+    - "Add client-side bypass in signup-form.tsx mirroring server-side behavior when reCAPTCHA unavailable"
+  debug_session: ".planning/debug/verification-failed-signup.md"
