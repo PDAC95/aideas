@@ -73,6 +73,40 @@
     },
     "backToSignup": "Back to sign up"
   },
+  "forgotPassword": {
+    "title": "Forgot your password?",
+    "subtitle": "Enter your email and we'll send you a reset link",
+    "email": "Email",
+    "emailPlaceholder": "you@company.com",
+    "submit": "Send reset link",
+    "submitting": "Sending...",
+    "successTitle": "Check your inbox",
+    "successSubtitle": "If an account exists for {email}, you'll receive a reset link shortly",
+    "successTip": "Can't find it? Check your spam or junk folder",
+    "resend": "Resend link",
+    "cooldown": "Resend in {seconds}s",
+    "backToLogin": "Back to sign in",
+    "errors": {
+      "expired": "This link has expired. Please request a new one.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "resetPassword": {
+    "title": "Set new password",
+    "subtitle": "Choose a strong password for your account",
+    "password": "New password",
+    "passwordPlaceholder": "Min. 8 characters",
+    "submit": "Update password",
+    "submitting": "Updating...",
+    "successTitle": "Password updated",
+    "successSubtitle": "Your password has been changed successfully",
+    "backToLogin": "Go to sign in",
+    "errors": {
+      "noSession": "This link has expired. Please request a new one.",
+      "weakPassword": "Password does not meet requirements.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
   "login": {
     "title": "Welcome back",
     "subtitle": "Sign in to your account",
@@ -87,6 +121,7 @@
     "noAccount": "Don't have an account?",
     "register": "Sign up",
     "or": "or",
+    "verified": "Email verified! You can now sign in.",
     "errors": {
       "invalidCredentials": "Invalid email or password.",
       "emailNotVerified": "Please verify your email before signing in.",

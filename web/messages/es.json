@@ -73,6 +73,40 @@
     },
     "backToSignup": "Volver al registro"
   },
+  "forgotPassword": {
+    "title": "¿Olvidaste tu contraseña?",
+    "subtitle": "Ingresa tu correo y te enviaremos un enlace",
+    "email": "Correo electrónico",
+    "emailPlaceholder": "tu@empresa.com",
+    "submit": "Enviar enlace",
+    "submitting": "Enviando...",
+    "successTitle": "Revisa tu correo",
+    "successSubtitle": "Si existe una cuenta para {email}, recibirás un enlace en breve",
+    "successTip": "¿No lo ves? Revisa tu carpeta de spam",
+    "resend": "Reenviar enlace",
+    "cooldown": "Reenviar en {seconds}s",
+    "backToLogin": "Volver al inicio de sesión",
+    "errors": {
+      "expired": "Este enlace ha expirado. Solicita uno nuevo.",
+      "generic": "Algo salió mal. Inténtalo de nuevo."
+    }
+  },
+  "resetPassword": {
+    "title": "Nueva contraseña",
+    "subtitle": "Elige una contraseña segura para tu cuenta",
+    "password": "Nueva contraseña",
+    "passwordPlaceholder": "Mín. 8 caracteres",
+    "submit": "Actualizar contraseña",
+    "submitting": "Actualizando...",
+    "successTitle": "Contraseña actualizada",
+    "successSubtitle": "Tu contraseña fue cambiada exitosamente",
+    "backToLogin": "Ir a iniciar sesión",
+    "errors": {
+      "noSession": "Este enlace ha expirado. Solicita uno nuevo.",
+      "weakPassword": "La contraseña no cumple los requisitos.",
+      "generic": "Algo salió mal. Inténtalo de nuevo."
+    }
+  },
   "login": {
     "title": "Bienvenido de nuevo",
     "subtitle": "Inicia sesión en tu cuenta",
@@ -87,6 +121,7 @@
     "noAccount": "¿No tienes cuenta?",
     "register": "Regístrate",
     "or": "o",
+    "verified": "¡Email verificado! Ya puedes iniciar sesión.",
     "errors": {
       "invalidCredentials": "Correo o contraseña incorrectos.",
       "emailNotVerified": "Verifica tu correo antes de iniciar sesión.",
