@@ -25,7 +25,7 @@ See: .planning/PROJECT.md (updated 2026-03-05)
 Phase: 6 of 6 (Password Recovery and Email Verification) — COMPLETE
 Plan: 2 of 2 in current phase — COMPLETE
 Status: Phase 6 complete — email verification gate (middleware), verify-email page masking + error states, login verified banner
-Last activity: 2026-04-01 — Completed 06-02: email_confirmed_at middleware gate, maskEmail, error=invalid banner, login verified success banner
+Last activity: 2026-04-01 - Completed quick task 1: Fix password reset email link redirecting to root instead of reset-password page
 
 Progress: [██████████] 100%
 
@@ -132,6 +132,12 @@ None yet.
 ### Blockers/Concerns
 
 None.
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 1 | Fix password reset email link redirecting to root instead of reset-password page | 2026-04-01 | 984780a | [1-fix-password-reset-email-link-redirectin](./quick/1-fix-password-reset-email-link-redirectin/) |
 
 ## Session Continuity
 
