@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-31T20:13:10.772Z"
+last_updated: "2026-04-01T15:35:29.767Z"
 progress:
-  total_phases: 5
-  completed_phases: 5
-  total_plans: 13
-  completed_plans: 13
+  total_phases: 6
+  completed_phases: 6
+  total_plans: 15
+  completed_plans: 15
 ---
 
 # Project State
@@ -22,12 +22,12 @@ See: .planning/PROJECT.md (updated 2026-03-05)
 
 ## Current Position
 
-Phase: 6 of 6 (Password Recovery and Email Verification) — IN PROGRESS
-Plan: 1 of 2 in current phase — COMPLETE
-Status: Phase 6 Plan 1 complete — password reset flow: requestPasswordReset/resetPassword Server Actions, forgot/reset pages, auth callback routing, i18n EN+ES
-Last activity: 2026-04-01 — Completed 06-01: password reset Server Actions, auth callback extended for type=recovery/signup, forgot-password and reset-password pages, Zod schemas
+Phase: 6 of 6 (Password Recovery and Email Verification) — COMPLETE
+Plan: 2 of 2 in current phase — COMPLETE
+Status: Phase 6 complete — email verification gate (middleware), verify-email page masking + error states, login verified banner
+Last activity: 2026-04-01 — Completed 06-02: email_confirmed_at middleware gate, maskEmail, error=invalid banner, login verified success banner
 
-Progress: [█████████░] 92%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -59,6 +59,7 @@ Progress: [█████████░] 92%
 | Phase 04-user-registration P03 | 4 | 2 tasks | 7 files |
 | Phase 04-user-registration P04 | 2 min | 2 tasks | 7 files |
 | Phase 05-user-login P02 | 12 | 2 tasks | 10 files |
+| Phase 06 P02 | 4 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -121,6 +122,8 @@ Recent decisions affecting current work:
 - [Phase 06-01]: ForgotPasswordForm implements inline cooldown (not reusing ResendEmailTimer — hardcoded to resendVerificationEmail)
 - [Phase 06-01]: ResetPasswordForm success state has manual Go to sign in link — no auto-redirect per CONTEXT.md
 - [Phase 06-01]: Auth callback type param checked before OAuth new-user detection — recovery/signup routing takes priority
+- [Phase 06]: email_confirmed_at gate in middleware is defense-in-depth — signInWithEmail already catches email_not_verified client-side
+- [Phase 06]: maskEmail shows first_letter***@domain — balances privacy with recognizability
 
 ### Pending Todos
 
@@ -133,5 +136,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-01
-Stopped at: Completed 06-01-PLAN.md — requestPasswordReset/resetPassword Server Actions, auth callback extended for type=recovery/signup, forgot-password and reset-password pages, Zod schemas, i18n EN+ES.
+Stopped at: Completed 06-02-PLAN.md — email verification gate in middleware, verify-email masking and error states, login verified banner, i18n EN+ES.
 Resume file: None

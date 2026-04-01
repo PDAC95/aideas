@@ -76,11 +76,11 @@ Requirements for initial release (Phase 1: Backend Foundation + Auth).
 
 ### Email Verification
 
-- [ ] **VERIFY-01**: Verification email sent automatically on signup
-- [ ] **VERIFY-02**: Verification link in email confirms account
-- [ ] **VERIFY-03**: Verify-email page at `/verify-email` with status message
-- [ ] **VERIFY-04**: User can only login after email is verified
-- [ ] **VERIFY-05**: Resend verification email option
+- [x] **VERIFY-01**: Verification email sent automatically on signup
+- [x] **VERIFY-02**: Verification link in email confirms account
+- [x] **VERIFY-03**: Verify-email page at `/verify-email` with status message
+- [x] **VERIFY-04**: User can only login after email is verified
+- [x] **VERIFY-05**: Resend verification email option
 
 ## v2 Requirements
 
@@ -181,11 +181,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PWD-04 | Phase 6 | Complete |
 | PWD-05 | Phase 6 | Complete |
 | PWD-06 | Phase 6 | Complete |
-| VERIFY-01 | Phase 6 | Pending |
-| VERIFY-02 | Phase 6 | Pending |
-| VERIFY-03 | Phase 6 | Pending |
-| VERIFY-04 | Phase 6 | Pending |
-| VERIFY-05 | Phase 6 | Pending |
+| VERIFY-01 | Phase 6 | Complete |
+| VERIFY-02 | Phase 6 | Complete |
+| VERIFY-03 | Phase 6 | Complete |
+| VERIFY-04 | Phase 6 | Complete |
+| VERIFY-05 | Phase 6 | Complete |
 
 **Coverage:**
 - v1 requirements: 54 total
