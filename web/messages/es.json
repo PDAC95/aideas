@@ -51,7 +51,9 @@
     "cooldown": "Reenviar en {seconds}s",
     "tip": "¿No lo encuentras? Revisa tu carpeta de spam o correo no deseado",
     "logout": "Usar otra cuenta",
-    "settingUp": "Estamos configurando tu cuenta"
+    "settingUp": "Estamos configurando tu cuenta",
+    "invalidLink": "Este enlace de verificación es inválido o ha expirado.",
+    "alreadyVerified": "Tu email ya está verificado."
   },
   "completeRegistration": {
     "title": "Un último paso",

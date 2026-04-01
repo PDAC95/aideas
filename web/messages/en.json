@@ -51,7 +51,9 @@
     "cooldown": "Resend in {seconds}s",
     "tip": "Can't find it? Check your spam or junk folder",
     "logout": "Use a different account",
-    "settingUp": "We're setting up your account"
+    "settingUp": "We're setting up your account",
+    "invalidLink": "This verification link is invalid or has expired.",
+    "alreadyVerified": "Your email is already verified."
   },
   "completeRegistration": {
     "title": "One last step",

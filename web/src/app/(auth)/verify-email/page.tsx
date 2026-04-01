@@ -5,14 +5,20 @@ import { LanguageSwitcher } from '@/components/auth/language-switcher'
 import { SignOutButton } from '@/components/auth/sign-out-button'
 
 interface VerifyEmailPageProps {
-  searchParams: Promise<{ email?: string; setup?: string }>
+  searchParams: Promise<{ email?: string; setup?: string; error?: string }>
+}
+
+function maskEmail(email: string): string {
+  const [local, domain] = email.split('@')
+  if (!local || !domain) return email
+  return `${local[0]}***@${domain}`
 }
 
 export default async function VerifyEmailPage({
   searchParams,
 }: VerifyEmailPageProps) {
   const t = await getTranslations('verifyEmail')
-  const { email = '', setup } = await searchParams
+  const { email = '', setup, error } = await searchParams
   const isSetupPending = setup === 'pending'
 
   return (
@@ -25,6 +31,13 @@ export default async function VerifyEmailPage({
       <div className="w-full max-w-md space-y-6">
         {/* Card */}
         <div className="rounded-xl border bg-card text-card-foreground shadow-sm p-8 space-y-6">
+          {/* Invalid link error banner */}
+          {error === 'invalid' && (
+            <div className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
+              {t('invalidLink')}
+            </div>
+          )}
+
           {/* Icon */}
           <div className="flex justify-center">
             <div className="flex items-center justify-center w-16 h-16 rounded-full bg-primary/10">
@@ -41,7 +54,7 @@ export default async function VerifyEmailPage({
               <p className="text-muted-foreground text-sm">
                 {t('subtitle')}{' '}
                 {email && (
-                  <span className="font-medium text-foreground">{email}</span>
+                  <span className="font-medium text-foreground">{maskEmail(email)}</span>
                 )}
               </p>
             )}

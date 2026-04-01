@@ -56,6 +56,21 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // Email verification gate — unverified users redirected to /verify-email
+  if (
+    user &&
+    !user.email_confirmed_at &&
+    !request.nextUrl.pathname.startsWith('/verify-email') &&
+    !request.nextUrl.pathname.startsWith('/auth/') &&
+    (request.nextUrl.pathname.startsWith('/dashboard') ||
+      request.nextUrl.pathname.startsWith('/app/'))
+  ) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/verify-email'
+    url.searchParams.set('email', user.email ?? '')
+    return NextResponse.redirect(url)
+  }
+
   // Redirect logged-in users away from auth pages
   if (
     user &&
