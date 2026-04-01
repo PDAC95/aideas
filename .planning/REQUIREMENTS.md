@@ -67,12 +67,12 @@ Requirements for initial release (Phase 1: Backend Foundation + Auth).
 
 ### Password Recovery
 
-- [ ] **PWD-01**: Forgot password page at `/forgot-password` with email input
-- [ ] **PWD-02**: Reset email sent via Supabase Auth
-- [ ] **PWD-03**: Reset password page at `/reset-password` with new password form
-- [ ] **PWD-04**: Password strength validation
-- [ ] **PWD-05**: Confirmation message after password changed
-- [ ] **PWD-06**: Redirect to login after reset
+- [x] **PWD-01**: Forgot password page at `/forgot-password` with email input
+- [x] **PWD-02**: Reset email sent via Supabase Auth
+- [x] **PWD-03**: Reset password page at `/reset-password` with new password form
+- [x] **PWD-04**: Password strength validation
+- [x] **PWD-05**: Confirmation message after password changed
+- [x] **PWD-06**: Redirect to login after reset
 
 ### Email Verification
 
@@ -175,12 +175,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | LOGIN-05 | Phase 5 | Complete |
 | LOGIN-06 | Phase 5 | Complete |
 | LOGIN-07 | Phase 5 | Complete |
-| PWD-01 | Phase 6 | Pending |
-| PWD-02 | Phase 6 | Pending |
-| PWD-03 | Phase 6 | Pending |
-| PWD-04 | Phase 6 | Pending |
-| PWD-05 | Phase 6 | Pending |
-| PWD-06 | Phase 6 | Pending |
+| PWD-01 | Phase 6 | Complete |
+| PWD-02 | Phase 6 | Complete |
+| PWD-03 | Phase 6 | Complete |
+| PWD-04 | Phase 6 | Complete |
+| PWD-05 | Phase 6 | Complete |
+| PWD-06 | Phase 6 | Complete |
 | VERIFY-01 | Phase 6 | Pending |
 | VERIFY-02 | Phase 6 | Pending |
 | VERIFY-03 | Phase 6 | Pending |

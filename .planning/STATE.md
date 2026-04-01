@@ -18,16 +18,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-05)
 
 **Core value:** Customers can monitor automations, request new ones, and communicate with the AIDEAS team from a single dashboard that proves the ROI of their subscription
-**Current focus:** Phase 5 — User Login
+**Current focus:** Phase 6 — Password Recovery and Email Verification
 
 ## Current Position
 
-Phase: 5 of 6 (User Login) — COMPLETE
-Plan: 2 of 2 in current phase — COMPLETE
-Status: Phase 5 complete — full login flow: Server Action, error handling, rate limiting, remember-me session, AuthSync, middleware, dashboard i18n
-Last activity: 2026-03-31 — Completed 05-02: signInWithEmail, LoginForm wired, AuthSync, middleware /app/*, dashboard stripped + i18n
+Phase: 6 of 6 (Password Recovery and Email Verification) — IN PROGRESS
+Plan: 1 of 2 in current phase — COMPLETE
+Status: Phase 6 Plan 1 complete — password reset flow: requestPasswordReset/resetPassword Server Actions, forgot/reset pages, auth callback routing, i18n EN+ES
+Last activity: 2026-04-01 — Completed 06-01: password reset Server Actions, auth callback extended for type=recovery/signup, forgot-password and reset-password pages, Zod schemas
 
-Progress: [█████████░] 90%
+Progress: [█████████░] 92%
 
 ## Performance Metrics
 
@@ -116,6 +116,11 @@ Recent decisions affecting current work:
 - [Phase 05-user-login]: signInWithEmail uses discriminated union LoginResult for type-safe error handling without exceptions
 - [Phase 05-02]: sb-remember-me cookie set by Server Action, read by middleware to override Supabase cookie maxAge (30d vs session)
 - [Phase 05-02]: greetingWithName + greeting as separate i18n keys instead of ICU select syntax
+- [Phase 06-01]: requestPasswordReset always returns success — never reveals if email exists (enumeration protection)
+- [Phase 06-01]: resetPassword signs out recovery session after password update — user must re-login with new password
+- [Phase 06-01]: ForgotPasswordForm implements inline cooldown (not reusing ResendEmailTimer — hardcoded to resendVerificationEmail)
+- [Phase 06-01]: ResetPasswordForm success state has manual Go to sign in link — no auto-redirect per CONTEXT.md
+- [Phase 06-01]: Auth callback type param checked before OAuth new-user detection — recovery/signup routing takes priority
 
 ### Pending Todos
 
@@ -127,6 +132,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-31
-Stopped at: Completed 05-02-PLAN.md — signInWithEmail Server Action, LoginForm wired, AuthSync, middleware /app/*, dashboard i18n.
+Last session: 2026-04-01
+Stopped at: Completed 06-01-PLAN.md — requestPasswordReset/resetPassword Server Actions, auth callback extended for type=recovery/signup, forgot-password and reset-password pages, Zod schemas, i18n EN+ES.
 Resume file: None
