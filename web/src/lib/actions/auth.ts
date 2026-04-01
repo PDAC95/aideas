@@ -230,6 +230,56 @@ export async function resendVerificationEmail(
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// requestPasswordReset
+// ─────────────────────────────────────────────────────────────────────────────
+
+export async function requestPasswordReset(
+  email: string
+): Promise<{ success: true } | { error: string }> {
+  const supabase = await createServerClient()
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback?type=recovery`,
+  })
+  // Always return success — never reveal if email exists (enumeration protection)
+  if (error) {
+    console.warn('[requestPasswordReset]', error.message)
+  }
+  return { success: true }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// resetPassword
+// ─────────────────────────────────────────────────────────────────────────────
+
+export async function resetPassword(
+  password: string
+): Promise<{ success: true } | { error: 'no_session' | 'weak_password' | 'generic' }> {
+  const supabase = await createServerClient()
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) {
+    return { error: 'no_session' }
+  }
+
+  const { error } = await supabase.auth.updateUser({ password })
+  if (error) {
+    if (
+      error.message?.toLowerCase().includes('weak') ||
+      error.message?.toLowerCase().includes('password')
+    ) {
+      return { error: 'weak_password' }
+    }
+    return { error: 'generic' }
+  }
+
+  // Sign out the recovery session so user must log in with new password
+  await supabase.auth.signOut()
+  return { success: true }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // signInWithEmail
 // ─────────────────────────────────────────────────────────────────────────────
 
