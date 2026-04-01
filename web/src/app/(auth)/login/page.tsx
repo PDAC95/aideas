@@ -5,7 +5,7 @@ import { LoginForm } from "@/components/auth/login-form";
 import { LanguageSwitcher } from "@/components/auth/language-switcher";
 
 interface LoginPageProps {
-  searchParams: Promise<{ reason?: string; error?: string }>;
+  searchParams: Promise<{ reason?: string; error?: string; verified?: string }>;
 }
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
@@ -14,6 +14,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
   const sessionExpired = params.reason === "expired";
   const authError = params.error === "auth";
+  const verified = params.verified === "true";
 
   const highlights = [
     { icon: CheckCircle, text: t("branding.highlight1") },
@@ -98,7 +99,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           </div>
 
           {/* Login form */}
-          <LoginForm sessionExpired={sessionExpired} authError={authError} />
+          <LoginForm sessionExpired={sessionExpired} authError={authError} verified={verified} />
         </div>
       </div>
     </div>

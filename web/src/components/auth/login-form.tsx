@@ -17,9 +17,10 @@ import { GoogleOAuthButton } from "@/components/auth/google-oauth-button";
 interface LoginFormProps {
   sessionExpired?: boolean;
   authError?: boolean;
+  verified?: boolean;
 }
 
-export function LoginForm({ sessionExpired, authError }: LoginFormProps) {
+export function LoginForm({ sessionExpired, authError, verified }: LoginFormProps) {
   const t = useTranslations("login");
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
@@ -27,6 +28,7 @@ export function LoginForm({ sessionExpired, authError }: LoginFormProps) {
   const [showSessionExpired, setShowSessionExpired] = useState(
     sessionExpired ?? false
   );
+  const [showVerified, setShowVerified] = useState(verified ?? false);
 
   // Rate limiting state
   const [failedAttempts, setFailedAttempts] = useState(0);
@@ -83,6 +85,14 @@ export function LoginForm({ sessionExpired, authError }: LoginFormProps) {
       return () => clearTimeout(timer);
     }
   }, [showSessionExpired]);
+
+  // Auto-dismiss verified banner after 5 seconds
+  useEffect(() => {
+    if (showVerified) {
+      const timer = setTimeout(() => setShowVerified(false), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [showVerified]);
 
   // Countdown timer for lockout display
   useEffect(() => {
@@ -173,6 +183,21 @@ export function LoginForm({ sessionExpired, authError }: LoginFormProps) {
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} noValidate>
       <div className="space-y-4">
+        {/* Email verified success banner */}
+        {showVerified && (
+          <div className="rounded-md bg-green-50 dark:bg-green-900/20 px-3 py-2 text-sm text-green-700 dark:text-green-300 flex items-center justify-between">
+            <span>{t("verified")}</span>
+            <button
+              type="button"
+              onClick={() => setShowVerified(false)}
+              className="ml-2 text-green-500 hover:text-green-700 font-medium"
+              aria-label="Dismiss"
+            >
+              ×
+            </button>
+          </div>
+        )}
+
         {/* Session expired banner */}
         {showSessionExpired && (
           <div className="rounded-md bg-blue-50 border border-blue-200 px-3 py-2 text-sm text-blue-700 flex items-center justify-between">
