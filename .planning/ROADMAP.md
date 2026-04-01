@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Auth Integration** - Supabase Auth configured for email/password + Google OAuth, JWT validation wired into FastAPI (completed 2026-03-27)
 - [x] **Phase 4: User Registration** - New users can sign up with email or Google, organization created automatically, verification email sent (completed 2026-03-31)
 - [x] **Phase 5: User Login** - Users can log in and maintain persistent sessions across browser refreshes (completed 2026-03-31)
-- [x] **Phase 6: Password Recovery and Email Verification** - Users can recover a forgotten password and verify their email address (completed 2026-04-01)
+- [ ] **Phase 6: Password Recovery and Email Verification** - Users can recover a forgotten password and verify their email address (UAT gap closure in progress)
 
 ## Phase Details
 
@@ -112,11 +112,12 @@ Plans:
   3. A newly registered user on `/verify-email` can click "Resend verification email" and receive a new email immediately
   4. Clicking the verification link in the email marks the account as verified and allows login; an unverified user who tries to log in is redirected to `/verify-email`
   5. The reset password form rejects passwords below the minimum strength requirement before submitting
-**Plans**: 2 plans
+**Plans**: 3 plans
 
 Plans:
 - [ ] 06-01-PLAN.md — Auth callback extension, Server Actions, Zod schemas, forgot-password page, reset-password page, i18n
 - [ ] 06-02-PLAN.md — Middleware email verification gate, verify-email page enhancements, login page verified banner
+- [ ] 06-03-PLAN.md — UAT gap closure: NEXT_PUBLIC_SITE_URL env var fix + reCAPTCHA client-side dev bypass
 
 ## Progress
 
@@ -130,4 +131,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 3. Auth Integration | 2/2 | Complete   | 2026-03-27 |
 | 4. User Registration | 4/4 | Complete   | 2026-03-31 |
 | 5. User Login | 2/2 | Complete   | 2026-03-31 |
-| 6. Password Recovery and Email Verification | 2/2 | Complete   | 2026-04-01 |
+| 6. Password Recovery and Email Verification | 2/3 | Gap Closure | — |
