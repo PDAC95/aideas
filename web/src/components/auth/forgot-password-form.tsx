@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
 import { Mail, Loader2 } from 'lucide-react'
 import { forgotPasswordSchema, type ForgotPasswordFormData } from '@/lib/validations/password-reset'
-import { requestPasswordReset } from '@/lib/actions/auth'
+import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -34,7 +34,10 @@ export function ForgotPasswordForm({ expiredError }: ForgotPasswordFormProps) {
   })
 
   async function onSubmit(data: ForgotPasswordFormData) {
-    await requestPasswordReset(data.email)
+    const supabase = createClient()
+    await supabase.auth.resetPasswordForEmail(data.email, {
+      redirectTo: `${window.location.origin}/auth/callback?type=recovery`,
+    })
     setSubmittedEmail(data.email)
     setSubmitted(true)
   }
@@ -55,7 +58,10 @@ export function ForgotPasswordForm({ expiredError }: ForgotPasswordFormProps) {
   async function handleResend() {
     if (cooldown > 0 || sending) return
     setSending(true)
-    await requestPasswordReset(submittedEmail)
+    const supabase = createClient()
+    await supabase.auth.resetPasswordForEmail(submittedEmail, {
+      redirectTo: `${window.location.origin}/auth/callback?type=recovery`,
+    })
     setSending(false)
     startCooldown()
   }

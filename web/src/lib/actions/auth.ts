@@ -230,30 +230,12 @@ export async function resendVerificationEmail(
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// requestPasswordReset
-// ─────────────────────────────────────────────────────────────────────────────
-
-export async function requestPasswordReset(
-  email: string
-): Promise<{ success: true } | { error: string }> {
-  const supabase = await createServerClient()
-  const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback?type=recovery`,
-  })
-  // Always return success — never reveal if email exists (enumeration protection)
-  if (error) {
-    console.warn('[requestPasswordReset]', error.message)
-  }
-  return { success: true }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
 // resetPassword
 // ─────────────────────────────────────────────────────────────────────────────
 
 export async function resetPassword(
   password: string
-): Promise<{ success: true } | { error: 'no_session' | 'weak_password' | 'generic' }> {
+): Promise<{ success: true } | { error: 'no_session' | 'weak_password' | 'same_password' | 'generic' }> {
   const supabase = await createServerClient()
 
   const {
@@ -265,11 +247,16 @@ export async function resetPassword(
 
   const { error } = await supabase.auth.updateUser({ password })
   if (error) {
-    if (
-      error.message?.toLowerCase().includes('weak') ||
-      error.message?.toLowerCase().includes('password')
-    ) {
+    console.error('[resetPassword] updateUser error:', error.message, error.status)
+    const msg = error.message?.toLowerCase() ?? ''
+    if (msg.includes('weak') || msg.includes('strength')) {
       return { error: 'weak_password' }
+    }
+    if (msg.includes('same') || msg.includes('different')) {
+      return { error: 'same_password' }
+    }
+    if (msg.includes('session') || msg.includes('not authorized') || error.status === 403) {
+      return { error: 'no_session' }
     }
     return { error: 'generic' }
   }
