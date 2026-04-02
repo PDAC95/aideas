@@ -138,9 +138,10 @@ None.
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 1 | Fix password reset email link redirecting to root instead of reset-password page | 2026-04-01 | 984780a | [1-fix-password-reset-email-link-redirectin](./quick/1-fix-password-reset-email-link-redirectin/) |
+| 2 | Fix password reset link showing expired (PKCE cookie in browser context) | 2026-04-02 | ed19bfc | [2-fix-password-reset-link-showing-expired-](./quick/2-fix-password-reset-link-showing-expired-/) |
 
 ## Session Continuity
 
-Last session: 2026-04-01
-Stopped at: Completed 06-02-PLAN.md — email verification gate in middleware, verify-email masking and error states, login verified banner, i18n EN+ES.
+Last session: 2026-04-02
+Stopped at: Completed quick task 2: Fix password reset link showing expired (moved resetPasswordForEmail to browser client)
 Resume file: None
