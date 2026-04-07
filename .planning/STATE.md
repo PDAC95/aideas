@@ -18,14 +18,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-05)
 
 **Core value:** Customers can monitor automations, request new ones, and communicate with the AIDEAS team from a single dashboard that proves the ROI of their subscription
-**Current focus:** Phase 6 — Password Recovery and Email Verification
+**Current focus:** Phase 6 — Password Recovery and Email Verification (UAT gap closure complete)
 
 ## Current Position
 
 Phase: 6 of 6 (Password Recovery and Email Verification) — COMPLETE
-Plan: 2 of 2 in current phase — COMPLETE
-Status: Phase 6 complete — email verification gate (middleware), verify-email page masking + error states, login verified banner
-Last activity: 2026-04-01 - Completed quick task 1: Fix password reset email link redirecting to root instead of reset-password page
+Plan: 3 of 3 in current phase — COMPLETE
+Status: Phase 6 fully complete — UAT gaps closed: NEXT_PUBLIC_SITE_URL added to .env.local, signup reCAPTCHA dev bypass implemented
+Last activity: 2026-04-07 - Completed plan 06-03: UAT gap closure (site URL + reCAPTCHA bypass)
 
 Progress: [██████████] 100%
 
@@ -124,6 +124,8 @@ Recent decisions affecting current work:
 - [Phase 06-01]: Auth callback type param checked before OAuth new-user detection — recovery/signup routing takes priority
 - [Phase 06]: email_confirmed_at gate in middleware is defense-in-depth — signInWithEmail already catches email_not_verified client-side
 - [Phase 06]: maskEmail shows first_letter***@domain — balances privacy with recognizability
+- [Phase 06-03]: NEXT_PUBLIC_SITE_URL=http://localhost:3000 in .env.local fixes resetPasswordForEmail redirectTo evaluating to undefined/...
+- [Phase 06-03]: reCAPTCHA client bypass uses "dev-bypass" token — captchaToken field stays non-empty; real failure only when key configured but library missing
 
 ### Pending Todos
 
@@ -142,6 +144,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-02
-Stopped at: Completed quick task 2: Fix password reset link showing expired (moved resetPasswordForEmail to browser client)
+Last session: 2026-04-07
+Stopped at: Completed plan 06-03: UAT gap closure — NEXT_PUBLIC_SITE_URL + reCAPTCHA signup bypass
 Resume file: None
