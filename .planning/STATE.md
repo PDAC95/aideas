@@ -141,9 +141,10 @@ None.
 |---|-------------|------|--------|-----------|
 | 1 | Fix password reset email link redirecting to root instead of reset-password page | 2026-04-01 | 984780a | [1-fix-password-reset-email-link-redirectin](./quick/1-fix-password-reset-email-link-redirectin/) |
 | 2 | Fix password reset link showing expired (PKCE cookie in browser context) | 2026-04-02 | ed19bfc | [2-fix-password-reset-link-showing-expired-](./quick/2-fix-password-reset-link-showing-expired-/) |
+| 3 | Replace main page with full AIDEAS branded landing page (React conversion from HTML/jQuery) | 2026-04-07 | c30b119 | [3-replace-main-page-with-landing-page-and-](./quick/3-replace-main-page-with-landing-page-and-/) |
 
 ## Session Continuity
 
 Last session: 2026-04-07
-Stopped at: Completed plan 06-03: UAT gap closure — NEXT_PUBLIC_SITE_URL + reCAPTCHA signup bypass
+Stopped at: Completed quick-3: replace root page with branded AIDEAS landing page
 Resume file: None
