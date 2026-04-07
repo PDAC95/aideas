@@ -43,13 +43,17 @@ export function SignupForm() {
   const watchedPassword = watch("password") ?? "";
 
   const handleFormSubmit = async (data: SignupFormData) => {
-    // 1. Get reCAPTCHA token
-    if (!executeRecaptcha) {
-      setError("root", { message: t("errors.captchaFailed") });
-      return;
-    }
-    const captchaToken = await executeRecaptcha("signup");
-    if (!captchaToken) {
+    // 1. Get reCAPTCHA token (bypass in development when not configured)
+    let captchaToken = "dev-bypass";
+    if (executeRecaptcha) {
+      const token = await executeRecaptcha("signup");
+      if (!token) {
+        setError("root", { message: t("errors.captchaFailed") });
+        return;
+      }
+      captchaToken = token;
+    } else if (process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY) {
+      // reCAPTCHA configured but not loaded — real failure
       setError("root", { message: t("errors.captchaFailed") });
       return;
     }
