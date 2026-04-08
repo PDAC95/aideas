@@ -1,9 +1,9 @@
 ---
 gsd_state_version: 1.0
 milestone: v1.0
-milestone_name: milestone
-status: unknown
-last_updated: "2026-04-07T17:26:20.876Z"
+milestone_name: Backend Foundation + Auth
+status: complete
+last_updated: "2026-04-08T14:00:00.000Z"
 progress:
   total_phases: 6
   completed_phases: 6
@@ -15,121 +15,28 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-05)
+See: .planning/PROJECT.md (updated 2026-04-08)
 
 **Core value:** Customers can monitor automations, request new ones, and communicate with the AIDEAS team from a single dashboard that proves the ROI of their subscription
-**Current focus:** Phase 6 — Password Recovery and Email Verification (UAT gap closure complete)
+**Current focus:** v1.0 shipped — planning next milestone
 
 ## Current Position
 
-Phase: 6 of 6 (Password Recovery and Email Verification) — COMPLETE
-Plan: 3 of 3 in current phase — COMPLETE
-Status: Phase 6 fully complete — UAT gaps closed: NEXT_PUBLIC_SITE_URL added to .env.local, signup reCAPTCHA dev bypass implemented
-Last activity: 2026-04-07 - Completed plan 06-03: UAT gap closure (site URL + reCAPTCHA bypass)
+Milestone: v1.0 Backend Foundation + Auth — SHIPPED 2026-04-08
+Status: All 6 phases complete, 54/54 requirements satisfied, milestone archived
+Last activity: 2026-04-08 - Milestone v1.0 archived and tagged
 
-Progress: [██████████] 100%
-
-## Performance Metrics
-
-**Velocity:**
-- Total plans completed: 9
-- Average duration: 3 min
-- Total execution time: ~0.45 hours
-
-**By Phase:**
-
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| 01-api-foundation | 1 | 2 min | 2 min |
-| 02-database-schema | 3 | 5 min | 2 min |
-| 03-auth-integration | 2 | 6 min | 3 min |
-| 04-user-registration | 4 | ~24 min | 6 min |
-
-**Recent Trend:**
-- Last 5 plans: 03-01 (3 min), 03-02 (3 min), 04-02 (7 min), 04-01 (8 min), 04-03 (4 min)
-- Trend: stable
-
-*Updated after each plan completion*
-
-| Phase 02-database-schema P03 | 3 | 2 tasks | 2 files |
-| Phase 03-auth-integration P01 | 3 | 2 tasks | 12 files |
-| Phase 03-auth-integration P02 | 3 | 2 tasks | 5 files |
-| Phase 04-user-registration P02 | 7 | 2 tasks | 13 files |
-| Phase 04-user-registration P01 | 8 | 2 tasks | 8 files |
-| Phase 04-user-registration P03 | 4 | 2 tasks | 7 files |
-| Phase 04-user-registration P04 | 2 min | 2 tasks | 7 files |
-| Phase 05-user-login P02 | 12 | 2 tasks | 10 files |
-| Phase 06 P02 | 4 | 2 tasks | 6 files |
+Progress: [██████████] 100% — SHIPPED
 
 ## Accumulated Context
 
 ### Decisions
 
-Decisions are logged in PROJECT.md Key Decisions table.
-Recent decisions affecting current work:
-
-- [Init]: Supabase for auth + DB + realtime (single service, reduces complexity)
-- [Init]: FastAPI over Next.js API routes (better for background jobs, Stripe webhooks, Python ecosystem)
-- [Init]: Managed service model — customers monitor and request, not build
-- [01-01]: SettingsConfigDict (pydantic v2) replaces inner class Config — avoids deprecation warnings
-- [01-01]: debug=False default — production-safe, avoids exposing /docs on Railway deployment
-- [01-01]: Path(__file__).parent.parent for env_file — cwd-independent, works inside Docker /app
-- [01-01]: loguru colorize=False — Railway log aggregation handles plain text; ANSI codes corrupt log viewers
-- [01-02]: Always-on /docs — removed debug gating (API-06); docs always available for Railway testing workflow
-- [01-02]: Supabase probe via auth.get_user with dummy token — auth errors prove reachability without needing a real DB table
-- [01-02]: auth.py simplified to stub — /me and UserInfo deferred to Phase 3 with proper JWT middleware
-- [02-01]: organization_members RLS uses direct user_id check — no self-referencing subquery to prevent infinite recursion
-- [02-01]: role column uses CHECK constraint (not Postgres ENUM) — easier future value additions
-- [02-01]: organization_members uses is_active boolean (not deleted_at) — cleaner membership suspension semantics
-- [02-01]: handle_new_user uses SECURITY DEFINER SET search_path = '' — security best practice for trigger functions
-- [02-01]: No INSERT/UPDATE/DELETE RLS policies on system tables — service_role key for writes only
-- [Phase 02-02]: automation_templates uses is_active (not deleted_at) for hiding — global catalog simplicity
-- [Phase 02-02]: automation_executions joins through automations table for org-scoped RLS — avoids direct org_id column, preserves immutability
-- [Phase 02-02]: UNIQUE(organization_id) on subscriptions enforces one-subscription-per-org at DB level
-- [Phase 02-03]: chat_messages immutable (no updated_at/deleted_at) — v1 has no edit/delete per CONTEXT.md
-- [Phase 02-03]: Realtime added only to chat_messages via ALTER PUBLICATION — notifications use polling per CONTEXT.md
-- [Phase 02-03]: Seed wrapped in transaction and auth.identities seeded for email login to work in local Supabase
-- [03-01]: Google OAuth secrets use env() in config.toml — never committed to version control
-- [03-01]: 10 email template paths registered (5 EN + 5 ES) — bilingual auth from day one
-- [03-01]: Logo served by Next.js at web/public/logo.png — email templates reference production URL
-- [03-02]: HTTPBearer auto_error=False — forces 401 (not 403) on missing token per project error format spec
-- [03-02]: Server-side JWT validation via supabase.auth.get_user() — authoritative, handles expiry/revocation without local decode
-- [03-02]: In-memory slowapi rate limiter — sufficient for single Railway instance, no Redis dependency
-- [03-02]: request.state.user_id attachment — downstream handlers access user identity without re-validating
-- [03-02]: Protected router pattern documented — future Phase 4+ routers use APIRouter(dependencies=[Depends(get_current_user)])
-- [04-02]: zodResolver + Zod v4: z.enum().default() causes input/output type mismatch — use .optional() and handle default in form defaultValues
-- [04-02]: next-intl v4 uses cookies() and headers() as async — await both in request.ts
-- [04-02]: SignupForm onSubmit is a prop (optional) — Plan 02 builds UI only, Plan 03 wires Server Action
-- [04-02]: Google button placed below form fields + divider — email form is primary CTA per UX convention
-- [04-02]: captchaToken not optional in schema — Plan 03 will populate it via reCAPTCHA v3
-- [04-01]: Seed disables on_auth_user_created trigger during auth.users insert — fixed UUIDs required for FK stability; trigger re-enabled after
-- [04-01]: Profile UPDATE statements moved out of migration into seed — migrations run before seed data exists
-- [04-01]: locale field stays .optional() in signupSchema — zodResolver generic requires input/output type alignment with useForm<SignupFormData>
-- [04-01]: handle_new_user EXCEPTION block uses RAISE WARNING not RAISE EXCEPTION — signup continues even if trigger body fails
-- [Phase 04-03]: New OAuth user detection uses user_metadata.company_name absence + google provider check
-- [Phase 04-03]: RecaptchaProvider extracted to client component wrapper — signup page stays Server Component
-- [Phase 04-04]: verify-email page reads email from searchParams — no session required, works immediately after signup redirect
-- [Phase 04-04]: Legal pages in (legal) route group — no shared layout needed, inherits root layout
-- [Phase 05-01]: LoginFormData uses z.input<typeof loginSchema> — zodResolver requires input type alignment (consistent with Phase 4 pattern)
-- [Phase 05-01]: handleFormSubmit placeholder (console.log) — Plan 02 wires Supabase signInWithEmail Server Action
-- [Phase 05-01]: searchParams typed as Promise<{}> and awaited — Next.js 16 async searchParams requirement
-- [Phase 05-01]: Auto-dismiss banners via useState + useEffect setTimeout(5000) — form component manages its own banner lifecycle
-- [Phase 05-user-login]: signInWithEmail uses discriminated union LoginResult for type-safe error handling without exceptions
-- [Phase 05-02]: sb-remember-me cookie set by Server Action, read by middleware to override Supabase cookie maxAge (30d vs session)
-- [Phase 05-02]: greetingWithName + greeting as separate i18n keys instead of ICU select syntax
-- [Phase 06-01]: requestPasswordReset always returns success — never reveals if email exists (enumeration protection)
-- [Phase 06-01]: resetPassword signs out recovery session after password update — user must re-login with new password
-- [Phase 06-01]: ForgotPasswordForm implements inline cooldown (not reusing ResendEmailTimer — hardcoded to resendVerificationEmail)
-- [Phase 06-01]: ResetPasswordForm success state has manual Go to sign in link — no auto-redirect per CONTEXT.md
-- [Phase 06-01]: Auth callback type param checked before OAuth new-user detection — recovery/signup routing takes priority
-- [Phase 06]: email_confirmed_at gate in middleware is defense-in-depth — signInWithEmail already catches email_not_verified client-side
-- [Phase 06]: maskEmail shows first_letter***@domain — balances privacy with recognizability
-- [Phase 06-03]: NEXT_PUBLIC_SITE_URL=http://localhost:3000 in .env.local fixes resetPasswordForEmail redirectTo evaluating to undefined/...
-- [Phase 06-03]: reCAPTCHA client bypass uses "dev-bypass" token — captchaToken field stays non-empty; real failure only when key configured but library missing
+Decisions logged in PROJECT.md Key Decisions table (updated with outcomes at v1.0 completion).
 
 ### Pending Todos
 
-None yet.
+None.
 
 ### Blockers/Concerns
 
@@ -145,6 +52,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-07
-Stopped at: Completed quick-3: replace root page with branded AIDEAS landing page
+Last session: 2026-04-08
+Stopped at: Milestone v1.0 archived and completed
 Resume file: None
