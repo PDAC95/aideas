@@ -119,51 +119,51 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DATA-01 | — | Pending |
-| DATA-02 | — | Pending |
-| DATA-03 | — | Pending |
-| DATA-04 | — | Pending |
-| DATA-05 | — | Pending |
-| HOME-01 | — | Pending |
-| HOME-02 | — | Pending |
-| HOME-03 | — | Pending |
-| HOME-04 | — | Pending |
-| HOME-05 | — | Pending |
-| AUTO-01 | — | Pending |
-| AUTO-02 | — | Pending |
-| AUTO-03 | — | Pending |
-| AUTO-04 | — | Pending |
-| AUTO-05 | — | Pending |
-| AUTO-06 | — | Pending |
-| CATL-01 | — | Pending |
-| CATL-02 | — | Pending |
-| CATL-03 | — | Pending |
-| CATL-04 | — | Pending |
-| REPT-01 | — | Pending |
-| REPT-02 | — | Pending |
-| REPT-03 | — | Pending |
-| REPT-04 | — | Pending |
-| REPT-05 | — | Pending |
-| BILL-01 | — | Pending |
-| BILL-02 | — | Pending |
-| BILL-03 | — | Pending |
-| BILL-04 | — | Pending |
-| SETT-01 | — | Pending |
-| SETT-02 | — | Pending |
-| SETT-03 | — | Pending |
-| SETT-04 | — | Pending |
-| SETT-05 | — | Pending |
-| SETT-06 | — | Pending |
-| NOTF-01 | — | Pending |
-| NOTF-02 | — | Pending |
-| NOTF-03 | — | Pending |
-| I18N-01 | — | Pending |
+| DATA-01 | Phase 7 | Pending |
+| DATA-02 | Phase 7 | Pending |
+| DATA-03 | Phase 7 | Pending |
+| DATA-04 | Phase 7 | Pending |
+| DATA-05 | Phase 7 | Pending |
+| HOME-01 | Phase 8 | Pending |
+| HOME-02 | Phase 8 | Pending |
+| HOME-03 | Phase 8 | Pending |
+| HOME-04 | Phase 8 | Pending |
+| HOME-05 | Phase 8 | Pending |
+| NOTF-01 | Phase 8 | Pending |
+| NOTF-02 | Phase 8 | Pending |
+| NOTF-03 | Phase 8 | Pending |
+| I18N-01 | Phase 8 | Pending |
+| AUTO-01 | Phase 9 | Pending |
+| AUTO-02 | Phase 9 | Pending |
+| AUTO-03 | Phase 9 | Pending |
+| AUTO-04 | Phase 9 | Pending |
+| AUTO-05 | Phase 9 | Pending |
+| AUTO-06 | Phase 9 | Pending |
+| CATL-01 | Phase 10 | Pending |
+| CATL-02 | Phase 10 | Pending |
+| CATL-03 | Phase 10 | Pending |
+| CATL-04 | Phase 10 | Pending |
+| REPT-01 | Phase 11 | Pending |
+| REPT-02 | Phase 11 | Pending |
+| REPT-03 | Phase 11 | Pending |
+| REPT-04 | Phase 11 | Pending |
+| REPT-05 | Phase 11 | Pending |
+| BILL-01 | Phase 11 | Pending |
+| BILL-02 | Phase 11 | Pending |
+| BILL-03 | Phase 11 | Pending |
+| BILL-04 | Phase 11 | Pending |
+| SETT-01 | Phase 12 | Pending |
+| SETT-02 | Phase 12 | Pending |
+| SETT-03 | Phase 12 | Pending |
+| SETT-04 | Phase 12 | Pending |
+| SETT-05 | Phase 12 | Pending |
+| SETT-06 | Phase 12 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 34 total
-- Mapped to phases: 0
-- Unmapped: 34 ⚠️
+- Mapped to phases: 34
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-04-09*
-*Last updated: 2026-04-09 after initial definition*
+*Last updated: 2026-04-09 — traceability complete after roadmap creation*

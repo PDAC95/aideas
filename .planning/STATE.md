@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Core Dashboard Experience
-status: defining_requirements
+status: ready_to_plan
 last_updated: "2026-04-09T12:00:00.000Z"
 progress:
-  total_phases: 0
+  total_phases: 6
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -17,21 +17,28 @@ progress:
 
 See: .planning/PROJECT.md (updated 2026-04-09)
 
-**Core value:** Customers can monitor automations, request new ones, and communicate with the AIDEAS team from a single dashboard that proves the ROI of their subscription
-**Current focus:** v1.1 Core Dashboard Experience — defining requirements
+**Core value:** Customers can monitor automations, request new ones, and see their ROI from a single dashboard that proves the value of their AIDEAS subscription
+**Current focus:** Phase 7 — Schema & Seed Data
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-04-09 — Milestone v1.1 started
+Phase: 7 of 12 (Schema & Seed Data)
+Plan: 0 of ? in current phase
+Status: Ready to plan
+Last activity: 2026-04-09 — v1.1 roadmap created (Phases 7-12), 34 requirements mapped
+
+Progress: [████████░░░░░░░░░░░░] 37% (6/16 plans — v1.0 complete, v1.1 not started)
 
 ## Accumulated Context
 
 ### Decisions
 
-Decisions logged in PROJECT.md Key Decisions table (updated with outcomes at v1.0 completion).
+Key v1.1 decisions (see PROJECT.md for full log):
+- **Stripe OUT OF SCOPE for v1.1** — all payment UI uses mock/seed data; Stripe wired in v1.2 (STRP-01–STRP-06 deferred)
+- **Data flow: Hybrid C** — reads via Supabase Server Components, writes via FastAPI, Settings writes direct to Supabase (no business logic)
+- **Schema changes are ALTERs** — v1.0 already created tables; v1.1 adds columns and expands CHECK constraints
+- **I18N-01 applies across all frontend phases** — EN/ES translation keys tracked from Phase 8 through Phase 12
+- **Mock billing data** — payment history from seed data in v1.1; Stripe API in v1.2
 
 ### Pending Todos
 
@@ -39,7 +46,8 @@ None.
 
 ### Blockers/Concerns
 
-None.
+- Phase 7 (schema migration) is a hard prerequisite for all v1.1 frontend phases — must complete first
+- `automation_templates.category` CHECK constraint expansion requires careful ALTER ordering (drop old, add new)
 
 ### Quick Tasks Completed
 
@@ -52,5 +60,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-09
-Stopped at: Milestone v1.1 started — defining requirements
+Stopped at: v1.1 roadmap created — Phases 7-12 defined, 34/34 requirements mapped. Ready to plan Phase 7.
 Resume file: None
