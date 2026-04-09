@@ -26,20 +26,25 @@ Customers can monitor their automations' performance, request new ones, and comm
 
 ### Active
 
-- [ ] Dashboard with automation metrics and status overview
-- [ ] Automation catalog with search/filter
-- [ ] Request automation workflow
-- [ ] My automations list with real-time status
-- [ ] Real-time chat with AIDEAS team
-- [ ] Team management (invite, roles, remove)
-- [ ] Billing integration (Stripe checkout, portal, invoices)
-- [ ] Profile and settings management
-- [ ] In-app notifications
+<!-- v1.1 — Core Dashboard Experience -->
+- [ ] Dashboard home with KPIs, automation list, activity feed
+- [ ] My Automations list with detail views, pause/resume/cancel via Stripe
+- [ ] Automation catalog (66+ templates) with industry/category filters and Stripe Checkout purchase flow
+- [ ] Reports with impact metrics, weekly charts, per-automation breakdown, optional value estimation
+- [ ] Billing summary, monthly charges, payment history via Stripe API, Customer Portal
+- [ ] Settings: profile, preferences (language, hourly cost), security (change password, session management)
+- [ ] Notifications dropdown with unread count, created by business operations
+- [ ] Schema migration: ALTER templates/automations/requests + seed 66+ templates + demo data
+- [ ] FastAPI endpoints: automation request, pause/resume/cancel, billing portal/history, Stripe webhooks, admin activation
 
 ### Out of Scope
 
 - Self-service automation builder — NOT the AIDEAS model, customers don't build automations
-- Admin panel — Phase 2 (US-5.x)
+- Real-time chat with AIDEAS team — v1.2
+- Team management / invitations — v1.2
+- Admin panel for AIDEAS team — v1.2
+- Status update notes during setup — v1.2
+- Empty states for zero-automation users — v1.2 (seed data covers v1.1)
 - Public API — Phase 2+
 - Mobile app — Phase 2+, PWA may suffice
 - AI chat assistant for needs discovery — Phase 2
@@ -84,5 +89,22 @@ Hosting: Vercel (frontend), Railway (backend), Supabase (database).
 | reCAPTCHA v3 with dev bypass | Client-side "dev-bypass" token when key not configured | ✓ Good — unblocks local development without external dependency |
 | handle_new_user trigger for org creation | Atomic org + profile + membership on every signup | ✓ Good — no race conditions, works for both email and OAuth |
 
+## Current Milestone: v1.1 Core Dashboard Experience
+
+**Goal:** Deliver the complete customer-facing dashboard — all 7 sections, Stripe integration, seed data — so customers can monitor automations, browse the catalog, purchase, and see ROI.
+
+**Target features:**
+- Dashboard home with KPIs and activity feed
+- My Automations with detail views and lifecycle actions (pause/resume/cancel)
+- Catalog with 66+ templates, industry/category filters, Stripe Checkout purchase
+- Reports with impact metrics and value estimation
+- Billing with Stripe Customer Portal integration
+- Settings (profile, preferences, security)
+- Notifications with unread count
+- Schema migration + seed data (66+ templates, demo org data)
+- FastAPI endpoints for all business writes + Stripe webhooks
+
+**Design spec:** `docs/superpowers/specs/2026-04-09-v1.1-dashboard-design.md`
+
 ---
-*Last updated: 2026-04-08 after v1.0 milestone*
+*Last updated: 2026-04-09 after v1.1 milestone start*
