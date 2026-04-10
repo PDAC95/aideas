@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-04-09)
 ## Current Position
 
 Phase: 7 of 12 (Schema & Seed Data)
-Plan: 1 of 3 in current phase (07-01 complete)
+Plan: 2 of 3 in current phase (07-01, 07-02 complete)
 Status: In Progress
-Last activity: 2026-04-10 — 07-01 schema migration complete (ecb5f55)
+Last activity: 2026-04-10 — 07-02 seed data complete (e416fd1)
 
-Progress: [████████░░░░░░░░░░░░] 37% (6/16 plans — v1.0 complete, v1.1 07-01 done)
+Progress: [████████░░░░░░░░░░░░] 37% (7/16 plans — v1.0 complete, v1.1 07-01+07-02 done)
 
 ## Accumulated Context
 
@@ -46,9 +46,15 @@ Phase 07-01 decisions (2026-04-10):
 - **in_setup status on automations** — represents automation during onboarding/setup phase after payment
 - **payment_pending/payment_failed on automation_requests** — tracks Stripe checkout session lifecycle
 
+Phase 07-02 decisions (2026-04-10):
+- **TRUNCATE CASCADE for seed idempotency** — clean-slate replaces ON CONFLICT pattern in seed.sql
+- **i18n keys in DB TEXT columns** — templates store keys like `templates.lead_followup_email.name` for bilingual catalog display (phases 8, 10)
+- **12 featured templates** — `is_featured=true` distributed across all 8 categories for Top Picks UI section
+- **pricing_tier mapping** — starter=simple 1-day, pro=medium 2-3 day, business=complex/AI 5-day templates
+
 ### Pending Todos
 
-- Run `npx supabase db reset` when Docker Desktop is running to confirm full migration stack applies cleanly (prerequisite before 07-02 seed data goes in).
+- Run `npx supabase db reset` when Docker Desktop is running to confirm full migration stack + seed apply cleanly (prerequisite before Phase 08).
 
 ### Blockers/Concerns
 
@@ -66,5 +72,5 @@ Phase 07-01 decisions (2026-04-10):
 ## Session Continuity
 
 Last session: 2026-04-10
-Stopped at: Completed 07-01-PLAN.md — v1.1 schema expansion migration created (ecb5f55). Ready for 07-02.
+Stopped at: Completed 07-02-PLAN.md — 66-template seed catalog with EN/ES i18n (e416fd1). Ready for 07-03.
 Resume file: None

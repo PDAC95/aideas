@@ -12,7 +12,7 @@ Requirements for Core Dashboard Experience. Each maps to roadmap phases.
 - [x] **DATA-01**: Schema migration ALTERs `automation_templates` with pricing, industry, metric columns and expanded category CHECK
 - [x] **DATA-02**: Schema migration ALTERs `automations` with `stripe_subscription_id` and `in_setup` status
 - [x] **DATA-03**: Schema migration ALTERs `automation_requests` with checkout fields and expanded status CHECK
-- [ ] **DATA-04**: Seed 66+ automation templates across 8 categories and 6 industries with realistic pricing and metrics
+- [x] **DATA-04**: Seed 66+ automation templates across 8 categories and 6 industries with realistic pricing and metrics
 - [ ] **DATA-05**: Seed demo org data: 5-6 automations, ~500 executions over 60 days, 5-6 requests, 8-10 notifications, org settings with hourly_cost
 
 ### Dashboard Home
@@ -122,7 +122,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DATA-01 | Phase 7 | Complete |
 | DATA-02 | Phase 7 | Complete |
 | DATA-03 | Phase 7 | Complete |
-| DATA-04 | Phase 7 | Pending |
+| DATA-04 | Phase 7 | Complete |
 | DATA-05 | Phase 7 | Pending |
 | HOME-01 | Phase 8 | Pending |
 | HOME-02 | Phase 8 | Pending |
