@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Core Dashboard Experience
 status: in_progress
-last_updated: "2026-04-10T14:11:20Z"
+last_updated: "2026-04-10T14:45:00Z"
 progress:
   total_phases: 6
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 3
-  completed_plans: 1
+  completed_plans: 3
 ---
 
 # Project State
@@ -22,12 +22,12 @@ See: .planning/PROJECT.md (updated 2026-04-09)
 
 ## Current Position
 
-Phase: 7 of 12 (Schema & Seed Data)
-Plan: 2 of 3 in current phase (07-01, 07-02 complete)
-Status: In Progress
-Last activity: 2026-04-10 — 07-02 seed data complete (e416fd1)
+Phase: 7 of 12 (Schema & Seed Data) — COMPLETE
+Plan: 3 of 3 in current phase (07-01, 07-02, 07-03 all complete)
+Status: In Progress (Phase 08 next)
+Last activity: 2026-04-10 — 07-03 demo org data complete (db5a294)
 
-Progress: [████████░░░░░░░░░░░░] 37% (7/16 plans — v1.0 complete, v1.1 07-01+07-02 done)
+Progress: [█████████░░░░░░░░░░░] 40% (8/16 plans — v1.0 complete, v1.1 Phase 07 done)
 
 ## Accumulated Context
 
@@ -52,6 +52,12 @@ Phase 07-02 decisions (2026-04-10):
 - **12 featured templates** — `is_featured=true` distributed across all 8 categories for Top Picks UI section
 - **pricing_tier mapping** — starter=simple 1-day, pro=medium 2-3 day, business=complex/AI 5-day templates
 
+Phase 07-03 decisions (2026-04-10):
+- **Growth curve via separate INSERT blocks per time period** — clearer and tunable vs. single calculated generate_series
+- **Paused automation has partial execution history** — lead-nurture stops at day 40, explaining why it's paused
+- **hourly_cost=25 as integer dollars** — not Stripe cents; human-entered rate for Phase 11 ROI estimates
+- **in_setup automation has zero executions** — invoice-processing never activated yet, accurate demo state
+
 ### Pending Todos
 
 - Run `npx supabase db reset` when Docker Desktop is running to confirm full migration stack + seed apply cleanly (prerequisite before Phase 08).
@@ -72,5 +78,5 @@ Phase 07-02 decisions (2026-04-10):
 ## Session Continuity
 
 Last session: 2026-04-10
-Stopped at: Completed 07-02-PLAN.md — 66-template seed catalog with EN/ES i18n (e416fd1). Ready for 07-03.
+Stopped at: Completed 07-03-PLAN.md — demo org data: 9 automations, ~500 executions, 7 requests, 13 notifications, hourly_cost (db5a294). Phase 07 complete. Ready for Phase 08.
 Resume file: None
