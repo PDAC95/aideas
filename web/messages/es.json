@@ -160,7 +160,8 @@
       "greetingAfternoon": "Buenas tardes, {name}",
       "greetingEvening": "Buenas noches, {name}",
       "greetingFallback": "Bienvenido de nuevo",
-      "subtitle": "Así van tus automatizaciones",
+      "noOrganization": "Tu cuenta aún no está vinculada a una organización. Contacta a soporte.",
+      "subtitle": "Estas son las cosas más importantes del día",
       "newAutomation": "+ Nueva automatización",
       "kpi": {
         "activeAutomations": "Automatizaciones activas",
@@ -168,7 +169,7 @@
         "hoursSavedThisMonth": "Horas ahorradas este mes"
       },
       "automationList": {
-        "title": "Mis automatizaciones",
+        "title": "Top Automatizaciones",
         "viewAll": "Ver todas",
         "dailyMetric": "{count} hoy",
         "noRuns": "Sin ejecuciones hoy"
@@ -177,7 +178,32 @@
         "title": "Actividad reciente",
         "viewAll": "Ver actividad completa",
         "errorBadge": "Error",
-        "noActivity": "Sin actividad reciente"
+        "noActivity": "Sin actividad reciente",
+        "statusLabels": {
+          "success": "Completado exitosamente",
+          "error": "Falló con error",
+          "running": "En ejecución",
+          "cancelled": "Cancelado"
+        }
+      },
+      "topAutomation": {
+        "title": "Automatización principal",
+        "executions": "ejecuciones hoy",
+        "status": "Estado"
+      },
+      "successRate": {
+        "title": "Tasa de éxito de automatizaciones",
+        "trendLabel": "vs semana pasada"
+      },
+      "performance": {
+        "title": "Rendimiento de automatizaciones",
+        "avgResponseTime": "Tiempo promedio de respuesta",
+        "totalExecutions": "Ejecuciones totales",
+        "successRate": "Tasa de éxito",
+        "activeAutomations": "Automatizaciones activas"
+      },
+      "kpiTrends": {
+        "noChange": "0%"
       },
       "status": {
         "active": "Activa",

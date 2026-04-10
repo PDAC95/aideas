@@ -160,7 +160,8 @@
       "greetingAfternoon": "Good afternoon, {name}",
       "greetingEvening": "Good evening, {name}",
       "greetingFallback": "Welcome back",
-      "subtitle": "Here's how your automations are doing",
+      "noOrganization": "Your account is not linked to an organization yet. Please contact support.",
+      "subtitle": "Here are the most important things for the day",
       "newAutomation": "+ New automation",
       "kpi": {
         "activeAutomations": "Active automations",
@@ -168,7 +169,7 @@
         "hoursSavedThisMonth": "Hours saved this month"
       },
       "automationList": {
-        "title": "My automations",
+        "title": "Top Automations",
         "viewAll": "View all",
         "dailyMetric": "{count} today",
         "noRuns": "No runs today"
@@ -177,7 +178,32 @@
         "title": "Recent activity",
         "viewAll": "View full activity",
         "errorBadge": "Error",
-        "noActivity": "No recent activity"
+        "noActivity": "No recent activity",
+        "statusLabels": {
+          "success": "Completed successfully",
+          "error": "Failed with error",
+          "running": "Currently running",
+          "cancelled": "Cancelled"
+        }
+      },
+      "topAutomation": {
+        "title": "Top Automation",
+        "executions": "executions today",
+        "status": "Status"
+      },
+      "successRate": {
+        "title": "Automation Success Rate",
+        "trendLabel": "vs last week"
+      },
+      "performance": {
+        "title": "Automation Performance",
+        "avgResponseTime": "Avg. Response Time",
+        "totalExecutions": "Total Executions",
+        "successRate": "Success Rate",
+        "activeAutomations": "Active Automations"
+      },
+      "kpiTrends": {
+        "noChange": "0%"
       },
       "status": {
         "active": "Active",
