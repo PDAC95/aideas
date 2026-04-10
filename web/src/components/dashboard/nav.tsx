@@ -1,19 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
+import { NotificationBell } from "@/components/dashboard/notification-bell";
 import type { User } from "@supabase/supabase-js";
+import type { DashboardNotification } from "@/lib/dashboard/types";
 
-export function DashboardNav({ user }: { user: User }) {
+interface DashboardNavProps {
+  user: User;
+  notifications?: DashboardNotification[];
+}
+
+export function DashboardNav({ user, notifications = [] }: DashboardNavProps) {
   const t = useTranslations("dashboard");
+  const tNotif = useTranslations("dashboard.notifications");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const router = useRouter();
-  const supabase = createClient();
-
   const navigation = [
     { name: t("nav.dashboard"), href: "/dashboard", icon: "📊" },
     { name: t("nav.automations"), href: "/dashboard/automations", icon: "⚡" },
@@ -25,14 +29,16 @@ export function DashboardNav({ user }: { user: User }) {
   ];
 
   const handleSignOut = async () => {
+    const supabase = createClient();
     await supabase.auth.signOut();
-    router.push("/login");
-    router.refresh();
+    window.location.href = "/login";
   };
+
+  const unreadCount = notifications.filter((n) => !n.is_read).length;
 
   return (
     <>
-      {/* Mobile menu button */}
+      {/* Mobile header bar */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-40 flex items-center justify-between p-4 bg-white dark:bg-gray-800 border-b">
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -41,7 +47,18 @@ export function DashboardNav({ user }: { user: User }) {
           <span className="text-xl">☰</span>
         </button>
         <span className="font-bold text-xl">AIDEAS</span>
-        <div className="w-10" />
+        <div className="flex items-center gap-2">
+          <NotificationBell
+            initialNotifications={notifications}
+            unreadCount={unreadCount}
+            userId={user.id}
+            translations={{
+              title: tNotif("title"),
+              markAllRead: tNotif("markAllRead"),
+              empty: tNotif("empty"),
+            }}
+          />
+        </div>
       </div>
 
       {/* Mobile sidebar overlay */}
