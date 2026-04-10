@@ -17,11 +17,11 @@ Requirements for Core Dashboard Experience. Each maps to roadmap phases.
 
 ### Dashboard Home
 
-- [ ] **HOME-01**: User sees personalized greeting with their first name
-- [ ] **HOME-02**: User sees 3 KPI summary cards (active automations, tasks this week, hours saved this month)
-- [ ] **HOME-03**: User sees compact list of their automations with status and daily metric
-- [ ] **HOME-04**: User sees activity feed of last 10-15 execution events
-- [ ] **HOME-05**: User can navigate to catalog via "+ Nueva automatizacion" CTA
+- [x] **HOME-01**: User sees personalized greeting with their first name
+- [x] **HOME-02**: User sees 3 KPI summary cards (active automations, tasks this week, hours saved this month)
+- [x] **HOME-03**: User sees compact list of their automations with status and daily metric
+- [x] **HOME-04**: User sees activity feed of last 10-15 execution events
+- [x] **HOME-05**: User can navigate to catalog via "+ Nueva automatizacion" CTA
 
 ### My Automations
 
@@ -124,11 +124,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DATA-03 | Phase 7 | Complete |
 | DATA-04 | Phase 7 | Complete |
 | DATA-05 | Phase 7 | Complete |
-| HOME-01 | Phase 8 | Pending |
-| HOME-02 | Phase 8 | Pending |
-| HOME-03 | Phase 8 | Pending |
-| HOME-04 | Phase 8 | Pending |
-| HOME-05 | Phase 8 | Pending |
+| HOME-01 | Phase 8 | Complete |
+| HOME-02 | Phase 8 | Complete |
+| HOME-03 | Phase 8 | Complete |
+| HOME-04 | Phase 8 | Complete |
+| HOME-05 | Phase 8 | Complete |
 | NOTF-01 | Phase 8 | Complete |
 | NOTF-02 | Phase 8 | Complete |
 | NOTF-03 | Phase 8 | Complete |

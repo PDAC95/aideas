@@ -52,6 +52,11 @@ Phase 07-02 decisions (2026-04-10):
 - **12 featured templates** — `is_featured=true` distributed across all 8 categories for Top Picks UI section
 - **pricing_tier mapping** — starter=simple 1-day, pro=medium 2-3 day, business=complex/AI 5-day templates
 
+Phase 08-02 decisions (2026-04-10):
+- **Pre-compute enriched executions in parent page** — formatTimeAgo cannot be passed as function prop across RSC boundaries (not serializable); parent page computes timeAgo strings and passes enriched array to ActivityFeed
+- **Automation names rendered directly** — seed stores human-readable names (e.g., "Acme Customer Support Chatbot"), not i18n keys; confirmed from seed.sql
+- **Template substitution for i18n count strings** — format with sentinel "99" then replace with "{count}" for runtime substitution pattern
+
 Phase 08-03 decisions (2026-04-10):
 - **Notifications fetched once in layout.tsx** — DashboardHeader takes props (not self-fetching) to avoid duplicate DB queries for desktop + mobile
 - **Radix Popover via portal** — ensures correct z-index stacking above sidebar (z-50)
