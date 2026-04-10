@@ -23,9 +23,9 @@ See: .planning/PROJECT.md (updated 2026-04-09)
 ## Current Position
 
 Phase: 8 of 12 (Dashboard Home & Notifications) — In Progress
-Plan: 1 of 4 in current phase (08-01 complete)
+Plan: 3 of 4 in current phase (08-01, 08-02, 08-03 complete)
 Status: In Progress
-Last activity: 2026-04-10 — 08-01 i18n foundation, types, queries, status badge (8be4343)
+Last activity: 2026-04-10 — 08-03 notification bell system: sticky topbar, NotificationBell component, mobile bell in nav (39bb8a6)
 
 Progress: [█████████░░░░░░░░░░░] 43% (9/16 plans — v1.0 complete, v1.1 Phase 07 done, Phase 08 started)
 
@@ -51,6 +51,11 @@ Phase 07-02 decisions (2026-04-10):
 - **i18n keys in DB TEXT columns** — templates store keys like `templates.lead_followup_email.name` for bilingual catalog display (phases 8, 10)
 - **12 featured templates** — `is_featured=true` distributed across all 8 categories for Top Picks UI section
 - **pricing_tier mapping** — starter=simple 1-day, pro=medium 2-3 day, business=complex/AI 5-day templates
+
+Phase 08-03 decisions (2026-04-10):
+- **Notifications fetched once in layout.tsx** — DashboardHeader takes props (not self-fetching) to avoid duplicate DB queries for desktop + mobile
+- **Radix Popover via portal** — ensures correct z-index stacking above sidebar (z-50)
+- **Bell placement: DashboardHeader (desktop hidden on mobile) + nav mobile header** — single server fetch, two consumers
 
 Phase 08-01 decisions (2026-04-10):
 - **Executions query uses .in() not nested .eq()** — fetching automations first then scoping executions by `orgAutomationIds` avoids unreliable PostgREST nested relation filtering
@@ -83,5 +88,5 @@ Phase 07-03 decisions (2026-04-10):
 ## Session Continuity
 
 Last session: 2026-04-10
-Stopped at: Completed 08-01-PLAN.md — i18n foundation (EN/ES), DashboardAutomation/Execution/Notification/KpiData types, fetchDashboardData query helpers, StatusBadge CVA component (8be4343). Phase 08 Plan 01 complete.
+Stopped at: Completed 08-03-PLAN.md — notification bell system with Radix UI Popover, DashboardHeader sticky topbar, mobile bell in nav, single fetch in layout (39bb8a6). Phase 08 Plan 03 complete.
 Resume file: None

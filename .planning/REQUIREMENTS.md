@@ -65,9 +65,9 @@ Requirements for Core Dashboard Experience. Each maps to roadmap phases.
 
 ### Notifications
 
-- [ ] **NOTF-01**: User sees bell icon in sidebar with unread count badge
-- [ ] **NOTF-02**: User can open dropdown with last 20 notifications (icon by type, title, message, timestamp)
-- [ ] **NOTF-03**: User can mark all notifications as read
+- [x] **NOTF-01**: User sees bell icon in sidebar with unread count badge
+- [x] **NOTF-02**: User can open dropdown with last 20 notifications (icon by type, title, message, timestamp)
+- [x] **NOTF-03**: User can mark all notifications as read
 
 ### i18n
 
@@ -129,9 +129,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | HOME-03 | Phase 8 | Pending |
 | HOME-04 | Phase 8 | Pending |
 | HOME-05 | Phase 8 | Pending |
-| NOTF-01 | Phase 8 | Pending |
-| NOTF-02 | Phase 8 | Pending |
-| NOTF-03 | Phase 8 | Pending |
+| NOTF-01 | Phase 8 | Complete |
+| NOTF-02 | Phase 8 | Complete |
+| NOTF-03 | Phase 8 | Complete |
 | I18N-01 | Phase 8 | Complete |
 | AUTO-01 | Phase 9 | Pending |
 | AUTO-02 | Phase 9 | Pending |
