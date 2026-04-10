@@ -71,7 +71,7 @@ Requirements for Core Dashboard Experience. Each maps to roadmap phases.
 
 ### i18n
 
-- [ ] **I18N-01**: All new dashboard UI text available in both EN and ES under structured translation keys
+- [x] **I18N-01**: All new dashboard UI text available in both EN and ES under structured translation keys
 
 ## v1.2 Requirements
 
@@ -132,7 +132,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | NOTF-01 | Phase 8 | Pending |
 | NOTF-02 | Phase 8 | Pending |
 | NOTF-03 | Phase 8 | Pending |
-| I18N-01 | Phase 8 | Pending |
+| I18N-01 | Phase 8 | Complete |
 | AUTO-01 | Phase 9 | Pending |
 | AUTO-02 | Phase 9 | Pending |
 | AUTO-03 | Phase 9 | Pending |

@@ -120,7 +120,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 | 5. User Login | v1.0 | 2/2 | Complete | 2026-03-31 |
 | 6. Password Recovery & Email Verification | v1.0 | 3/3 | Complete | 2026-04-07 |
 | 7. Schema & Seed Data | 3/3 | Complete   | 2026-04-10 | - |
-| 8. Dashboard Home & Notifications | v1.1 | 0/? | Not started | - |
+| 8. Dashboard Home & Notifications | 1/4 | In Progress|  | - |
 | 9. My Automations | v1.1 | 0/? | Not started | - |
 | 10. Catalog | v1.1 | 0/? | Not started | - |
 | 11. Reports & Billing | v1.1 | 0/? | Not started | - |

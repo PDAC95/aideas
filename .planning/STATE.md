@@ -22,12 +22,12 @@ See: .planning/PROJECT.md (updated 2026-04-09)
 
 ## Current Position
 
-Phase: 7 of 12 (Schema & Seed Data) — COMPLETE
-Plan: 3 of 3 in current phase (07-01, 07-02, 07-03 all complete)
-Status: In Progress (Phase 08 next)
-Last activity: 2026-04-10 — 07-03 demo org data complete (db5a294)
+Phase: 8 of 12 (Dashboard Home & Notifications) — In Progress
+Plan: 1 of 4 in current phase (08-01 complete)
+Status: In Progress
+Last activity: 2026-04-10 — 08-01 i18n foundation, types, queries, status badge (8be4343)
 
-Progress: [█████████░░░░░░░░░░░] 40% (8/16 plans — v1.0 complete, v1.1 Phase 07 done)
+Progress: [█████████░░░░░░░░░░░] 43% (9/16 plans — v1.0 complete, v1.1 Phase 07 done, Phase 08 started)
 
 ## Accumulated Context
 
@@ -51,6 +51,11 @@ Phase 07-02 decisions (2026-04-10):
 - **i18n keys in DB TEXT columns** — templates store keys like `templates.lead_followup_email.name` for bilingual catalog display (phases 8, 10)
 - **12 featured templates** — `is_featured=true` distributed across all 8 categories for Top Picks UI section
 - **pricing_tier mapping** — starter=simple 1-day, pro=medium 2-3 day, business=complex/AI 5-day templates
+
+Phase 08-01 decisions (2026-04-10):
+- **Executions query uses .in() not nested .eq()** — fetching automations first then scoping executions by `orgAutomationIds` avoids unreliable PostgREST nested relation filtering
+- **daily_execution_count mutated onto automation objects** — avoids extra round-trip; computed from last-24h executions query after initial fetch
+- **hoursSavedThisMonth rounded to 1 decimal** — `Math.round(minutes/60 * 10)/10` for clean display
 
 Phase 07-03 decisions (2026-04-10):
 - **Growth curve via separate INSERT blocks per time period** — clearer and tunable vs. single calculated generate_series
@@ -78,5 +83,5 @@ Phase 07-03 decisions (2026-04-10):
 ## Session Continuity
 
 Last session: 2026-04-10
-Stopped at: Completed 07-03-PLAN.md — demo org data: 9 automations, ~500 executions, 7 requests, 13 notifications, hourly_cost (db5a294). Phase 07 complete. Ready for Phase 08.
+Stopped at: Completed 08-01-PLAN.md — i18n foundation (EN/ES), DashboardAutomation/Execution/Notification/KpiData types, fetchDashboardData query helpers, StatusBadge CVA component (8be4343). Phase 08 Plan 01 complete.
 Resume file: None
