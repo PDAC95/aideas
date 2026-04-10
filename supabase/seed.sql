@@ -1463,6 +1463,98 @@ SELECT
     'schedule'
 FROM generate_series(1, 58) AS n;
 
+-- ---- CHATBOT EXTRA: webhook-triggered runs (boost total toward ~500) ----
+-- Additional webhook runs weeks 3-8: ad-hoc customer interactions
+INSERT INTO public.automation_executions (
+    id, automation_id, status, started_at, completed_at, duration_ms,
+    input_data, output_data, error_message, triggered_by
+)
+SELECT
+    gen_random_uuid(),
+    'au111111-0000-0000-0000-000000000001',
+    CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
+    NOW() - INTERVAL '46 days' + (n * INTERVAL '18 hours') + ((random() * 7200)::int * INTERVAL '1 second'),
+    NOW() - INTERVAL '46 days' + (n * INTERVAL '18 hours') + ((random() * 7200)::int * INTERVAL '1 second') + ((random() * 6000 + 1500)::int * INTERVAL '1 millisecond'),
+    (random() * 6000 + 1500)::INTEGER,
+    ('{"messages_received": ' || (random()*8+2)::INTEGER || ', "source": "widget"}')::jsonb,
+    CASE WHEN random() < 0.95 THEN ('{"messages_handled": ' || (random()*7+1)::INTEGER || ', "escalated": ' || (random()*1)::INTEGER || '}')::jsonb ELSE NULL END,
+    CASE WHEN random() >= 0.95 THEN (ARRAY['Widget integration timeout','API rate limit exceeded'])[floor(random()*2+1)::int] ELSE NULL END,
+    'webhook'
+FROM generate_series(1, 62) AS n;
+
+-- ---- CONTENT PIPELINE EXTRA: manual on-demand runs ----
+INSERT INTO public.automation_executions (
+    id, automation_id, status, started_at, completed_at, duration_ms,
+    input_data, output_data, error_message, triggered_by
+)
+SELECT
+    gen_random_uuid(),
+    'au111111-0000-0000-0000-000000000002',
+    CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
+    NOW() - INTERVAL '55 days' + (n * INTERVAL '5 days') + ((random() * 14400)::int * INTERVAL '1 second'),
+    NOW() - INTERVAL '55 days' + (n * INTERVAL '5 days') + ((random() * 14400)::int * INTERVAL '1 second') + ((random() * 10000 + 4000)::int * INTERVAL '1 millisecond'),
+    (random() * 10000 + 4000)::INTEGER,
+    ('{"topics_queued": ' || (random()*4+2)::INTEGER || ', "formats": ["blog","social"]}')::jsonb,
+    CASE WHEN random() < 0.95 THEN ('{"articles_generated": ' || (random()*3+1)::INTEGER || ', "posts_created": ' || (random()*6+2)::INTEGER || '}')::jsonb ELSE NULL END,
+    CASE WHEN random() >= 0.95 THEN (ARRAY['OpenAI API timeout','Template render error'])[floor(random()*2+1)::int] ELSE NULL END,
+    'manual'
+FROM generate_series(1, 11) AS n;
+
+-- ---- WEEKLY REPORT EXTRA: manual report runs requested by Alice ----
+INSERT INTO public.automation_executions (
+    id, automation_id, status, started_at, completed_at, duration_ms,
+    input_data, output_data, error_message, triggered_by
+)
+SELECT
+    gen_random_uuid(),
+    'au111111-0000-0000-0000-000000000004',
+    CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
+    NOW() - INTERVAL '50 days' + (n * INTERVAL '10 days') + ((random() * 3600)::int * INTERVAL '1 second'),
+    NOW() - INTERVAL '50 days' + (n * INTERVAL '10 days') + ((random() * 3600)::int * INTERVAL '1 second') + ((random() * 8000 + 3000)::int * INTERVAL '1 millisecond'),
+    (random() * 8000 + 3000)::INTEGER,
+    ('{"metrics_collected": ' || (random()*6+3)::INTEGER || ', "data_sources": ["hubspot","google_analytics"]}')::jsonb,
+    CASE WHEN random() < 0.95 THEN ('{"pages": ' || (random()*4+2)::INTEGER || ', "kpis_tracked": ' || (random()*8+4)::INTEGER || '}')::jsonb ELSE NULL END,
+    CASE WHEN random() >= 0.95 THEN 'Google Analytics API quota exceeded' ELSE NULL END,
+    'manual'
+FROM generate_series(1, 5) AS n;
+
+-- ---- SOCIAL SCHEDULER EXTRA: full-production daily double-post (weeks 7-8) ----
+-- Represents peak usage: 3x/day posting in final production weeks
+INSERT INTO public.automation_executions (
+    id, automation_id, status, started_at, completed_at, duration_ms,
+    input_data, output_data, error_message, triggered_by
+)
+SELECT
+    gen_random_uuid(),
+    'au111111-0000-0000-0000-000000000006',
+    CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
+    NOW() - INTERVAL '14 days' + (n * INTERVAL '8 hours') + ((random() * 900)::int * INTERVAL '1 second'),
+    NOW() - INTERVAL '14 days' + (n * INTERVAL '8 hours') + ((random() * 900)::int * INTERVAL '1 second') + ((random() * 4000 + 1000)::int * INTERVAL '1 millisecond'),
+    (random() * 4000 + 1000)::INTEGER,
+    ('{"posts_queued": ' || (random()*6+3)::INTEGER || ', "platforms": ["linkedin","instagram","facebook","twitter"]}')::jsonb,
+    CASE WHEN random() < 0.95 THEN ('{"posts_published": ' || (random()*6+2)::INTEGER || ', "scheduled": ' || (random()*4)::INTEGER || ', "engagement_tracked": true}')::jsonb ELSE NULL END,
+    CASE WHEN random() >= 0.95 THEN (ARRAY['LinkedIn API rate limit','Instagram token expired'])[floor(random()*2+1)::int] ELSE NULL END,
+    'schedule'
+FROM generate_series(1, 42) AS n;
+
+-- ---- CHATBOT: recent high-frequency period (last 14 days — peak usage) ----
+INSERT INTO public.automation_executions (
+    id, automation_id, status, started_at, completed_at, duration_ms,
+    input_data, output_data, error_message, triggered_by
+)
+SELECT
+    gen_random_uuid(),
+    'au111111-0000-0000-0000-000000000001',
+    CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
+    NOW() - INTERVAL '14 days' + (n * INTERVAL '3 hours') + ((random() * 900)::int * INTERVAL '1 second'),
+    NOW() - INTERVAL '14 days' + (n * INTERVAL '3 hours') + ((random() * 900)::int * INTERVAL '1 second') + ((random() * 7000 + 2000)::int * INTERVAL '1 millisecond'),
+    (random() * 7000 + 2000)::INTEGER,
+    ('{"messages_received": ' || (random()*28+10)::INTEGER || ', "source": "website"}')::jsonb,
+    CASE WHEN random() < 0.95 THEN ('{"messages_handled": ' || (random()*25+8)::INTEGER || ', "escalated": ' || (random()*3)::INTEGER || '}')::jsonb ELSE NULL END,
+    CASE WHEN random() >= 0.95 THEN (ARRAY['Webhook timeout after 30s','API rate limit exceeded','Authentication token expired'])[floor(random()*3+1)::int] ELSE NULL END,
+    CASE WHEN random() < 0.4 THEN 'webhook' ELSE 'schedule' END
+FROM generate_series(1, 24) AS n;
+
 -- =============================================================================
 -- 9. automation_requests (7 requests: 6 Acme + 1 GlobalTech — all statuses)
 -- =============================================================================
