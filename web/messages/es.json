@@ -106,6 +106,7 @@
     "errors": {
       "noSession": "Este enlace ha expirado. Solicita uno nuevo.",
       "weakPassword": "La contraseña no cumple los requisitos.",
+      "samePassword": "La nueva contraseña debe ser diferente a la actual.",
       "generic": "Algo salió mal. Inténtalo de nuevo."
     }
   },
@@ -158,5 +159,403 @@
   "common": {
     "language": "Idioma",
     "or": "o"
+  },
+  "templates": {
+    "lead_followup_email": {
+      "name": "Secuencia de Seguimiento a Prospectos",
+      "description": "Nutre a tus prospectos automáticamente con secuencias de correo personalizadas activadas por formularios, asegurando que ninguna oportunidad se pierda.",
+      "impact": "Reduce el tiempo de respuesta a prospectos de horas a minutos, aumentando las conversiones hasta un 35%",
+      "metric_label": "Correos enviados"
+    },
+    "crm_data_sync": {
+      "name": "Sincronización de CRM",
+      "description": "Mantén tu CRM y otros sistemas de negocio perfectamente sincronizados con reconciliación de datos bidireccional y resolución de conflictos.",
+      "impact": "Elimina registros duplicados y la captura manual de datos, ahorrando más de 5 horas por semana",
+      "metric_label": "Registros sincronizados"
+    },
+    "proposal_generator": {
+      "name": "Generador Automático de Propuestas",
+      "description": "Genera propuestas de venta profesionales y con tu marca en minutos, extrayendo datos del cliente de tu CRM y llenando plantillas prediseñadas.",
+      "impact": "Reduce el tiempo de creación de propuestas en un 80%, permitiendo enviarlas el mismo día",
+      "metric_label": "Propuestas generadas"
+    },
+    "quote_builder": {
+      "name": "Constructor de Cotizaciones",
+      "description": "Genera cotizaciones precisas automáticamente desde tu catálogo de productos, aplicando descuentos por volumen y enviando recordatorios antes de que venzan.",
+      "impact": "Reduce el tiempo de cotización de horas a minutos y mejora las tasas de cierre en un 20%",
+      "metric_label": "Cotizaciones creadas"
+    },
+    "pipeline_alerts": {
+      "name": "Alertas de Pipeline de Ventas",
+      "description": "Recibe alertas en tiempo real por Slack y correo cuando los negocios cambien de etapa, se enfríen o requieran atención urgente.",
+      "impact": "Previene que los negocios calientes se enfríen, recuperando en promedio un 15% de las oportunidades en riesgo",
+      "metric_label": "Alertas enviadas"
+    },
+    "territory_report": {
+      "name": "Reporte de Desempeño Territorial",
+      "description": "Genera automáticamente reportes semanales de territorio mostrando el desempeño de los vendedores, cumplimiento de cuotas y desglose regional.",
+      "impact": "Ahorra a los gerentes más de 3 horas semanales en reportes manuales y mejora las sesiones de coaching",
+      "metric_label": "Reportes entregados"
+    },
+    "win_loss_analysis": {
+      "name": "Análisis de Negocios Ganados y Perdidos",
+      "description": "Analiza automáticamente los negocios cerrados para identificar patrones de por qué ganas o pierdes, con insights generados por IA sobre competidores.",
+      "impact": "Mejora las tasas de cierre entre un 10% y 15% al identificar y abordar las principales razones de pérdida",
+      "metric_label": "Negocios analizados"
+    },
+    "sales_forecasting": {
+      "name": "Pronóstico de Ventas con IA",
+      "description": "Usa aprendizaje automático para predecir ingresos con alta precisión, modelar escenarios y alinear a tu equipo alrededor de un único número de pronóstico.",
+      "impact": "Mejora la precisión del pronóstico hasta en un 40%, permitiendo mejor planeación de recursos y menos sorpresas",
+      "metric_label": "Pronósticos generados"
+    },
+    "content_generation": {
+      "name": "Generación de Contenido con IA",
+      "description": "Genera artículos de blog, contenido para redes sociales y textos de email a escala, usando IA entrenada con la voz de tu marca y palabras clave SEO.",
+      "impact": "Aumenta la producción de contenido 5 veces mientras mantiene la consistencia de marca y reduce el tiempo de redacción",
+      "metric_label": "Piezas de contenido creadas"
+    },
+    "social_scheduler": {
+      "name": "Programador de Redes Sociales",
+      "description": "Programa y publica contenido en redes sociales en los momentos óptimos, manteniendo tu calendario lleno sin esfuerzo manual.",
+      "impact": "Ahorra más de 4 horas semanales en programación y mejora el engagement con horarios de publicación óptimos",
+      "metric_label": "Publicaciones programadas"
+    },
+    "lead_scoring": {
+      "name": "Calificación Automática de Prospectos",
+      "description": "Califica y prioriza prospectos automáticamente según señales de comportamiento y datos demográficos, sincronizando puntajes a tu CRM en tiempo real.",
+      "impact": "Aumenta la eficiencia del equipo de ventas en un 30% al enfocar el esfuerzo en los prospectos de mayor potencial",
+      "metric_label": "Prospectos calificados"
+    },
+    "email_campaigns": {
+      "name": "Automatización de Campañas de Email",
+      "description": "Diseña y automatiza campañas de email segmentadas con mensajes personalizados que guían a los prospectos desde el conocimiento hasta la compra.",
+      "impact": "Aumenta las tasas de apertura en un 25% y las tasas de conversión hasta un 40% mediante la personalización",
+      "metric_label": "Correos enviados"
+    },
+    "seo_monitoring": {
+      "name": "Monitoreo de Posicionamiento SEO",
+      "description": "Rastrea automáticamente las posiciones de tus palabras clave, monitorea a la competencia y recibe alertas cuando ocurran cambios significativos en el ranking.",
+      "impact": "Detecta caídas de posicionamiento 10 veces más rápido que la revisión manual, minimizando la pérdida de tráfico",
+      "metric_label": "Palabras clave monitoreadas"
+    },
+    "ad_performance": {
+      "name": "Monitor de Rendimiento Publicitario",
+      "description": "Consolida el rendimiento de anuncios de todas las plataformas, monitorea el ROAS y el CPA, y recibe alertas cuando las campañas no cumplan las metas.",
+      "impact": "Reduce el gasto publicitario desperdiciado en un 20% mediante la detección de anomalías y alertas de presupuesto en tiempo real",
+      "metric_label": "Campañas monitoreadas"
+    },
+    "audience_segmentation": {
+      "name": "Motor de Segmentación de Audiencias",
+      "description": "Segmenta tu base de clientes automáticamente usando análisis RFM y agrupación por comportamiento, manteniendo las etiquetas del CRM actualizadas en tiempo real.",
+      "impact": "Aumenta los ingresos de campañas en un 25% mediante mensajes altamente dirigidos a los segmentos correctos",
+      "metric_label": "Segmentos actualizados"
+    },
+    "newsletter_automation": {
+      "name": "Automatización de Newsletter",
+      "description": "Curada automáticamente de contenido de tu blog y fuentes del sector, personaliza líneas de asunto y envía newsletters semanales a suscriptores activos.",
+      "impact": "Mantiene el engagement con suscriptores mientras reduce el tiempo de producción del newsletter en un 70%",
+      "metric_label": "Newsletters enviados"
+    },
+    "ai_chatbot_24_7": {
+      "name": "Chatbot de Atención al Cliente con IA",
+      "description": "Despliega un chatbot con IA que atiende consultas de clientes 24/7, entiende lenguaje natural y escala a agentes humanos cuando es necesario.",
+      "impact": "Resuelve el 60% de los tickets sin intervención humana, reduciendo los costos de soporte hasta un 40%",
+      "metric_label": "Conversaciones atendidas"
+    },
+    "auto_response_email": {
+      "name": "Respuesta Automática de Correo",
+      "description": "Responde automáticamente los correos de soporte e consultas entrantes con categorización inteligente y respuestas basadas en plantillas.",
+      "impact": "Reduce el tiempo promedio de primera respuesta de horas a menos de 2 minutos para todos los correos entrantes",
+      "metric_label": "Correos respondidos"
+    },
+    "ticket_routing": {
+      "name": "Enrutamiento Inteligente de Tickets",
+      "description": "Usa IA para clasificar los tickets de soporte por tema y urgencia, y enrutarlos automáticamente al agente o equipo correcto.",
+      "impact": "Reduce los tickets mal asignados en un 85% y el tiempo de manejo promedio en un 30% mediante enrutamiento inteligente",
+      "metric_label": "Tickets enrutados"
+    },
+    "satisfaction_surveys": {
+      "name": "Encuestas de Satisfacción del Cliente",
+      "description": "Envía encuestas de CSAT y NPS automáticamente tras resolver tickets y alerta al equipo cuando los puntajes caen por debajo de los umbrales.",
+      "impact": "Aumenta las tasas de respuesta a encuestas 3 veces con seguimiento automatizado, obteniendo datos accionables de satisfacción",
+      "metric_label": "Encuestas enviadas"
+    },
+    "sla_monitoring": {
+      "name": "Monitoreo y Alertas de SLA",
+      "description": "Monitorea proactivamente el cumplimiento de SLAs, predice tickets en riesgo antes de que incumplan y escala automáticamente cuando es necesario.",
+      "impact": "Reduce la tasa de incumplimiento de SLA en un 90% con alertas proactivas y flujos de escalación automática",
+      "metric_label": "Verificaciones de SLA realizadas"
+    },
+    "knowledge_base_updater": {
+      "name": "Actualizador de Base de Conocimiento",
+      "description": "Detecta preguntas de soporte recurrentes y genera automáticamente borradores de artículos para revisión, manteniendo la documentación actualizada.",
+      "impact": "Reduce el volumen de tickets repetitivos en un 30% en 60 días al mantener actualizado el contenido de autoservicio",
+      "metric_label": "Artículos actualizados"
+    },
+    "escalation_manager": {
+      "name": "Gestor de Escalaciones",
+      "description": "Identifica automáticamente clientes en riesgo mediante análisis de sentimiento y escala problemas de alto valor a agentes senior o gerentes al instante.",
+      "impact": "Reduce la pérdida de clientes por malas experiencias de servicio en un 25% mediante escalación proactiva de clientes VIP",
+      "metric_label": "Escalaciones gestionadas"
+    },
+    "faq_bot": {
+      "name": "Bot de Preguntas Frecuentes",
+      "description": "Despliega un bot ligero que responde preguntas frecuentes al instante en tu sitio web, chat y canales de mensajería.",
+      "impact": "Desvía el 40% del volumen de soporte entrante respondiendo preguntas comunes sin intervención de agentes",
+      "metric_label": "Preguntas respondidas"
+    },
+    "review_response": {
+      "name": "Automatización de Respuestas a Reseñas",
+      "description": "Monitorea reseñas en línea en todas las plataformas y genera automáticamente respuestas personalizadas que protegen la reputación de tu marca.",
+      "impact": "Mejora el tiempo de respuesta a reseñas de días a horas, aumentando la calificación general entre 0.3 y 0.5 estrellas",
+      "metric_label": "Reseñas respondidas"
+    },
+    "invoice_processing": {
+      "name": "Procesamiento de Facturas",
+      "description": "Extrae datos de facturas de proveedores mediante OCR, valida contra órdenes de compra y publica facturas aprobadas directamente en tu sistema contable.",
+      "impact": "Procesa facturas 10 veces más rápido que la captura manual, reduciendo los costos de cuentas por pagar en un 60%",
+      "metric_label": "Facturas procesadas"
+    },
+    "report_generation": {
+      "name": "Generación Automática de Reportes",
+      "description": "Genera reportes formateados con datos de tu negocio de forma programada y distribúyelos automáticamente a los interesados correctos.",
+      "impact": "Ahorra a los analistas más de 5 horas semanales en la preparación de reportes y asegura que los datos siempre estén actualizados",
+      "metric_label": "Reportes generados"
+    },
+    "contract_analysis": {
+      "name": "Análisis de Contratos con IA",
+      "description": "Usa IA para extraer cláusulas clave, detectar términos no estándar y rastrear obligaciones en todo tu portafolio de contratos.",
+      "impact": "Reduce el tiempo de revisión de contratos en un 70% y detecta cláusulas de riesgo que la revisión manual frecuentemente pasa por alto",
+      "metric_label": "Contratos analizados"
+    },
+    "data_extraction": {
+      "name": "Extracción de Datos de Documentos",
+      "description": "Extrae automáticamente datos estructurados de PDFs, hojas de cálculo y formularios escaneados, con validación y detección de errores integrada.",
+      "impact": "Elimina la captura manual de datos para el 90% de los documentos entrantes, reduciendo errores en un 95%",
+      "metric_label": "Documentos procesados"
+    },
+    "document_approval": {
+      "name": "Flujo de Aprobación de Documentos",
+      "description": "Enruta documentos a través de flujos de aprobación multi-etapa con recordatorios de plazos, registro de auditoría e integración de firma electrónica.",
+      "impact": "Reduce el tiempo del ciclo de aprobación de documentos en un 50% y garantiza registros de auditoría completos",
+      "metric_label": "Documentos aprobados"
+    },
+    "template_filling": {
+      "name": "Llenado Automático de Plantillas",
+      "description": "Llena automáticamente plantillas de documentos —contratos, cartas, documentos de incorporación— con datos extraídos de tu CRM o base de datos.",
+      "impact": "Reduce el tiempo de preparación de documentos de 30 minutos a menos de 2 minutos por documento",
+      "metric_label": "Documentos generados"
+    },
+    "receipt_scanning": {
+      "name": "Escaneo de Recibos y Control de Gastos",
+      "description": "Captura recibos con foto desde el celular, categoriza gastos automáticamente y sincroniza con tu sistema contable para reembolsos rápidos.",
+      "impact": "Reduce el tiempo de procesamiento de gastos en un 75% y disminuye errores por captura manual",
+      "metric_label": "Recibos procesados"
+    },
+    "compliance_checker": {
+      "name": "Verificador de Cumplimiento Normativo",
+      "description": "Revisa documentos automáticamente contra requisitos regulatorios, identifica brechas de cumplimiento y genera flujos de remediación.",
+      "impact": "Reduce la exposición al riesgo regulatorio al detectar el 95% de las brechas antes de que se conviertan en hallazgos de auditoría",
+      "metric_label": "Documentos revisados"
+    },
+    "data_reconciliation": {
+      "name": "Conciliación de Datos",
+      "description": "Compara automáticamente datos entre múltiples sistemas para detectar discrepancias, aplicar reglas de resolución y generar reportes de excepciones.",
+      "impact": "Reduce el tiempo de conciliación de días a horas y detecta automáticamente el 99% de las discrepancias de datos",
+      "metric_label": "Registros conciliados"
+    },
+    "inventory_sync": {
+      "name": "Sincronización de Inventario",
+      "description": "Mantén los niveles de inventario sincronizados en todos tus canales de venta y ubicaciones en tiempo real, con alertas automáticas de punto de reorden.",
+      "impact": "Elimina las ventas en exceso y las roturas de stock, mejorando la precisión del inventario al 99%+ en todos los canales",
+      "metric_label": "SKUs sincronizados"
+    },
+    "shift_scheduling": {
+      "name": "Programación Automática de Turnos",
+      "description": "Genera turnos óptimos según la disponibilidad del personal y los requisitos de cobertura, con notificaciones automáticas y manejo de cambios.",
+      "impact": "Reduce el tiempo de programación en un 80% y los incidentes de falta de personal en un 60% mediante planeación inteligente",
+      "metric_label": "Turnos programados"
+    },
+    "vendor_management": {
+      "name": "Automatización de Gestión de Proveedores",
+      "description": "Rastrea contratos con proveedores, monitorea puntajes de desempeño, automatiza calendarios de pago y agiliza los flujos de incorporación de proveedores.",
+      "impact": "Reduce la carga administrativa de gestión de proveedores en un 50% y previene costosas caducidades de contrato",
+      "metric_label": "Proveedores gestionados"
+    },
+    "quality_monitoring": {
+      "name": "Monitoreo de Calidad",
+      "description": "Monitorea continuamente métricas de calidad, activa alertas cuando se superan los umbrales y automatiza los flujos de acción correctiva.",
+      "impact": "Reduce los costos relacionados con calidad en un 30% mediante detección temprana y resolución más rápida de acciones correctivas",
+      "metric_label": "Verificaciones de calidad realizadas"
+    },
+    "workflow_orchestrator": {
+      "name": "Orquestador de Flujos de Trabajo",
+      "description": "Diseña y automatiza procesos de negocio complejos de múltiples pasos con lógica visual, ramificación condicional y disparadores entre sistemas.",
+      "impact": "Reemplaza el 80% de los traspasos manuales en flujos complejos, reduciendo el tiempo de ciclo de procesos hasta un 60%",
+      "metric_label": "Flujos ejecutados"
+    },
+    "system_health_monitor": {
+      "name": "Monitor de Salud de Sistemas",
+      "description": "Monitorea la disponibilidad, latencia y tasa de errores en tus APIs y servicios, con alertas instantáneas en Slack y creación automática de incidentes.",
+      "impact": "Reduce el tiempo promedio de detección de interrupciones 10 veces, minimizando el impacto de caídas en el negocio",
+      "metric_label": "Verificaciones de salud realizadas"
+    },
+    "backup_verification": {
+      "name": "Verificación de Respaldos",
+      "description": "Verifica automáticamente que los respaldos programados se completaron correctamente, valida la integridad de los datos y alerta al equipo ante fallas.",
+      "impact": "Garantiza una cobertura de respaldo del 100% y detecta fallas antes de que se conviertan en pérdida de datos",
+      "metric_label": "Respaldos verificados"
+    },
+    "meeting_notes_ai": {
+      "name": "Notas de Reuniones con IA",
+      "description": "Transcribe reuniones automáticamente, extrae puntos de acción y decisiones, y distribuye resúmenes a los asistentes después de cada llamada.",
+      "impact": "Ahorra más de 30 minutos por reunión en toma de notas y garantiza que el 100% de los puntos de acción queden registrados",
+      "metric_label": "Reuniones resumidas"
+    },
+    "task_assignment": {
+      "name": "Asignación Automática de Tareas",
+      "description": "Crea y asigna tareas automáticamente a partir de correos, reuniones o disparadores, enrutándolas a la persona correcta según carga de trabajo y habilidades.",
+      "impact": "Reduce el tiempo de configuración de tareas en un 70% y asegura que ningún punto de acción se pierda u olvide",
+      "metric_label": "Tareas asignadas"
+    },
+    "time_tracking_sync": {
+      "name": "Sincronización de Control de Horas",
+      "description": "Agrega datos de control de horas entre proyectos, calcula montos facturables, genera partes de horas y los sincroniza con tu sistema de facturación.",
+      "impact": "Recupera entre el 5% y 10% de horas no facturadas anteriormente y reduce el tiempo de preparación de partes de horas en un 80%",
+      "metric_label": "Horas sincronizadas"
+    },
+    "calendar_optimizer": {
+      "name": "Optimizador de Calendario",
+      "description": "Protege el tiempo de trabajo profundo, agrupa reuniones de forma inteligente, establece tiempos de amortiguación y optimiza los calendarios del equipo.",
+      "impact": "Aumenta los bloques de trabajo ininterrumpido en un 40% y reduce la fatiga por cambio de contexto",
+      "metric_label": "Eventos de calendario optimizados"
+    },
+    "slack_digest": {
+      "name": "Resumen de Canales de Slack",
+      "description": "Resume automáticamente los canales de Slack, destaca hilos importantes y extrae puntos de acción en un resumen diario o semanal.",
+      "impact": "Reduce el tiempo de actualización en Slack en un 50%, mostrando solo lo que realmente requiere tu atención",
+      "metric_label": "Canales resumidos"
+    },
+    "project_status_report": {
+      "name": "Reporte de Estado de Proyectos",
+      "description": "Compila automáticamente datos de proyectos de tus herramientas, genera reportes de estado RAG y los entrega a los interesados con puntualidad.",
+      "impact": "Ahorra a los gerentes de proyecto más de 3 horas semanales en reportes de estado y mejora la visibilidad de los involucrados",
+      "metric_label": "Reportes entregados"
+    },
+    "daily_standup_bot": {
+      "name": "Bot de Standup Diario",
+      "description": "Realiza standups diarios de forma asíncrona por Slack, recopila actualizaciones del equipo, resalta bloqueos y entrega un resumen automático a los gerentes.",
+      "impact": "Reemplaza standups sincrónicos de 30 minutos, ahorrando más de 2.5 horas semanales por miembro del equipo",
+      "metric_label": "Standups recopilados"
+    },
+    "resource_planner": {
+      "name": "Planeador de Recursos",
+      "description": "Rastrea la capacidad del equipo, relaciona habilidades con necesidades de proyectos, detecta sobreasignaciones y reporta tiempo disponible en la organización.",
+      "impact": "Mejora la utilización de recursos en un 20% y previene el agotamiento del equipo mediante monitoreo proactivo de capacidad",
+      "metric_label": "Planes de capacidad actualizados"
+    },
+    "executive_dashboard": {
+      "name": "Dashboard Ejecutivo",
+      "description": "Consolida KPIs de todos los sistemas de negocio en un único dashboard en tiempo real diseñado para la toma de decisiones ejecutivas.",
+      "impact": "Elimina los reportes manuales semanales para la dirección, dando visibilidad en tiempo real del desempeño de la empresa",
+      "metric_label": "Dashboards actualizados"
+    },
+    "kpi_tracker": {
+      "name": "Seguimiento de KPIs",
+      "description": "Monitorea indicadores clave de desempeño contra objetivos, alerta a los responsables cuando las metas están en riesgo y rastrea tendencias en el tiempo.",
+      "impact": "Mejora el cumplimiento de metas en un 25% mediante alertas proactivas y seguimiento de responsabilidades",
+      "metric_label": "KPIs monitoreados"
+    },
+    "financial_summary": {
+      "name": "Reporte Financiero Resumido",
+      "description": "Genera automáticamente resúmenes de estado de resultados, balance general y flujo de caja con comparativos presupuesto-real y análisis de tendencias.",
+      "impact": "Entrega reportes financieros listos para el consejo en minutos en vez de días, acelerando la toma de decisiones",
+      "metric_label": "Reportes generados"
+    },
+    "client_performance": {
+      "name": "Reporte de Desempeño por Cliente",
+      "description": "Genera y entrega automáticamente reportes de desempeño por cliente con KPIs, cumplimiento de SLA y puntajes de salud.",
+      "impact": "Aumenta la retención de clientes en un 15% al demostrar valor proactivamente y detectar cuentas en riesgo a tiempo",
+      "metric_label": "Reportes de clientes enviados"
+    },
+    "team_productivity": {
+      "name": "Reporte de Productividad del Equipo",
+      "description": "Mide el rendimiento del equipo contra la capacidad, rastrea contribuciones individuales e identifica cuellos de botella con reportes semanales automáticos.",
+      "impact": "Mejora el rendimiento del equipo en un 15% al identificar y resolver cuellos de botella con mayor rapidez",
+      "metric_label": "Reportes de productividad enviados"
+    },
+    "marketing_roi": {
+      "name": "Reporte de ROI de Marketing",
+      "description": "Consolida datos de rendimiento de todos los canales de marketing, calcula el ROI y la atribución, y entrega insights para optimizar el gasto.",
+      "impact": "Mejora el ROI de marketing en un 20% al identificar los canales de mayor rendimiento y reasignar presupuesto en consecuencia",
+      "metric_label": "Reportes generados"
+    },
+    "operations_scorecard": {
+      "name": "Scorecard de Operaciones",
+      "description": "Evalúa el desempeño operacional en métricas de calidad, eficiencia y costo, rastreando tendencias y señalando áreas que requieren mejora.",
+      "impact": "Reduce los costos operacionales entre un 10% y 15% al identificar continuamente ineficiencias y oportunidades de mejora",
+      "metric_label": "Scorecards generados"
+    },
+    "custom_analytics": {
+      "name": "Constructor de Analítica Personalizada",
+      "description": "Diseña reportes analíticos a la medida combinando datos de múltiples fuentes, con entrega programada e interfaz de consulta de autoservicio.",
+      "impact": "Reemplaza semanas de análisis manual en hojas de cálculo con respuestas instantáneas a cualquier pregunta de negocio",
+      "metric_label": "Reportes generados"
+    },
+    "multichannel_support_agent": {
+      "name": "Agente de Soporte Multicanal",
+      "description": "Un agente de IA que unifica el soporte por correo, chat y SMS, clasifica la intención, resuelve problemas comunes de forma autónoma y transfiere a humanos sin interrupciones.",
+      "impact": "Gestiona el 70% del volumen de soporte de forma autónoma en todos los canales, reduciendo las necesidades de personal en un 30%",
+      "metric_label": "Interacciones resueltas"
+    },
+    "research_assistant": {
+      "name": "Agente Asistente de Investigación",
+      "description": "Un agente de IA que realiza investigaciones estructuradas sobre competidores, mercados o temas, y entrega resúmenes organizados y documentos de briefing.",
+      "impact": "Completa en 20 minutos lo que antes tomaba a un analista junior 2 días de investigación y compilación",
+      "metric_label": "Reportes de investigación producidos"
+    },
+    "data_analyst_agent": {
+      "name": "Agente Analista de Datos",
+      "description": "Haz preguntas de negocio en lenguaje natural y obtén análisis de datos instantáneo, visualizaciones e insights generados por un analista de IA.",
+      "impact": "Da a cada miembro del equipo acceso a insights de nivel analista sin esperar al equipo de datos, reduciendo retrasos de reportes en un 80%",
+      "metric_label": "Análisis generados"
+    },
+    "content_strategist_agent": {
+      "name": "Agente Estratega de Contenido",
+      "description": "Un agente de IA que analiza brechas de contenido, genera ideas de temas, gestiona tu calendario editorial y produce contenido en múltiples formatos a escala.",
+      "impact": "Triplica la producción de contenido mientras reduce el tiempo de estrategia y producción en un 60%",
+      "metric_label": "Piezas de contenido producidas"
+    },
+    "sales_copilot": {
+      "name": "Copiloto de Ventas",
+      "description": "Un copiloto de IA que asesora a los vendedores en negocios activos, recomienda las mejores acciones, ofrece respuestas a objeciones y evalúa el riesgo del pipeline.",
+      "impact": "Aumenta la tasa de cierre de los vendedores en un 20% y reduce el ciclo de ventas promedio en un 15% mediante asesoría guiada por IA",
+      "metric_label": "Recomendaciones de negocio realizadas"
+    },
+    "hr_onboarding_agent": {
+      "name": "Agente de Incorporación de Personal",
+      "description": "Automatiza todo el proceso de incorporación de nuevos empleados — checklists, correos de bienvenida, recopilación de documentos y seguimiento de preparación para el día 1.",
+      "impact": "Reduce el tiempo administrativo de incorporación en RR.HH. en un 70% y mejora el tiempo de productividad de nuevos empleados en un 30%",
+      "metric_label": "Incorporaciones completadas"
+    },
+    "code_review_agent": {
+      "name": "Agente de Revisión de Código",
+      "description": "Un agente de IA que analiza pull requests en busca de vulnerabilidades de seguridad, problemas de calidad de código e infracciones de estilo, publicando comentarios de revisión en línea.",
+      "impact": "Detecta el 80% de los problemas comunes de seguridad y calidad antes de la revisión humana, reduciendo el tiempo de revisión de PRs a la mitad",
+      "metric_label": "PRs revisados"
+    },
+    "compliance_agent": {
+      "name": "Agente de Cumplimiento Normativo",
+      "description": "Monitorea cambios regulatorios, verifica brechas en documentos de política, automatiza la preparación de auditorías y rastrea el progreso de remediación.",
+      "impact": "Reduce el tiempo de preparación de cumplimiento en un 60% y minimiza el riesgo regulatorio mediante monitoreo continuo",
+      "metric_label": "Verificaciones de cumplimiento realizadas"
+    },
+    "competitive_intel_agent": {
+      "name": "Agente de Inteligencia Competitiva",
+      "description": "Monitorea continuamente a la competencia en lanzamientos de productos, cambios de precio y menciones en medios, entregando resúmenes de inteligencia semanales a tu equipo.",
+      "impact": "Mantiene a tu equipo 10 veces mejor informado sobre los movimientos de la competencia, permitiendo respuestas estratégicas más rápidas",
+      "metric_label": "Reportes de inteligencia entregados"
+    }
   }
 }

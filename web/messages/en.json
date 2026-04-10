@@ -106,6 +106,7 @@
     "errors": {
       "noSession": "This link has expired. Please request a new one.",
       "weakPassword": "Password does not meet requirements.",
+      "samePassword": "New password must be different from your current password.",
       "generic": "Something went wrong. Please try again."
     }
   },
@@ -158,5 +159,403 @@
   "common": {
     "language": "Language",
     "or": "or"
+  },
+  "templates": {
+    "lead_followup_email": {
+      "name": "Lead Follow-up Email Sequence",
+      "description": "Automatically nurture leads with personalized email sequences triggered by form submissions, ensuring no prospect falls through the cracks.",
+      "impact": "Reduces lead response time from hours to minutes, increasing conversions by up to 35%",
+      "metric_label": "Emails sent"
+    },
+    "crm_data_sync": {
+      "name": "CRM Data Sync",
+      "description": "Keep your CRM and other business systems in perfect sync with bi-directional data reconciliation and conflict resolution.",
+      "impact": "Eliminates duplicate records and manual data entry, saving 5+ hours per week",
+      "metric_label": "Records synced"
+    },
+    "proposal_generator": {
+      "name": "Automated Proposal Generator",
+      "description": "Generate professional, branded sales proposals in minutes by pulling client data from your CRM and filling pre-built templates.",
+      "impact": "Cuts proposal creation time by 80%, enabling reps to send proposals within the same day",
+      "metric_label": "Proposals generated"
+    },
+    "quote_builder": {
+      "name": "Instant Quote Builder",
+      "description": "Automatically build accurate price quotes from product catalogs, applying volume discounts and sending reminders before quotes expire.",
+      "impact": "Reduces quoting time from hours to minutes and improves quote-to-close rates by 20%",
+      "metric_label": "Quotes created"
+    },
+    "pipeline_alerts": {
+      "name": "Sales Pipeline Alerts",
+      "description": "Get real-time Slack and email alerts when deals change stage, go stale, or require urgent attention from your team.",
+      "impact": "Prevents hot deals from going cold, recovering an average of 15% of at-risk opportunities",
+      "metric_label": "Alerts sent"
+    },
+    "territory_report": {
+      "name": "Territory Performance Report",
+      "description": "Automatically generate weekly territory reports showing rep performance, quota attainment, and regional breakdown delivered to managers.",
+      "impact": "Saves managers 3+ hours per week on manual reporting and improves coaching conversations",
+      "metric_label": "Reports delivered"
+    },
+    "win_loss_analysis": {
+      "name": "Win/Loss Analysis",
+      "description": "Automatically analyze closed deals to surface patterns in why you win or lose, with AI-generated insights on competitor performance and stage dropouts.",
+      "impact": "Improves win rates by 10-15% by identifying and addressing the top reasons deals are lost",
+      "metric_label": "Deals analyzed"
+    },
+    "sales_forecasting": {
+      "name": "AI Sales Forecasting",
+      "description": "Use machine learning to predict revenue with high accuracy, model scenarios, and align your team around a single forecast number.",
+      "impact": "Improves forecast accuracy by up to 40%, enabling better resource planning and fewer surprises",
+      "metric_label": "Forecasts generated"
+    },
+    "content_generation": {
+      "name": "AI Content Generation",
+      "description": "Generate on-brand blog posts, social media content, and email copy at scale using AI tuned to your brand voice and SEO keywords.",
+      "impact": "Increases content output by 5x while maintaining brand consistency and reducing writing time",
+      "metric_label": "Content pieces created"
+    },
+    "social_scheduler": {
+      "name": "Social Media Scheduler",
+      "description": "Schedule and publish social media posts across platforms at optimal times, keeping your content calendar full without manual effort.",
+      "impact": "Saves 4+ hours per week on scheduling and improves engagement with optimal posting times",
+      "metric_label": "Posts scheduled"
+    },
+    "lead_scoring": {
+      "name": "Automated Lead Scoring",
+      "description": "Automatically score and prioritize leads based on behavioral signals and demographic data, syncing scores to your CRM in real time.",
+      "impact": "Increases sales team efficiency by 30% by focusing effort on the highest-potential leads",
+      "metric_label": "Leads scored"
+    },
+    "email_campaigns": {
+      "name": "Email Campaign Automation",
+      "description": "Build and automate segmented email drip campaigns with personalized messaging that guides prospects from awareness to purchase.",
+      "impact": "Increases email open rates by 25% and conversion rates by up to 40% through personalization",
+      "metric_label": "Emails sent"
+    },
+    "seo_monitoring": {
+      "name": "SEO Rank Monitoring",
+      "description": "Automatically track keyword rankings, monitor competitor positions, and receive alerts when significant ranking changes occur.",
+      "impact": "Catches ranking drops 10x faster than manual checks, minimizing traffic loss from algorithm changes",
+      "metric_label": "Keywords tracked"
+    },
+    "ad_performance": {
+      "name": "Ad Performance Monitor",
+      "description": "Aggregate ad performance data from all platforms, track ROAS and CPA, and receive alerts when campaigns underperform or budgets are at risk.",
+      "impact": "Reduces wasted ad spend by 20% through real-time anomaly detection and budget pacing alerts",
+      "metric_label": "Campaigns monitored"
+    },
+    "audience_segmentation": {
+      "name": "Audience Segmentation Engine",
+      "description": "Automatically segment your customer base using RFM analysis and behavioral clustering, keeping CRM tags updated in real time.",
+      "impact": "Increases campaign revenue by 25% through hyper-targeted messaging to the right audience segments",
+      "metric_label": "Segments updated"
+    },
+    "newsletter_automation": {
+      "name": "Newsletter Automation",
+      "description": "Automatically curate content from your blog and industry sources, personalize subject lines, and send weekly newsletters to engaged subscribers.",
+      "impact": "Maintains consistent subscriber engagement while reducing newsletter production time by 70%",
+      "metric_label": "Newsletters sent"
+    },
+    "ai_chatbot_24_7": {
+      "name": "AI Customer Support Chatbot",
+      "description": "Deploy an AI chatbot that handles customer inquiries 24/7, understands natural language, and seamlessly escalates to human agents when needed.",
+      "impact": "Resolves 60% of support tickets without human intervention, reducing support costs by up to 40%",
+      "metric_label": "Conversations handled"
+    },
+    "auto_response_email": {
+      "name": "Auto-Response Email",
+      "description": "Automatically respond to incoming support and inquiry emails with smart categorization and appropriate templated replies.",
+      "impact": "Reduces average first response time from hours to under 2 minutes for all inbound emails",
+      "metric_label": "Emails responded"
+    },
+    "ticket_routing": {
+      "name": "Smart Ticket Routing",
+      "description": "Use AI to classify incoming support tickets by topic and urgency, then automatically route them to the right agent or team.",
+      "impact": "Reduces misassigned tickets by 85% and cuts average handle time by 30% through smart routing",
+      "metric_label": "Tickets routed"
+    },
+    "satisfaction_surveys": {
+      "name": "Customer Satisfaction Surveys",
+      "description": "Automatically send CSAT and NPS surveys after ticket resolution and alert your team when satisfaction scores drop below thresholds.",
+      "impact": "Increases survey response rates by 3x with automated follow-up, giving you actionable satisfaction data",
+      "metric_label": "Surveys sent"
+    },
+    "sla_monitoring": {
+      "name": "SLA Monitoring & Alerts",
+      "description": "Proactively monitor SLA compliance, predict at-risk tickets before they breach, and auto-escalate to senior agents when needed.",
+      "impact": "Reduces SLA breach rate by 90% with proactive alerting and automatic escalation workflows",
+      "metric_label": "SLA checks performed"
+    },
+    "knowledge_base_updater": {
+      "name": "Knowledge Base Updater",
+      "description": "Detect recurring support questions and automatically draft knowledge base articles for agent review, keeping your help docs current.",
+      "impact": "Reduces repetitive ticket volume by 30% within 60 days by keeping self-service content up to date",
+      "metric_label": "Articles updated"
+    },
+    "escalation_manager": {
+      "name": "Escalation Manager",
+      "description": "Automatically identify at-risk customers through sentiment analysis and escalate high-value issues to senior agents or managers instantly.",
+      "impact": "Reduces churn from poor service experiences by 25% through proactive VIP customer escalation",
+      "metric_label": "Escalations managed"
+    },
+    "faq_bot": {
+      "name": "FAQ Bot",
+      "description": "Deploy a lightweight bot that answers frequently asked questions instantly across your website, chat, and messaging channels.",
+      "impact": "Deflects 40% of inbound support volume by answering common questions without agent involvement",
+      "metric_label": "FAQs answered"
+    },
+    "review_response": {
+      "name": "Review Response Automation",
+      "description": "Monitor online reviews across platforms and automatically draft personalized responses that protect and enhance your brand reputation.",
+      "impact": "Improves average review response time from days to hours, boosting overall rating by 0.3-0.5 stars",
+      "metric_label": "Reviews responded"
+    },
+    "invoice_processing": {
+      "name": "Invoice Processing",
+      "description": "Extract data from vendor invoices using OCR, validate against purchase orders, and post approved invoices directly to your accounting system.",
+      "impact": "Processes invoices 10x faster than manual entry, reducing accounts payable processing costs by 60%",
+      "metric_label": "Invoices processed"
+    },
+    "report_generation": {
+      "name": "Automated Report Generation",
+      "description": "Generate formatted reports from your business data on a schedule and automatically distribute them to the right stakeholders.",
+      "impact": "Saves analysts 5+ hours per week on report preparation and ensures stakeholders always have current data",
+      "metric_label": "Reports generated"
+    },
+    "contract_analysis": {
+      "name": "Contract Analysis",
+      "description": "Use AI to extract key clauses, flag non-standard terms, and track obligations across your entire contract portfolio.",
+      "impact": "Reduces contract review time by 70% and catches risk clauses that manual review often misses",
+      "metric_label": "Contracts analyzed"
+    },
+    "data_extraction": {
+      "name": "Document Data Extraction",
+      "description": "Automatically extract structured data from PDFs, spreadsheets, and scanned forms, with validation and error flagging built in.",
+      "impact": "Eliminates manual data entry for 90% of incoming documents, reducing errors by 95%",
+      "metric_label": "Documents processed"
+    },
+    "document_approval": {
+      "name": "Document Approval Workflow",
+      "description": "Route documents through multi-stage approval workflows with deadline reminders, audit trails, and e-signature integration.",
+      "impact": "Reduces document approval cycle time by 50% and ensures full compliance audit trails",
+      "metric_label": "Documents approved"
+    },
+    "template_filling": {
+      "name": "Document Template Filling",
+      "description": "Automatically populate document templates — contracts, letters, onboarding docs — with data pulled from your CRM or database.",
+      "impact": "Reduces document preparation time from 30 minutes to under 2 minutes per document",
+      "metric_label": "Documents generated"
+    },
+    "receipt_scanning": {
+      "name": "Receipt Scanning & Expense Tracking",
+      "description": "Capture receipts via mobile photo, automatically categorize expenses, and sync to your accounting system for fast reimbursement.",
+      "impact": "Cuts expense report processing time by 75% and reduces errors from manual expense entry",
+      "metric_label": "Receipts processed"
+    },
+    "compliance_checker": {
+      "name": "Document Compliance Checker",
+      "description": "Automatically check documents against regulatory requirements, identify compliance gaps, and generate remediation workflows.",
+      "impact": "Reduces compliance risk exposure by catching 95% of regulatory gaps before they become audit findings",
+      "metric_label": "Documents reviewed"
+    },
+    "data_reconciliation": {
+      "name": "Data Reconciliation",
+      "description": "Automatically compare data across multiple systems to detect discrepancies, apply resolution rules, and generate exception reports.",
+      "impact": "Reduces reconciliation time from days to hours and catches 99% of data discrepancies automatically",
+      "metric_label": "Records reconciled"
+    },
+    "inventory_sync": {
+      "name": "Inventory Sync",
+      "description": "Keep inventory levels synchronized across all your sales channels and locations in real time, with automatic reorder point alerts.",
+      "impact": "Eliminates overselling and stockouts, improving inventory accuracy to 99%+ across all channels",
+      "metric_label": "SKUs synced"
+    },
+    "shift_scheduling": {
+      "name": "Automated Shift Scheduling",
+      "description": "Build optimal shift schedules based on staff availability and coverage requirements, with automated notifications and swap handling.",
+      "impact": "Reduces scheduling time by 80% and cuts understaffing incidents by 60% through smart coverage planning",
+      "metric_label": "Shifts scheduled"
+    },
+    "vendor_management": {
+      "name": "Vendor Management Automation",
+      "description": "Track vendor contracts, monitor performance scores, automate payment schedules, and streamline vendor onboarding workflows.",
+      "impact": "Reduces vendor management overhead by 50% and prevents costly contract lapses through automated renewal alerts",
+      "metric_label": "Vendors managed"
+    },
+    "quality_monitoring": {
+      "name": "Quality Monitoring",
+      "description": "Continuously monitor quality metrics, trigger alerts when thresholds are breached, and automate corrective action workflows.",
+      "impact": "Reduces quality-related costs by 30% through early detection and faster corrective action resolution",
+      "metric_label": "Quality checks run"
+    },
+    "workflow_orchestrator": {
+      "name": "Workflow Orchestrator",
+      "description": "Design and automate complex multi-step business processes with visual workflow logic, conditional branching, and cross-system triggers.",
+      "impact": "Replaces 80% of manual handoffs in complex workflows, reducing process cycle time by up to 60%",
+      "metric_label": "Workflows executed"
+    },
+    "system_health_monitor": {
+      "name": "System Health Monitor",
+      "description": "Monitor uptime, latency, and error rates across your APIs and services, with instant Slack alerts and automatic incident creation.",
+      "impact": "Reduces mean time to detection for outages by 10x, minimizing the business impact of downtime",
+      "metric_label": "Health checks run"
+    },
+    "backup_verification": {
+      "name": "Backup Verification",
+      "description": "Automatically verify that scheduled backups completed successfully, validate data integrity, and alert the team on any failures.",
+      "impact": "Ensures 100% backup coverage and catches backup failures before they become data loss events",
+      "metric_label": "Backups verified"
+    },
+    "meeting_notes_ai": {
+      "name": "AI Meeting Notes",
+      "description": "Automatically transcribe meetings, extract action items and decisions, and distribute summaries to attendees after every call.",
+      "impact": "Saves 30+ minutes per meeting on note-taking and ensures 100% of action items are captured",
+      "metric_label": "Meetings summarized"
+    },
+    "task_assignment": {
+      "name": "Automated Task Assignment",
+      "description": "Automatically create and assign tasks from emails, meetings, or triggers, routing them to the right person based on workload and skills.",
+      "impact": "Reduces task setup time by 70% and ensures no action items are dropped or forgotten",
+      "metric_label": "Tasks assigned"
+    },
+    "time_tracking_sync": {
+      "name": "Time Tracking Sync",
+      "description": "Aggregate time tracking data across projects, calculate billable amounts, generate timesheets, and sync to your billing system.",
+      "impact": "Recovers 5-10% of previously unbilled time and cuts timesheet preparation time by 80%",
+      "metric_label": "Hours synced"
+    },
+    "calendar_optimizer": {
+      "name": "Calendar Optimizer",
+      "description": "Protect deep work time, cluster meetings intelligently, enforce buffer times, and optimize your team's calendars for productivity.",
+      "impact": "Increases uninterrupted work blocks by 40% and reduces context-switching fatigue",
+      "metric_label": "Calendar events optimized"
+    },
+    "slack_digest": {
+      "name": "Slack Channel Digest",
+      "description": "Automatically summarize Slack channels, highlight important threads, and extract action items into a daily or weekly digest.",
+      "impact": "Reduces time spent catching up on Slack by 50%, surfacing only what truly needs your attention",
+      "metric_label": "Channels summarized"
+    },
+    "project_status_report": {
+      "name": "Project Status Report",
+      "description": "Automatically compile project data from your tools, generate RAG status reports, and deliver them to stakeholders on a schedule.",
+      "impact": "Saves project managers 3+ hours per week on status reporting and improves stakeholder visibility",
+      "metric_label": "Reports delivered"
+    },
+    "daily_standup_bot": {
+      "name": "Daily Standup Bot",
+      "description": "Run async daily standups via Slack, collect team updates, highlight blockers, and deliver a team summary to managers automatically.",
+      "impact": "Replaces 30-minute sync standups, saving 2.5+ hours per week per team member",
+      "metric_label": "Standups collected"
+    },
+    "resource_planner": {
+      "name": "Resource Planner",
+      "description": "Track team capacity, match skills to project needs, flag overallocations, and report on bench time across your organization.",
+      "impact": "Improves resource utilization by 20% and prevents team burnout through proactive capacity monitoring",
+      "metric_label": "Capacity plans updated"
+    },
+    "executive_dashboard": {
+      "name": "Executive Dashboard",
+      "description": "Aggregate KPIs from all business systems into a single real-time dashboard designed for executive decision-making.",
+      "impact": "Eliminates weekly manual reporting packs, giving leadership real-time visibility into company performance",
+      "metric_label": "Dashboards refreshed"
+    },
+    "kpi_tracker": {
+      "name": "KPI Tracker",
+      "description": "Monitor key performance indicators against targets, alert owners when goals are at risk, and track trends over time.",
+      "impact": "Improves goal attainment rates by 25% through proactive alerting and accountability tracking",
+      "metric_label": "KPIs monitored"
+    },
+    "financial_summary": {
+      "name": "Financial Summary Report",
+      "description": "Automatically generate P&L, balance sheet, and cash flow summaries with budget-vs-actual comparisons and trend analysis.",
+      "impact": "Delivers board-ready financial reports in minutes instead of days, improving financial decision-making speed",
+      "metric_label": "Reports generated"
+    },
+    "client_performance": {
+      "name": "Client Performance Report",
+      "description": "Automatically generate and deliver per-client performance reports with KPIs, SLA compliance, and health scores.",
+      "impact": "Increases client retention by 15% by proactively demonstrating value and catching at-risk accounts early",
+      "metric_label": "Client reports sent"
+    },
+    "team_productivity": {
+      "name": "Team Productivity Report",
+      "description": "Measure team output against capacity, track individual contributions, and identify bottlenecks with weekly automated reports.",
+      "impact": "Improves team throughput by 15% by identifying and resolving bottlenecks faster",
+      "metric_label": "Productivity reports sent"
+    },
+    "marketing_roi": {
+      "name": "Marketing ROI Report",
+      "description": "Aggregate performance data across all marketing channels, calculate ROI and attribution, and deliver insights to optimize spending.",
+      "impact": "Improves marketing ROI by 20% by identifying the highest-performing channels and reallocating budget accordingly",
+      "metric_label": "Reports generated"
+    },
+    "operations_scorecard": {
+      "name": "Operations Scorecard",
+      "description": "Score operational performance across quality, efficiency, and cost metrics, tracking trends and flagging areas needing improvement.",
+      "impact": "Reduces operational costs by 10-15% by continuously surfacing inefficiencies and improvement opportunities",
+      "metric_label": "Scorecards generated"
+    },
+    "custom_analytics": {
+      "name": "Custom Analytics Builder",
+      "description": "Build bespoke analytics reports by blending data from multiple sources, with scheduled delivery and a self-serve query interface.",
+      "impact": "Replaces weeks of manual spreadsheet analysis with on-demand answers to any business question",
+      "metric_label": "Reports generated"
+    },
+    "multichannel_support_agent": {
+      "name": "Multi-Channel Support Agent",
+      "description": "An AI agent that unifies support across email, chat, and SMS, classifies intent, resolves common issues autonomously, and hands off to humans seamlessly.",
+      "impact": "Handles 70% of support volume autonomously across all channels, reducing support staffing needs by 30%",
+      "metric_label": "Interactions resolved"
+    },
+    "research_assistant": {
+      "name": "Research Assistant Agent",
+      "description": "An AI agent that conducts structured research on competitors, markets, or topics and delivers organized summaries and briefing documents.",
+      "impact": "Completes in 20 minutes what previously took a junior analyst 2 days to research and compile",
+      "metric_label": "Research reports produced"
+    },
+    "data_analyst_agent": {
+      "name": "Data Analyst Agent",
+      "description": "Ask business questions in plain language and get instant data analysis, visualizations, and insights generated by an AI analyst.",
+      "impact": "Gives every team member analyst-level insights without waiting for the data team, reducing reporting backlogs by 80%",
+      "metric_label": "Analyses generated"
+    },
+    "content_strategist_agent": {
+      "name": "Content Strategist Agent",
+      "description": "An AI agent that analyzes content gaps, ideates topics, manages your editorial calendar, and produces multi-format content at scale.",
+      "impact": "Triples content output while reducing strategy and production time by 60%",
+      "metric_label": "Content pieces produced"
+    },
+    "sales_copilot": {
+      "name": "Sales Copilot Agent",
+      "description": "An AI copilot that coaches reps on active deals, recommends next best actions, surfaces objection handling prompts, and scores pipeline risk.",
+      "impact": "Increases rep win rates by 20% and reduces average sales cycle length by 15% through AI-guided coaching",
+      "metric_label": "Deal recommendations made"
+    },
+    "hr_onboarding_agent": {
+      "name": "HR Onboarding Agent",
+      "description": "Automate the entire new hire onboarding journey — checklists, welcome emails, document collection, and day-1 readiness tracking.",
+      "impact": "Reduces HR onboarding admin time by 70% and improves new hire time-to-productivity by 30%",
+      "metric_label": "Onboardings completed"
+    },
+    "code_review_agent": {
+      "name": "Code Review Agent",
+      "description": "An AI agent that analyzes pull requests for security vulnerabilities, code quality issues, and style violations, posting inline review comments.",
+      "impact": "Catches 80% of common security and quality issues before human review, cutting PR review time in half",
+      "metric_label": "PRs reviewed"
+    },
+    "compliance_agent": {
+      "name": "Compliance Agent",
+      "description": "Monitor regulatory changes, check policy documents for gaps, automate audit preparation workflows, and track remediation progress.",
+      "impact": "Reduces compliance preparation time by 60% and minimizes regulatory risk through continuous monitoring",
+      "metric_label": "Compliance checks run"
+    },
+    "competitive_intel_agent": {
+      "name": "Competitive Intelligence Agent",
+      "description": "Continuously monitor competitors for product launches, pricing changes, and news mentions, delivering weekly intel digests to your team.",
+      "impact": "Keeps your team 10x better informed on competitive moves, enabling faster strategic responses",
+      "metric_label": "Intel reports delivered"
+    }
   }
 }
