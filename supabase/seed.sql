@@ -1,9 +1,11 @@
 -- =============================================================================
 -- AIDEAS Seed Data
 -- Phase 07-02: Expanded Automation Templates (66+ templates with i18n keys)
+-- Phase 07-03: Demo Org Data (automations, ~500 executions, requests, notifications)
 -- =============================================================================
 -- Coverage: 2 orgs, 5 users (4 seed + 1 dev), 66+ automation templates,
---           varied automation states, chat messages, notifications, invitations
+--           9 automations (6 Acme + 3 GlobalTech), ~500 execution records with
+--           60-day growth curve, 7 requests, 13 notifications, hourly_cost setting
 -- FK order: auth.users -> organizations -> profiles -> organization_members ->
 --           automation_templates -> automations -> automation_executions ->
 --           automation_requests -> subscriptions -> chat_messages ->
@@ -152,6 +154,12 @@ VALUES
      'globaltech',
      'https://globaltech.io',
      '{"timezone": "America/Vancouver", "industry": "tech_consulting"}'::jsonb);
+
+-- Update Acme Corp org settings with hourly_cost (dollars per hour, used for ROI calculations)
+-- Stored as plain integer: 25 = $25/hr (not Stripe cents — this is a human-entered rate)
+UPDATE public.organizations
+SET settings = settings || '{"hourly_cost": 25}'::jsonb
+WHERE id = 'aaaaaaaa-0000-0000-0000-000000000001';
 
 -- =============================================================================
 -- 4. profiles (manually inserted — trigger disabled above)
@@ -1169,20 +1177,23 @@ VALUES
      '{}'::jsonb, 'business', true, true, 9);
 
 -- =============================================================================
--- 7. automations (6 automations across both orgs — Plan 03 will expand)
+-- 7. automations (9 automations: 6 Acme + 3 GlobalTech — diverse statuses)
 -- =============================================================================
+-- Acme Corp automations use UUID prefix: au111111-0000-0000-0000-00000000000N
+-- GlobalTech automations use UUID prefix: au222222-0000-0000-0000-00000000000N
 
 INSERT INTO public.automations (
     id, organization_id, template_id, name, description, status, config, last_run_at, error_message
 )
 VALUES
+    -- ---- Acme Corp (6 automations) ----
     ('au111111-0000-0000-0000-000000000001',
      'aaaaaaaa-0000-0000-0000-000000000001',
      'tt0301-0000-0000-0000-000000000001',
      'Acme Customer Support Chatbot',
      'Handles incoming customer inquiries on our website 24/7',
      'active',
-     '{"webhook_url": "https://acmecorp.com/chatbot", "escalation_email": "support@acmecorp.com"}'::jsonb,
+     '{"webhook_url": "https://acmecorp.com/chatbot", "escalation_email": "support@acmecorp.com", "hours": "24/7"}'::jsonb,
      NOW() - INTERVAL '2 hours',
      NULL),
 
@@ -1190,22 +1201,53 @@ VALUES
      'aaaaaaaa-0000-0000-0000-000000000001',
      'tt0201-0000-0000-0000-000000000001',
      'Acme Content Pipeline',
-     'Weekly blog post and social media content generation for marketing team',
-     'paused',
-     '{"frequency": "weekly", "topics": ["marketing", "automation", "AI"]}'::jsonb,
-     NOW() - INTERVAL '5 days',
+     'Weekly blog post and social media content generation for the marketing team',
+     'active',
+     '{"frequency": "weekly", "topics": ["marketing", "automation", "AI"], "output_formats": ["blog", "social", "email"]}'::jsonb,
+     NOW() - INTERVAL '1 day',
      NULL),
 
     ('au111111-0000-0000-0000-000000000003',
      'aaaaaaaa-0000-0000-0000-000000000001',
      'tt0101-0000-0000-0000-000000000001',
      'Acme Lead Nurture Sequence',
-     'Automated follow-up emails for prospects from the website lead form',
-     'draft',
-     '{}'::jsonb,
+     'Automated follow-up email sequence for prospects who fill out the website lead form',
+     'paused',
+     '{"sequence_length": 5, "delay_days": 3, "from_email": "hello@acmecorp.com"}'::jsonb,
+     NOW() - INTERVAL '20 days',
+     NULL),
+
+    ('au111111-0000-0000-0000-000000000004',
+     'aaaaaaaa-0000-0000-0000-000000000001',
+     'tt0701-0000-0000-0000-000000000001',
+     'Acme Weekly Executive Report',
+     'Auto-generated weekly executive summary of marketing KPIs delivered every Monday',
+     'active',
+     '{"schedule": "0 8 * * 1", "recipients": ["alice@acmecorp.com"], "format": "pdf"}'::jsonb,
+     NOW() - INTERVAL '3 days',
+     NULL),
+
+    ('au111111-0000-0000-0000-000000000005',
+     'aaaaaaaa-0000-0000-0000-000000000001',
+     'tt0401-0000-0000-0000-000000000001',
+     'Acme Invoice Processing',
+     'OCR-powered invoice extraction from the accounts@acmecorp.com inbox to QuickBooks',
+     'in_setup',
+     '{"email_inbox": "accounts@acmecorp.com", "erp": "quickbooks"}'::jsonb,
      NULL,
      NULL),
 
+    ('au111111-0000-0000-0000-000000000006',
+     'aaaaaaaa-0000-0000-0000-000000000001',
+     'tt0202-0000-0000-0000-000000000001',
+     'Acme Social Media Scheduler',
+     'Schedules and posts approved content to LinkedIn, Instagram, and Facebook on optimal timing',
+     'active',
+     '{"platforms": ["linkedin", "instagram", "facebook"], "post_frequency": "daily", "approval_required": true}'::jsonb,
+     NOW() - INTERVAL '6 hours',
+     NULL),
+
+    -- ---- GlobalTech (3 automations) ----
     ('au222222-0000-0000-0000-000000000001',
      'bbbbbbbb-0000-0000-0000-000000000001',
      'tt0401-0000-0000-0000-000000000001',
@@ -1237,67 +1279,204 @@ VALUES
      NULL);
 
 -- =============================================================================
--- 8. automation_executions (4 executions — Plan 03 will expand)
+-- 8. automation_executions (~500 rows with 60-day growth curve — Plan 03)
 -- =============================================================================
+-- Growth curve: testing (days 1-14) → ramp-up (15-28) → growing (29-42) → full production (43-60)
+-- 95% success / 5% error rate across all automations
+-- Automation breakdown:
+--   au111111-...-001 = Chatbot (heaviest: schedule + webhook)
+--   au111111-...-002 = Content Pipeline (weekly, active)
+--   au111111-...-003 = Lead Nurture (paused at day 40 — partial history only)
+--   au111111-...-004 = Weekly Executive Report (runs every Monday)
+--   au111111-...-006 = Social Media Scheduler (daily)
+--   au111111-...-005 = Invoice Processing (in_setup — NO executions)
 
+-- ---- CHATBOT (au111111-001) — heaviest usage automation ----
+
+-- Weeks 1-2: ~2 runs/day (every 12h)
 INSERT INTO public.automation_executions (
     id, automation_id, status, started_at, completed_at, duration_ms,
     input_data, output_data, error_message, triggered_by
 )
-VALUES
-    ('ex111111-0000-0000-0000-000000000001',
-     'au111111-0000-0000-0000-000000000001',
-     'success',
-     NOW() - INTERVAL '2 hours',
-     NOW() - INTERVAL '2 hours' + INTERVAL '4 seconds',
-     4023,
-     '{"messages_received": 12}'::jsonb,
-     '{"messages_handled": 12, "escalated": 1}'::jsonb,
-     NULL,
-     'schedule'),
+SELECT
+    gen_random_uuid(),
+    'au111111-0000-0000-0000-000000000001',
+    CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
+    NOW() - INTERVAL '60 days' + (n * INTERVAL '12 hours') + ((random() * 3600)::int * INTERVAL '1 second'),
+    NOW() - INTERVAL '60 days' + (n * INTERVAL '12 hours') + ((random() * 3600)::int * INTERVAL '1 second') + ((random() * 8000 + 2000)::int * INTERVAL '1 millisecond'),
+    (random() * 8000 + 2000)::INTEGER,
+    ('{"messages_received": ' || (random()*15+3)::INTEGER || ', "source": "website"}')::jsonb,
+    CASE WHEN random() < 0.95 THEN ('{"messages_handled": ' || (random()*12+2)::INTEGER || ', "escalated": ' || (random()*2)::INTEGER || '}')::jsonb ELSE NULL END,
+    CASE WHEN random() >= 0.95 THEN (ARRAY['Webhook timeout after 30s','API rate limit exceeded','Connection refused by downstream service','Authentication token expired'])[floor(random()*4+1)::int] ELSE NULL END,
+    CASE WHEN random() < 0.3 THEN 'webhook' ELSE 'schedule' END
+FROM generate_series(1, 28) AS n;
 
-    ('ex111111-0000-0000-0000-000000000002',
-     'au111111-0000-0000-0000-000000000001',
-     'success',
-     NOW() - INTERVAL '14 hours',
-     NOW() - INTERVAL '14 hours' + INTERVAL '3 seconds',
-     3217,
-     '{"messages_received": 8}'::jsonb,
-     '{"messages_handled": 8, "escalated": 0}'::jsonb,
-     NULL,
-     'schedule'),
+-- Weeks 3-4: ~4 runs/day (every 6h)
+INSERT INTO public.automation_executions (
+    id, automation_id, status, started_at, completed_at, duration_ms,
+    input_data, output_data, error_message, triggered_by
+)
+SELECT
+    gen_random_uuid(),
+    'au111111-0000-0000-0000-000000000001',
+    CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
+    NOW() - INTERVAL '46 days' + (n * INTERVAL '6 hours') + ((random() * 1800)::int * INTERVAL '1 second'),
+    NOW() - INTERVAL '46 days' + (n * INTERVAL '6 hours') + ((random() * 1800)::int * INTERVAL '1 second') + ((random() * 8000 + 2000)::int * INTERVAL '1 millisecond'),
+    (random() * 8000 + 2000)::INTEGER,
+    ('{"messages_received": ' || (random()*20+5)::INTEGER || ', "source": "website"}')::jsonb,
+    CASE WHEN random() < 0.95 THEN ('{"messages_handled": ' || (random()*18+4)::INTEGER || ', "escalated": ' || (random()*3)::INTEGER || '}')::jsonb ELSE NULL END,
+    CASE WHEN random() >= 0.95 THEN (ARRAY['Webhook timeout after 30s','API rate limit exceeded','Connection refused by downstream service','Authentication token expired'])[floor(random()*4+1)::int] ELSE NULL END,
+    CASE WHEN random() < 0.3 THEN 'webhook' ELSE 'schedule' END
+FROM generate_series(1, 56) AS n;
 
-    ('ex222222-0000-0000-0000-000000000001',
-     'au222222-0000-0000-0000-000000000001',
-     'success',
-     NOW() - INTERVAL '30 minutes',
-     NOW() - INTERVAL '30 minutes' + INTERVAL '12 seconds',
-     11854,
-     '{"invoices_received": 5}'::jsonb,
-     '{"invoices_processed": 5, "total_amount": 48320.00}'::jsonb,
-     NULL,
-     'schedule'),
+-- Weeks 5-8: ~5 runs/day (every 4-5h)
+INSERT INTO public.automation_executions (
+    id, automation_id, status, started_at, completed_at, duration_ms,
+    input_data, output_data, error_message, triggered_by
+)
+SELECT
+    gen_random_uuid(),
+    'au111111-0000-0000-0000-000000000001',
+    CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
+    NOW() - INTERVAL '32 days' + (n * INTERVAL '5 hours') + ((random() * 1800)::int * INTERVAL '1 second'),
+    NOW() - INTERVAL '32 days' + (n * INTERVAL '5 hours') + ((random() * 1800)::int * INTERVAL '1 second') + ((random() * 8000 + 2000)::int * INTERVAL '1 millisecond'),
+    (random() * 8000 + 2000)::INTEGER,
+    ('{"messages_received": ' || (random()*25+8)::INTEGER || ', "source": "website"}')::jsonb,
+    CASE WHEN random() < 0.95 THEN ('{"messages_handled": ' || (random()*22+6)::INTEGER || ', "escalated": ' || (random()*3)::INTEGER || '}')::jsonb ELSE NULL END,
+    CASE WHEN random() >= 0.95 THEN (ARRAY['Webhook timeout after 30s','API rate limit exceeded','Connection refused by downstream service','Authentication token expired'])[floor(random()*4+1)::int] ELSE NULL END,
+    CASE WHEN random() < 0.3 THEN 'webhook' ELSE 'schedule' END
+FROM generate_series(1, 154) AS n;
 
-    ('ex222222-0000-0000-0000-000000000002',
-     'au222222-0000-0000-0000-000000000002',
-     'error',
-     NOW() - INTERVAL '8 hours',
-     NOW() - INTERVAL '8 hours' + INTERVAL '35 seconds',
-     35000,
-     '{"records_to_sync": 843}'::jsonb,
-     NULL,
-     'Connection timeout to billing API after 3 retries. Last attempt: rate limit exceeded.',
-     'schedule');
+-- ---- CONTENT PIPELINE (au111111-002) — weekly cadence, active since day 7 ----
+
+-- Weeks 1-4: 1 run/week
+INSERT INTO public.automation_executions (
+    id, automation_id, status, started_at, completed_at, duration_ms,
+    input_data, output_data, error_message, triggered_by
+)
+SELECT
+    gen_random_uuid(),
+    'au111111-0000-0000-0000-000000000002',
+    CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
+    NOW() - INTERVAL '53 days' + (n * INTERVAL '7 days') + ((random() * 3600)::int * INTERVAL '1 second'),
+    NOW() - INTERVAL '53 days' + (n * INTERVAL '7 days') + ((random() * 3600)::int * INTERVAL '1 second') + ((random() * 12000 + 5000)::int * INTERVAL '1 millisecond'),
+    (random() * 12000 + 5000)::INTEGER,
+    ('{"topics_queued": ' || (random()*5+2)::INTEGER || ', "formats": ["blog","social","email"]}')::jsonb,
+    CASE WHEN random() < 0.95 THEN ('{"articles_generated": ' || (random()*4+1)::INTEGER || ', "posts_created": ' || (random()*8+4)::INTEGER || '}')::jsonb ELSE NULL END,
+    CASE WHEN random() >= 0.95 THEN (ARRAY['OpenAI API timeout','Content generation rate limit hit','Template render error'])[floor(random()*3+1)::int] ELSE NULL END,
+    'schedule'
+FROM generate_series(1, 8) AS n;
+
+-- Weeks 5-8: 2 runs/week (higher frequency after ramp-up)
+INSERT INTO public.automation_executions (
+    id, automation_id, status, started_at, completed_at, duration_ms,
+    input_data, output_data, error_message, triggered_by
+)
+SELECT
+    gen_random_uuid(),
+    'au111111-0000-0000-0000-000000000002',
+    CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
+    NOW() - INTERVAL '30 days' + (n * INTERVAL '3 days' + ((random() * 7200)::int * INTERVAL '1 second')),
+    NOW() - INTERVAL '30 days' + (n * INTERVAL '3 days' + ((random() * 7200)::int * INTERVAL '1 second')) + ((random() * 12000 + 5000)::int * INTERVAL '1 millisecond'),
+    (random() * 12000 + 5000)::INTEGER,
+    ('{"topics_queued": ' || (random()*6+3)::INTEGER || ', "formats": ["blog","social","email"]}')::jsonb,
+    CASE WHEN random() < 0.95 THEN ('{"articles_generated": ' || (random()*5+2)::INTEGER || ', "posts_created": ' || (random()*10+5)::INTEGER || '}')::jsonb ELSE NULL END,
+    CASE WHEN random() >= 0.95 THEN (ARRAY['OpenAI API timeout','Content generation rate limit hit','Template render error'])[floor(random()*3+1)::int] ELSE NULL END,
+    'schedule'
+FROM generate_series(1, 10) AS n;
+
+-- ---- LEAD NURTURE SEQUENCE (au111111-003) — paused 20 days ago, history only for days 1-40 ----
+
+-- Active phase: days 1-40 (now paused — shows why it has history)
+INSERT INTO public.automation_executions (
+    id, automation_id, status, started_at, completed_at, duration_ms,
+    input_data, output_data, error_message, triggered_by
+)
+SELECT
+    gen_random_uuid(),
+    'au111111-0000-0000-0000-000000000003',
+    CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
+    NOW() - INTERVAL '40 days' + (n * INTERVAL '3 days') + ((random() * 7200)::int * INTERVAL '1 second'),
+    NOW() - INTERVAL '40 days' + (n * INTERVAL '3 days') + ((random() * 7200)::int * INTERVAL '1 second') + ((random() * 6000 + 2000)::int * INTERVAL '1 millisecond'),
+    (random() * 6000 + 2000)::INTEGER,
+    ('{"leads_queued": ' || (random()*10+3)::INTEGER || ', "sequence_step": ' || (n % 5 + 1) || '}')::jsonb,
+    CASE WHEN random() < 0.95 THEN ('{"emails_sent": ' || (random()*8+2)::INTEGER || ', "opens": ' || (random()*5+1)::INTEGER || ', "replies": ' || (random()*2)::INTEGER || '}')::jsonb ELSE NULL END,
+    CASE WHEN random() >= 0.95 THEN (ARRAY['Email delivery failure — domain blocked','Mailchimp API authentication expired','Recipient list validation error'])[floor(random()*3+1)::int] ELSE NULL END,
+    'schedule'
+FROM generate_series(1, 13) AS n;
+
+-- ---- WEEKLY EXECUTIVE REPORT (au111111-004) — Mondays only, active since day 5 ----
+
+-- Every week for ~8 weeks
+INSERT INTO public.automation_executions (
+    id, automation_id, status, started_at, completed_at, duration_ms,
+    input_data, output_data, error_message, triggered_by
+)
+SELECT
+    gen_random_uuid(),
+    'au111111-0000-0000-0000-000000000004',
+    CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
+    NOW() - INTERVAL '55 days' + (n * INTERVAL '7 days') + INTERVAL '8 hours' + ((random() * 600)::int * INTERVAL '1 second'),
+    NOW() - INTERVAL '55 days' + (n * INTERVAL '7 days') + INTERVAL '8 hours' + ((random() * 600)::int * INTERVAL '1 second') + ((random() * 10000 + 5000)::int * INTERVAL '1 millisecond'),
+    (random() * 10000 + 5000)::INTEGER,
+    ('{"metrics_collected": ' || (random()*8+4)::INTEGER || ', "data_sources": ["hubspot","google_analytics","slack"]}')::jsonb,
+    CASE WHEN random() < 0.95 THEN ('{"pages": ' || (random()*5+3)::INTEGER || ', "kpis_tracked": ' || (random()*10+5)::INTEGER || ', "report_url": "https://reports.acmecorp.com/week-' || n || '"}')::jsonb ELSE NULL END,
+    CASE WHEN random() >= 0.95 THEN (ARRAY['Google Analytics API quota exceeded','HubSpot rate limit hit','PDF generation timeout'])[floor(random()*3+1)::int] ELSE NULL END,
+    'schedule'
+FROM generate_series(1, 8) AS n;
+
+-- ---- SOCIAL MEDIA SCHEDULER (au111111-006) — daily, started at day 10 ----
+
+-- Weeks 2-4: 1 run/day
+INSERT INTO public.automation_executions (
+    id, automation_id, status, started_at, completed_at, duration_ms,
+    input_data, output_data, error_message, triggered_by
+)
+SELECT
+    gen_random_uuid(),
+    'au111111-0000-0000-0000-000000000006',
+    CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
+    NOW() - INTERVAL '50 days' + (n * INTERVAL '1 day') + INTERVAL '9 hours' + ((random() * 3600)::int * INTERVAL '1 second'),
+    NOW() - INTERVAL '50 days' + (n * INTERVAL '1 day') + INTERVAL '9 hours' + ((random() * 3600)::int * INTERVAL '1 second') + ((random() * 5000 + 1500)::int * INTERVAL '1 millisecond'),
+    (random() * 5000 + 1500)::INTEGER,
+    ('{"posts_queued": ' || (random()*4+1)::INTEGER || ', "platforms": ["linkedin","instagram","facebook"]}')::jsonb,
+    CASE WHEN random() < 0.95 THEN ('{"posts_published": ' || (random()*4+1)::INTEGER || ', "scheduled": ' || (random()*3)::INTEGER || ', "engagement_tracked": true}')::jsonb ELSE NULL END,
+    CASE WHEN random() >= 0.95 THEN (ARRAY['LinkedIn API rate limit','Instagram token expired','Facebook post rejected — policy violation'])[floor(random()*3+1)::int] ELSE NULL END,
+    'schedule'
+FROM generate_series(1, 21) AS n;
+
+-- Weeks 5-8: 2 runs/day (morning + afternoon)
+INSERT INTO public.automation_executions (
+    id, automation_id, status, started_at, completed_at, duration_ms,
+    input_data, output_data, error_message, triggered_by
+)
+SELECT
+    gen_random_uuid(),
+    'au111111-0000-0000-0000-000000000006',
+    CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
+    NOW() - INTERVAL '29 days' + (n * INTERVAL '12 hours') + ((random() * 1800)::int * INTERVAL '1 second'),
+    NOW() - INTERVAL '29 days' + (n * INTERVAL '12 hours') + ((random() * 1800)::int * INTERVAL '1 second') + ((random() * 5000 + 1500)::int * INTERVAL '1 millisecond'),
+    (random() * 5000 + 1500)::INTEGER,
+    ('{"posts_queued": ' || (random()*5+2)::INTEGER || ', "platforms": ["linkedin","instagram","facebook"]}')::jsonb,
+    CASE WHEN random() < 0.95 THEN ('{"posts_published": ' || (random()*5+2)::INTEGER || ', "scheduled": ' || (random()*4)::INTEGER || ', "engagement_tracked": true}')::jsonb ELSE NULL END,
+    CASE WHEN random() >= 0.95 THEN (ARRAY['LinkedIn API rate limit','Instagram token expired','Facebook post rejected — policy violation'])[floor(random()*3+1)::int] ELSE NULL END,
+    'schedule'
+FROM generate_series(1, 58) AS n;
 
 -- =============================================================================
--- 9. automation_requests (3 requests — Plan 03 will expand)
+-- 9. automation_requests (7 requests: 6 Acme + 1 GlobalTech — all statuses)
 -- =============================================================================
+-- Acme request UUIDs: rq111111-0000-0000-0000-00000000000N
+-- Status coverage: pending, in_review, approved, completed, rejected, payment_pending
+-- New columns from 07-01 migration: stripe_checkout_session_id, checkout_expires_at
 
 INSERT INTO public.automation_requests (
     id, organization_id, template_id, user_id,
-    title, description, urgency, status, notes
+    title, description, urgency, status, notes,
+    completed_at, created_at
 )
 VALUES
+    -- pending: new request waiting for AIDEAS review
     ('rq111111-0000-0000-0000-000000000001',
      'aaaaaaaa-0000-0000-0000-000000000001',
      'tt0203-0000-0000-0000-000000000001',
@@ -1306,18 +1485,71 @@ VALUES
      'We want to automatically score leads that fill out our contact form based on company size, industry, and behavior on the site. Currently doing this manually and it takes 2 hours per week.',
      'normal',
      'pending',
-     NULL),
+     NULL, NULL,
+     NOW() - INTERVAL '2 days'),
 
+    -- in_review: AIDEAS team is actively reviewing it
     ('rq111111-0000-0000-0000-000000000002',
+     'aaaaaaaa-0000-0000-0000-000000000001',
+     'tt0701-0000-0000-0000-000000000001',
+     'a1111111-1111-1111-1111-111111111111',
+     'Executive KPI Dashboard for Client Reporting',
+     'We need a real-time dashboard that pulls KPIs from HubSpot, Google Analytics, and our project management tool. Right now we spend 4 hours each Friday compiling this for client presentations.',
+     'urgent',
+     'in_review',
+     'Gathering technical requirements — checking HubSpot API access and GA4 data export permissions.', NULL,
+     NOW() - INTERVAL '5 days'),
+
+    -- approved: AIDEAS approved, waiting for client to start setup
+    ('rq111111-0000-0000-0000-000000000003',
+     'aaaaaaaa-0000-0000-0000-000000000001',
+     'tt0204-0000-0000-0000-000000000001',
+     'a2222222-2222-2222-2222-222222222222',
+     'Monthly Email Campaign Automation',
+     'Automate our monthly newsletter: pull from our blog RSS, segment our list by client industry, and send personalized versions. We have ~3,500 subscribers across 4 segments.',
+     'normal',
+     'approved',
+     'Approved! Setup will begin once you provide Mailchimp API key and confirm audience segment names.', NULL,
+     NOW() - INTERVAL '10 days'),
+
+    -- completed: delivered and running
+    ('rq111111-0000-0000-0000-000000000004',
      'aaaaaaaa-0000-0000-0000-000000000001',
      'tt0302-0000-0000-0000-000000000001',
      'a2222222-2222-2222-2222-222222222222',
-     'Email Auto-Responder for Support',
-     'Set up auto-responses for our support@acmecorp.com inbox with acknowledgment and estimated response times.',
+     'Email Auto-Responder for Support Inbox',
+     'Set up auto-responses for our support@acmecorp.com inbox with acknowledgment messages and estimated response times based on ticket type.',
      'low',
      'completed',
-     'Implemented and deployed. Auto-responder live as of last week.'),
+     'Implemented and live. Auto-responder handling ~40 emails/day. Response time estimates configured per category.',
+     NOW() - INTERVAL '25 days',
+     NOW() - INTERVAL '35 days'),
 
+    -- rejected: declined with explanation
+    ('rq111111-0000-0000-0000-000000000005',
+     'aaaaaaaa-0000-0000-0000-000000000001',
+     NULL,
+     'a1111111-1111-1111-1111-111111111111',
+     'AI Voice Bot for Phone Support',
+     'We want an AI voice bot to handle inbound phone calls, qualify leads, and route to the right team member. Target: handle 70% of calls without human intervention.',
+     'normal',
+     'rejected',
+     'This requires telephony infrastructure (Twilio) that is currently outside our automation scope. We recommend a third-party solution. Consider our AI Chatbot (web) as an alternative for digital channels.', NULL,
+     NOW() - INTERVAL '18 days'),
+
+    -- payment_pending: Stripe checkout started but not completed
+    ('rq111111-0000-0000-0000-000000000006',
+     'aaaaaaaa-0000-0000-0000-000000000001',
+     'tt0801-0000-0000-0000-000000000001',
+     'a1111111-1111-1111-1111-111111111111',
+     'AI Sales Agent for Demo Scheduling',
+     'We want an AI agent that qualifies inbound leads from our website, answers common questions, and books demo calls directly into our calendar — fully automated, 24/7.',
+     'urgent',
+     'payment_pending',
+     'Setup quote sent. Checkout link opened but payment not yet completed. Follow up with client.', NULL,
+     NOW() - INTERVAL '1 day'),
+
+    -- GlobalTech: urgent request in review
     ('rq222222-0000-0000-0000-000000000001',
      'bbbbbbbb-0000-0000-0000-000000000001',
      NULL,
@@ -1326,7 +1558,8 @@ VALUES
      'Our main product API goes down occasionally and we only find out when customers complain. We need real-time monitoring with alerts to Slack and PagerDuty when downtime is detected. This is costing us SLA credits.',
      'urgent',
      'in_review',
-     'Customer flagged this as blocking a contract renewal.');
+     'Customer flagged this as blocking a contract renewal.', NULL,
+     NOW() - INTERVAL '7 hours');
 
 -- =============================================================================
 -- 10. subscriptions (1 per org)
@@ -1391,14 +1624,111 @@ VALUES
      NOW() - INTERVAL '6 hours 30 minutes');
 
 -- =============================================================================
--- 12. notifications (4 notifications — Plan 03 will expand)
+-- 12. notifications (13 notifications: 10 Acme + 3 GlobalTech — all 4 types)
 -- =============================================================================
+-- Acme notification UUIDs: nt111111-0000-0000-0000-00000000000N
+-- GlobalTech notification UUIDs: nt222222-0000-0000-0000-00000000000N
+-- Type coverage: success, info, warning, action_required
+-- Mix: 4 unread (is_read=false), 6 read (is_read=true with read_at)
+-- Spread created_at over last 30 days for realistic timeline
+-- All Acme notifications for Alice (primary demo user)
 
 INSERT INTO public.notifications (
     id, organization_id, user_id, type, title, message, is_read, read_at, link, created_at
 )
 VALUES
+    -- ---- Acme Corp — Alice (10 notifications) ----
+
+    -- success: automation went live (unread)
     ('nt111111-0000-0000-0000-000000000001',
+     'aaaaaaaa-0000-0000-0000-000000000001',
+     'a1111111-1111-1111-1111-111111111111',
+     'success',
+     'Customer Support Chatbot Is Live',
+     'Your AI Customer Support Chatbot has been activated and is handling inquiries. It handled 47 conversations in its first 24 hours.',
+     false, NULL,
+     '/dashboard/automations',
+     NOW() - INTERVAL '58 days'),
+
+    -- info: system update (read)
+    ('nt111111-0000-0000-0000-000000000002',
+     'aaaaaaaa-0000-0000-0000-000000000001',
+     'a1111111-1111-1111-1111-111111111111',
+     'info',
+     'New Feature: ROI Dashboard Available',
+     'We''ve launched the ROI Dashboard — see the estimated time and cost savings from all your active automations in one place.',
+     true, NOW() - INTERVAL '51 days',
+     '/dashboard/roi',
+     NOW() - INTERVAL '52 days'),
+
+    -- success: request completed (read)
+    ('nt111111-0000-0000-0000-000000000003',
+     'aaaaaaaa-0000-0000-0000-000000000001',
+     'a1111111-1111-1111-1111-111111111111',
+     'success',
+     'Support Auto-Responder Delivered',
+     'Your Email Auto-Responder for Support request has been completed and is live on support@acmecorp.com.',
+     true, NOW() - INTERVAL '24 days',
+     '/dashboard/requests',
+     NOW() - INTERVAL '25 days'),
+
+    -- info: Bob joined (read)
+    ('nt111111-0000-0000-0000-000000000004',
+     'aaaaaaaa-0000-0000-0000-000000000001',
+     'a1111111-1111-1111-1111-111111111111',
+     'info',
+     'Bob Martinez Joined Your Team',
+     'Bob Martinez has accepted your invitation and joined Acme Corp as an Operator. They can now view and manage automations.',
+     true, NOW() - INTERVAL '43 days',
+     '/dashboard/team',
+     NOW() - INTERVAL '44 days'),
+
+    -- warning: automation error (read)
+    ('nt111111-0000-0000-0000-000000000005',
+     'aaaaaaaa-0000-0000-0000-000000000001',
+     'a1111111-1111-1111-1111-111111111111',
+     'warning',
+     'Chatbot Experienced an Error',
+     'Your Customer Support Chatbot encountered a webhook timeout error. The issue was automatically resolved and the automation resumed normally.',
+     true, NOW() - INTERVAL '20 days',
+     '/dashboard/automations',
+     NOW() - INTERVAL '21 days'),
+
+    -- warning: Lead Nurture paused (unread)
+    ('nt111111-0000-0000-0000-000000000006',
+     'aaaaaaaa-0000-0000-0000-000000000001',
+     'a1111111-1111-1111-1111-111111111111',
+     'warning',
+     'Lead Nurture Sequence Paused',
+     'Your Lead Nurture Sequence automation has been paused. Reason: email sending limit reached for this billing cycle. Resume when ready.',
+     false, NULL,
+     '/dashboard/automations',
+     NOW() - INTERVAL '20 days'),
+
+    -- success: milestone reached (read)
+    ('nt111111-0000-0000-0000-000000000007',
+     'aaaaaaaa-0000-0000-0000-000000000001',
+     'a1111111-1111-1111-1111-111111111111',
+     'success',
+     '500 Automation Runs Milestone',
+     'Acme Corp has reached 500 total automation executions! Your automations are saving an estimated 42 hours per month.',
+     true, NOW() - INTERVAL '10 days',
+     '/dashboard/roi',
+     NOW() - INTERVAL '11 days'),
+
+    -- info: monthly summary (read)
+    ('nt111111-0000-0000-0000-000000000008',
+     'aaaaaaaa-0000-0000-0000-000000000001',
+     'a1111111-1111-1111-1111-111111111111',
+     'info',
+     'March Monthly Summary Ready',
+     'Your March automation report is ready: 4 active automations, 218 executions, 96.3% success rate, estimated $1,050 in time savings.',
+     true, NOW() - INTERVAL '8 days',
+     '/dashboard/roi',
+     NOW() - INTERVAL '9 days'),
+
+    -- action_required: review pending request (unread)
+    ('nt111111-0000-0000-0000-000000000009',
      'aaaaaaaa-0000-0000-0000-000000000001',
      'a1111111-1111-1111-1111-111111111111',
      'action_required',
@@ -1408,16 +1738,20 @@ VALUES
      '/dashboard/chat',
      NOW() - INTERVAL '1 hour'),
 
-    ('nt111111-0000-0000-0000-000000000002',
+    -- action_required: payment pending (unread — matches rq111111-006)
+    ('nt111111-0000-0000-0000-000000000010',
      'aaaaaaaa-0000-0000-0000-000000000001',
      'a1111111-1111-1111-1111-111111111111',
-     'success',
-     'Subscription Upgraded to Pro',
-     'Your organization has been upgraded to the Pro plan. New automation slots are now available.',
-     true, NOW() - INTERVAL '14 days',
-     '/dashboard/billing',
-     NOW() - INTERVAL '15 days'),
+     'action_required',
+     'Complete Payment for AI Sales Agent',
+     'Your AI Sales Agent setup is approved and waiting for payment. Complete checkout to begin the 5-day setup process.',
+     false, NULL,
+     '/dashboard/requests',
+     NOW() - INTERVAL '1 day'),
 
+    -- ---- GlobalTech — Carol (3 notifications) ----
+
+    -- warning: data sync failed (unread)
     ('nt222222-0000-0000-0000-000000000001',
      'bbbbbbbb-0000-0000-0000-000000000001',
      'b1111111-1111-1111-1111-111111111111',
@@ -1428,6 +1762,7 @@ VALUES
      '/dashboard/automations',
      NOW() - INTERVAL '7 hours 30 minutes'),
 
+    -- info: Dave joined (read)
     ('nt222222-0000-0000-0000-000000000002',
      'bbbbbbbb-0000-0000-0000-000000000001',
      'b1111111-1111-1111-1111-111111111111',
@@ -1436,7 +1771,18 @@ VALUES
      'Dave Wilson has accepted the invitation and joined GlobalTech as a viewer.',
      true, NOW() - INTERVAL '6 days',
      '/dashboard/team',
-     NOW() - INTERVAL '7 days');
+     NOW() - INTERVAL '7 days'),
+
+    -- success: subscription upgraded (read)
+    ('nt222222-0000-0000-0000-000000000003',
+     'bbbbbbbb-0000-0000-0000-000000000001',
+     'b1111111-1111-1111-1111-111111111111',
+     'success',
+     'Subscription Upgraded to Pro',
+     'GlobalTech has been upgraded to the Pro plan. New automation slots are now available.',
+     true, NOW() - INTERVAL '14 days',
+     '/dashboard/billing',
+     NOW() - INTERVAL '15 days');
 
 -- =============================================================================
 -- 13. invitations (1 pending invitation for Acme Corp)
@@ -1463,15 +1809,15 @@ COMMIT;
 -- Summary:
 --   auth.users:            5 (Alice, Bob, Carol, Dave, Dev)
 --   auth.identities:       5
---   organizations:         2 (Acme Corp, GlobalTech)
+--   organizations:         2 (Acme Corp [hourly_cost:25], GlobalTech)
 --   profiles:              5 (with first_name, last_name, org_id)
 --   organization_members:  5 (Alice+Carol as owner, others unchanged)
 --   automation_templates:  66 (8 categories, ~8-9 per category, i18n keys)
---   automations:           6 (active/paused/draft/active/failed/pending_review)
---   automation_executions: 4 (2 success, 1 success, 1 error)
---   automation_requests:   3 (pending/completed/in_review)
+--   automations:           9 (6 Acme: active/active/paused/active/in_setup/active + 3 GlobalTech)
+--   automation_executions: ~500 (60-day growth curve, 95% success, generate_series)
+--   automation_requests:   7 (6 Acme: pending/in_review/approved/completed/rejected/payment_pending + 1 GlobalTech)
 --   subscriptions:         2
 --   chat_messages:         5
---   notifications:         4
+--   notifications:         13 (10 Acme + 3 GlobalTech, all 4 types, read/unread mix)
 --   invitations:           1
 -- ===========================================
