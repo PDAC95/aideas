@@ -154,6 +154,52 @@
       "team": "Team",
       "billing": "Billing",
       "settings": "Settings"
+    },
+    "home": {
+      "greetingMorning": "Good morning, {name}",
+      "greetingAfternoon": "Good afternoon, {name}",
+      "greetingEvening": "Good evening, {name}",
+      "greetingFallback": "Welcome back",
+      "subtitle": "Here's how your automations are doing",
+      "newAutomation": "+ New automation",
+      "kpi": {
+        "activeAutomations": "Active automations",
+        "tasksThisWeek": "Tasks this week",
+        "hoursSavedThisMonth": "Hours saved this month"
+      },
+      "automationList": {
+        "title": "My automations",
+        "viewAll": "View all",
+        "dailyMetric": "{count} today",
+        "noRuns": "No runs today"
+      },
+      "activityFeed": {
+        "title": "Recent activity",
+        "viewAll": "View full activity",
+        "errorBadge": "Error",
+        "noActivity": "No recent activity"
+      },
+      "status": {
+        "active": "Active",
+        "paused": "Paused",
+        "failed": "Failed",
+        "in_setup": "In Setup",
+        "pending_review": "Pending Review",
+        "draft": "Draft",
+        "archived": "Archived"
+      },
+      "timeAgo": {
+        "now": "Just now",
+        "minutes": "{count}m ago",
+        "hours": "{count}h ago",
+        "days": "{count}d ago"
+      }
+    },
+    "notifications": {
+      "title": "Notifications",
+      "markAllRead": "Mark all as read",
+      "empty": "No notifications",
+      "unreadCount": "{count} unread"
     }
   },
   "common": {

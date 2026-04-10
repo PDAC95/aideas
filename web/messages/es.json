@@ -154,6 +154,52 @@
       "team": "Equipo",
       "billing": "Facturación",
       "settings": "Configuración"
+    },
+    "home": {
+      "greetingMorning": "Buenos días, {name}",
+      "greetingAfternoon": "Buenas tardes, {name}",
+      "greetingEvening": "Buenas noches, {name}",
+      "greetingFallback": "Bienvenido de nuevo",
+      "subtitle": "Así van tus automatizaciones",
+      "newAutomation": "+ Nueva automatización",
+      "kpi": {
+        "activeAutomations": "Automatizaciones activas",
+        "tasksThisWeek": "Tareas esta semana",
+        "hoursSavedThisMonth": "Horas ahorradas este mes"
+      },
+      "automationList": {
+        "title": "Mis automatizaciones",
+        "viewAll": "Ver todas",
+        "dailyMetric": "{count} hoy",
+        "noRuns": "Sin ejecuciones hoy"
+      },
+      "activityFeed": {
+        "title": "Actividad reciente",
+        "viewAll": "Ver actividad completa",
+        "errorBadge": "Error",
+        "noActivity": "Sin actividad reciente"
+      },
+      "status": {
+        "active": "Activa",
+        "paused": "Pausada",
+        "failed": "Fallida",
+        "in_setup": "En Configuración",
+        "pending_review": "En Revisión",
+        "draft": "Borrador",
+        "archived": "Archivada"
+      },
+      "timeAgo": {
+        "now": "Ahora",
+        "minutes": "Hace {count}m",
+        "hours": "Hace {count}h",
+        "days": "Hace {count}d"
+      }
+    },
+    "notifications": {
+      "title": "Notificaciones",
+      "markAllRead": "Marcar todas como leídas",
+      "empty": "No tienes notificaciones",
+      "unreadCount": "{count} sin leer"
     }
   },
   "common": {
