@@ -71,7 +71,11 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
   3. User can navigate to an automation detail page and see 3 KPI cards (metric count, hours saved, monthly charge) for that automation
   4. Automation detail page shows an activity timeline of the last 20 executions and a weekly bar chart of the last 4 weeks
   5. Pause, resume, and cancel buttons appear on the detail view in the correct states (pause for active, resume/cancel for paused) — buttons are visible UI with no Stripe wiring
-**Plans**: TBD
+**Plans**: 4 plans
+  - [ ] 09-01-PLAN.md — i18n keys (EN/ES), TypeScript types, and Supabase query functions
+  - [ ] 09-02-PLAN.md — Automations list page with filter tabs, cards, and empty states
+  - [ ] 09-03-PLAN.md — Install Recharts, build WeeklyBarChart and ExecutionTimeline components
+  - [ ] 09-04-PLAN.md — Automation detail page with KPIs, timeline, chart, and lifecycle actions
 
 ### Phase 10: Catalog
 **Goal**: Users can browse the full automation catalog and view complete template details before requesting
@@ -121,7 +125,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 | 6. Password Recovery & Email Verification | v1.0 | 3/3 | Complete | 2026-04-07 |
 | 7. Schema & Seed Data | 3/3 | Complete   | 2026-04-10 | - |
 | 8. Dashboard Home & Notifications | 5/5 | Complete   | 2026-04-13 | - |
-| 9. My Automations | v1.1 | 0/? | Not started | - |
+| 9. My Automations | v1.1 | 0/4 | Planned | - |
 | 10. Catalog | v1.1 | 0/? | Not started | - |
 | 11. Reports & Billing | v1.1 | 0/? | Not started | - |
 | 12. Settings | v1.1 | 0/? | Not started | - |
