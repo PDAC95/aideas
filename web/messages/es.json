@@ -146,6 +146,12 @@
     "greetingWithName": "¡Bienvenido de nuevo, {name}!",
     "subtitle": "Tus automatizaciones están activas. El contenido real del panel llegará en una fase futura.",
     "signOut": "Cerrar sesión",
+    "header": {
+      "search": "Buscar automatizaciones...",
+      "createAgent": "Crear Agente",
+      "inbox": "Buzón",
+      "profile": "Perfil"
+    },
     "nav": {
       "dashboard": "Panel",
       "automations": "Automatizaciones",
@@ -153,7 +159,10 @@
       "chat": "Chat",
       "team": "Equipo",
       "billing": "Facturación",
-      "settings": "Configuración"
+      "settings": "Configuración",
+      "faq": "Preguntas frecuentes",
+      "help": "Ayuda",
+      "contact": "Contacto"
     },
     "home": {
       "greetingMorning": "Buenos días, {name}",
@@ -162,7 +171,8 @@
       "greetingFallback": "Bienvenido de nuevo",
       "noOrganization": "Tu cuenta aún no está vinculada a una organización. Contacta a soporte.",
       "subtitle": "Estas son las cosas más importantes del día",
-      "newAutomation": "+ Nueva automatización",
+      "newAutomation": "Nueva automatización",
+      "newAutomationShort": "Nueva",
       "kpi": {
         "activeAutomations": "Automatizaciones activas",
         "tasksThisWeek": "Tareas esta semana",

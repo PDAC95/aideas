@@ -1,8 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { Plus } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { getOrgId, fetchDashboardData } from "@/lib/dashboard/queries";
 import { KpiCards } from "@/components/dashboard/kpi-cards";
 import { AutomationList } from "@/components/dashboard/automation-list";
@@ -157,7 +157,7 @@ export default async function DashboardPage() {
   return (
     <div>
       {/* Row 1: Greeting */}
-      <div className="flex items-start justify-between mb-6 gap-4">
+      <div className="mb-6 flex items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             {greeting}
@@ -166,10 +166,11 @@ export default async function DashboardPage() {
         </div>
         <Link
           href="/dashboard/catalog"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors shrink-0"
+          className="shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-purple-600 px-3 py-2 text-sm font-medium text-white hover:bg-purple-700 transition-colors"
         >
           <Plus className="h-4 w-4" />
-          {t("newAutomation")}
+          <span className="hidden sm:inline">{t("newAutomation")}</span>
+          <span className="sm:hidden">{t("newAutomationShort")}</span>
         </Link>
       </div>
 

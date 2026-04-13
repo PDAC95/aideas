@@ -146,6 +146,12 @@
     "greetingWithName": "Welcome back, {name}!",
     "subtitle": "Your automations are running. Real dashboard content comes in a future phase.",
     "signOut": "Sign out",
+    "header": {
+      "search": "Search automations...",
+      "createAgent": "Create Agent",
+      "inbox": "Inbox",
+      "profile": "Profile"
+    },
     "nav": {
       "dashboard": "Dashboard",
       "automations": "Automations",
@@ -153,7 +159,10 @@
       "chat": "Chat",
       "team": "Team",
       "billing": "Billing",
-      "settings": "Settings"
+      "settings": "Settings",
+      "faq": "FAQ",
+      "help": "Help",
+      "contact": "Contact"
     },
     "home": {
       "greetingMorning": "Good morning, {name}",
@@ -162,7 +171,8 @@
       "greetingFallback": "Welcome back",
       "noOrganization": "Your account is not linked to an organization yet. Please contact support.",
       "subtitle": "Here are the most important things for the day",
-      "newAutomation": "+ New automation",
+      "newAutomation": "New automation",
+      "newAutomationShort": "New",
       "kpi": {
         "activeAutomations": "Active automations",
         "tasksThisWeek": "Tasks this week",
