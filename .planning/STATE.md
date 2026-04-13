@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Core Dashboard Experience
 status: unknown
-last_updated: "2026-04-10T14:40:57.513Z"
+last_updated: "2026-04-13T18:08:14.190Z"
 progress:
-  total_phases: 1
-  completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
+  total_phases: 2
+  completed_phases: 2
+  total_plans: 8
+  completed_plans: 8
 ---
 
 # Project State
@@ -22,10 +22,10 @@ See: .planning/PROJECT.md (updated 2026-04-09)
 
 ## Current Position
 
-Phase: 8 of 12 (Dashboard Home & Notifications) — In Progress
-Plan: 3 of 4 in current phase (08-01, 08-02, 08-03 complete)
-Status: In Progress
-Last activity: 2026-04-10 — Completed quick task 4: Redesign dashboard UI based on reference design (f88e596)
+Phase: 8 of 12 (Dashboard Home & Notifications) — Complete
+Plan: 5 of 5 in current phase (08-01, 08-02, 08-03, 08-04, 08-05 complete)
+Status: Complete
+Last activity: 2026-04-13 — Completed 08-05: Mobile notification popover and greeting CTA button (a0715cc)
 
 Progress: [█████████░░░░░░░░░░░] 43% (9/16 plans — v1.0 complete, v1.1 Phase 07 done, Phase 08 started)
 
@@ -73,6 +73,10 @@ Phase 07-03 decisions (2026-04-10):
 - **hourly_cost=25 as integer dollars** — not Stripe cents; human-entered rate for Phase 11 ROI estimates
 - **in_setup automation has zero executions** — invoice-processing never activated yet, accurate demo state
 
+Phase 08-05 decisions (2026-04-13):
+- **NotificationBell replaces static mobile notification div** — mobile users can now open popover and mark notifications read
+- **Mobile CTA button in greeting row** — purple Link to /dashboard/catalog visible at all viewports; compact label on mobile, full text on sm+
+
 ### Pending Todos
 
 - Run `npx supabase db reset` when Docker Desktop is running to confirm full migration stack + seed apply cleanly (prerequisite before Phase 08).
@@ -93,6 +97,6 @@ Phase 07-03 decisions (2026-04-10):
 
 ## Session Continuity
 
-Last session: 2026-04-10
-Stopped at: Completed quick task 4 — dashboard redesign with purple accent styling, KPI trend indicators, TopAutomationCard gradient, ranked AutomationList, AutomationSuccessRate, AutomationPerformance, enhanced ActivityFeed with icons (41cdcec).
+Last session: 2026-04-13
+Stopped at: Completed 08-05-PLAN.md — mobile NotificationBell popover in nav, purple CTA button in dashboard greeting row.
 Resume file: None

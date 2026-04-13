@@ -28,7 +28,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 **Stripe is OUT OF SCOPE for v1.1.** All payment-related UI uses mock/seed data only.
 
 - [x] **Phase 7: Schema & Seed Data** — Migrate schema for 3 tables and seed 66+ templates + demo org data (completed 2026-04-10)
-- [ ] **Phase 8: Dashboard Home & Notifications** — Personalized landing with KPIs, activity feed, and notification bell
+- [x] **Phase 8: Dashboard Home & Notifications** — Personalized landing with KPIs, activity feed, and notification bell (completed 2026-04-13)
 - [ ] **Phase 9: My Automations** — Full automation inventory with filterable list, detail views, and lifecycle action buttons
 - [ ] **Phase 10: Catalog** — Browse 66+ templates with industry/category filters and template detail pages
 - [ ] **Phase 11: Reports & Billing** — Impact metrics with charts and billing summary with mock payment history
@@ -120,7 +120,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 | 5. User Login | v1.0 | 2/2 | Complete | 2026-03-31 |
 | 6. Password Recovery & Email Verification | v1.0 | 3/3 | Complete | 2026-04-07 |
 | 7. Schema & Seed Data | 3/3 | Complete   | 2026-04-10 | - |
-| 8. Dashboard Home & Notifications | 3/4 | In Progress|  | - |
+| 8. Dashboard Home & Notifications | 5/5 | Complete   | 2026-04-13 | - |
 | 9. My Automations | v1.1 | 0/? | Not started | - |
 | 10. Catalog | v1.1 | 0/? | Not started | - |
 | 11. Reports & Billing | v1.1 | 0/? | Not started | - |
