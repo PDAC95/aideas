@@ -30,7 +30,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 - [x] **Phase 7: Schema & Seed Data** — Migrate schema for 3 tables and seed 66+ templates + demo org data (completed 2026-04-10)
 - [x] **Phase 8: Dashboard Home & Notifications** — Personalized landing with KPIs, activity feed, and notification bell (completed 2026-04-13)
 - [x] **Phase 9: My Automations** — Full automation inventory with filterable list, detail views, and lifecycle action buttons (completed 2026-04-14)
-- [ ] **Phase 10: Catalog** — Browse 66+ templates with industry/category filters and template detail pages
+- [x] **Phase 10: Catalog** — Browse 66+ templates with industry/category filters and template detail pages (completed 2026-04-14)
 - [ ] **Phase 11: Reports & Billing** — Impact metrics with charts and billing summary with mock payment history
 - [ ] **Phase 12: Settings** — Profile, preferences (language, hourly cost), and security management
 
@@ -126,6 +126,6 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 | 7. Schema & Seed Data | 3/3 | Complete   | 2026-04-10 | - |
 | 8. Dashboard Home & Notifications | 5/5 | Complete   | 2026-04-13 | - |
 | 9. My Automations | 4/4 | Complete   | 2026-04-14 | - |
-| 10. Catalog | 1/3 | In Progress|  | - |
+| 10. Catalog | 3/3 | Complete   | 2026-04-14 | - |
 | 11. Reports & Billing | v1.1 | 0/? | Not started | - |
 | 12. Settings | v1.1 | 0/? | Not started | - |

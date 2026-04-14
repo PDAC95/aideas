@@ -37,7 +37,7 @@ Requirements for Core Dashboard Experience. Each maps to roadmap phases.
 - [x] **CATL-01**: User can browse catalog grid with industry chip filters (Todas, Retail, Salud, Legal, Inmobiliaria, Restaurantes)
 - [x] **CATL-02**: User can filter by category tabs (Mas populares, Ventas, Marketing, Atencion al cliente, Documentos, Productividad, Reportes, Agentes IA)
 - [x] **CATL-03**: User can view template detail page with description, connected apps, impact text, setup time, pricing
-- [ ] **CATL-04**: User sees "Solicitar esta automatizacion" button (UI only — Stripe Checkout wired in future milestone)
+- [x] **CATL-04**: User sees "Solicitar esta automatizacion" button (UI only — Stripe Checkout wired in future milestone)
 
 ### Reports
 
@@ -142,7 +142,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CATL-01 | Phase 10 | Complete |
 | CATL-02 | Phase 10 | Complete |
 | CATL-03 | Phase 10 | Complete |
-| CATL-04 | Phase 10 | Pending |
+| CATL-04 | Phase 10 | Complete |
 | REPT-01 | Phase 11 | Pending |
 | REPT-02 | Phase 11 | Pending |
 | REPT-03 | Phase 11 | Pending |

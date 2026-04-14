@@ -22,12 +22,12 @@ See: .planning/PROJECT.md (updated 2026-04-09)
 
 ## Current Position
 
-Phase: 10 of 12 (Catalog) — In Progress
-Plan: 1 of 3 in current phase (10-01 complete)
-Status: In Progress
-Last activity: 2026-04-14 — Completed 10-01: Catalog data foundation — CatalogTemplate types, fetchCatalogTemplates/fetchTemplateBySlug queries, dashboard.catalog i18n (bcf92e4, 2433a01)
+Phase: 10 of 12 (Catalog) — Complete
+Plan: 3 of 3 in current phase (10-01, 10-02, 10-03 complete)
+Status: In Progress (Phase 11 next)
+Last activity: 2026-04-14 — Completed 10-03: Template detail page at /dashboard/catalog/[slug] with hero, content sections, CatalogRequestButton (a0471f6)
 
-Progress: [█████████████░░░░░░░] 62% (14/21 plans — v1.0 complete, v1.1 Phase 07 done, Phase 08 done, Phase 09 done, Phase 10 1/3 done)
+Progress: [███████████████░░░░░] 71% (15/21 plans — v1.0 complete, v1.1 Phase 07 done, Phase 08 done, Phase 09 done, Phase 10 complete)
 
 ## Accumulated Context
 
@@ -98,6 +98,15 @@ Phase 09-04 decisions (2026-04-14):
 - **Optimistic status rollback** — StatusBadge receives optimisticStatus state; reverts to server status on action error
 - [Phase 10-catalog]: fetchTemplateBySlug returns null on error (not throw) — appropriate for 404 handling on detail page
 - [Phase 10-catalog]: ES message key uses 'catalog' (same as EN) not 'catalogo' — next-intl uses same key in all locales, only values differ
+- [Phase 10-03]: CatalogRequestButton co-located in [slug] directory — single-use component, no shared components needed
+- [Phase 10-03]: State-based toast (useState/useEffect) used instead of sonner (not in package.json) or window.alert()
+- [Phase 10-03]: APP_COLORS duplicated from automation-card.tsx per plan recommendation — YAGNI, single consumer
+
+Phase 10-02 decisions (2026-04-14):
+- **CatalogCard receives pre-formatted strings** — no i18n or Intl calls inside the pure display component; parent CatalogClient handles formatting
+- **mas_populares tab maps to is_featured=true** — not a DB category value; consistent with Phase 07 decision
+- **Template name key split pattern** — stored key 'templates.{slug_snake}.name' split on '.', index 1 extracted, tTemplates(slugSnake+'.name') called in RSC
+- **No Suspense boundary on CatalogClient** — uses useState initialized from RSC props (not useSearchParams), so no async boundary needed
 
 ### Pending Todos
 
@@ -120,5 +129,5 @@ Phase 09-04 decisions (2026-04-14):
 ## Session Continuity
 
 Last session: 2026-04-14
-Stopped at: Completed 10-01-PLAN.md — catalog data foundation with CatalogTemplate types, query functions, and i18n keys.
+Stopped at: Completed 10-03-PLAN.md — template detail page at /dashboard/catalog/[slug] with hero, content sections, and CatalogRequestButton.
 Resume file: None
