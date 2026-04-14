@@ -236,6 +236,72 @@
       "markAllRead": "Marcar todas como leídas",
       "empty": "No tienes notificaciones",
       "unreadCount": "{count} sin leer"
+    },
+    "automations": {
+      "title": "Mis Automatizaciones",
+      "count": "{count} automatizaciones",
+      "count_one": "{count} automatizacion",
+      "filter": {
+        "all": "Todas",
+        "active": "Activas",
+        "in_setup": "En Setup",
+        "paused": "Pausadas"
+      },
+      "card": {
+        "monthlyMetric": "{count} este mes",
+        "monthlyPrice": "{price}/mes",
+        "configuring": "Configurando...",
+        "noData": "---"
+      },
+      "status": {
+        "active": "Activa",
+        "paused": "Pausada",
+        "in_setup": "En Setup",
+        "failed": "Fallida"
+      },
+      "empty": {
+        "title": "Aun no tienes automatizaciones",
+        "cta": "Explorar catalogo"
+      },
+      "emptyFilter": {
+        "active": "No tienes automatizaciones activas",
+        "in_setup": "No tienes automatizaciones en configuracion",
+        "paused": "No tienes automatizaciones pausadas"
+      },
+      "detail": {
+        "back": "Mis Automatizaciones",
+        "kpi": {
+          "metricCount": "{count} {label}",
+          "hoursSaved": "Horas ahorradas",
+          "monthlyCharge": "Cargo mensual"
+        },
+        "timeline": {
+          "title": "Actividad Reciente",
+          "empty": "Aun no hay ejecuciones registradas",
+          "duration": "{seconds}s",
+          "success": "Exitoso",
+          "error": "Error"
+        },
+        "chart": {
+          "title": "Ejecuciones Semanales",
+          "empty": "No hay datos disponibles"
+        },
+        "setupMessage": "Esta automatizacion esta siendo configurada. Te notificaremos cuando este lista."
+      },
+      "actions": {
+        "pause": "Pausar",
+        "resume": "Reanudar",
+        "cancel": "Cancelar",
+        "pauseSuccess": "Automatizacion pausada",
+        "resumeSuccess": "Automatizacion reanudada",
+        "cancelSuccess": "Automatizacion cancelada"
+      },
+      "cancelDialog": {
+        "title": "Cancelar automatizacion?",
+        "description": "Esta accion no se puede deshacer. La automatizacion sera desactivada permanentemente.",
+        "back": "Volver",
+        "confirm": "Si, cancelar"
+      }
     }
   },
   "common": {

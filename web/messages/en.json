@@ -236,6 +236,72 @@
       "markAllRead": "Mark all as read",
       "empty": "No notifications",
       "unreadCount": "{count} unread"
+    },
+    "automations": {
+      "title": "My Automations",
+      "count": "{count} automations",
+      "count_one": "{count} automation",
+      "filter": {
+        "all": "All",
+        "active": "Active",
+        "in_setup": "In Setup",
+        "paused": "Paused"
+      },
+      "card": {
+        "monthlyMetric": "{count} this month",
+        "monthlyPrice": "{price}/mo",
+        "configuring": "Configuring...",
+        "noData": "---"
+      },
+      "status": {
+        "active": "Active",
+        "paused": "Paused",
+        "in_setup": "In Setup",
+        "failed": "Failed"
+      },
+      "empty": {
+        "title": "You don't have any automations yet",
+        "cta": "Explore catalog"
+      },
+      "emptyFilter": {
+        "active": "You don't have active automations",
+        "in_setup": "You don't have automations in setup",
+        "paused": "You don't have paused automations"
+      },
+      "detail": {
+        "back": "My Automations",
+        "kpi": {
+          "metricCount": "{count} {label}",
+          "hoursSaved": "Hours saved",
+          "monthlyCharge": "Monthly charge"
+        },
+        "timeline": {
+          "title": "Recent Activity",
+          "empty": "No executions recorded yet",
+          "duration": "{seconds}s",
+          "success": "Success",
+          "error": "Error"
+        },
+        "chart": {
+          "title": "Weekly Executions",
+          "empty": "No data available"
+        },
+        "setupMessage": "This automation is being configured. We'll notify you when it's ready."
+      },
+      "actions": {
+        "pause": "Pause",
+        "resume": "Resume",
+        "cancel": "Cancel",
+        "pauseSuccess": "Automation paused",
+        "resumeSuccess": "Automation resumed",
+        "cancelSuccess": "Automation cancelled"
+      },
+      "cancelDialog": {
+        "title": "Cancel automation?",
+        "description": "This action cannot be undone. The automation will be permanently deactivated.",
+        "back": "Go back",
+        "confirm": "Yes, cancel"
+      }
     }
   },
   "common": {
