@@ -81,3 +81,25 @@ export interface WeeklyChartData {
   week: string; // display label like "W1", "W2"
   count: number;
 }
+
+export interface CatalogTemplate {
+  id: string;
+  name: string;           // i18n key: "templates.{slug_snake}.name"
+  slug: string;
+  category: string;
+  icon: string;
+  setup_price: number;    // integer cents
+  monthly_price: number;  // integer cents
+  industry_tags: string[] | null;
+  connected_apps: string[] | null;
+  is_featured: boolean;
+  sort_order: number;
+}
+
+export interface CatalogTemplateDetail extends CatalogTemplate {
+  description: string;           // i18n key: "templates.{slug_snake}.description"
+  typical_impact_text: string;   // i18n key: "templates.{slug_snake}.impact"
+  setup_time_days: number;
+  avg_minutes_per_task: number;
+  activity_metric_label: string; // i18n key: "templates.{slug_snake}.metric_label"
+}

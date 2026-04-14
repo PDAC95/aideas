@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import type { DashboardAutomation, DashboardExecution, DashboardNotification, KpiData, AutomationsPageAutomation, AutomationDetailData, AutomationExecutionEntry, WeeklyChartData } from "./types";
+import type { DashboardAutomation, DashboardExecution, DashboardNotification, KpiData, AutomationsPageAutomation, AutomationDetailData, AutomationExecutionEntry, WeeklyChartData, CatalogTemplate, CatalogTemplateDetail } from "./types";
 
 /**
  * Get the user's organization_id from organization_members table.
@@ -321,4 +321,49 @@ export async function fetchAutomationDetail(automationId: string, orgId: string)
   const hoursSaved = Math.round((monthlyMetricCount * avgMinutes) / 60 * 10) / 10;
 
   return { automation, executions, weeklyData, monthlyMetricCount, hoursSaved };
+}
+
+/**
+ * Fetch all active catalog templates sorted by sort_order.
+ * Returns fields needed for the catalog grid cards.
+ */
+export async function fetchCatalogTemplates(): Promise<CatalogTemplate[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("automation_templates")
+    .select(`
+      id, name, slug, category, icon,
+      setup_price, monthly_price,
+      industry_tags, connected_apps,
+      is_featured, sort_order
+    `)
+    .eq("is_active", true)
+    .order("sort_order", { ascending: true });
+
+  if (error) throw error;
+  return (data ?? []) as unknown as CatalogTemplate[];
+}
+
+/**
+ * Fetch a single active catalog template by slug.
+ * Returns all detail fields for the template detail page.
+ * Returns null if not found or not active.
+ */
+export async function fetchTemplateBySlug(slug: string): Promise<CatalogTemplateDetail | null> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("automation_templates")
+    .select(`
+      id, name, slug, description, category, icon,
+      setup_price, monthly_price, setup_time_days,
+      industry_tags, connected_apps,
+      typical_impact_text, avg_minutes_per_task, activity_metric_label,
+      is_featured, sort_order
+    `)
+    .eq("slug", slug)
+    .eq("is_active", true)
+    .single();
+
+  if (error) return null;
+  return data as unknown as CatalogTemplateDetail;
 }
