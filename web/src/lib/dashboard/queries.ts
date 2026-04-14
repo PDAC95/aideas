@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import type { DashboardAutomation, DashboardExecution, DashboardNotification, KpiData } from "./types";
+import type { DashboardAutomation, DashboardExecution, DashboardNotification, KpiData, AutomationsPageAutomation, AutomationDetailData, AutomationExecutionEntry, WeeklyChartData } from "./types";
 
 /**
  * Get the user's organization_id from organization_members table.
@@ -138,4 +138,187 @@ export async function fetchDashboardData(userId: string, orgId: string) {
   }
 
   return { automations, executions, notifications, kpis };
+}
+
+/**
+ * Group executions into 4 weekly buckets.
+ * W1 = oldest week, W4 = most recent week.
+ */
+function groupByWeek(executions: { started_at: string }[], now: Date): WeeklyChartData[] {
+  const buckets: WeeklyChartData[] = [
+    { week: "W1", count: 0 },
+    { week: "W2", count: 0 },
+    { week: "W3", count: 0 },
+    { week: "W4", count: 0 },
+  ];
+
+  const nowMs = now.getTime();
+
+  executions.forEach((exec) => {
+    const execMs = new Date(exec.started_at).getTime();
+    const daysAgo = (nowMs - execMs) / (24 * 60 * 60 * 1000);
+    // W4 = 0-7 days ago, W3 = 7-14 days ago, W2 = 14-21 days ago, W1 = 21-28 days ago
+    if (daysAgo < 7) {
+      buckets[3].count += 1;
+    } else if (daysAgo < 14) {
+      buckets[2].count += 1;
+    } else if (daysAgo < 21) {
+      buckets[1].count += 1;
+    } else {
+      buckets[0].count += 1;
+    }
+  });
+
+  return buckets;
+}
+
+/**
+ * Fetch automations for the My Automations list page.
+ * Returns automations with template data and monthly execution counts.
+ */
+export async function fetchAutomationsPage(orgId: string): Promise<AutomationsPageAutomation[]> {
+  const supabase = await createClient();
+
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+
+  // 1. Fetch automations with template join
+  const { data: automationsData, error: automationsError } = await supabase
+    .from("automations")
+    .select(`
+      id, name, status, last_run_at,
+      template:automation_templates(
+        category,
+        connected_apps,
+        activity_metric_label,
+        avg_minutes_per_task,
+        monthly_price
+      )
+    `)
+    .eq("organization_id", orgId)
+    .is("deleted_at", null)
+    .not("status", "eq", "archived");
+
+  if (automationsError) throw automationsError;
+
+  const automations = (automationsData ?? []) as unknown as AutomationsPageAutomation[];
+  const orgAutomationIds = automations.map((a) => a.id);
+
+  // 2. Fetch monthly execution counts in parallel (scoped to org automation IDs)
+  let monthlyCounts = new Map<string, number>();
+  if (orgAutomationIds.length > 0) {
+    const { data: monthlyExecs } = await supabase
+      .from("automation_executions")
+      .select("automation_id")
+      .eq("status", "success")
+      .gte("started_at", monthStart)
+      .in("automation_id", orgAutomationIds);
+
+    (monthlyExecs ?? []).forEach((e: any) => {
+      monthlyCounts.set(e.automation_id, (monthlyCounts.get(e.automation_id) ?? 0) + 1);
+    });
+  }
+
+  // 3. Attach monthly_execution_count to each automation
+  automations.forEach((a) => {
+    a.monthly_execution_count = monthlyCounts.get(a.id) ?? 0;
+  });
+
+  // 4. Sort: active first, in_setup second, paused third, then alphabetical within groups
+  const STATUS_ORDER: Record<string, number> = {
+    active: 0,
+    in_setup: 1,
+    paused: 2,
+    pending_review: 3,
+    failed: 4,
+    draft: 5,
+    archived: 6,
+  };
+
+  automations.sort((a, b) => {
+    const orderDiff = (STATUS_ORDER[a.status] ?? 99) - (STATUS_ORDER[b.status] ?? 99);
+    if (orderDiff !== 0) return orderDiff;
+    return a.name.localeCompare(b.name);
+  });
+
+  return automations;
+}
+
+/**
+ * Fetch full detail data for a single automation.
+ * Returns automation, last 20 executions, weekly chart data, monthly metric count, and hours saved.
+ */
+export async function fetchAutomationDetail(automationId: string, orgId: string): Promise<{
+  automation: AutomationDetailData;
+  executions: AutomationExecutionEntry[];
+  weeklyData: WeeklyChartData[];
+  monthlyMetricCount: number;
+  hoursSaved: number;
+}> {
+  const supabase = await createClient();
+
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+  const fourWeeksAgo = new Date(now.getTime() - 28 * 24 * 60 * 60 * 1000).toISOString();
+
+  // Run all 4 queries in parallel
+  const [automationResult, executionsResult, weeklyExecsResult, monthlyCountResult] =
+    await Promise.all([
+      // 1. Single automation with template join
+      supabase
+        .from("automations")
+        .select(`
+          id, name, status,
+          template:automation_templates(
+            category,
+            connected_apps,
+            activity_metric_label,
+            avg_minutes_per_task,
+            monthly_price
+          )
+        `)
+        .eq("id", automationId)
+        .eq("organization_id", orgId)
+        .single(),
+
+      // 2. Last 20 executions
+      supabase
+        .from("automation_executions")
+        .select("id, status, started_at, completed_at, duration_ms, error_message")
+        .eq("automation_id", automationId)
+        .order("started_at", { ascending: false })
+        .limit(20),
+
+      // 3. 28-day executions for weekly chart (success only)
+      supabase
+        .from("automation_executions")
+        .select("started_at")
+        .eq("automation_id", automationId)
+        .eq("status", "success")
+        .gte("started_at", fourWeeksAgo),
+
+      // 4. Monthly metric count (success only)
+      supabase
+        .from("automation_executions")
+        .select("*", { count: "exact", head: true })
+        .eq("automation_id", automationId)
+        .eq("status", "success")
+        .gte("started_at", monthStart),
+    ]);
+
+  if (automationResult.error) throw automationResult.error;
+
+  const automation = automationResult.data as unknown as AutomationDetailData;
+  const executions = (executionsResult.data ?? []) as unknown as AutomationExecutionEntry[];
+  const weeklyExecs = (weeklyExecsResult.data ?? []) as { started_at: string }[];
+  const monthlyMetricCount = monthlyCountResult.count ?? 0;
+
+  // Compute weekly chart data
+  const weeklyData = groupByWeek(weeklyExecs, now);
+
+  // Compute hours saved: monthly count * avg_minutes_per_task / 60 (1 decimal)
+  const avgMinutes = automation.template?.avg_minutes_per_task ?? 0;
+  const hoursSaved = Math.round((monthlyMetricCount * avgMinutes) / 60 * 10) / 10;
+
+  return { automation, executions, weeklyData, monthlyMetricCount, hoursSaved };
 }
