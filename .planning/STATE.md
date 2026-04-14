@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Core Dashboard Experience
 status: unknown
-last_updated: "2026-04-13T18:08:14.190Z"
+last_updated: "2026-04-14T12:53:44.690Z"
 progress:
-  total_phases: 2
+  total_phases: 3
   completed_phases: 2
-  total_plans: 8
-  completed_plans: 8
+  total_plans: 12
+  completed_plans: 11
 ---
 
 # Project State
@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-04-09)
 ## Current Position
 
 Phase: 9 of 12 (My Automations) — In Progress
-Plan: 1 of 5 in current phase (09-01 complete)
+Plan: 3 of 5 in current phase (09-01, 09-02, 09-03 complete)
 Status: In Progress
-Last activity: 2026-04-14 — Completed 09-01: My Automations data foundation — types, queries, i18n (de45edc)
+Last activity: 2026-04-14 — Completed 09-03: Recharts WeeklyBarChart and ExecutionTimeline visualization components (82d82c9)
 
-Progress: [█████████░░░░░░░░░░░] 47% (10/21 plans — v1.0 complete, v1.1 Phase 07 done, Phase 08 done, Phase 09 started)
+Progress: [██████████░░░░░░░░░░] 52% (12/21 plans — v1.0 complete, v1.1 Phase 07 done, Phase 08 done, Phase 09 3/5 done)
 
 ## Accumulated Context
 
@@ -83,6 +83,13 @@ Phase 09-01 decisions (2026-04-14):
 - **groupByWeek uses day-offset buckets (0-7 = W4 = most recent)** — predictable 4-bucket chart labels for detail page
 - **hoursSaved = monthlyMetricCount * avg_minutes_per_task / 60 rounded to 1 decimal** — consistent with 08-01 KPI pattern
 
+Phase 09-03 decisions (2026-04-14):
+- **WeeklyBarChart is "use client" + next/dynamic ssr:false required** — Recharts requires browser APIs; JSDoc documents requirement for Plan 04 consumer
+- **ExecutionTimeline is pure display component (no use client)** — parent RSC pre-computes timeAgo and durationLabel strings (extends 08-02 pattern)
+- **Purple-500 (#a855f7) bar fill** — matches existing dashboard accent theme
+- [Phase 09-02]: AutomationsFilterTabs uses router.push for tab navigation to keep URL-driven state while staying on same page context
+- [Phase 09-02]: AutomationCard receives locale from server for Intl.NumberFormat to avoid hydration mismatches
+
 ### Pending Todos
 
 - Run `npx supabase db reset` when Docker Desktop is running to confirm full migration stack + seed apply cleanly (prerequisite before Phase 08).
@@ -104,5 +111,5 @@ Phase 09-01 decisions (2026-04-14):
 ## Session Continuity
 
 Last session: 2026-04-14
-Stopped at: Completed 09-01-PLAN.md — data foundation for My Automations (types, queries, i18n EN/ES).
+Stopped at: Completed 09-03-PLAN.md — visualization components (WeeklyBarChart + ExecutionTimeline).
 Resume file: None
