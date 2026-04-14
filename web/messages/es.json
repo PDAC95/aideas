@@ -302,6 +302,43 @@
         "back": "Volver",
         "confirm": "Si, cancelar"
       }
+    },
+    "catalog": {
+      "title": "Catálogo de automatizaciones",
+      "subtitle": "Mostrando {filtered} de {total}",
+      "searchPlaceholder": "Buscar automatizaciones...",
+      "clearFilters": "Limpiar filtros",
+      "popularBadge": "Popular",
+      "emptyTitle": "No hay automatizaciones para estos filtros",
+      "emptyCta": "Limpiar filtros",
+      "back": "Volver al catálogo",
+      "requestButton": "Solicitar esta automatización",
+      "requestedToast": "¡Nos pondremos en contacto pronto!",
+      "setupTime": "Tiempo de configuración: {days} días hábiles",
+      "setupPrice": "Configuración: {price}",
+      "monthlyPrice": "{price}/mes",
+      "connectedApps": "Aplicaciones conectadas",
+      "impact": "Impacto típico",
+      "description": "Descripción",
+      "categories": {
+        "all": "Todas",
+        "mas_populares": "Más populares",
+        "sales": "Ventas",
+        "marketing": "Marketing",
+        "customer_service": "Atención al cliente",
+        "documents": "Documentos",
+        "productivity": "Productividad",
+        "reports": "Reportes",
+        "ai_agents": "Agentes IA"
+      },
+      "industries": {
+        "all": "Todas",
+        "retail": "Retail",
+        "salud": "Salud",
+        "legal": "Legal",
+        "inmobiliaria": "Inmobiliaria",
+        "restaurantes": "Restaurantes"
+      }
     }
   },
   "common": {
