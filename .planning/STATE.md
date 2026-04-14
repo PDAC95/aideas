@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Core Dashboard Experience
 status: unknown
-last_updated: "2026-04-14T13:02:15.318Z"
+last_updated: "2026-04-14T17:00:59.535Z"
 progress:
-  total_phases: 3
+  total_phases: 4
   completed_phases: 3
-  total_plans: 12
-  completed_plans: 12
+  total_plans: 15
+  completed_plans: 13
 ---
 
 # Project State
@@ -22,12 +22,12 @@ See: .planning/PROJECT.md (updated 2026-04-09)
 
 ## Current Position
 
-Phase: 9 of 12 (My Automations) — In Progress
-Plan: 4 of 5 in current phase (09-01, 09-02, 09-03, 09-04 complete)
+Phase: 10 of 12 (Catalog) — In Progress
+Plan: 1 of 3 in current phase (10-01 complete)
 Status: In Progress
-Last activity: 2026-04-14 — Completed 09-04: Automation detail page at /dashboard/automations/[id] with KPI cards, timeline, bar chart, and lifecycle actions (3993fd1)
+Last activity: 2026-04-14 — Completed 10-01: Catalog data foundation — CatalogTemplate types, fetchCatalogTemplates/fetchTemplateBySlug queries, dashboard.catalog i18n (bcf92e4, 2433a01)
 
-Progress: [████████████░░░░░░░░] 57% (13/21 plans — v1.0 complete, v1.1 Phase 07 done, Phase 08 done, Phase 09 4/5 done)
+Progress: [█████████████░░░░░░░] 62% (14/21 plans — v1.0 complete, v1.1 Phase 07 done, Phase 08 done, Phase 09 done, Phase 10 1/3 done)
 
 ## Accumulated Context
 
@@ -96,6 +96,8 @@ Phase 09-04 decisions (2026-04-14):
 - **Cancel sets status to 'archived'** — redirects to /dashboard/automations after 800ms delay (toast visibility)
 - **in_setup shows '---' for all KPIs** — setup message replaces timeline+chart panel entirely
 - **Optimistic status rollback** — StatusBadge receives optimisticStatus state; reverts to server status on action error
+- [Phase 10-catalog]: fetchTemplateBySlug returns null on error (not throw) — appropriate for 404 handling on detail page
+- [Phase 10-catalog]: ES message key uses 'catalog' (same as EN) not 'catalogo' — next-intl uses same key in all locales, only values differ
 
 ### Pending Todos
 
@@ -118,5 +120,5 @@ Phase 09-04 decisions (2026-04-14):
 ## Session Continuity
 
 Last session: 2026-04-14
-Stopped at: Completed 09-04-PLAN.md — automation detail page at /dashboard/automations/[id].
+Stopped at: Completed 10-01-PLAN.md — catalog data foundation with CatalogTemplate types, query functions, and i18n keys.
 Resume file: None

@@ -126,6 +126,6 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 | 7. Schema & Seed Data | 3/3 | Complete   | 2026-04-10 | - |
 | 8. Dashboard Home & Notifications | 5/5 | Complete   | 2026-04-13 | - |
 | 9. My Automations | 4/4 | Complete   | 2026-04-14 | - |
-| 10. Catalog | v1.1 | 0/? | Not started | - |
+| 10. Catalog | 1/3 | In Progress|  | - |
 | 11. Reports & Billing | v1.1 | 0/? | Not started | - |
 | 12. Settings | v1.1 | 0/? | Not started | - |
