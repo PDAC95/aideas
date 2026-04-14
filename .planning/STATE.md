@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-04-09)
 ## Current Position
 
 Phase: 9 of 12 (My Automations) — In Progress
-Plan: 3 of 5 in current phase (09-01, 09-02, 09-03 complete)
+Plan: 4 of 5 in current phase (09-01, 09-02, 09-03, 09-04 complete)
 Status: In Progress
-Last activity: 2026-04-14 — Completed 09-03: Recharts WeeklyBarChart and ExecutionTimeline visualization components (82d82c9)
+Last activity: 2026-04-14 — Completed 09-04: Automation detail page at /dashboard/automations/[id] with KPI cards, timeline, bar chart, and lifecycle actions (3993fd1)
 
-Progress: [██████████░░░░░░░░░░] 52% (12/21 plans — v1.0 complete, v1.1 Phase 07 done, Phase 08 done, Phase 09 3/5 done)
+Progress: [████████████░░░░░░░░] 57% (13/21 plans — v1.0 complete, v1.1 Phase 07 done, Phase 08 done, Phase 09 4/5 done)
 
 ## Accumulated Context
 
@@ -90,6 +90,13 @@ Phase 09-03 decisions (2026-04-14):
 - [Phase 09-02]: AutomationsFilterTabs uses router.push for tab navigation to keep URL-driven state while staying on same page context
 - [Phase 09-02]: AutomationCard receives locale from server for Intl.NumberFormat to avoid hydration mismatches
 
+Phase 09-04 decisions (2026-04-14):
+- **Server action in separate actions.ts per-route** — client component imports 'use server' functions from dedicated file co-located in [id] directory
+- **AlertDialog from 'radix-ui' top-level re-export** — consistent with existing Popover import pattern in notification-bell.tsx
+- **Cancel sets status to 'archived'** — redirects to /dashboard/automations after 800ms delay (toast visibility)
+- **in_setup shows '---' for all KPIs** — setup message replaces timeline+chart panel entirely
+- **Optimistic status rollback** — StatusBadge receives optimisticStatus state; reverts to server status on action error
+
 ### Pending Todos
 
 - Run `npx supabase db reset` when Docker Desktop is running to confirm full migration stack + seed apply cleanly (prerequisite before Phase 08).
@@ -111,5 +118,5 @@ Phase 09-03 decisions (2026-04-14):
 ## Session Continuity
 
 Last session: 2026-04-14
-Stopped at: Completed 09-03-PLAN.md — visualization components (WeeklyBarChart + ExecutionTimeline).
+Stopped at: Completed 09-04-PLAN.md — automation detail page at /dashboard/automations/[id].
 Resume file: None
