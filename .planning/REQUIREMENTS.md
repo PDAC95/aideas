@@ -25,11 +25,11 @@ Requirements for Core Dashboard Experience. Each maps to roadmap phases.
 
 ### My Automations
 
-- [ ] **AUTO-01**: User can view filterable list of automations (All, Active, In Setup, Paused)
-- [ ] **AUTO-02**: User sees automation cards with name, category, connected apps, status badge, monthly metric, monthly price
-- [ ] **AUTO-03**: User can view automation detail with 3 KPI cards (metric count, hours saved, monthly charge)
-- [ ] **AUTO-04**: User sees activity timeline of last 20 executions in detail view
-- [ ] **AUTO-05**: User sees weekly bar chart of executions (last 4 weeks) in detail view
+- [x] **AUTO-01**: User can view filterable list of automations (All, Active, In Setup, Paused)
+- [x] **AUTO-02**: User sees automation cards with name, category, connected apps, status badge, monthly metric, monthly price
+- [x] **AUTO-03**: User can view automation detail with 3 KPI cards (metric count, hours saved, monthly charge)
+- [x] **AUTO-04**: User sees activity timeline of last 20 executions in detail view
+- [x] **AUTO-05**: User sees weekly bar chart of executions (last 4 weeks) in detail view
 - [ ] **AUTO-06**: User sees pause/resume/cancel buttons (UI only — Stripe wired in future milestone)
 
 ### Catalog
@@ -133,11 +133,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | NOTF-02 | Phase 8 | Complete |
 | NOTF-03 | Phase 8 | Complete |
 | I18N-01 | Phase 8 | Complete |
-| AUTO-01 | Phase 9 | Pending |
-| AUTO-02 | Phase 9 | Pending |
-| AUTO-03 | Phase 9 | Pending |
-| AUTO-04 | Phase 9 | Pending |
-| AUTO-05 | Phase 9 | Pending |
+| AUTO-01 | Phase 9 | Complete |
+| AUTO-02 | Phase 9 | Complete |
+| AUTO-03 | Phase 9 | Complete |
+| AUTO-04 | Phase 9 | Complete |
+| AUTO-05 | Phase 9 | Complete |
 | AUTO-06 | Phase 9 | Pending |
 | CATL-01 | Phase 10 | Pending |
 | CATL-02 | Phase 10 | Pending |

@@ -22,12 +22,12 @@ See: .planning/PROJECT.md (updated 2026-04-09)
 
 ## Current Position
 
-Phase: 8 of 12 (Dashboard Home & Notifications) — Complete
-Plan: 5 of 5 in current phase (08-01, 08-02, 08-03, 08-04, 08-05 complete)
-Status: Complete
-Last activity: 2026-04-13 — Completed 08-05: Mobile notification popover and greeting CTA button (a0715cc)
+Phase: 9 of 12 (My Automations) — In Progress
+Plan: 1 of 5 in current phase (09-01 complete)
+Status: In Progress
+Last activity: 2026-04-14 — Completed 09-01: My Automations data foundation — types, queries, i18n (de45edc)
 
-Progress: [█████████░░░░░░░░░░░] 43% (9/16 plans — v1.0 complete, v1.1 Phase 07 done, Phase 08 started)
+Progress: [█████████░░░░░░░░░░░] 47% (10/21 plans — v1.0 complete, v1.1 Phase 07 done, Phase 08 done, Phase 09 started)
 
 ## Accumulated Context
 
@@ -77,6 +77,12 @@ Phase 08-05 decisions (2026-04-13):
 - **NotificationBell replaces static mobile notification div** — mobile users can now open popover and mark notifications read
 - **Mobile CTA button in greeting row** — purple Link to /dashboard/catalog visible at all viewports; compact label on mobile, full text on sm+
 
+Phase 09-01 decisions (2026-04-14):
+- **monthly_execution_count computed from success-only executions since month start** — mutated onto automation objects, mirrors daily_execution_count pattern from 08-01
+- **STATUS_ORDER map sorts active/in_setup/paused alphabetically within groups** — stable sort for automations list page
+- **groupByWeek uses day-offset buckets (0-7 = W4 = most recent)** — predictable 4-bucket chart labels for detail page
+- **hoursSaved = monthlyMetricCount * avg_minutes_per_task / 60 rounded to 1 decimal** — consistent with 08-01 KPI pattern
+
 ### Pending Todos
 
 - Run `npx supabase db reset` when Docker Desktop is running to confirm full migration stack + seed apply cleanly (prerequisite before Phase 08).
@@ -97,6 +103,6 @@ Phase 08-05 decisions (2026-04-13):
 
 ## Session Continuity
 
-Last session: 2026-04-13
-Stopped at: Completed 08-05-PLAN.md — mobile NotificationBell popover in nav, purple CTA button in dashboard greeting row.
+Last session: 2026-04-14
+Stopped at: Completed 09-01-PLAN.md — data foundation for My Automations (types, queries, i18n EN/ES).
 Resume file: None
