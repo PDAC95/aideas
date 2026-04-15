@@ -3,6 +3,19 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Core Dashboard Experience
 status: unknown
+last_updated: "2026-04-15T20:37:05.736Z"
+progress:
+  total_phases: 6
+  completed_phases: 5
+  total_plans: 21
+  completed_plans: 20
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: Core Dashboard Experience
+status: unknown
 last_updated: "2026-04-15T18:16:38.946Z"
 progress:
   total_phases: 5
@@ -36,11 +49,11 @@ See: .planning/PROJECT.md (updated 2026-04-09)
 ## Current Position
 
 Phase: 12 of 12 (Settings) — In Progress
-Plan: 1 of 3 in current phase (12-01 complete)
-Status: Phase 12 In Progress — 12-01 foundation layer done, 12-02 (Settings UI) next
-Last activity: 2026-04-15 — Completed 12-01: Avatars storage migration, Zod schemas, server actions, query functions, i18n keys (6cdaede)
+Plan: 3 of 3 in current phase (12-01, 12-02, 12-03 complete)
+Status: Phase 12 In Progress — All 3 plans done, awaiting page integration verification
+Last activity: 2026-04-15 — Completed 12-03: Security card with password change, session management (71ba4e3)
 
-Progress: [██████████████████░░] 90% (19/21 plans — v1.0 complete, v1.1 Phases 07-11 done, Phase 12 plan 1/3 done)
+Progress: [████████████████████] 100% (21/21 plans — v1.0 complete, v1.1 Phases 07-12 all done)
 
 ## Accumulated Context
 
@@ -143,6 +156,7 @@ Phase 12-01 decisions (2026-04-15):
 - **serviceRole for org writes** — organizations table has no authenticated UPDATE policy; saveCompanyName and saveHourlyCost use getAdminClient() pattern from auth.ts
 - **switchLocale httpOnly:false** — NEXT_LOCALE cookie must be readable by client-side next-intl for locale switching; httpOnly must be false
 - **Role check before service_role write** — always query organization_members first, verify owner/admin before using admin client for org mutations
+- [Phase 12]: AlertDialog import from radix-ui root: plan specified subpath 'radix-ui/react-alert-dialog' but project uses '{ AlertDialog } from radix-ui' — auto-fixed to match existing usage pattern
 
 ### Pending Todos
 
@@ -165,5 +179,5 @@ Phase 12-01 decisions (2026-04-15):
 ## Session Continuity
 
 Last session: 2026-04-15
-Stopped at: Completed 12-01-PLAN.md — Settings foundation (storage migration, Zod schemas, server actions, query functions, i18n keys)
+Stopped at: Completed 12-03-PLAN.md — Security card with password change and session management (71ba4e3)
 Resume file: None
