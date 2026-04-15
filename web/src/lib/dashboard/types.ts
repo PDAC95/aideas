@@ -103,3 +103,43 @@ export interface CatalogTemplateDetail extends CatalogTemplate {
   avg_minutes_per_task: number;
   activity_metric_label: string; // i18n key: "templates.{slug_snake}.metric_label"
 }
+
+export interface ReportsKpi {
+  tasksCompleted: number;
+  hoursSaved: number;
+  estimatedValue: number | null; // null when org has no hourly_cost
+  tasksChange: number | null;    // percentage change vs previous period (null if prev=0)
+  hoursChange: number | null;
+  valueChange: number | null;
+}
+
+export interface AutomationBreakdownRow {
+  automationId: string;
+  name: string;
+  metricLabel: string;
+  count: number;
+  hoursSaved: number;
+}
+
+export interface ReportsData {
+  kpi: ReportsKpi;
+  weeklyChart: WeeklyChartData[];  // reuses existing WeeklyChartData (8 entries)
+  breakdown: AutomationBreakdownRow[];
+  hourlyCost: number | null;
+}
+
+export interface BillingAutomation {
+  id: string;
+  name: string;
+  status: string;
+  planLabel: string;       // e.g. "Pro", "Business" — derived from pricing_tier
+  monthlyPrice: number;    // in cents (from template.monthly_price)
+}
+
+export interface BillingData {
+  totalMonthlyCents: number;
+  activeCount: number;
+  nextChargeDate: string | null;   // ISO date string from subscriptions.current_period_end
+  automations: BillingAutomation[];
+  hourlyCost: number | null;
+}

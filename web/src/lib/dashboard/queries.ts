@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import type { DashboardAutomation, DashboardExecution, DashboardNotification, KpiData, AutomationsPageAutomation, AutomationDetailData, AutomationExecutionEntry, WeeklyChartData, CatalogTemplate, CatalogTemplateDetail } from "./types";
+import type { DashboardAutomation, DashboardExecution, DashboardNotification, KpiData, AutomationsPageAutomation, AutomationDetailData, AutomationExecutionEntry, WeeklyChartData, CatalogTemplate, CatalogTemplateDetail, ReportsData, ReportsKpi, AutomationBreakdownRow, BillingData, BillingAutomation } from "./types";
 
 /**
  * Get the user's organization_id from organization_members table.
@@ -366,4 +366,292 @@ export async function fetchTemplateBySlug(slug: string): Promise<CatalogTemplate
 
   if (error) return null;
   return data as unknown as CatalogTemplateDetail;
+}
+
+/**
+ * Compute date range start/end/prevStart/prevEnd for report period queries.
+ */
+function getPeriodRange(period: string, now: Date): {
+  start: string;
+  end: string;
+  prevStart: string;
+  prevEnd: string;
+} {
+  const end = now.toISOString();
+
+  if (period === "last_month") {
+    const start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
+    const prevStart = new Date(now.getFullYear(), now.getMonth() - 2, 1);
+    const prevEnd = new Date(now.getFullYear(), now.getMonth() - 1, 0, 23, 59, 59, 999);
+    return {
+      start: start.toISOString(),
+      end: endOfLastMonth.toISOString(),
+      prevStart: prevStart.toISOString(),
+      prevEnd: prevEnd.toISOString(),
+    };
+  } else if (period === "last_3_months") {
+    const start = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+    const prevStart = new Date(now.getTime() - 180 * 24 * 60 * 60 * 1000);
+    const prevEnd = new Date(now.getTime() - 91 * 24 * 60 * 60 * 1000);
+    return {
+      start: start.toISOString(),
+      end,
+      prevStart: prevStart.toISOString(),
+      prevEnd: prevEnd.toISOString(),
+    };
+  } else {
+    // this_month (default)
+    const start = new Date(now.getFullYear(), now.getMonth(), 1);
+    const prevStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const prevEnd = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
+    return {
+      start: start.toISOString(),
+      end,
+      prevStart: prevStart.toISOString(),
+      prevEnd: prevEnd.toISOString(),
+    };
+  }
+}
+
+/**
+ * Group executions into 8 weekly buckets (S1=oldest, S8=most recent).
+ * Uses the last 56 days regardless of selected report period.
+ */
+function groupBy8Weeks(executions: { started_at: string }[], now: Date): WeeklyChartData[] {
+  const buckets: WeeklyChartData[] = Array.from({ length: 8 }, (_, i) => ({
+    week: `S${i + 1}`,
+    count: 0,
+  }));
+  const nowMs = now.getTime();
+  executions.forEach((exec) => {
+    const daysAgo = (nowMs - new Date(exec.started_at).getTime()) / (24 * 60 * 60 * 1000);
+    const bucket = Math.floor(daysAgo / 7);
+    if (bucket >= 0 && bucket < 8) {
+      buckets[7 - bucket].count += 1;
+    }
+  });
+  return buckets;
+}
+
+/**
+ * Fetch org hourly cost from organization settings.
+ * hourly_cost is stored as integer dollars (not cents) per Phase 07-03 decision.
+ */
+async function fetchOrgHourlyCost(orgId: string): Promise<number | null> {
+  const supabase = await createClient();
+  const { data: org } = await supabase
+    .from("organizations")
+    .select("settings")
+    .eq("id", orgId)
+    .single();
+  return (org?.settings as any)?.hourly_cost ?? null;
+}
+
+/**
+ * Fetch reports data for the given org and period.
+ * Returns KPI metrics (tasks, hours, estimated value) with period-over-period changes,
+ * 8-week activity chart data, and per-automation breakdown.
+ * Returns null if the org has no automations (triggers empty state).
+ */
+export async function fetchReportsData(orgId: string, period: string): Promise<ReportsData | null> {
+  const supabase = await createClient();
+  const now = new Date();
+  const { start, end, prevStart, prevEnd } = getPeriodRange(period, now);
+
+  // 1. Fetch org automations with template data
+  const { data: automationsData } = await supabase
+    .from("automations")
+    .select(`
+      id, name,
+      template:automation_templates(avg_minutes_per_task, activity_metric_label)
+    `)
+    .eq("organization_id", orgId);
+
+  const automations = (automationsData ?? []) as unknown as Array<{
+    id: string;
+    name: string;
+    template: { avg_minutes_per_task: number | null; activity_metric_label: string | null } | null;
+  }>;
+
+  const orgAutomationIds = automations.map((a) => a.id);
+  if (orgAutomationIds.length === 0) return null;
+
+  // Build lookup maps
+  const automationsMap = new Map(automations.map((a) => [a.id, a]));
+  const minutesMap = new Map(automations.map((a) => [a.id, a.template?.avg_minutes_per_task ?? 0]));
+
+  // 2. Fetch executions for full window (prevStart to end) and for 8-week chart (last 56 days)
+  const fiftysSixDaysAgo = new Date(now.getTime() - 56 * 24 * 60 * 60 * 1000).toISOString();
+
+  const [periodExecsResult, chartExecsResult, hourlyCost] = await Promise.all([
+    supabase
+      .from("automation_executions")
+      .select("automation_id, started_at, status")
+      .in("automation_id", orgAutomationIds)
+      .eq("status", "success")
+      .gte("started_at", prevStart)
+      .lte("started_at", end),
+
+    supabase
+      .from("automation_executions")
+      .select("started_at")
+      .in("automation_id", orgAutomationIds)
+      .eq("status", "success")
+      .gte("started_at", fiftysSixDaysAgo),
+
+    fetchOrgHourlyCost(orgId),
+  ]);
+
+  const allExecs = (periodExecsResult.data ?? []) as Array<{
+    automation_id: string;
+    started_at: string;
+    status: string;
+  }>;
+
+  // 3. Split executions into current period vs previous period
+  const startMs = new Date(start).getTime();
+  const prevEndMs = new Date(prevEnd).getTime();
+
+  const periodExecs = allExecs.filter((e) => {
+    const t = new Date(e.started_at).getTime();
+    return t >= startMs;
+  });
+  const prevExecs = allExecs.filter((e) => {
+    const t = new Date(e.started_at).getTime();
+    return t <= prevEndMs;
+  });
+
+  // 4. KPI: tasks completed
+  const tasksCompleted = periodExecs.length;
+  const prevTasks = prevExecs.length;
+  const tasksChange = prevTasks > 0
+    ? Math.round(((tasksCompleted - prevTasks) / prevTasks) * 100)
+    : null;
+
+  // 5. KPI: hours saved
+  const totalMinutes = periodExecs.reduce((sum, e) => sum + (minutesMap.get(e.automation_id) ?? 0), 0);
+  const hoursSaved = Math.round((totalMinutes / 60) * 10) / 10;
+
+  const prevMinutes = prevExecs.reduce((sum, e) => sum + (minutesMap.get(e.automation_id) ?? 0), 0);
+  const prevHours = Math.round((prevMinutes / 60) * 10) / 10;
+  const hoursChange = prevHours > 0
+    ? Math.round(((hoursSaved - prevHours) / prevHours) * 100)
+    : null;
+
+  // 6. KPI: estimated value
+  const estimatedValue = hourlyCost != null ? Math.round(hoursSaved * hourlyCost) : null;
+  const prevValue = hourlyCost != null ? Math.round(prevHours * hourlyCost) : null;
+  const valueChange = (prevValue != null && prevValue > 0)
+    ? Math.round(((estimatedValue! - prevValue) / prevValue) * 100)
+    : null;
+
+  const kpi: ReportsKpi = {
+    tasksCompleted,
+    hoursSaved,
+    estimatedValue,
+    tasksChange,
+    hoursChange,
+    valueChange,
+  };
+
+  // 7. 8-week chart
+  const chartExecs = (chartExecsResult.data ?? []) as { started_at: string }[];
+  const weeklyChart = groupBy8Weeks(chartExecs, now);
+
+  // 8. Per-automation breakdown
+  const breakdownMap = new Map<string, { name: string; metricLabel: string; count: number; minutes: number }>();
+  for (const exec of periodExecs) {
+    const auto = automationsMap.get(exec.automation_id);
+    if (!auto) continue;
+    if (!breakdownMap.has(exec.automation_id)) {
+      breakdownMap.set(exec.automation_id, {
+        name: auto.name,
+        metricLabel: auto.template?.activity_metric_label ?? "",
+        count: 0,
+        minutes: 0,
+      });
+    }
+    const entry = breakdownMap.get(exec.automation_id)!;
+    entry.count += 1;
+    entry.minutes += auto.template?.avg_minutes_per_task ?? 0;
+  }
+
+  const breakdown: AutomationBreakdownRow[] = [...breakdownMap.entries()]
+    .map(([automationId, r]) => ({
+      automationId,
+      name: r.name,
+      metricLabel: r.metricLabel,
+      count: r.count,
+      hoursSaved: Math.round((r.minutes / 60) * 10) / 10,
+    }))
+    .sort((a, b) => b.hoursSaved - a.hoursSaved);
+
+  return { kpi, weeklyChart, breakdown, hourlyCost };
+}
+
+/**
+ * Fetch billing data for the given org.
+ * Returns monthly total, per-automation charges, and subscription next charge date.
+ * Returns null if the org has no active/in_setup automations (triggers empty state).
+ */
+export async function fetchBillingData(orgId: string): Promise<BillingData | null> {
+  const supabase = await createClient();
+
+  // 1. Fetch active/in_setup automations with template pricing data
+  const { data: automationsData } = await supabase
+    .from("automations")
+    .select(`
+      id, name, status,
+      template:automation_templates(monthly_price, pricing_tier)
+    `)
+    .eq("organization_id", orgId)
+    .in("status", ["active", "in_setup"]);
+
+  const automations = (automationsData ?? []) as unknown as Array<{
+    id: string;
+    name: string;
+    status: string;
+    template: { monthly_price: number | null; pricing_tier: string | null } | null;
+  }>;
+
+  if (automations.length === 0) return null;
+
+  // 2. Fetch subscription for next charge date and org hourly cost in parallel
+  const [subResult, hourlyCost] = await Promise.all([
+    supabase
+      .from("subscriptions")
+      .select("current_period_end")
+      .eq("organization_id", orgId)
+      .eq("status", "active")
+      .single(),
+    fetchOrgHourlyCost(orgId),
+  ]);
+
+  const nextChargeDate = subResult.data?.current_period_end ?? null;
+
+  // 3. Build BillingAutomation array
+  const billingAutomations: BillingAutomation[] = automations.map((a) => {
+    const tier = a.template?.pricing_tier ?? "starter";
+    const planLabel = tier.charAt(0).toUpperCase() + tier.slice(1);
+    return {
+      id: a.id,
+      name: a.name,
+      status: a.status,
+      planLabel,
+      monthlyPrice: a.template?.monthly_price ?? 0,
+    };
+  });
+
+  // 4. Compute total
+  const totalMonthlyCents = billingAutomations.reduce((sum, a) => sum + a.monthlyPrice, 0);
+  const activeCount = billingAutomations.filter((a) => a.status === "active").length;
+
+  return {
+    totalMonthlyCents,
+    activeCount,
+    nextChargeDate,
+    automations: billingAutomations,
+    hourlyCost,
+  };
 }
