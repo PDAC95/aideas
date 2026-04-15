@@ -35,12 +35,12 @@ See: .planning/PROJECT.md (updated 2026-04-09)
 
 ## Current Position
 
-Phase: 11 of 12 (Reports & Billing) — Complete
-Plan: 3 of 3 in current phase (11-01, 11-02, 11-03 all complete)
-Status: Phase 11 Complete — Phase 12 (Settings & Final Polish) next
-Last activity: 2026-04-15 — Completed 11-03: Billing page (summary card with toast, charges table, payment history with mock data) (ab387a2)
+Phase: 12 of 12 (Settings) — In Progress
+Plan: 1 of 3 in current phase (12-01 complete)
+Status: Phase 12 In Progress — 12-01 foundation layer done, 12-02 (Settings UI) next
+Last activity: 2026-04-15 — Completed 12-01: Avatars storage migration, Zod schemas, server actions, query functions, i18n keys (6cdaede)
 
-Progress: [█████████████████░░░] 86% (18/21 plans — v1.0 complete, v1.1 Phase 07 done, Phase 08 done, Phase 09 done, Phase 10 done, Phase 11 done)
+Progress: [██████████████████░░] 90% (19/21 plans — v1.0 complete, v1.1 Phases 07-11 done, Phase 12 plan 1/3 done)
 
 ## Accumulated Context
 
@@ -138,6 +138,12 @@ Phase 11-01 decisions (2026-04-15):
 - **Null returns signal empty state** — fetchReportsData and fetchBillingData return null (not empty objects) when no automations exist; consistent with fetchTemplateBySlug pattern
 - **Breakdown map keyed by automationId** — correct deduplication for multi-execution automations; automationId field in returned row enables Plan 02 detail page linking
 
+Phase 12-01 decisions (2026-04-15):
+- **Zod v4 .issues[]** — ZodError in Zod v4 uses `.issues` property not `.errors`; all server actions use `parsed.error.issues[0]?.message`
+- **serviceRole for org writes** — organizations table has no authenticated UPDATE policy; saveCompanyName and saveHourlyCost use getAdminClient() pattern from auth.ts
+- **switchLocale httpOnly:false** — NEXT_LOCALE cookie must be readable by client-side next-intl for locale switching; httpOnly must be false
+- **Role check before service_role write** — always query organization_members first, verify owner/admin before using admin client for org mutations
+
 ### Pending Todos
 
 - Run `npx supabase db reset` when Docker Desktop is running to confirm full migration stack + seed apply cleanly (prerequisite before Phase 08).
@@ -159,5 +165,5 @@ Phase 11-01 decisions (2026-04-15):
 ## Session Continuity
 
 Last session: 2026-04-15
-Stopped at: Completed 11-02-PLAN.md — Reports page (period selector, KPI cards, 8-week bar chart, sortable breakdown table)
+Stopped at: Completed 12-01-PLAN.md — Settings foundation (storage migration, Zod schemas, server actions, query functions, i18n keys)
 Resume file: None

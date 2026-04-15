@@ -56,12 +56,12 @@ Requirements for Core Dashboard Experience. Each maps to roadmap phases.
 
 ### Settings
 
-- [ ] **SETT-01**: User can upload and change profile avatar (Supabase Storage)
-- [ ] **SETT-02**: User can edit name and company name
-- [ ] **SETT-03**: User can switch language (Español/English)
-- [ ] **SETT-04**: User can set hourly cost for value estimation
-- [ ] **SETT-05**: User can change password
-- [ ] **SETT-06**: User can see active sessions and close all other sessions
+- [x] **SETT-01**: User can upload and change profile avatar (Supabase Storage)
+- [x] **SETT-02**: User can edit name and company name
+- [x] **SETT-03**: User can switch language (Español/English)
+- [x] **SETT-04**: User can set hourly cost for value estimation
+- [x] **SETT-05**: User can change password
+- [x] **SETT-06**: User can see active sessions and close all other sessions
 
 ### Notifications
 
@@ -152,12 +152,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BILL-02 | Phase 11 | Complete |
 | BILL-03 | Phase 11 | Complete |
 | BILL-04 | Phase 11 | Complete |
-| SETT-01 | Phase 12 | Pending |
-| SETT-02 | Phase 12 | Pending |
-| SETT-03 | Phase 12 | Pending |
-| SETT-04 | Phase 12 | Pending |
-| SETT-05 | Phase 12 | Pending |
-| SETT-06 | Phase 12 | Pending |
+| SETT-01 | Phase 12 | Complete |
+| SETT-02 | Phase 12 | Complete |
+| SETT-03 | Phase 12 | Complete |
+| SETT-04 | Phase 12 | Complete |
+| SETT-05 | Phase 12 | Complete |
+| SETT-06 | Phase 12 | Complete |
 
 **Coverage:**
 - v1.1 requirements: 34 total
