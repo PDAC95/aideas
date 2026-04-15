@@ -51,8 +51,8 @@ Requirements for Core Dashboard Experience. Each maps to roadmap phases.
 
 - [x] **BILL-01**: User sees monthly summary card (total active charges, next charge date)
 - [x] **BILL-02**: User sees per-automation monthly charges table
-- [ ] **BILL-03**: User sees payment history table (from seed/mock data — Stripe API wired later)
-- [ ] **BILL-04**: User sees "Manage payment" button (UI only — Stripe Customer Portal wired later)
+- [x] **BILL-03**: User sees payment history table (from seed/mock data — Stripe API wired later)
+- [x] **BILL-04**: User sees "Manage payment" button (UI only — Stripe Customer Portal wired later)
 
 ### Settings
 
@@ -150,8 +150,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | REPT-05 | Phase 11 | Complete |
 | BILL-01 | Phase 11 | Complete |
 | BILL-02 | Phase 11 | Complete |
-| BILL-03 | Phase 11 | Pending |
-| BILL-04 | Phase 11 | Pending |
+| BILL-03 | Phase 11 | Complete |
+| BILL-04 | Phase 11 | Complete |
 | SETT-01 | Phase 12 | Pending |
 | SETT-02 | Phase 12 | Pending |
 | SETT-03 | Phase 12 | Pending |

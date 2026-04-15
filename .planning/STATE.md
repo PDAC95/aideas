@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-04-09)
 ## Current Position
 
 Phase: 11 of 12 (Reports & Billing) — In Progress
-Plan: 1 of 3 in current phase (11-01 complete)
-Status: In Progress (11-02 Reports page next)
-Last activity: 2026-04-15 — Completed 11-01: Data layer for reports/billing (types, query functions, i18n, nav entry) (17ebc6f)
+Plan: 2 of 3 in current phase (11-01, 11-02 complete; 11-03 next)
+Status: In Progress — 11-03 Billing page next
+Last activity: 2026-04-15 — Completed 11-02: Reports page (period selector, KPI cards, weekly chart, breakdown table) (5eeae5f)
 
-Progress: [████████████████░░░░] 76% (16/21 plans — v1.0 complete, v1.1 Phase 07 done, Phase 08 done, Phase 09 done, Phase 10 done, Phase 11 Plan 01 done)
+Progress: [██████████████████░░] 86% (18/21 plans — v1.0 complete, v1.1 Phase 07 done, Phase 08 done, Phase 09 done, Phase 10 done, Phase 11 done)
 
 ## Accumulated Context
 
@@ -108,6 +108,11 @@ Phase 10-02 decisions (2026-04-14):
 - **Template name key split pattern** — stored key 'templates.{slug_snake}.name' split on '.', index 1 extracted, tTemplates(slugSnake+'.name') called in RSC
 - **No Suspense boundary on CatalogClient** — uses useState initialized from RSC props (not useSearchParams), so no async boundary needed
 
+Phase 11-03 decisions (2026-04-15):
+- **BillingSummaryCard is 'use client'** — toast interactivity requires client state; BillingChargesTable and BillingPaymentHistory are pure display server components
+- **Mock history computed at render** — date arithmetic from new Date() produces current-month-pending + 3-prior-months-paid without DB dependency
+- **Toast uses gray-900 background** — signals "coming soon" for payment portal vs. green success used in CatalogRequestButton
+
 Phase 11-01 decisions (2026-04-15):
 - **groupBy8Weeks always spans last 56 days** — independent of selected report period; period selector controls KPI/breakdown only
 - **fetchOrgHourlyCost shared helper** — extracted for reuse by both fetchReportsData and fetchBillingData
@@ -135,5 +140,5 @@ Phase 11-01 decisions (2026-04-15):
 ## Session Continuity
 
 Last session: 2026-04-15
-Stopped at: Completed 11-01-PLAN.md — data layer for reports/billing (types, query functions, i18n keys, nav entry with BarChart3)
+Stopped at: Completed 11-03-PLAN.md — Billing page (summary card with toast, charges table, payment history with mock data)
 Resume file: None
