@@ -22,12 +22,12 @@ See: .planning/PROJECT.md (updated 2026-04-09)
 
 ## Current Position
 
-Phase: 10 of 12 (Catalog) — Complete
-Plan: 3 of 3 in current phase (10-01, 10-02, 10-03 complete)
-Status: In Progress (Phase 11 next)
-Last activity: 2026-04-14 — Completed 10-03: Template detail page at /dashboard/catalog/[slug] with hero, content sections, CatalogRequestButton (a0471f6)
+Phase: 11 of 12 (Reports & Billing) — In Progress
+Plan: 1 of 3 in current phase (11-01 complete)
+Status: In Progress (11-02 Reports page next)
+Last activity: 2026-04-15 — Completed 11-01: Data layer for reports/billing (types, query functions, i18n, nav entry) (17ebc6f)
 
-Progress: [███████████████░░░░░] 71% (15/21 plans — v1.0 complete, v1.1 Phase 07 done, Phase 08 done, Phase 09 done, Phase 10 complete)
+Progress: [████████████████░░░░] 76% (16/21 plans — v1.0 complete, v1.1 Phase 07 done, Phase 08 done, Phase 09 done, Phase 10 done, Phase 11 Plan 01 done)
 
 ## Accumulated Context
 
@@ -108,6 +108,12 @@ Phase 10-02 decisions (2026-04-14):
 - **Template name key split pattern** — stored key 'templates.{slug_snake}.name' split on '.', index 1 extracted, tTemplates(slugSnake+'.name') called in RSC
 - **No Suspense boundary on CatalogClient** — uses useState initialized from RSC props (not useSearchParams), so no async boundary needed
 
+Phase 11-01 decisions (2026-04-15):
+- **groupBy8Weeks always spans last 56 days** — independent of selected report period; period selector controls KPI/breakdown only
+- **fetchOrgHourlyCost shared helper** — extracted for reuse by both fetchReportsData and fetchBillingData
+- **Null returns signal empty state** — fetchReportsData and fetchBillingData return null (not empty objects) when no automations exist; consistent with fetchTemplateBySlug pattern
+- **Breakdown map keyed by automationId** — correct deduplication for multi-execution automations; automationId field in returned row enables Plan 02 detail page linking
+
 ### Pending Todos
 
 - Run `npx supabase db reset` when Docker Desktop is running to confirm full migration stack + seed apply cleanly (prerequisite before Phase 08).
@@ -128,6 +134,6 @@ Phase 10-02 decisions (2026-04-14):
 
 ## Session Continuity
 
-Last session: 2026-04-14
-Stopped at: Completed 10-02-PLAN.md — catalog browse page with CatalogCard, CatalogClient filter component, and catalog RSC page.
+Last session: 2026-04-15
+Stopped at: Completed 11-01-PLAN.md — data layer for reports/billing (types, query functions, i18n keys, nav entry with BarChart3)
 Resume file: None

@@ -41,16 +41,16 @@ Requirements for Core Dashboard Experience. Each maps to roadmap phases.
 
 ### Reports
 
-- [ ] **REPT-01**: User can select report period (This month, Last month, Last 3 months)
-- [ ] **REPT-02**: User sees 3 impact KPI cards (tasks completed, hours saved, estimated value)
+- [x] **REPT-01**: User can select report period (This month, Last month, Last 3 months)
+- [x] **REPT-02**: User sees 3 impact KPI cards (tasks completed, hours saved, estimated value)
 - [ ] **REPT-03**: User sees weekly activity bar chart (last ~8 weeks)
-- [ ] **REPT-04**: User sees per-automation breakdown table (name, metric label + count, hours saved)
-- [ ] **REPT-05**: Estimated value card shows when org has hourly_cost configured, with link to settings when not set
+- [x] **REPT-04**: User sees per-automation breakdown table (name, metric label + count, hours saved)
+- [x] **REPT-05**: Estimated value card shows when org has hourly_cost configured, with link to settings when not set
 
 ### Billing
 
-- [ ] **BILL-01**: User sees monthly summary card (total active charges, next charge date)
-- [ ] **BILL-02**: User sees per-automation monthly charges table
+- [x] **BILL-01**: User sees monthly summary card (total active charges, next charge date)
+- [x] **BILL-02**: User sees per-automation monthly charges table
 - [ ] **BILL-03**: User sees payment history table (from seed/mock data — Stripe API wired later)
 - [ ] **BILL-04**: User sees "Manage payment" button (UI only — Stripe Customer Portal wired later)
 
@@ -143,13 +143,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CATL-02 | Phase 10 | Complete |
 | CATL-03 | Phase 10 | Complete |
 | CATL-04 | Phase 10 | Complete |
-| REPT-01 | Phase 11 | Pending |
-| REPT-02 | Phase 11 | Pending |
+| REPT-01 | Phase 11 | Complete |
+| REPT-02 | Phase 11 | Complete |
 | REPT-03 | Phase 11 | Pending |
-| REPT-04 | Phase 11 | Pending |
-| REPT-05 | Phase 11 | Pending |
-| BILL-01 | Phase 11 | Pending |
-| BILL-02 | Phase 11 | Pending |
+| REPT-04 | Phase 11 | Complete |
+| REPT-05 | Phase 11 | Complete |
+| BILL-01 | Phase 11 | Complete |
+| BILL-02 | Phase 11 | Complete |
 | BILL-03 | Phase 11 | Pending |
 | BILL-04 | Phase 11 | Pending |
 | SETT-01 | Phase 12 | Pending |
