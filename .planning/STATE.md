@@ -22,12 +22,12 @@ See: .planning/PROJECT.md (updated 2026-04-09)
 
 ## Current Position
 
-Phase: 11 of 12 (Reports & Billing) — In Progress
-Plan: 2 of 3 in current phase (11-01, 11-02 complete; 11-03 next)
-Status: In Progress — 11-03 Billing page next
-Last activity: 2026-04-15 — Completed 11-02: Reports page (period selector, KPI cards, weekly chart, breakdown table) (5eeae5f)
+Phase: 11 of 12 (Reports & Billing) — Complete
+Plan: 3 of 3 in current phase (11-01, 11-02, 11-03 all complete)
+Status: Phase 11 Complete — Phase 12 (Settings & Final Polish) next
+Last activity: 2026-04-15 — Completed 11-03: Billing page (summary card with toast, charges table, payment history with mock data) (ab387a2)
 
-Progress: [█████████████████░░░] 81% (17/21 plans — v1.0 complete, v1.1 Phase 07 done, Phase 08 done, Phase 09 done, Phase 10 done, Phase 11 Plans 01-02 done)
+Progress: [█████████████████░░░] 86% (18/21 plans — v1.0 complete, v1.1 Phase 07 done, Phase 08 done, Phase 09 done, Phase 10 done, Phase 11 done)
 
 ## Accumulated Context
 
