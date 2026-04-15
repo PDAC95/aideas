@@ -367,7 +367,7 @@
         "count": "Cantidad",
         "hoursSaved": "Horas ahorradas",
         "total": "Total",
-        "viewAll": "Ver todas ({count})",
+        "viewAll": "Ver todas",
         "showLess": "Ver menos"
       },
       "empty": {
@@ -406,6 +406,62 @@
         "title": "Sin cargos activos",
         "message": "Activa una automatizacion para ver tu facturacion aqui.",
         "cta": "Ver automatizaciones"
+      }
+    },
+    "settings": {
+      "title": "Configuracion",
+      "subtitle": "Administra tu perfil, preferencias y seguridad",
+      "profile": {
+        "title": "Perfil",
+        "firstName": "Nombre",
+        "lastName": "Apellido",
+        "email": "Correo electronico",
+        "emailHelp": "Tu correo electronico no se puede cambiar aqui",
+        "avatar": "Foto de perfil",
+        "changeAvatar": "Cambiar foto",
+        "removeAvatar": "Eliminar foto",
+        "avatarHelp": "Max 2MB. JPG, PNG o WebP.",
+        "save": "Guardar cambios",
+        "saving": "Guardando...",
+        "saved": "Cambios guardados",
+        "error": "Error al guardar los cambios"
+      },
+      "preferences": {
+        "title": "Preferencias",
+        "language": "Idioma",
+        "languageHelp": "Selecciona el idioma del panel",
+        "hourlyCost": "Costo laboral por hora",
+        "hourlyCostHelp": "Costo laboral por hora estimado para calcular el valor de las automatizaciones en Reportes",
+        "hourlyCostRole": "Solo administradores y propietarios pueden cambiar esto",
+        "companyName": "Nombre de empresa",
+        "companyNameHelp": "Compartido con todos los miembros de la organizacion",
+        "save": "Guardar cambios",
+        "saving": "Guardando...",
+        "saved": "Cambios guardados"
+      },
+      "security": {
+        "title": "Seguridad",
+        "changePassword": "Cambiar contrasena",
+        "currentPassword": "Contrasena actual",
+        "newPassword": "Nueva contrasena",
+        "confirmPassword": "Confirmar nueva contrasena",
+        "passwordMismatch": "Las contrasenas no coinciden",
+        "wrongCurrentPassword": "La contrasena actual es incorrecta",
+        "passwordChanged": "Contrasena actualizada exitosamente",
+        "changePasswordBtn": "Actualizar contrasena",
+        "changingPassword": "Actualizando...",
+        "sessions": "Sesiones activas",
+        "sessionsDescription": "Actualmente tienes sesion iniciada en este dispositivo",
+        "signOutOthers": "Cerrar sesion en otros dispositivos",
+        "signOutOthersConfirmTitle": "Cerrar sesion en todos los otros dispositivos?",
+        "signOutOthersConfirmMessage": "Esto cerrara tu sesion en todos los otros navegadores y dispositivos",
+        "signOutOthersConfirmBtn": "Cerrar otras sesiones",
+        "signOutOthersCancel": "Cancelar",
+        "signOutOthersSuccess": "Sesion cerrada en todos los otros dispositivos"
+      },
+      "languageOptions": {
+        "english": "English",
+        "spanish": "Espanol"
       }
     }
   },

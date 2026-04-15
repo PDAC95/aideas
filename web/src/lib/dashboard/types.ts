@@ -143,3 +143,18 @@ export interface BillingData {
   automations: BillingAutomation[];
   hourlyCost: number | null;
 }
+
+export interface SettingsProfileData {
+  firstName: string | null;
+  lastName: string | null;
+  fullName: string | null;
+  avatarUrl: string | null;
+  email: string;
+}
+
+export interface SettingsOrgData {
+  orgId: string;
+  orgName: string | null;
+  hourlyCost: number | null;
+  role: 'owner' | 'admin' | 'operator' | 'viewer';
+}

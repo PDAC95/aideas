@@ -367,7 +367,7 @@
         "count": "Count",
         "hoursSaved": "Hours saved",
         "total": "Total",
-        "viewAll": "View all ({count})",
+        "viewAll": "View all",
         "showLess": "Show less"
       },
       "empty": {
@@ -406,6 +406,62 @@
         "title": "No active charges",
         "message": "Activate an automation to see your billing here.",
         "cta": "View automations"
+      }
+    },
+    "settings": {
+      "title": "Settings",
+      "subtitle": "Manage your profile, preferences, and security",
+      "profile": {
+        "title": "Profile",
+        "firstName": "First name",
+        "lastName": "Last name",
+        "email": "Email",
+        "emailHelp": "Your email address cannot be changed here",
+        "avatar": "Profile photo",
+        "changeAvatar": "Change photo",
+        "removeAvatar": "Remove photo",
+        "avatarHelp": "Max 2MB. JPG, PNG, or WebP.",
+        "save": "Save changes",
+        "saving": "Saving...",
+        "saved": "Changes saved",
+        "error": "Failed to save changes"
+      },
+      "preferences": {
+        "title": "Preferences",
+        "language": "Language",
+        "languageHelp": "Select the language for the dashboard",
+        "hourlyCost": "Hourly labor cost",
+        "hourlyCostHelp": "Estimated hourly labor cost used to calculate automation value in Reports",
+        "hourlyCostRole": "Only admins and owners can change this",
+        "companyName": "Company name",
+        "companyNameHelp": "Shared with all organization members",
+        "save": "Save changes",
+        "saving": "Saving...",
+        "saved": "Changes saved"
+      },
+      "security": {
+        "title": "Security",
+        "changePassword": "Change password",
+        "currentPassword": "Current password",
+        "newPassword": "New password",
+        "confirmPassword": "Confirm new password",
+        "passwordMismatch": "Passwords do not match",
+        "wrongCurrentPassword": "Current password is incorrect",
+        "passwordChanged": "Password updated successfully",
+        "changePasswordBtn": "Update password",
+        "changingPassword": "Updating...",
+        "sessions": "Active sessions",
+        "sessionsDescription": "You are currently signed in on this device",
+        "signOutOthers": "Sign out other devices",
+        "signOutOthersConfirmTitle": "Sign out all other devices?",
+        "signOutOthersConfirmMessage": "This will sign you out of all other browsers and devices",
+        "signOutOthersConfirmBtn": "Sign out others",
+        "signOutOthersCancel": "Cancel",
+        "signOutOthersSuccess": "Signed out of all other devices"
+      },
+      "languageOptions": {
+        "english": "English",
+        "spanish": "Espanol"
       }
     }
   },
