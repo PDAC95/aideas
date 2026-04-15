@@ -134,4 +134,4 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 | 9. My Automations | 4/4 | Complete   | 2026-04-14 | - |
 | 10. Catalog | 3/3 | Complete    | 2026-04-14 | - |
 | 11. Reports & Billing | 3/3 | Complete    | 2026-04-15 | - |
-| 12. Settings | 3/3 | Complete   | 2026-04-15 | - |
+| 12. Settings | 3/3 | Complete    | 2026-04-15 | - |
