@@ -114,7 +114,10 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
   4. User can enter an hourly cost value and see it used in the Reports estimated value calculation
   5. User can change their password via the security block
   6. User can view active sessions and close all other sessions
-**Plans**: TBD
+**Plans**: 3 plans
+  - [ ] 12-01-PLAN.md — Storage migration, Zod schemas, server actions, query functions, types, and i18n keys
+  - [ ] 12-02-PLAN.md — Settings page, Profile card (avatar + name), and Preferences card (language + hourly cost)
+  - [ ] 12-03-PLAN.md — Security card with password change form and session management
 
 ## Progress
 
