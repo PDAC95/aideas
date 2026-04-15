@@ -32,7 +32,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 - [x] **Phase 9: My Automations** — Full automation inventory with filterable list, detail views, and lifecycle action buttons (completed 2026-04-14)
 - [x] **Phase 10: Catalog** — Browse 66+ templates with industry/category filters and template detail pages (completed 2026-04-14)
 - [x] **Phase 11: Reports & Billing** — Impact metrics with charts and billing summary with mock payment history (completed 2026-04-15)
-- [ ] **Phase 12: Settings** — Profile, preferences (language, hourly cost), and security management
+- [x] **Phase 12: Settings** — Profile, preferences (language, hourly cost), and security management (completed 2026-04-15)
 
 ## Phase Details
 
@@ -134,4 +134,4 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 | 9. My Automations | 4/4 | Complete   | 2026-04-14 | - |
 | 10. Catalog | 3/3 | Complete    | 2026-04-14 | - |
 | 11. Reports & Billing | 3/3 | Complete    | 2026-04-15 | - |
-| 12. Settings | 2/3 | In Progress|  | - |
+| 12. Settings | 3/3 | Complete   | 2026-04-15 | - |

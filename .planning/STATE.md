@@ -51,7 +51,7 @@ See: .planning/PROJECT.md (updated 2026-04-09)
 Phase: 12 of 12 (Settings) — In Progress
 Plan: 3 of 3 in current phase (12-01, 12-02, 12-03 complete)
 Status: Phase 12 In Progress — All 3 plans done, awaiting page integration verification
-Last activity: 2026-04-15 — Completed 12-03: Security card with password change, session management (71ba4e3)
+Last activity: 2026-04-15 — Completed 12-02: Settings page RSC, Profile card (avatar upload, name/company editing), Preferences card (language switch, hourly cost) (1a582b5)
 
 Progress: [████████████████████] 100% (21/21 plans — v1.0 complete, v1.1 Phases 07-12 all done)
 
@@ -157,6 +157,11 @@ Phase 12-01 decisions (2026-04-15):
 - **switchLocale httpOnly:false** — NEXT_LOCALE cookie must be readable by client-side next-intl for locale switching; httpOnly must be false
 - **Role check before service_role write** — always query organization_members first, verify owner/admin before using admin client for org mutations
 - [Phase 12]: AlertDialog import from radix-ui root: plan specified subpath 'radix-ui/react-alert-dialog' but project uses '{ AlertDialog } from radix-ui' — auto-fixed to match existing usage pattern
+
+Phase 12-02 decisions (2026-04-15):
+- **ProfileFormValues explicit type** — Zod optional().default('') produces lastName?: string | undefined; explicit form type with resolver cast avoids useForm TS2322 type mismatch
+- **readLocaleCookie() client helper** — reads NEXT_LOCALE from document.cookie on mount to initialize language select without server round-trip
+- **isOAuthOnly commented in settings page** — ESLint no-unused-vars; Plan 03 will restore it when wiring SettingsSecurityCard
 
 ### Pending Todos
 
