@@ -104,9 +104,9 @@ export default async function CatalogDetailPage({
       maximumFractionDigits: 0,
     }).format(cents / 100);
 
-  const setupPriceText = t("setupPrice").replace("{price}", formatPrice(template.setup_price));
-  const monthlyPriceText = t("monthlyPrice").replace("{price}", formatPrice(template.monthly_price));
-  const setupTimeText = t("setupTime").replace("{days}", String(template.setup_time_days));
+  const setupPriceText = t.raw("setupPrice").replace("{price}", formatPrice(template.setup_price));
+  const monthlyPriceText = t.raw("monthlyPrice").replace("{price}", formatPrice(template.monthly_price));
+  const setupTimeText = t.raw("setupTime").replace("{days}", String(template.setup_time_days));
 
   const connectedApps = template.connected_apps ?? [];
   const industryTags = template.industry_tags ?? [];

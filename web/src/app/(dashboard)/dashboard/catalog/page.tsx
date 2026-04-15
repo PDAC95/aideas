@@ -52,13 +52,13 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
   // Build translations object for CatalogClient
   const translations = {
     title: t("title"),
-    subtitle: t("subtitle"),
+    subtitle: t.raw("subtitle"),
     searchPlaceholder: t("searchPlaceholder"),
     clearFilters: t("clearFilters"),
     popularBadge: t("popularBadge"),
     emptyTitle: t("emptyTitle"),
     emptyCta: t("emptyCta"),
-    monthlyPrice: t("monthlyPrice"),
+    monthlyPrice: t.raw("monthlyPrice"),
     categories: {
       all: t("categories.all"),
       mas_populares: t("categories.mas_populares"),

@@ -88,10 +88,11 @@ export function CatalogClient({
 
   const handleIndustryChange = useCallback(
     (val: string) => {
-      setIndustry(val);
-      updateParams(category, val, search);
+      const next = val === industry ? "all" : val;
+      setIndustry(next);
+      updateParams(category, next, search);
     },
-    [category, search, updateParams]
+    [category, industry, search, updateParams]
   );
 
   const handleSearchChange = useCallback(
