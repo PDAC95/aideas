@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import type { DashboardAutomation, DashboardExecution, DashboardNotification, KpiData, AutomationsPageAutomation, AutomationDetailData, AutomationExecutionEntry, WeeklyChartData, CatalogTemplate, CatalogTemplateDetail, ReportsData, ReportsKpi, AutomationBreakdownRow, BillingData, BillingAutomation } from "./types";
+import type { DashboardAutomation, DashboardExecution, DashboardNotification, KpiData, AutomationsPageAutomation, AutomationDetailData, AutomationExecutionEntry, WeeklyChartData, CatalogTemplate, CatalogTemplateDetail, ReportsData, ReportsKpi, AutomationBreakdownRow, BillingData, BillingAutomation, SettingsProfileData, SettingsOrgData } from "./types";
 
 /**
  * Get the user's organization_id from organization_members table.
@@ -654,4 +654,54 @@ export async function fetchBillingData(orgId: string): Promise<BillingData | nul
     automations: billingAutomations,
     hourlyCost,
   };
+}
+
+/**
+ * Fetch all settings data for the Settings page in parallel:
+ * profile (name, avatar, email), org (name, hourly_cost), and membership role.
+ */
+export async function fetchSettingsData(
+  userId: string,
+  orgId: string
+): Promise<{ profile: SettingsProfileData | null; org: SettingsOrgData }> {
+  const supabase = await createClient();
+
+  const [profileResult, orgResult, memberResult] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("first_name, last_name, full_name, avatar_url, email")
+      .eq("id", userId)
+      .single(),
+    supabase
+      .from("organizations")
+      .select("name, settings")
+      .eq("id", orgId)
+      .single(),
+    supabase
+      .from("organization_members")
+      .select("role")
+      .eq("user_id", userId)
+      .eq("organization_id", orgId)
+      .single(),
+  ]);
+
+  const profile: SettingsProfileData | null = profileResult.data
+    ? {
+        firstName: profileResult.data.first_name,
+        lastName: profileResult.data.last_name,
+        fullName: profileResult.data.full_name,
+        avatarUrl: profileResult.data.avatar_url,
+        email: profileResult.data.email,
+      }
+    : null;
+
+  const org: SettingsOrgData = {
+    orgId,
+    orgName: orgResult.data?.name ?? null,
+    hourlyCost:
+      ((orgResult.data?.settings as Record<string, unknown>)?.hourly_cost as number | null) ?? null,
+    role: (memberResult.data?.role ?? "viewer") as SettingsOrgData["role"],
+  };
+
+  return { profile, org };
 }
