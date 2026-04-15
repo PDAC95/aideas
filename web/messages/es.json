@@ -156,6 +156,7 @@
       "dashboard": "Panel",
       "automations": "Automatizaciones",
       "catalog": "Catálogo",
+      "reports": "Reportes",
       "chat": "Chat",
       "team": "Equipo",
       "billing": "Facturación",
@@ -338,6 +339,73 @@
         "legal": "Legal",
         "inmobiliaria": "Inmobiliaria",
         "restaurantes": "Restaurantes"
+      }
+    },
+    "reports": {
+      "title": "Reportes",
+      "period": {
+        "this_month": "Este mes",
+        "last_month": "Mes pasado",
+        "last_3_months": "Ultimos 3 meses"
+      },
+      "kpi": {
+        "tasksCompleted": "Tareas completadas",
+        "hoursSaved": "Horas ahorradas",
+        "estimatedValue": "Valor estimado",
+        "vsLastPeriod": "vs periodo anterior",
+        "noHourlyCost": "Configura tu costo por hora para ver el valor estimado",
+        "settingsLink": "Ir a Configuracion"
+      },
+      "chart": {
+        "title": "Actividad semanal",
+        "empty": "Sin actividad en este periodo"
+      },
+      "breakdown": {
+        "title": "Desglose por automatizacion",
+        "automationName": "Automatizacion",
+        "metricLabel": "Metrica",
+        "count": "Cantidad",
+        "hoursSaved": "Horas ahorradas",
+        "total": "Total",
+        "viewAll": "Ver todas ({count})",
+        "showLess": "Ver menos"
+      },
+      "empty": {
+        "title": "Sin datos aun",
+        "message": "Crea tu primera automatizacion para ver reportes aqui.",
+        "cta": "Ver automatizaciones"
+      }
+    },
+    "billing": {
+      "title": "Facturacion",
+      "summary": {
+        "title": "Resumen mensual",
+        "totalCharge": "Cargo mensual total",
+        "activeAutomations": "Automatizaciones activas",
+        "nextCharge": "Proxima fecha de cobro",
+        "managePayment": "Administrar pago",
+        "toastMessage": "Portal de pagos disponible proximamente"
+      },
+      "charges": {
+        "title": "Cargos actuales",
+        "automation": "Automatizacion",
+        "plan": "Plan",
+        "monthlyCharge": "Cargo mensual",
+        "total": "Total"
+      },
+      "history": {
+        "title": "Historial de pagos",
+        "date": "Fecha",
+        "amount": "Monto",
+        "status": "Estado",
+        "method": "Metodo",
+        "paid": "Pagado",
+        "pending": "Pendiente"
+      },
+      "empty": {
+        "title": "Sin cargos activos",
+        "message": "Activa una automatizacion para ver tu facturacion aqui.",
+        "cta": "Ver automatizaciones"
       }
     }
   },

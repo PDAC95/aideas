@@ -10,6 +10,7 @@ import {
   LayoutDashboard,
   Zap,
   BookOpen,
+  BarChart3,
   MessageSquare,
   Users,
   CreditCard,
@@ -46,6 +47,7 @@ export function DashboardNav({ user, notifications = [] }: DashboardNavProps) {
     { name: t("nav.dashboard"), href: "/dashboard", icon: LayoutDashboard },
     { name: t("nav.automations"), href: "/dashboard/automations", icon: Zap },
     { name: t("nav.catalog"), href: "/dashboard/catalog", icon: BookOpen },
+    { name: t("nav.reports"), href: "/dashboard/reports", icon: BarChart3 },
     { name: t("nav.chat"), href: "/dashboard/chat", icon: MessageSquare },
     { name: t("nav.team"), href: "/dashboard/team", icon: Users },
     { name: t("nav.billing"), href: "/dashboard/billing", icon: CreditCard },
@@ -122,7 +124,7 @@ export function DashboardNav({ user, notifications = [] }: DashboardNavProps) {
                 <div className="border-t border-gray-100 dark:border-gray-700" />
 
                 {/* Notifications */}
-                <div className="px-4 py-3">
+                <div className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
                   <NotificationBell
                     initialNotifications={notifications}
                     unreadCount={unreadCount}
@@ -133,6 +135,7 @@ export function DashboardNav({ user, notifications = [] }: DashboardNavProps) {
                       empty: tNotif("empty"),
                     }}
                   />
+                  <span>{tNotif("title")}</span>
                 </div>
 
                 {/* Inbox */}

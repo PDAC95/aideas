@@ -156,6 +156,7 @@
       "dashboard": "Dashboard",
       "automations": "Automations",
       "catalog": "Catalog",
+      "reports": "Reports",
       "chat": "Chat",
       "team": "Team",
       "billing": "Billing",
@@ -338,6 +339,73 @@
         "legal": "Legal",
         "inmobiliaria": "Real estate",
         "restaurantes": "Restaurants"
+      }
+    },
+    "reports": {
+      "title": "Reports",
+      "period": {
+        "this_month": "This month",
+        "last_month": "Last month",
+        "last_3_months": "Last 3 months"
+      },
+      "kpi": {
+        "tasksCompleted": "Tasks completed",
+        "hoursSaved": "Hours saved",
+        "estimatedValue": "Estimated value",
+        "vsLastPeriod": "vs last period",
+        "noHourlyCost": "Set up your hourly cost to see the estimated value",
+        "settingsLink": "Go to Settings"
+      },
+      "chart": {
+        "title": "Weekly activity",
+        "empty": "No activity in this period"
+      },
+      "breakdown": {
+        "title": "Per-automation breakdown",
+        "automationName": "Automation",
+        "metricLabel": "Metric",
+        "count": "Count",
+        "hoursSaved": "Hours saved",
+        "total": "Total",
+        "viewAll": "View all ({count})",
+        "showLess": "Show less"
+      },
+      "empty": {
+        "title": "No data yet",
+        "message": "Create your first automation to see reports here.",
+        "cta": "View automations"
+      }
+    },
+    "billing": {
+      "title": "Billing",
+      "summary": {
+        "title": "Monthly summary",
+        "totalCharge": "Total monthly charge",
+        "activeAutomations": "Active automations",
+        "nextCharge": "Next charge date",
+        "managePayment": "Manage payment",
+        "toastMessage": "Payment portal coming soon"
+      },
+      "charges": {
+        "title": "Current charges",
+        "automation": "Automation",
+        "plan": "Plan",
+        "monthlyCharge": "Monthly charge",
+        "total": "Total"
+      },
+      "history": {
+        "title": "Payment history",
+        "date": "Date",
+        "amount": "Amount",
+        "status": "Status",
+        "method": "Method",
+        "paid": "Paid",
+        "pending": "Pending"
+      },
+      "empty": {
+        "title": "No active charges",
+        "message": "Activate an automation to see your billing here.",
+        "cta": "View automations"
       }
     }
   },
