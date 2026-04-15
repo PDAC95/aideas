@@ -130,5 +130,5 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 | 8. Dashboard Home & Notifications | 5/5 | Complete   | 2026-04-13 | - |
 | 9. My Automations | 4/4 | Complete   | 2026-04-14 | - |
 | 10. Catalog | 3/3 | Complete    | 2026-04-14 | - |
-| 11. Reports & Billing | 3/3 | Complete   | 2026-04-15 | - |
+| 11. Reports & Billing | 3/3 | Complete    | 2026-04-15 | - |
 | 12. Settings | v1.1 | 0/? | Not started | - |

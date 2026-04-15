@@ -43,7 +43,7 @@ Requirements for Core Dashboard Experience. Each maps to roadmap phases.
 
 - [x] **REPT-01**: User can select report period (This month, Last month, Last 3 months)
 - [x] **REPT-02**: User sees 3 impact KPI cards (tasks completed, hours saved, estimated value)
-- [ ] **REPT-03**: User sees weekly activity bar chart (last ~8 weeks)
+- [x] **REPT-03**: User sees weekly activity bar chart (last ~8 weeks)
 - [x] **REPT-04**: User sees per-automation breakdown table (name, metric label + count, hours saved)
 - [x] **REPT-05**: Estimated value card shows when org has hourly_cost configured, with link to settings when not set
 
@@ -145,7 +145,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CATL-04 | Phase 10 | Complete |
 | REPT-01 | Phase 11 | Complete |
 | REPT-02 | Phase 11 | Complete |
-| REPT-03 | Phase 11 | Pending |
+| REPT-03 | Phase 11 | Complete |
 | REPT-04 | Phase 11 | Complete |
 | REPT-05 | Phase 11 | Complete |
 | BILL-01 | Phase 11 | Complete |
