@@ -27,7 +27,7 @@ Plan: 2 of 3 in current phase (11-01, 11-02 complete; 11-03 next)
 Status: In Progress — 11-03 Billing page next
 Last activity: 2026-04-15 — Completed 11-02: Reports page (period selector, KPI cards, weekly chart, breakdown table) (5eeae5f)
 
-Progress: [██████████████████░░] 86% (18/21 plans — v1.0 complete, v1.1 Phase 07 done, Phase 08 done, Phase 09 done, Phase 10 done, Phase 11 done)
+Progress: [█████████████████░░░] 81% (17/21 plans — v1.0 complete, v1.1 Phase 07 done, Phase 08 done, Phase 09 done, Phase 10 done, Phase 11 Plans 01-02 done)
 
 ## Accumulated Context
 
@@ -108,6 +108,12 @@ Phase 10-02 decisions (2026-04-14):
 - **Template name key split pattern** — stored key 'templates.{slug_snake}.name' split on '.', index 1 extracted, tTemplates(slugSnake+'.name') called in RSC
 - **No Suspense boundary on CatalogClient** — uses useState initialized from RSC props (not useSearchParams), so no async boundary needed
 
+Phase 11-02 decisions (2026-04-15):
+- **Translations passed as objects from RSC to client components** — avoids useTranslations in client context; consistent with Phase 09 pattern
+- **ReportsWeeklyChart JSDoc documents ssr:false requirement** — same pattern as WeeklyBarChart (Phase 09-03)
+- **SortHeader sub-component in breakdown table** — single-file pattern, not shared since only used there
+- **Breakdown table returns null when rows.length === 0** — page-level empty state (fetchReportsData returns null) handles no-automations case
+
 Phase 11-03 decisions (2026-04-15):
 - **BillingSummaryCard is 'use client'** — toast interactivity requires client state; BillingChargesTable and BillingPaymentHistory are pure display server components
 - **Mock history computed at render** — date arithmetic from new Date() produces current-month-pending + 3-prior-months-paid without DB dependency
@@ -140,5 +146,5 @@ Phase 11-01 decisions (2026-04-15):
 ## Session Continuity
 
 Last session: 2026-04-15
-Stopped at: Completed 11-03-PLAN.md — Billing page (summary card with toast, charges table, payment history with mock data)
+Stopped at: Completed 11-02-PLAN.md — Reports page (period selector, KPI cards, 8-week bar chart, sortable breakdown table)
 Resume file: None
