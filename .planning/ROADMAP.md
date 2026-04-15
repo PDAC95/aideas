@@ -98,7 +98,10 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
   3. Reports page shows a per-automation breakdown table with name, metric label, count, and hours saved
   4. Estimated value card appears when org has hourly_cost set; when not set, a link to Settings appears in its place
   5. Billing page shows monthly summary card, per-automation charges table, and a mock payment history table; "Manage payment" button is visible (UI only — no Stripe Portal wired)
-**Plans**: TBD
+**Plans**: 3 plans
+  - [ ] 11-01-PLAN.md — i18n keys (EN/ES), TypeScript types, Supabase query functions, and nav update
+  - [ ] 11-02-PLAN.md — Reports page with period selector, KPI cards, weekly chart, and breakdown table
+  - [ ] 11-03-PLAN.md — Billing page with summary card, charges table, and mock payment history
 
 ### Phase 12: Settings
 **Goal**: Users can manage their profile, preferences, and security from a single settings page
@@ -127,5 +130,5 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 | 8. Dashboard Home & Notifications | 5/5 | Complete   | 2026-04-13 | - |
 | 9. My Automations | 4/4 | Complete   | 2026-04-14 | - |
 | 10. Catalog | 3/3 | Complete    | 2026-04-14 | - |
-| 11. Reports & Billing | v1.1 | 0/? | Not started | - |
+| 11. Reports & Billing | v1.1 | 0/3 | Not started | - |
 | 12. Settings | v1.1 | 0/? | Not started | - |
