@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getOrgId, fetchSettingsData } from "@/lib/dashboard/queries";
 import { SettingsProfileCard } from "@/components/dashboard/settings-profile-card";
 import { SettingsPreferencesCard } from "@/components/dashboard/settings-preferences-card";
+import { SettingsSecurityCard } from "@/components/dashboard/settings-security-card";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -23,8 +24,7 @@ export default async function SettingsPage() {
     getTranslations("dashboard.settings"),
   ]);
 
-  // isOAuthOnly will be passed to SettingsSecurityCard in Plan 03
-  // const isOAuthOnly = !user.identities?.some((id) => id.provider === "email");
+  const isOAuthOnly = !user.identities?.some((id) => id.provider === "email");
 
   const profileTranslations = {
     title: t("profile.title"),
@@ -84,12 +84,28 @@ export default async function SettingsPage() {
         translations={preferencesTranslations}
       />
 
-      {/* SettingsSecurityCard — Plan 03 */}
-      <div className="rounded-xl border bg-card p-6 shadow-sm opacity-50">
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          {t("security.title")} — coming soon
-        </p>
-      </div>
+      <SettingsSecurityCard
+        isOAuthOnly={isOAuthOnly}
+        translations={{
+          title: t("security.title"),
+          changePassword: t("security.changePassword"),
+          currentPassword: t("security.currentPassword"),
+          newPassword: t("security.newPassword"),
+          confirmPassword: t("security.confirmPassword"),
+          changePasswordBtn: t("security.changePasswordBtn"),
+          changingPassword: t("security.changingPassword"),
+          passwordChanged: t("security.passwordChanged"),
+          wrongCurrentPassword: t("security.wrongCurrentPassword"),
+          sessions: t("security.sessions"),
+          sessionsDescription: t("security.sessionsDescription"),
+          signOutOthers: t("security.signOutOthers"),
+          signOutOthersConfirmTitle: t("security.signOutOthersConfirmTitle"),
+          signOutOthersConfirmMessage: t("security.signOutOthersConfirmMessage"),
+          signOutOthersConfirmBtn: t("security.signOutOthersConfirmBtn"),
+          signOutOthersCancel: t("security.signOutOthersCancel"),
+          signOutOthersSuccess: t("security.signOutOthersSuccess"),
+        }}
+      />
     </div>
   );
 }
