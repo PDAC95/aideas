@@ -3,6 +3,7 @@
 import { createClient as createServerClient } from '@/lib/supabase/server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
+import { revalidatePath } from 'next/cache'
 import { profileSchema, hourlyCostSchema, changePasswordSchema } from '@/lib/validations/settings'
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -44,6 +45,13 @@ export async function saveProfileName(
     .eq('id', user.id)
 
   if (error) return { error: error.message }
+
+  // Sync auth user_metadata so header picks up new name immediately
+  await supabase.auth.updateUser({
+    data: { first_name: fn, last_name: ln, full_name: fullName }
+  })
+
+  revalidatePath('/dashboard', 'layout')
   return { success: true }
 }
 
@@ -81,6 +89,7 @@ export async function saveCompanyName(
     .eq('id', orgId)
 
   if (error) return { error: error.message }
+  revalidatePath('/dashboard/settings')
   return { success: true }
 }
 
@@ -101,6 +110,7 @@ export async function saveAvatarUrl(
     .eq('id', user.id)
 
   if (error) return { error: error.message }
+  revalidatePath('/dashboard', 'layout')
   return { success: true }
 }
 
@@ -155,6 +165,7 @@ export async function saveHourlyCost(
     .eq('id', orgId)
 
   if (error) return { error: error.message }
+  revalidatePath('/dashboard/settings')
   return { success: true }
 }
 
