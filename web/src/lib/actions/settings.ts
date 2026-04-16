@@ -4,7 +4,7 @@ import { createClient as createServerClient } from '@/lib/supabase/server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
-import { profileSchema, hourlyCostSchema, changePasswordSchema } from '@/lib/validations/settings'
+import { profileSchema, changePasswordSchema } from '@/lib/validations/settings'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helpers
@@ -83,12 +83,14 @@ export async function saveCompanyName(
   if (!trimmed || trimmed.length > 100) return { error: 'Invalid company name' }
 
   const admin = getAdminClient()
-  const { error } = await admin
+  const { data, error } = await admin
     .from('organizations')
     .update({ name: trimmed })
     .eq('id', orgId)
+    .select('id')
 
   if (error) return { error: error.message }
+  if (!data || data.length === 0) return { error: 'No organization found to update' }
   revalidatePath('/dashboard/settings')
   return { success: true }
 }
@@ -130,8 +132,9 @@ export async function saveHourlyCost(
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   if (authError || !user) return { error: 'unauthorized' }
 
-  const parsed = hourlyCostSchema.safeParse({ orgId, hourlyCost })
-  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? 'Invalid input' }
+  if (typeof hourlyCost !== 'number' || hourlyCost < 0 || hourlyCost > 10000) {
+    return { error: 'Invalid hourly cost' }
+  }
 
   // Role check: must be owner or admin
   const { data: member } = await supabase
@@ -159,12 +162,14 @@ export async function saveHourlyCost(
     hourly_cost: hourlyCost,
   }
 
-  const { error } = await admin
+  const { data, error } = await admin
     .from('organizations')
     .update({ settings: newSettings })
     .eq('id', orgId)
+    .select('id')
 
   if (error) return { error: error.message }
+  if (!data || data.length === 0) return { error: 'No organization found to update' }
   revalidatePath('/dashboard/settings')
   return { success: true }
 }

@@ -2,9 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { hourlyCostSchema } from "@/lib/validations/settings";
 import { switchLocale, saveHourlyCost } from "@/lib/actions/settings";
 import type { SettingsOrgData } from "@/lib/dashboard/types";
 
@@ -29,10 +27,8 @@ interface SettingsPreferencesCardProps {
 
 type ToastState = { message: string; type: "success" | "error" } | null;
 
-// Form type matching hourlyCostSchema fields (orgId passed separately)
 type HourlyCostFormValues = {
   hourlyCost: number;
-  orgId: string;
 };
 
 function readLocaleCookie(): "en" | "es" {
@@ -70,10 +66,8 @@ export function SettingsPreferencesCard({
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<HourlyCostFormValues>({
-    resolver: zodResolver(hourlyCostSchema) as import("react-hook-form").Resolver<HourlyCostFormValues>,
     defaultValues: {
       hourlyCost: org.hourlyCost ?? 0,
-      orgId: org.orgId,
     },
   });
 
@@ -90,11 +84,15 @@ export function SettingsPreferencesCard({
   }
 
   async function onSubmitHourlyCost(data: HourlyCostFormValues) {
-    const result = await saveHourlyCost(org.orgId, data.hourlyCost);
-    if ("error" in result) {
-      setToast({ message: result.error, type: "error" });
-    } else {
-      setToast({ message: translations.saved, type: "success" });
+    try {
+      const result = await saveHourlyCost(org.orgId, data.hourlyCost);
+      if ("error" in result) {
+        setToast({ message: result.error, type: "error" });
+      } else {
+        setToast({ message: translations.saved, type: "success" });
+      }
+    } catch {
+      setToast({ message: "Failed to save", type: "error" });
     }
   }
 
@@ -132,8 +130,6 @@ export function SettingsPreferencesCard({
 
         {/* Hourly cost section */}
         <form onSubmit={handleSubmit(onSubmitHourlyCost)}>
-          {/* Hidden orgId field */}
-          <input type="hidden" {...register("orgId")} />
 
           <div className="mb-4">
             <label
