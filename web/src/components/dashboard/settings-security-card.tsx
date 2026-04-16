@@ -141,13 +141,26 @@ export function SettingsSecurityCard({
     }
   }
 
-  // ── Device info (client-side only) ───────────────────────────────────────
+  // ── Device info (deferred to client to avoid hydration mismatch) ────────
 
-  const browser = detectBrowser()
-  const os = detectOS()
-  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const [deviceInfo, setDeviceInfo] = useState<{
+    browser: string
+    os: string
+    timezone: string
+  } | null>(null)
 
-  const deviceLabel = [browser, os].filter(Boolean).join(' on ')
+  useEffect(() => {
+    setDeviceInfo({
+      browser: detectBrowser(),
+      os: detectOS(),
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    })
+  }, [])
+
+  const deviceLabel = deviceInfo
+    ? [deviceInfo.browser, deviceInfo.os].filter(Boolean).join(' on ')
+    : ''
+  const timezone = deviceInfo?.timezone ?? ''
 
   // ── Render ────────────────────────────────────────────────────────────────
 
