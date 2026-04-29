@@ -1,6 +1,5 @@
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { ArrowLeft } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
@@ -8,23 +7,7 @@ import { getOrgId, fetchAutomationDetail } from "@/lib/dashboard/queries";
 import { AutomationDetailHeader } from "@/components/dashboard/automation-detail-header";
 import { AutomationKpiCards } from "@/components/dashboard/automation-kpi-cards";
 import { ExecutionTimeline } from "@/components/dashboard/execution-timeline";
-
-/**
- * WeeklyBarChart uses Recharts which requires browser APIs.
- * Must be imported via next/dynamic with { ssr: false }.
- */
-const WeeklyBarChart = dynamic(
-  () =>
-    import("@/components/dashboard/weekly-bar-chart").then((mod) => ({
-      default: mod.WeeklyBarChart,
-    })),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="h-[200px] animate-pulse bg-gray-100 dark:bg-gray-800 rounded-xl" />
-    ),
-  }
-);
+import { WeeklyBarChartLoader } from "@/components/dashboard/weekly-bar-chart-loader";
 
 interface AutomationDetailPageProps {
   params: Promise<{ id: string }>;
@@ -215,8 +198,8 @@ export default async function AutomationDetailPage({
             executions={enrichedExecutions}
             translations={timelineTranslations}
           />
-          {/* Right: Weekly Bar Chart (SSR-unsafe, loaded via dynamic import) */}
-          <WeeklyBarChart
+          {/* Right: Weekly Bar Chart (SSR-unsafe, loaded via client component wrapper) */}
+          <WeeklyBarChartLoader
             data={weeklyData}
             translations={chartTranslations}
           />
