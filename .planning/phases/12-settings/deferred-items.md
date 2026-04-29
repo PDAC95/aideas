@@ -44,4 +44,4 @@ Wrap `WeeklyBarChart` import in a thin client component (e.g., `weekly-bar-chart
 
 ### Status
 
-- [ ] Open — needs new plan / quick task to migrate the chart loader pattern to the automation detail page.
+- [x] **Resolved 2026-04-29** in commit `332bbc7` — Created `web/src/components/dashboard/weekly-bar-chart-loader.tsx` (mirroring the Phase 11 pattern) and updated `web/src/app/(dashboard)/dashboard/automations/[id]/page.tsx` to import the loader instead of declaring `dynamic({ ssr: false })` inline. `npm run build` now succeeds.
