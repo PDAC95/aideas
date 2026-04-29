@@ -3,6 +3,19 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Core Dashboard Experience
 status: unknown
+last_updated: "2026-04-29T18:56:32.905Z"
+progress:
+  total_phases: 6
+  completed_phases: 6
+  total_plans: 23
+  completed_plans: 23
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: Core Dashboard Experience
+status: unknown
 last_updated: "2026-04-15T20:45:41.032Z"
 progress:
   total_phases: 6
@@ -61,10 +74,10 @@ See: .planning/PROJECT.md (updated 2026-04-09)
 
 ## Current Position
 
-Phase: 12 of 12 (Settings) — In Progress
-Plan: 3 of 3 in current phase (12-01, 12-02, 12-03 complete)
-Status: Phase 12 In Progress — All 3 plans done, awaiting page integration verification
-Last activity: 2026-04-15 — Completed 12-02: Settings page RSC, Profile card (avatar upload, name/company editing), Preferences card (language switch, hourly cost) (1a582b5)
+Phase: 12 of 12 (Settings) — Gap closure complete
+Plan: 12-01, 12-02, 12-03 (build) + 12-04, 12-05 (gap closure) all complete
+Status: Phase 12 Complete — All 5 plans shipped and documented; UAT gaps for tests 1-5, 7 closed
+Last activity: 2026-04-29 — Documented 12-04: revalidatePath added to all settings server actions, auth metadata sync in saveProfileName, dashboard-header.tsx now reads first_name from profiles table (commits 9015053 + 333fa40)
 
 Progress: [████████████████████] 100% (21/21 plans — v1.0 complete, v1.1 Phases 07-12 all done)
 
@@ -176,6 +189,14 @@ Phase 12-02 decisions (2026-04-15):
 - **readLocaleCookie() client helper** — reads NEXT_LOCALE from document.cookie on mount to initialize language select without server round-trip
 - **isOAuthOnly commented in settings page** — ESLint no-unused-vars; Plan 03 will restore it when wiring SettingsSecurityCard
 
+Phase 12-05 decisions (2026-04-16, gap closure):
+- **Defer browser-only APIs to useEffect** — `navigator.userAgent` and `Intl.DateTimeFormat().resolvedOptions().timeZone` produce different values on server vs client, causing React hydration mismatch. Pattern: `useState<T | null>(null)` + `useEffect(() => setState(...), [])` ensures identical initial server/client markup.
+- **Empty initial render over placeholder text** — `deviceLabel` and `timezone` render empty when `deviceInfo` is null; existing `{deviceLabel || 'Current device'}` fallback covers the empty state without extra UI work.
+- **Helpers untouched, only call site moved** — `detectBrowser()` / `detectOS()` remain unchanged; only their CALL SITE relocated from component body into useEffect. Defensive `typeof navigator === 'undefined'` guard kept (now effectively dead but no-cost).
+- **Build-error scope boundary** — `npm run build` fails on Phase 09's `automations/[id]/page.tsx` (Turbopack rejects `dynamic({ssr:false})` in Server Components). Out of scope for 12-05; logged in `phases/12-settings/deferred-items.md`. Plan-level verification used `npx tsc --noEmit --skipLibCheck` (passes 0 errors).
+- [Phase 12-settings]: Plan 12-04 (gap closure): revalidatePath added to all settings server actions; saveProfileName syncs supabase.auth.updateUser; dashboard-header.tsx now reads first_name from profiles table with auth metadata fallback
+- [Phase 12-settings]: Plan 12-04: admin-client updates now use .select('id') + zero-row guard; hourly-cost form replaced silently-failing Zod resolver with inline numeric validation in server action
+
 ### Pending Todos
 
 - Run `npx supabase db reset` when Docker Desktop is running to confirm full migration stack + seed apply cleanly (prerequisite before Phase 08).
@@ -196,6 +217,6 @@ Phase 12-02 decisions (2026-04-15):
 
 ## Session Continuity
 
-Last session: 2026-04-15
-Stopped at: Completed 12-03-PLAN.md — Security card with password change and session management (71ba4e3)
+Last session: 2026-04-29
+Stopped at: Documented 12-05-SUMMARY.md (gap-closure for hydration mismatch in SettingsSecurityCard) — code already committed in 034128e
 Resume file: None
