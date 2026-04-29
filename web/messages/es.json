@@ -457,11 +457,11 @@
         "signOutOthersConfirmMessage": "Esto cerrara tu sesion en todos los otros navegadores y dispositivos",
         "signOutOthersConfirmBtn": "Cerrar otras sesiones",
         "signOutOthersCancel": "Cancelar",
-        "signOutOthersSuccess": "Sesion cerrada en todos los otros dispositivos"
+        "signOutOthersSuccess": "Sesión cerrada en todos los otros dispositivos"
       },
       "languageOptions": {
         "english": "English",
-        "spanish": "Espanol"
+        "spanish": "Español"
       }
     }
   },

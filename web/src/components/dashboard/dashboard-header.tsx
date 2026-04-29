@@ -1,9 +1,11 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { Search, PlusSquare, Inbox } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { NotificationBell } from "./notification-bell";
 import { UserMenu } from "./user-menu";
+import { LanguageSwitcher } from "./language-switcher";
 import type { DashboardNotification } from "@/lib/dashboard/types";
 import type { User } from "@supabase/supabase-js";
 
@@ -18,7 +20,12 @@ export async function DashboardHeader({
 }: DashboardHeaderProps) {
   const t = await getTranslations("dashboard");
   const tNotif = await getTranslations("dashboard.notifications");
+  const tLang = await getTranslations("dashboard.settings.languageOptions");
   const unreadCount = notifications.filter((n) => !n.is_read).length;
+
+  const cookieStore = await cookies();
+  const cookieLocale = cookieStore.get("NEXT_LOCALE")?.value;
+  const currentLocale: "en" | "es" = cookieLocale === "es" ? "es" : "en";
 
   // Fetch fresh name from profiles table (source of truth), fallback to auth metadata
   const supabase = await createClient();
@@ -54,6 +61,15 @@ export async function DashboardHeader({
           <PlusSquare className="h-4 w-4" />
           {t("header.createAgent")}
         </Link>
+
+        {/* Language switcher */}
+        <LanguageSwitcher
+          initialLocale={currentLocale}
+          labels={{
+            english: tLang("english"),
+            spanish: tLang("spanish"),
+          }}
+        />
 
         {/* Notification + Inbox pill */}
         <div className="flex items-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full shadow-sm px-4 py-2.5">
