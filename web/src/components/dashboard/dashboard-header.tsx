@@ -31,6 +31,7 @@ export async function DashboardHeader({
   const firstName = profile?.first_name || (user.user_metadata?.first_name as string) || "";
   const displayName = firstName || user.email?.split("@")[0] || "User";
   const avatarInitial = (firstName || user.email || "U").charAt(0).toUpperCase();
+  const avatarUrl = profile?.avatar_url ?? null;
 
   return (
     <header className="hidden lg:flex items-center gap-4 px-8 pt-8 pb-4">
@@ -79,6 +80,7 @@ export async function DashboardHeader({
         {/* User avatar + name + dropdown */}
         <UserMenu
           avatarInitial={avatarInitial}
+          avatarUrl={avatarUrl}
           displayName={displayName}
           translations={{
             profile: t("header.profile"),
