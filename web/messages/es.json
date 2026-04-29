@@ -135,7 +135,7 @@
     "sessionExpired": "Tu sesión ha expirado. Inicia sesión de nuevo.",
     "branding": {
       "headline": "Bienvenido de nuevo",
-      "subheadline": "Tus automatizaciones están activas. Revisa tu negocio.",
+      "subheadline": "Tus automatizaciónes están activas. Revisa tu negocio.",
       "highlight1": "Monitoreo en tiempo real",
       "highlight2": "Mide el ROI y tiempo ahorrado",
       "highlight3": "Colabora con tu equipo"
@@ -144,10 +144,10 @@
   "dashboard": {
     "greeting": "¡Bienvenido de nuevo!",
     "greetingWithName": "¡Bienvenido de nuevo, {name}!",
-    "subtitle": "Tus automatizaciones están activas. El contenido real del panel llegará en una fase futura.",
+    "subtitle": "Tus automatizaciónes están activas. El contenido real del panel llegará en una fase futura.",
     "signOut": "Cerrar sesión",
     "header": {
-      "search": "Buscar automatizaciones...",
+      "search": "Buscar automatizaciónes...",
       "createAgent": "Crear Agente",
       "inbox": "Buzón",
       "profile": "Perfil"
@@ -203,11 +203,11 @@
         "status": "Estado"
       },
       "successRate": {
-        "title": "Tasa de éxito de automatizaciones",
+        "title": "Tasa de éxito de automatizaciónes",
         "trendLabel": "vs semana pasada"
       },
       "performance": {
-        "title": "Rendimiento de automatizaciones",
+        "title": "Rendimiento de automatizaciónes",
         "avgResponseTime": "Tiempo promedio de respuesta",
         "totalExecutions": "Ejecuciones totales",
         "successRate": "Tasa de éxito",
@@ -240,8 +240,8 @@
     },
     "automations": {
       "title": "Mis Automatizaciones",
-      "count": "{count} automatizaciones",
-      "count_one": "{count} automatizacion",
+      "count": "{count} automatizaciónes",
+      "count_one": "{count} automatización",
       "filter": {
         "all": "Todas",
         "active": "Activas",
@@ -261,13 +261,13 @@
         "failed": "Fallida"
       },
       "empty": {
-        "title": "Aun no tienes automatizaciones",
+        "title": "Aun no tienes automatizaciónes",
         "cta": "Explorar catalogo"
       },
       "emptyFilter": {
-        "active": "No tienes automatizaciones activas",
-        "in_setup": "No tienes automatizaciones en configuracion",
-        "paused": "No tienes automatizaciones pausadas"
+        "active": "No tienes automatizaciónes activas",
+        "in_setup": "No tienes automatizaciónes en configuración",
+        "paused": "No tienes automatizaciónes pausadas"
       },
       "detail": {
         "back": "Mis Automatizaciones",
@@ -287,7 +287,7 @@
           "title": "Ejecuciones Semanales",
           "empty": "No hay datos disponibles"
         },
-        "setupMessage": "Esta automatizacion esta siendo configurada. Te notificaremos cuando este lista."
+        "setupMessage": "Esta automatización está siendo configurada. Te notificaremos cuando esté lista."
       },
       "actions": {
         "pause": "Pausar",
@@ -298,19 +298,19 @@
         "cancelSuccess": "Automatizacion cancelada"
       },
       "cancelDialog": {
-        "title": "Cancelar automatizacion?",
-        "description": "Esta accion no se puede deshacer. La automatizacion sera desactivada permanentemente.",
+        "title": "Cancelar automatización?",
+        "description": "Esta acción no se puede deshacer. La automatización será desactivada permanentemente.",
         "back": "Volver",
         "confirm": "Si, cancelar"
       }
     },
     "catalog": {
-      "title": "Catálogo de automatizaciones",
+      "title": "Catálogo de automatizaciónes",
       "subtitle": "Mostrando {filtered} de {total}",
-      "searchPlaceholder": "Buscar automatizaciones...",
+      "searchPlaceholder": "Buscar automatizaciónes...",
       "clearFilters": "Limpiar filtros",
       "popularBadge": "Popular",
-      "emptyTitle": "No hay automatizaciones para estos filtros",
+      "emptyTitle": "No hay automatizaciónes para estos filtros",
       "emptyCta": "Limpiar filtros",
       "back": "Volver al catálogo",
       "requestButton": "Solicitar esta automatización",
@@ -361,7 +361,7 @@
         "empty": "Sin actividad en este periodo"
       },
       "breakdown": {
-        "title": "Desglose por automatizacion",
+        "title": "Desglose por automatización",
         "automationName": "Automatizacion",
         "metricLabel": "Metrica",
         "count": "Cantidad",
@@ -372,8 +372,8 @@
       },
       "empty": {
         "title": "Sin datos aun",
-        "message": "Crea tu primera automatizacion para ver reportes aqui.",
-        "cta": "Ver automatizaciones"
+        "message": "Crea tu primera automatización para ver reportes aquí.",
+        "cta": "Ver automatizaciónes"
       }
     },
     "billing": {
@@ -404,8 +404,8 @@
       },
       "empty": {
         "title": "Sin cargos activos",
-        "message": "Activa una automatizacion para ver tu facturacion aqui.",
-        "cta": "Ver automatizaciones"
+        "message": "Activa una automatización para ver tu facturación aquí.",
+        "cta": "Ver automatizaciónes"
       }
     },
     "settings": {
@@ -416,7 +416,7 @@
         "firstName": "Nombre",
         "lastName": "Apellido",
         "email": "Correo electronico",
-        "emailHelp": "Tu correo electronico no se puede cambiar aqui",
+        "emailHelp": "Tu correo electrónico no se puede cambiar aquí",
         "avatar": "Foto de perfil",
         "changeAvatar": "Cambiar foto",
         "removeAvatar": "Eliminar foto",
@@ -431,30 +431,30 @@
         "language": "Idioma",
         "languageHelp": "Selecciona el idioma del panel",
         "hourlyCost": "Costo laboral por hora",
-        "hourlyCostHelp": "Costo laboral por hora estimado para calcular el valor de las automatizaciones en Reportes",
+        "hourlyCostHelp": "Costo laboral por hora estimado para calcular el valor de las automatizaciónes en Reportes",
         "hourlyCostRole": "Solo administradores y propietarios pueden cambiar esto",
         "companyName": "Nombre de empresa",
-        "companyNameHelp": "Compartido con todos los miembros de la organizacion",
+        "companyNameHelp": "Compartido con todos los miembros de la organización",
         "save": "Guardar cambios",
         "saving": "Guardando...",
         "saved": "Cambios guardados"
       },
       "security": {
         "title": "Seguridad",
-        "changePassword": "Cambiar contrasena",
-        "currentPassword": "Contrasena actual",
-        "newPassword": "Nueva contrasena",
-        "confirmPassword": "Confirmar nueva contrasena",
-        "passwordMismatch": "Las contrasenas no coinciden",
-        "wrongCurrentPassword": "La contrasena actual es incorrecta",
-        "passwordChanged": "Contrasena actualizada exitosamente",
-        "changePasswordBtn": "Actualizar contrasena",
+        "changePassword": "Cambiar contraseña",
+        "currentPassword": "Contraseña actual",
+        "newPassword": "Nueva contraseña",
+        "confirmPassword": "Confirmar nueva contraseña",
+        "passwordMismatch": "Las contraseñas no coinciden",
+        "wrongCurrentPassword": "La contraseña actual es incorrecta",
+        "passwordChanged": "Contraseña actualizada exitosamente",
+        "changePasswordBtn": "Actualizar contraseña",
         "changingPassword": "Actualizando...",
         "sessions": "Sesiones activas",
-        "sessionsDescription": "Actualmente tienes sesion iniciada en este dispositivo",
-        "signOutOthers": "Cerrar sesion en otros dispositivos",
-        "signOutOthersConfirmTitle": "Cerrar sesion en todos los otros dispositivos?",
-        "signOutOthersConfirmMessage": "Esto cerrara tu sesion en todos los otros navegadores y dispositivos",
+        "sessionsDescription": "Actualmente tienes sesión iniciada en este dispositivo",
+        "signOutOthers": "Cerrar sesión en otros dispositivos",
+        "signOutOthersConfirmTitle": "¿Cerrar sesión en todos los otros dispositivos?",
+        "signOutOthersConfirmMessage": "Esto cerrará tu sesión en todos los otros navegadores y dispositivos",
         "signOutOthersConfirmBtn": "Cerrar otras sesiones",
         "signOutOthersCancel": "Cancelar",
         "signOutOthersSuccess": "Sesión cerrada en todos los otros dispositivos"
@@ -587,7 +587,7 @@
     "satisfaction_surveys": {
       "name": "Encuestas de Satisfacción del Cliente",
       "description": "Envía encuestas de CSAT y NPS automáticamente tras resolver tickets y alerta al equipo cuando los puntajes caen por debajo de los umbrales.",
-      "impact": "Aumenta las tasas de respuesta a encuestas 3 veces con seguimiento automatizado, obteniendo datos accionables de satisfacción",
+      "impact": "Aumenta las tasas de respuesta a encuestas 3 veces con seguimiento automatizado, obteniendo datos acciónables de satisfacción",
       "metric_label": "Encuestas enviadas"
     },
     "sla_monitoring": {
@@ -695,7 +695,7 @@
     "quality_monitoring": {
       "name": "Monitoreo de Calidad",
       "description": "Monitorea continuamente métricas de calidad, activa alertas cuando se superan los umbrales y automatiza los flujos de acción correctiva.",
-      "impact": "Reduce los costos relacionados con calidad en un 30% mediante detección temprana y resolución más rápida de acciones correctivas",
+      "impact": "Reduce los costos relacionados con calidad en un 30% mediante detección temprana y resolución más rápida de acciónes correctivas",
       "metric_label": "Verificaciones de calidad realizadas"
     },
     "workflow_orchestrator": {
@@ -816,7 +816,7 @@
       "name": "Agente de Soporte Multicanal",
       "description": "Un agente de IA que unifica el soporte por correo, chat y SMS, clasifica la intención, resuelve problemas comunes de forma autónoma y transfiere a humanos sin interrupciones.",
       "impact": "Gestiona el 70% del volumen de soporte de forma autónoma en todos los canales, reduciendo las necesidades de personal en un 30%",
-      "metric_label": "Interacciones resueltas"
+      "metric_label": "Interacciónes resueltas"
     },
     "research_assistant": {
       "name": "Agente Asistente de Investigación",
@@ -838,7 +838,7 @@
     },
     "sales_copilot": {
       "name": "Copiloto de Ventas",
-      "description": "Un copiloto de IA que asesora a los vendedores en negocios activos, recomienda las mejores acciones, ofrece respuestas a objeciones y evalúa el riesgo del pipeline.",
+      "description": "Un copiloto de IA que asesora a los vendedores en negocios activos, recomienda las mejores acciónes, ofrece respuestas a objeciones y evalúa el riesgo del pipeline.",
       "impact": "Aumenta la tasa de cierre de los vendedores en un 20% y reduce el ciclo de ventas promedio en un 15% mediante asesoría guiada por IA",
       "metric_label": "Recomendaciones de negocio realizadas"
     },
@@ -850,7 +850,7 @@
     },
     "code_review_agent": {
       "name": "Agente de Revisión de Código",
-      "description": "Un agente de IA que analiza pull requests en busca de vulnerabilidades de seguridad, problemas de calidad de código e infracciones de estilo, publicando comentarios de revisión en línea.",
+      "description": "Un agente de IA que analiza pull requests en busca de vulnerabilidades de seguridad, problemas de calidad de código e infracciónes de estilo, publicando comentarios de revisión en línea.",
       "impact": "Detecta el 80% de los problemas comunes de seguridad y calidad antes de la revisión humana, reduciendo el tiempo de revisión de PRs a la mitad",
       "metric_label": "PRs revisados"
     },
