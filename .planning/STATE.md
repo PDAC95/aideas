@@ -239,6 +239,14 @@ Phase 13-01 decisions (2026-04-30):
 - **Pre-existing baseline lint debt deferred** — 104 errors / 1584 warnings in unrelated files (queries.ts, auth forms) verified out of scope; logged in deferred-items.md with recommendation for dedicated tech-debt phase before v1.2
 - [Phase 15]: Plan 15-01: removed kpiTrends/avgResponseTime/notifications-query placeholders rather than computing replacements (real trends need historical data; avgResponseTime from seed always ~5s)
 
+Phase 15-02 decisions (2026-04-30):
+- **Per-file YAML key style preserved** — 08-01/02/05 keep snake_case (matches existing dependency_graph/tech_stack/key_files keys); 08-04 uses kebab-case (matches its minimal-frontmatter style and the newer Phase 13/14 standard). Heterogeneous styles across siblings are intentional and locked.
+- **Insertion location: just before metrics: (or before closing --- if absent)** — top-level field placement, never nested. Makes the field discoverable by audit tooling that reads frontmatter only.
+- **Inline-array bare-scalar syntax** — `[HOME-02, HOME-03, ...]` no quotes. Matches Phase 13/14 SUMMARY reference style and is valid YAML.
+- **08-03 explicitly excluded** — out of audit scope (audit named exactly four plans: 01, 02, 04, 05). 08-03 already had requirements-completed: [NOTF-01, NOTF-02, NOTF-03] from its original 2026-04-10 ship commit `3e89f9b`.
+- **Body content invariant** — only frontmatter receives a single +1 line per file; verified via `git diff --stat` showing 4 files changed, 4 insertions, 0 deletions.
+- **Commit-message contamination on commit `93a51a0`** — Task 1 frontmatter additions to 08-01/02 absorbed by parallel Plan 15-01 agent's commit (which wears a `refactor(15-01):` message). Same pattern as 14-02's `99900e7` contamination. Content correct, message misleading. Documented in 15-02-SUMMARY.md.
+
 ### Pending Todos
 
 - Run `npx supabase db reset` when Docker Desktop is running to confirm full migration stack + seed apply cleanly (prerequisite before Phase 08).
@@ -260,5 +268,5 @@ Phase 13-01 decisions (2026-04-30):
 ## Session Continuity
 
 Last session: 2026-04-30
-Stopped at: Plan 15-01 COMPLETE — fetchDashboardData(orgId) single-arg, KpiCards without trends, AutomationPerformance 3-row layout, orphan i18n keys removed. 3 tasks, 5 min, 3 commits (c61fd3c + 93a51a0 + feb14e6). Closes audit LOW-2 (redundant notifications query) and 2 Phase 8 tech-debt items (kpiTrends, avgResponseTime placeholders). Pre-existing working-tree changes (mt-4 styling on greeting row, purple-400 KPI color tweak) noted in 15-01-SUMMARY deviations — mt-4 NOT staged in plan commits, purple tweak incidentally bundled in 93a51a0 due to component-level Edit rewrite.
-Resume file: None — 15-01 done. Next action: complete remaining Phase 15 plans, then phase verifier.
+Stopped at: Plan 15-02 COMPLETE — 4 Phase 8 SUMMARY files backfilled with requirements_completed/requirements-completed frontmatter field. 2 tasks, 4 min, 2 commits (Task 1: 93a51a0 [contaminated by 15-01 parallel agent — content correct, message misleading]; Task 2: b318212 [clean]). Per-file YAML key style preserved (snake_case for 08-01/02/05; kebab-case for 08-04). 08-03 untouched (out of scope, already had field). Closes v1.1 milestone audit tech-debt for Phase 8 SUMMARY frontmatter requirement-ID traceability. Phase 15 now 2/2 plans complete (alongside 15-01 which closed Phase 8 placeholder tech-debt earlier same session).
+Resume file: None — Phase 15 complete. Next action: v1.1 milestone audit re-run + `/gsd:verify-work` for Phase 15 + `/gsd:complete-milestone`.

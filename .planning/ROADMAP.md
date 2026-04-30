@@ -161,8 +161,8 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
   3. Hardcoded `avgResponseTime = "< 1 min"` placeholder is either replaced with a computed value or removed entirely (with the AutomationPerformance card adjusted)
   4. SUMMARY frontmatter `requirements_completed` field backfilled for plans 08-01, 08-02, 08-04, 08-05 to list HOME-01..05 and I18N-01 as appropriate
 **Plans**: 2 plans
-  - [ ] 15-01-PLAN.md — Remove redundant notifications query, kpiTrends placeholder, and avgResponseTime placeholder (5 files: queries.ts, page.tsx, kpi-cards.tsx, en.json, es.json)
-  - [ ] 15-02-PLAN.md — Backfill requirements_completed frontmatter into 08-01/02/04/05 SUMMARY files (per-file YAML style match)
+  - [x] 15-01-PLAN.md — Remove redundant notifications query, kpiTrends placeholder, and avgResponseTime placeholder (5 files: queries.ts, page.tsx, kpi-cards.tsx, en.json, es.json)
+  - [x] 15-02-PLAN.md — Backfill requirements_completed frontmatter into 08-01/02/04/05 SUMMARY files (per-file YAML style match)
 
 ## Progress
 
