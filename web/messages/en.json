@@ -329,6 +329,7 @@
         "customer_service": "Customer service",
         "documents": "Documents",
         "productivity": "Productivity",
+        "operations": "Operations",
         "reports": "Reports",
         "ai_agents": "AI Agents"
       },
@@ -338,7 +339,8 @@
         "salud": "Health",
         "legal": "Legal",
         "inmobiliaria": "Real estate",
-        "restaurantes": "Restaurants"
+        "restaurantes": "Restaurants",
+        "agencias": "Agencies"
       }
     },
     "reports": {

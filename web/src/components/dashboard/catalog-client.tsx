@@ -37,6 +37,7 @@ const CATEGORY_ORDER = [
   "customer_service",
   "documents",
   "productivity",
+  "operations",
   "reports",
   "ai_agents",
 ];

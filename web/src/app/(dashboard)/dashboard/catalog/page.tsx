@@ -67,6 +67,7 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
       customer_service: t("categories.customer_service"),
       documents: t("categories.documents"),
       productivity: t("categories.productivity"),
+      operations: t("categories.operations"),
       reports: t("categories.reports"),
       ai_agents: t("categories.ai_agents"),
     },
@@ -77,6 +78,7 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
       legal: t("industries.legal"),
       inmobiliaria: t("industries.inmobiliaria"),
       restaurantes: t("industries.restaurantes"),
+      agencias: t("industries.agencias"),
     },
   };
 
