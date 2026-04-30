@@ -469,7 +469,13 @@
   },
   "common": {
     "language": "Idioma",
-    "or": "o"
+    "or": "o",
+    "timeAgo": {
+      "now": "ahora",
+      "minutes": "m",
+      "hours": "h",
+      "days": "d"
+    }
   },
   "templates": {
     "lead_followup_email": {
