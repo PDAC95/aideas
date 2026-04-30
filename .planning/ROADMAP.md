@@ -179,5 +179,5 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 | 11. Reports & Billing | 3/3 | Complete    | 2026-04-15 | - |
 | 12. Settings | 5/5 | Complete    | 2026-04-29 | - |
 | 13. Catalog Coverage Fix | v1.1 | 1/1 | Complete | 2026-04-30 |
-| 14. i18n & Security Hygiene | v1.1 | 0/2 | Pending | - |
+| 14. i18n & Security Hygiene | 1/2 | In Progress|  | - |
 | 15. Dashboard Home Polish | v1.1 | 0/? | Pending | - |

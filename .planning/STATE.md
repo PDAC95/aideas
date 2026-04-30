@@ -87,12 +87,12 @@ See: .planning/PROJECT.md (updated 2026-04-09)
 
 ## Current Position
 
-Phase: 13 of 15 (Catalog Coverage Fix) — Plan 13-01 complete, awaiting verifier
-Plan: 13-01 complete (1 of 1 in phase)
-Status: Phase 13 Complete — Plan 13-01 shipped (audit HIGH-1, HIGH-2 closed); ready for /gsd:verify-work
-Last activity: 2026-04-30 — Plan 13-01 executed with 6/6 UAT tests passing; UAT-surfaced bug fix added (commit 8fc33e0) localizing card labels via translations bundle. Operations tab + Agencias chip live in EN+ES.
+Phase: 14 of 15 (i18n & Security Hygiene) — Plan 14-02 complete; Plan 14-01 in parallel progress
+Plan: 14-02 complete (1 of 2 finished in phase 14)
+Status: Phase 14 In Progress — Plan 14-02 shipped (audit LOW-1 'Just now' + NEW-LOW-1 hardcoded 'now'/'m'/'h'/'d' closed via shared formatRelativeTime helper)
+Last activity: 2026-04-30 — Plan 14-02 executed in 5 min, 3 tasks, 5 files. Shared @/lib/utils/time helper backs both notification-bell (client) and automations/[id]/page (server) with new common.timeAgo.* keys (EN now/m/h/d, ES ahora/m/h/d). Plan 14-01 still in progress (parallel agent), partial diff visible on automation-detail-header.tsx awaiting completion.
 
-Progress: [██████████████████░░] 90% (22/24 plans — v1.0 complete, v1.1 Phases 07-13 all done; Phase 14, 15 pending)
+Progress: [██████████████████▒░] 92% (23/25 plans — v1.0 complete, v1.1 Phases 07-13 done, Phase 14 1-of-2 plans done; Phase 14-01 + Phase 15 pending)
 
 ## Accumulated Context
 
@@ -210,6 +210,14 @@ Phase 12-05 decisions (2026-04-16, gap closure):
 - [Phase 12-settings]: Plan 12-04 (gap closure): revalidatePath added to all settings server actions; saveProfileName syncs supabase.auth.updateUser; dashboard-header.tsx now reads first_name from profiles table with auth metadata fallback
 - [Phase 12-settings]: Plan 12-04: admin-client updates now use .select('id') + zero-row guard; hourly-cost form replaced silently-failing Zod resolver with inline numeric validation in server action
 
+Phase 14-02 decisions (2026-04-30):
+- **Structural TimeT type in shared helper** — `type TimeT = (key: string) => string` accepts both `useTranslations` (client) and `getTranslations` (server) translator shapes; util module stays dependency-free of next-intl
+- **Full migration of all 4 buckets** — original `buildTimeAgo` only hardcoded `<60s` ('Just now') but Plan 14-02 unifies all 4 buckets (`<60s`, `<3600s`, `<86400s`, `else`) under shared helper for single source of truth
+- **Spanish m/h/d intentionally identical to English** — universal time-unit abbreviations preserve compact 5m/2h/3d visual style across locales; locked in CONTEXT.md
+- **common.timeAgo.* coexists with dashboard.home.timeAgo.*** — new compact namespace; old long-form (`{count}m ago` / `Hace {count}m`) untouched (different surface, different style)
+- **web/src/lib/utils/ subdirectory introduced alongside existing web/src/lib/utils.ts** — TypeScript module resolution treats both paths independently; `cn()` import path `@/lib/utils` unaffected
+- **Commit-message contamination on commit `99900e7`** — Task 2 i18n key changes committed under wrong message ("feat(14-01): add assertOrgMembership...") due to parallel agent activity; content correct, message misleading. Documented in 14-02-SUMMARY.md.
+
 Phase 13-01 decisions (2026-04-30):
 - **operations tab inserted between productivity and reports** — groups internal-process categories (productivity → operations → reports) before AI Agents; deliberately NOT alphabetized
 - **agencias chip appended as LAST industry key** — JSON insertion order = render order via `Object.keys(translations.industries)`; appending preserves byte-for-byte EN/ES key-order parity
@@ -238,5 +246,5 @@ Phase 13-01 decisions (2026-04-30):
 ## Session Continuity
 
 Last session: 2026-04-30
-Stopped at: Plan 13-01 COMPLETE — UAT passed (6/6 tests), post-UAT card-localization fix committed (8fc33e0), SUMMARY.md written. Phase 13 ready for /gsd:verify-work. Audit gaps HIGH-1 (operations) and HIGH-2 (agencias) closed; v1.1 backlog reduced to Phases 14 (i18n & Security Hygiene) and 15 (Dashboard Home Polish).
-Resume file: None — Phase 13 done. Next action: orchestrator runs verifier, then plan Phase 14.
+Stopped at: Plan 14-02 COMPLETE — Shared formatRelativeTime helper + common.timeAgo i18n keys + notification-bell/automations-[id] migrations. 3 tasks, 5 min, 3 commits (5266937 + 99900e7 + 8af73e1). Audit LOW-1 ("Just now") and NEW-LOW-1 (hardcoded EN literals) closed. Plan 14-01 still in progress in parallel (partial uncommitted diff on automation-detail-header.tsx awaiting completion).
+Resume file: None — 14-02 done. Next action: complete Plan 14-01 (parallel work), then phase verifier.
