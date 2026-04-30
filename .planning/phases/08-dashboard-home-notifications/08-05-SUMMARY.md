@@ -21,6 +21,7 @@ decisions:
   - "Wrapped NotificationBell in px-4 py-3 div to match mobile menu item padding — keeps visual alignment without special-casing the component"
   - "newAutomation key value changed from '+ Nueva automatización' to 'Nueva automatización' (Plus icon is rendered separately in JSX)"
   - "Short label for mobile CTA is 'New'/'Nueva' rather than '+' alone — more accessible and descriptive"
+requirements_completed: [HOME-05, NOTF-02, I18N-01]
 metrics:
   duration: "10 minutes"
   completed_date: "2026-04-13"

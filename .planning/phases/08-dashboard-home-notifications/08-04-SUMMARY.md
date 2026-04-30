@@ -4,6 +4,7 @@ plan: 04
 status: complete
 started: 2026-04-10
 completed: 2026-04-10
+requirements-completed: [HOME-01, HOME-02, HOME-03, HOME-04, HOME-05, NOTF-01, NOTF-02, NOTF-03, I18N-01]
 ---
 
 ## Summary
