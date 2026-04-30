@@ -33,6 +33,9 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 - [x] **Phase 10: Catalog** — Browse 66+ templates with industry/category filters and template detail pages (completed 2026-04-14)
 - [x] **Phase 11: Reports & Billing** — Impact metrics with charts and billing summary with mock payment history (completed 2026-04-15)
 - [x] **Phase 12: Settings** — Profile, preferences (language, hourly cost), and security management (completed 2026-04-15)
+- [ ] **Phase 13: Catalog Coverage Fix** — Add `operations` category and `agencias` industry to catalog UI + i18n (closes audit HIGH-1, HIGH-2)
+- [ ] **Phase 14: i18n & Security Hygiene** — Org ownership check on `updateAutomationStatus`; replace hardcoded "Just now"; wire `notification-bell` time format to next-intl (closes audit MEDIUM-1, LOW-1, NEW-LOW-1)
+- [ ] **Phase 15: Dashboard Home Polish** — Drop redundant notifications query; replace hardcoded KPI trend / avgResponseTime placeholders; backfill SUMMARY frontmatter for Phase 8 (closes audit LOW-2 + tech debt)
 
 ## Phase Details
 
@@ -119,6 +122,43 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
   - [ ] 12-02-PLAN.md — Settings page, Profile card (avatar + name), and Preferences card (language + hourly cost)
   - [ ] 12-03-PLAN.md — Security card with password change form and session management
 
+### Phase 13: Catalog Coverage Fix
+**Goal**: All seeded automation templates are reachable via catalog filters; no orphaned categories or industries
+**Depends on**: Phase 10 (catalog shipped)
+**Requirements**: CATL-01, CATL-02, CATL-03, I18N-01 (already satisfied — closes audit gaps within these)
+**Gap Closure**: Closes HIGH-1 (`operations` category orphan, 8 templates) and HIGH-2 (`agencias` industry orphan, ~48 templates) from `.planning/v1.1-MILESTONE-AUDIT.md`
+**Success Criteria** (what must be TRUE):
+  1. `dashboard.catalog.categories.operations` key present in `web/messages/en.json` and `es.json` with translated label
+  2. `dashboard.catalog.industries.agencias` key present in `web/messages/en.json` and `es.json` with translated label
+  3. `CATEGORY_ORDER` in `catalog-client.tsx` includes `operations` so the tab renders in the correct sort position
+  4. `catalog/page.tsx` translation map includes `operations` (categories) and `agencias` (industries) so labels render
+  5. Browsing `/dashboard/catalog` and selecting Operations tab shows all 8 operations templates; selecting Agencias chip shows all ~48 templates tagged `agencias`
+**Plans**: TBD
+
+### Phase 14: i18n & Security Hygiene
+**Goal**: Defense-in-depth on automation lifecycle action; full i18n coverage on user-visible time strings
+**Depends on**: Phase 9 (automations shipped)
+**Requirements**: AUTO-04, AUTO-06, NOTF-02, I18N-01 (already satisfied — closes audit gaps within these)
+**Gap Closure**: Closes MEDIUM-1 (`updateAutomationStatus` missing org ownership check), LOW-1 (hardcoded "Just now"), and NEW-LOW-1 (`notification-bell` formatRelativeTime hardcoded EN) from audit
+**Success Criteria** (what must be TRUE):
+  1. `updateAutomationStatus` server action verifies the caller's `organization_members` membership for the automation's `organization_id` before updating, returning a typed error otherwise
+  2. `automations/[id]/page.tsx` `buildTimeAgo` helper for `seconds < 60` returns the i18n-translated equivalent (e.g., `t("timeAgo.now")`) instead of the hardcoded `"Just now"`
+  3. `notification-bell.tsx` `formatRelativeTime` reads its labels (`now`, `m`, `h`, `d`) from translations passed via props (or via a next-intl client hook) so Spanish locale renders Spanish abbreviations
+  4. New i18n keys added to both `en.json` and `es.json` for the notification time abbreviations
+**Plans**: TBD
+
+### Phase 15: Dashboard Home Polish
+**Goal**: Dashboard home renders only real values (no hardcoded placeholders) and Phase 8 SUMMARY frontmatter accurately lists completed requirements
+**Depends on**: Phase 8 (dashboard home shipped)
+**Requirements**: HOME-01, HOME-02, HOME-04, I18N-01 (already satisfied — closes documentation/perf gaps within these)
+**Gap Closure**: Closes LOW-2 (redundant notifications query in `fetchDashboardData`) and Phase 8 tech debt items (KPI trend placeholders, avgResponseTime placeholder, SUMMARY frontmatter gap) from audit
+**Success Criteria** (what must be TRUE):
+  1. `fetchDashboardData` no longer fetches `notifications` (the value was discarded by the consumer); layout continues to fetch its own copy
+  2. Hardcoded `kpiTrends` array (+12%, +8%, +15%) in `dashboard/page.tsx:139-143` is either replaced with computed period-over-period values or removed entirely (with the trend UI also removed)
+  3. Hardcoded `avgResponseTime = "< 1 min"` placeholder is either replaced with a computed value or removed entirely (with the AutomationPerformance card adjusted)
+  4. SUMMARY frontmatter `requirements_completed` field backfilled for plans 08-01, 08-02, 08-04, 08-05 to list HOME-01..05 and I18N-01 as appropriate
+**Plans**: TBD
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -135,3 +175,6 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 | 10. Catalog | 3/3 | Complete    | 2026-04-14 | - |
 | 11. Reports & Billing | 3/3 | Complete    | 2026-04-15 | - |
 | 12. Settings | 5/5 | Complete    | 2026-04-29 | - |
+| 13. Catalog Coverage Fix | v1.1 | 0/? | Pending | - |
+| 14. i18n & Security Hygiene | v1.1 | 0/? | Pending | - |
+| 15. Dashboard Home Polish | v1.1 | 0/? | Pending | - |

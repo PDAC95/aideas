@@ -115,49 +115,49 @@ Deferred to future release. Tracked but not in current roadmap.
 
 ## Traceability
 
-Which phases cover which requirements. Updated during roadmap creation.
+Which phases cover which requirements. Updated during roadmap creation. Gap-closure phases (13-15) refine quality of already-satisfied requirements per `.planning/v1.1-MILESTONE-AUDIT.md` (2026-04-29).
 
-| Requirement | Phase | Status |
-|-------------|-------|--------|
-| DATA-01 | Phase 7 | Complete |
-| DATA-02 | Phase 7 | Complete |
-| DATA-03 | Phase 7 | Complete |
-| DATA-04 | Phase 7 | Complete |
-| DATA-05 | Phase 7 | Complete |
-| HOME-01 | Phase 8 | Complete |
-| HOME-02 | Phase 8 | Complete |
-| HOME-03 | Phase 8 | Complete |
-| HOME-04 | Phase 8 | Complete |
-| HOME-05 | Phase 8 | Complete |
-| NOTF-01 | Phase 8 | Complete |
-| NOTF-02 | Phase 8 | Complete |
-| NOTF-03 | Phase 8 | Complete |
-| I18N-01 | Phase 8 | Complete |
-| AUTO-01 | Phase 9 | Complete |
-| AUTO-02 | Phase 9 | Complete |
-| AUTO-03 | Phase 9 | Complete |
-| AUTO-04 | Phase 9 | Complete |
-| AUTO-05 | Phase 9 | Complete |
-| AUTO-06 | Phase 9 | Complete |
-| CATL-01 | Phase 10 | Complete |
-| CATL-02 | Phase 10 | Complete |
-| CATL-03 | Phase 10 | Complete |
-| CATL-04 | Phase 10 | Complete |
-| REPT-01 | Phase 11 | Complete |
-| REPT-02 | Phase 11 | Complete |
-| REPT-03 | Phase 11 | Complete |
-| REPT-04 | Phase 11 | Complete |
-| REPT-05 | Phase 11 | Complete |
-| BILL-01 | Phase 11 | Complete |
-| BILL-02 | Phase 11 | Complete |
-| BILL-03 | Phase 11 | Complete |
-| BILL-04 | Phase 11 | Complete |
-| SETT-01 | Phase 12 | Complete |
-| SETT-02 | Phase 12 | Complete |
-| SETT-03 | Phase 12 | Complete |
-| SETT-04 | Phase 12 | Complete |
-| SETT-05 | Phase 12 | Complete |
-| SETT-06 | Phase 12 | Complete |
+| Requirement | Phase | Status | Gap Closure |
+|-------------|-------|--------|-------------|
+| DATA-01 | Phase 7 | Complete | — |
+| DATA-02 | Phase 7 | Complete | — |
+| DATA-03 | Phase 7 | Complete | — |
+| DATA-04 | Phase 7 | Complete | — |
+| DATA-05 | Phase 7 | Complete | — |
+| HOME-01 | Phase 8 | Complete | — |
+| HOME-02 | Phase 8 | Complete | Phase 15 (drop hardcoded KPI trends + avgResponseTime) |
+| HOME-03 | Phase 8 | Complete | — |
+| HOME-04 | Phase 8 | Complete | Phase 15 (drop redundant notifications query) |
+| HOME-05 | Phase 8 | Complete | — |
+| NOTF-01 | Phase 8 | Complete | — |
+| NOTF-02 | Phase 8 | Complete | Phase 14 (i18n notification time format) |
+| NOTF-03 | Phase 8 | Complete | — |
+| I18N-01 | Phase 8 | Complete | Phase 13 (operations/agencias keys) + Phase 14 (Just now / notification time) |
+| AUTO-01 | Phase 9 | Complete | — |
+| AUTO-02 | Phase 9 | Complete | — |
+| AUTO-03 | Phase 9 | Complete | — |
+| AUTO-04 | Phase 9 | Complete | Phase 14 (replace hardcoded "Just now") |
+| AUTO-05 | Phase 9 | Complete | — |
+| AUTO-06 | Phase 9 | Complete | Phase 14 (org ownership check) |
+| CATL-01 | Phase 10 | Complete | Phase 13 (operations + agencias) |
+| CATL-02 | Phase 10 | Complete | Phase 13 (operations category) |
+| CATL-03 | Phase 10 | Complete | Phase 13 (agencias industry) |
+| CATL-04 | Phase 10 | Complete | — |
+| REPT-01 | Phase 11 | Complete | — |
+| REPT-02 | Phase 11 | Complete | — |
+| REPT-03 | Phase 11 | Complete | — |
+| REPT-04 | Phase 11 | Complete | — |
+| REPT-05 | Phase 11 | Complete | — |
+| BILL-01 | Phase 11 | Complete | — |
+| BILL-02 | Phase 11 | Complete | — |
+| BILL-03 | Phase 11 | Complete | — |
+| BILL-04 | Phase 11 | Complete | — |
+| SETT-01 | Phase 12 | Complete | — |
+| SETT-02 | Phase 12 | Complete | — |
+| SETT-03 | Phase 12 | Complete | — |
+| SETT-04 | Phase 12 | Complete | — |
+| SETT-05 | Phase 12 | Complete | — |
+| SETT-06 | Phase 12 | Complete | — |
 
 **Coverage:**
 - v1.1 requirements: 34 total
@@ -166,4 +166,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-04-09*
-*Last updated: 2026-04-09 — traceability complete after roadmap creation*
+*Last updated: 2026-04-29 — gap-closure annotations added for Phases 13-15 after milestone audit*
