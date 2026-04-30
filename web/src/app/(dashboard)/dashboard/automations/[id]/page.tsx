@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { getOrgId, fetchAutomationDetail } from "@/lib/dashboard/queries";
+import { formatRelativeTime } from "@/lib/utils/time";
 import { AutomationDetailHeader } from "@/components/dashboard/automation-detail-header";
 import { AutomationKpiCards } from "@/components/dashboard/automation-kpi-cards";
 import { ExecutionTimeline } from "@/components/dashboard/execution-timeline";
@@ -11,22 +12,6 @@ import { WeeklyBarChartLoader } from "@/components/dashboard/weekly-bar-chart-lo
 
 interface AutomationDetailPageProps {
   params: Promise<{ id: string }>;
-}
-
-function buildTimeAgo(
-  dateStr: string,
-  nowMs: number,
-  minutes: string,
-  hours: string,
-  days: string
-): string {
-  const seconds = Math.floor((nowMs - new Date(dateStr).getTime()) / 1000);
-  if (seconds < 60) return "Just now";
-  if (seconds < 3600)
-    return minutes.replace("{count}", String(Math.floor(seconds / 60)));
-  if (seconds < 86400)
-    return hours.replace("{count}", String(Math.floor(seconds / 3600)));
-  return days.replace("{count}", String(Math.floor(seconds / 86400)));
 }
 
 export default async function AutomationDetailPage({
@@ -68,7 +53,7 @@ export default async function AutomationDetailPage({
 
   // Get translations
   const t = await getTranslations("dashboard.automations");
-  const tHome = await getTranslations("dashboard.home");
+  const tCommon = await getTranslations("common");
 
   // Status labels
   const statusLabels: Record<string, string> = {
@@ -81,26 +66,11 @@ export default async function AutomationDetailPage({
     archived: t("status.failed"),
   };
 
-  // Pre-compute timeAgo strings (avoids passing functions across RSC boundaries)
-  const nowMs = Date.now();
-  const minutesTemplate = tHome("timeAgo.minutes", { count: 99 }).replace(
-    "99",
-    "{count}"
-  );
-  const hoursTemplate = tHome("timeAgo.hours", { count: 99 }).replace(
-    "99",
-    "{count}"
-  );
-  const daysTemplate = tHome("timeAgo.days", { count: 99 }).replace(
-    "99",
-    "{count}"
-  );
-
-  // Pre-compute duration labels
+  // Pre-compute timeAgo strings via shared helper (avoids passing functions across RSC boundaries)
   const enrichedExecutions = executions.map((exec) => ({
     id: exec.id,
     status: exec.status,
-    timeAgo: buildTimeAgo(exec.started_at, nowMs, minutesTemplate, hoursTemplate, daysTemplate),
+    timeAgo: formatRelativeTime(exec.started_at, tCommon),
     durationLabel:
       exec.duration_ms != null
         ? `${(exec.duration_ms / 1000).toFixed(1)}s`
@@ -136,6 +106,7 @@ export default async function AutomationDetailPage({
     cancelDialogDescription: t("cancelDialog.description"),
     cancelDialogBack: t("cancelDialog.back"),
     cancelDialogConfirm: t("cancelDialog.confirm"),
+    permissionError: t("actions.permissionError"),
   };
 
   // Timeline translations

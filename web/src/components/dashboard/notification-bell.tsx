@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { Bell, CheckCircle, Info, AlertTriangle, AlertCircle } from "lucide-react";
 import { Popover } from "radix-ui";
+import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
+import { formatRelativeTime } from "@/lib/utils/time";
 import type { DashboardNotification } from "@/lib/dashboard/types";
 
 interface NotificationBellProps {
@@ -15,14 +17,6 @@ interface NotificationBellProps {
     markAllRead: string;
     empty: string;
   };
-}
-
-function formatRelativeTime(dateStr: string): string {
-  const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
-  if (seconds < 60) return "now";
-  if (seconds < 3600) return `${Math.floor(seconds / 60)}m`;
-  if (seconds < 86400) return `${Math.floor(seconds / 3600)}h`;
-  return `${Math.floor(seconds / 86400)}d`;
 }
 
 function NotificationIcon({ type }: { type: DashboardNotification["type"] }) {
@@ -63,6 +57,7 @@ export function NotificationBell({
   const [notifications, setNotifications] = useState(initialNotifications);
   const [localUnread, setLocalUnread] = useState(unreadCount);
   const [open, setOpen] = useState(false);
+  const tCommon = useTranslations("common");
 
   const markAllRead = async () => {
     // Optimistic update
@@ -139,7 +134,7 @@ export function NotificationBell({
                           </p>
                         )}
                         <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
-                          {formatRelativeTime(notification.created_at)}
+                          {formatRelativeTime(notification.created_at, tCommon)}
                         </p>
                       </div>
                       {!notification.is_read && (
