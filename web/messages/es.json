@@ -295,7 +295,8 @@
         "cancel": "Cancelar",
         "pauseSuccess": "Automatizacion pausada",
         "resumeSuccess": "Automatizacion reanudada",
-        "cancelSuccess": "Automatizacion cancelada"
+        "cancelSuccess": "Automatizacion cancelada",
+        "permissionError": "No tienes permiso para realizar esta acción"
       },
       "cancelDialog": {
         "title": "Cancelar automatización?",

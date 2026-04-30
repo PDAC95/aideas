@@ -26,6 +26,7 @@ interface AutomationDetailHeaderProps {
     cancelDialogDescription: string;
     cancelDialogBack: string;
     cancelDialogConfirm: string;
+    permissionError: string;
   };
 }
 
@@ -64,7 +65,7 @@ export function AutomationDetailHeader({
 }: AutomationDetailHeaderProps) {
   const router = useRouter();
   const [optimisticStatus, setOptimisticStatus] = useState<AutomationStatus>(status);
-  const [toast, setToast] = useState<string | null>(null);
+  const [toast, setToast] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [isPending, setIsPending] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
 
@@ -79,11 +80,11 @@ export function AutomationDetailHeader({
     setIsPending(true);
     const result = await updateAutomationStatus(automationId, "paused");
     setIsPending(false);
-    if (result.success) {
-      setToast(translations.pauseSuccess);
-    } else {
+    if ("error" in result) {
       setOptimisticStatus(status);
-      setToast(result.error ?? "Error");
+      setToast({ type: "error", message: translations.permissionError });
+    } else {
+      setToast({ type: "success", message: translations.pauseSuccess });
     }
   }
 
@@ -92,11 +93,11 @@ export function AutomationDetailHeader({
     setIsPending(true);
     const result = await updateAutomationStatus(automationId, "active");
     setIsPending(false);
-    if (result.success) {
-      setToast(translations.resumeSuccess);
-    } else {
+    if ("error" in result) {
       setOptimisticStatus(status);
-      setToast(result.error ?? "Error");
+      setToast({ type: "error", message: translations.permissionError });
+    } else {
+      setToast({ type: "success", message: translations.resumeSuccess });
     }
   }
 
@@ -105,11 +106,11 @@ export function AutomationDetailHeader({
     setIsPending(true);
     const result = await updateAutomationStatus(automationId, "archived");
     setIsPending(false);
-    if (result.success) {
-      setToast(translations.cancelSuccess);
-      setTimeout(() => router.push("/dashboard/automations"), 800);
+    if ("error" in result) {
+      setToast({ type: "error", message: translations.permissionError });
     } else {
-      setToast(result.error ?? "Error");
+      setToast({ type: "success", message: translations.cancelSuccess });
+      setTimeout(() => router.push("/dashboard/automations"), 800);
     }
   }
 
@@ -242,8 +243,12 @@ export function AutomationDetailHeader({
 
       {/* Toast notification */}
       {toast && (
-        <div className="fixed bottom-4 right-4 z-50 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-lg">
-          {toast}
+        <div
+          className={`fixed bottom-4 right-4 z-50 rounded-lg px-4 py-2 text-sm font-medium text-white shadow-lg ${
+            toast.type === "error" ? "bg-red-600" : "bg-green-600"
+          }`}
+        >
+          {toast.message}
         </div>
       )}
     </div>

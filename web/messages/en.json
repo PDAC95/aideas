@@ -295,7 +295,8 @@
         "cancel": "Cancel",
         "pauseSuccess": "Automation paused",
         "resumeSuccess": "Automation resumed",
-        "cancelSuccess": "Automation cancelled"
+        "cancelSuccess": "Automation cancelled",
+        "permissionError": "You don't have permission to perform this action"
       },
       "cancelDialog": {
         "title": "Cancel automation?",
