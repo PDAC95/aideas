@@ -133,7 +133,8 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
   3. `CATEGORY_ORDER` in `catalog-client.tsx` includes `operations` so the tab renders in the correct sort position
   4. `catalog/page.tsx` translation map includes `operations` (categories) and `agencias` (industries) so labels render
   5. Browsing `/dashboard/catalog` and selecting Operations tab shows all 8 operations templates; selecting Agencias chip shows all ~48 templates tagged `agencias`
-**Plans**: TBD
+**Plans**: 1 plan
+  - [ ] 13-01-PLAN.md — Register operations category and agencias industry in i18n + UI registration points (4-file mechanical edit + manual UAT)
 
 ### Phase 14: i18n & Security Hygiene
 **Goal**: Defense-in-depth on automation lifecycle action; full i18n coverage on user-visible time strings
@@ -175,6 +176,6 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 | 10. Catalog | 3/3 | Complete    | 2026-04-14 | - |
 | 11. Reports & Billing | 3/3 | Complete    | 2026-04-15 | - |
 | 12. Settings | 5/5 | Complete    | 2026-04-29 | - |
-| 13. Catalog Coverage Fix | v1.1 | 0/? | Pending | - |
+| 13. Catalog Coverage Fix | v1.1 | 0/1 | Pending | - |
 | 14. i18n & Security Hygiene | v1.1 | 0/? | Pending | - |
 | 15. Dashboard Home Polish | v1.1 | 0/? | Pending | - |
