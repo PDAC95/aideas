@@ -87,12 +87,12 @@ See: .planning/PROJECT.md (updated 2026-04-09)
 
 ## Current Position
 
-Phase: 12 of 12 (Settings) — Gap closure complete
-Plan: 12-01, 12-02, 12-03 (build) + 12-04, 12-05 (gap closure) all complete
-Status: Phase 12 Complete — All 5 plans shipped and documented; UAT gaps for tests 1-5, 7 closed
-Last activity: 2026-04-29 — Documented 12-04: revalidatePath added to all settings server actions, auth metadata sync in saveProfileName, dashboard-header.tsx now reads first_name from profiles table (commits 9015053 + 333fa40)
+Phase: 13 of 15 (Catalog Coverage Fix) — Plan 13-01 complete, awaiting verifier
+Plan: 13-01 complete (1 of 1 in phase)
+Status: Phase 13 Complete — Plan 13-01 shipped (audit HIGH-1, HIGH-2 closed); ready for /gsd:verify-work
+Last activity: 2026-04-30 — Plan 13-01 executed with 6/6 UAT tests passing; UAT-surfaced bug fix added (commit 8fc33e0) localizing card labels via translations bundle. Operations tab + Agencias chip live in EN+ES.
 
-Progress: [████████████████████] 100% (21/21 plans — v1.0 complete, v1.1 Phases 07-12 all done)
+Progress: [██████████████████░░] 90% (22/24 plans — v1.0 complete, v1.1 Phases 07-13 all done; Phase 14, 15 pending)
 
 ## Accumulated Context
 
@@ -210,6 +210,13 @@ Phase 12-05 decisions (2026-04-16, gap closure):
 - [Phase 12-settings]: Plan 12-04 (gap closure): revalidatePath added to all settings server actions; saveProfileName syncs supabase.auth.updateUser; dashboard-header.tsx now reads first_name from profiles table with auth metadata fallback
 - [Phase 12-settings]: Plan 12-04: admin-client updates now use .select('id') + zero-row guard; hourly-cost form replaced silently-failing Zod resolver with inline numeric validation in server action
 
+Phase 13-01 decisions (2026-04-30):
+- **operations tab inserted between productivity and reports** — groups internal-process categories (productivity → operations → reports) before AI Agents; deliberately NOT alphabetized
+- **agencias chip appended as LAST industry key** — JSON insertion order = render order via `Object.keys(translations.industries)`; appending preserves byte-for-byte EN/ES key-order parity
+- **Catalog cards now map t.category and t.industry_tags through translations bundle** — UAT-surfaced bug fix in commit 8fc33e0; raw DB slugs were leaking through to user-facing cards (latent defect from Phase 10, only visible after operations category exposed asymmetric EN/ES labels)
+- **Raw-key fallback (?? t.category) in card translation lookup** — preserves safety for slugs not yet registered, allowing seed to evolve without breaking the UI
+- **Pre-existing baseline lint debt deferred** — 104 errors / 1584 warnings in unrelated files (queries.ts, auth forms) verified out of scope; logged in deferred-items.md with recommendation for dedicated tech-debt phase before v1.2
+
 ### Pending Todos
 
 - Run `npx supabase db reset` when Docker Desktop is running to confirm full migration stack + seed apply cleanly (prerequisite before Phase 08).
@@ -230,6 +237,6 @@ Phase 12-05 decisions (2026-04-16, gap closure):
 
 ## Session Continuity
 
-Last session: 2026-04-29
-Stopped at: Documented 12-04-SUMMARY.md (gap-closure for settings persistence) — code already committed in 9015053 + 333fa40; deferred-items.md created for pre-existing Next.js 16 dynamic-import build failure in Phase 9 file
-Resume file: None
+Last session: 2026-04-30
+Stopped at: Plan 13-01 COMPLETE — UAT passed (6/6 tests), post-UAT card-localization fix committed (8fc33e0), SUMMARY.md written. Phase 13 ready for /gsd:verify-work. Audit gaps HIGH-1 (operations) and HIGH-2 (agencias) closed; v1.1 backlog reduced to Phases 14 (i18n & Security Hygiene) and 15 (Dashboard Home Polish).
+Resume file: None — Phase 13 done. Next action: orchestrator runs verifier, then plan Phase 14.
