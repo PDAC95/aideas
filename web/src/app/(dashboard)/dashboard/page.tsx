@@ -131,14 +131,6 @@ export default async function DashboardPage() {
   const successRate =
     totalExecs > 0 ? Math.round((successExecs / totalExecs) * 100) : 0;
 
-  // KPI trends — hardcoded as "+12%" for now since we don't have historical comparison data yet
-  // TODO: compute real trends when weekly snapshot data is available
-  const kpiTrends = {
-    activeAutomations: "+12%",
-    tasksThisWeek: "+8%",
-    hoursSavedThisMonth: "+15%",
-  };
-
   // Performance metrics
   const avgResponseTime = "< 1 min"; // placeholder — real value needs execution duration tracking
   const performanceMetrics = [
@@ -181,7 +173,6 @@ export default async function DashboardPage() {
               tasksThisWeek: t("kpi.tasksThisWeek"),
               hoursSavedThisMonth: t("kpi.hoursSavedThisMonth"),
             }}
-            trends={kpiTrends}
           />
         </div>
         <TopAutomationCard

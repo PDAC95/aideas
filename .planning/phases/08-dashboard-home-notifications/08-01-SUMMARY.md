@@ -31,6 +31,7 @@ decisions:
   - Fallback query pattern for executions — used .in("automation_id", orgAutomationIds) instead of nested .eq() on relation column, as Supabase filtering on nested relation columns via .eq() is unreliable; automations fetched first, then executions scoped by IDs
   - hoursSavedThisMonth rounded to 1 decimal (Math.round x10/10) for clean display
   - daily_execution_count mutated onto automation objects after initial fetch to avoid extra round-trips
+requirements_completed: [HOME-02, HOME-03, HOME-04, NOTF-01, I18N-01]
 metrics:
   duration: ~8 minutes
   completed_date: "2026-04-10"

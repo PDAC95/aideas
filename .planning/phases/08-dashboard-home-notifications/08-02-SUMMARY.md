@@ -32,6 +32,7 @@ decisions:
   - Pre-compute enriched executions in parent page instead of passing formatTimeAgo function — functions are not serializable across RSC boundaries; page computes timeAgo strings and passes enriched array to ActivityFeed
   - Automation names rendered directly (human-readable strings from seed) — seed stores names like "Acme Customer Support Chatbot" not i18n keys; confirmed from seed.sql inspection
   - Template substitution for i18n count strings — getTranslations returns formatted strings (e.g., "5m ago"), so extract template by formatting with sentinel "99" then replacing with "{count}" for runtime substitution
+requirements_completed: [HOME-01, HOME-02, HOME-03, HOME-04, HOME-05, I18N-01]
 metrics:
   duration: ~3 minutes
   completed_date: "2026-04-10"
