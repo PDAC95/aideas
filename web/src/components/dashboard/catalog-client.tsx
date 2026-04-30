@@ -268,12 +268,14 @@ export function CatalogClient({
               key={t.id}
               slug={t.slug}
               displayName={t.displayName}
-              category={t.category}
+              category={translations.categories[t.category] ?? t.category}
               monthlyPriceFormatted={translations.monthlyPrice.replace(
                 "{price}",
                 formatPrice(t.monthly_price, locale)
               )}
-              industryTags={t.industry_tags ?? []}
+              industryTags={(t.industry_tags ?? []).map(
+                (tag) => translations.industries[tag] ?? tag
+              )}
               connectedApps={t.connected_apps ?? []}
               isFeatured={t.is_featured}
               popularBadgeLabel={translations.popularBadge}
