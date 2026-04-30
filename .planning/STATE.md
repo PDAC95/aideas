@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Core Dashboard Experience
 status: unknown
-last_updated: "2026-04-30T19:59:06.702Z"
+last_updated: "2026-04-30T20:34:25.296Z"
 progress:
   total_phases: 9
-  completed_phases: 8
-  total_plans: 26
-  completed_plans: 26
+  completed_phases: 9
+  total_plans: 28
+  completed_plans: 28
 ---
 
 ---
@@ -100,12 +100,12 @@ See: .planning/PROJECT.md (updated 2026-04-09)
 
 ## Current Position
 
-Phase: 14 of 15 (i18n & Security Hygiene) — Plan 14-02 complete; Plan 14-01 in parallel progress
-Plan: 14-02 complete (1 of 2 finished in phase 14)
-Status: Phase 14 In Progress — Plan 14-02 shipped (audit LOW-1 'Just now' + NEW-LOW-1 hardcoded 'now'/'m'/'h'/'d' closed via shared formatRelativeTime helper)
-Last activity: 2026-04-30 — Plan 14-02 executed in 5 min, 3 tasks, 5 files. Shared @/lib/utils/time helper backs both notification-bell (client) and automations/[id]/page (server) with new common.timeAgo.* keys (EN now/m/h/d, ES ahora/m/h/d). Plan 14-01 still in progress (parallel agent), partial diff visible on automation-detail-header.tsx awaiting completion.
+Phase: 15 of 15 (Dashboard Home Polish) — Plans 15-01 and 15-02 both complete
+Plan: 15-02 complete (Phase 8 SUMMARY frontmatter requirements traceability backfill); 15-01 also complete (placeholder cleanup)
+Status: Phase 15 Complete — Plan 15-01 closed Phase 8 placeholder tech-debt; Plan 15-02 closed audit traceability gap by backfilling requirements_completed/requirements-completed into 4 Phase 8 SUMMARY frontmatter blocks (08-01, 08-02, 08-04, 08-05)
+Last activity: 2026-04-30 — Plan 15-02 executed in 4 min, 2 tasks, 4 files modified. Snake_case backfill for 08-01/02/05 (matches existing dependency_graph/tech_stack/key_files style); kebab-case backfill for 08-04 (matches minimal-frontmatter Phase 13/14 standard). Per-file YAML style preserved per locked decision; 08-03 untouched (out of audit scope, already had requirements-completed from original ship). Task 1 commit message contaminated by parallel Plan 15-01 agent (commit 93a51a0 carries 08-01/02 frontmatter additions under a 15-01 message); content correct, message misleading. Task 2 clean (b318212).
 
-Progress: [██████████████████▒░] 92% (23/25 plans — v1.0 complete, v1.1 Phases 07-13 done, Phase 14 1-of-2 plans done; Phase 14-01 + Phase 15 pending)
+Progress: [████████████████████] 100% (25/25 plans — v1.0 complete, v1.1 Phases 07-15 done; ready for v1.1 milestone audit re-run)
 
 ## Accumulated Context
 
@@ -237,6 +237,7 @@ Phase 13-01 decisions (2026-04-30):
 - **Catalog cards now map t.category and t.industry_tags through translations bundle** — UAT-surfaced bug fix in commit 8fc33e0; raw DB slugs were leaking through to user-facing cards (latent defect from Phase 10, only visible after operations category exposed asymmetric EN/ES labels)
 - **Raw-key fallback (?? t.category) in card translation lookup** — preserves safety for slugs not yet registered, allowing seed to evolve without breaking the UI
 - **Pre-existing baseline lint debt deferred** — 104 errors / 1584 warnings in unrelated files (queries.ts, auth forms) verified out of scope; logged in deferred-items.md with recommendation for dedicated tech-debt phase before v1.2
+- [Phase 15]: Plan 15-01: removed kpiTrends/avgResponseTime/notifications-query placeholders rather than computing replacements (real trends need historical data; avgResponseTime from seed always ~5s)
 
 ### Pending Todos
 
@@ -259,5 +260,5 @@ Phase 13-01 decisions (2026-04-30):
 ## Session Continuity
 
 Last session: 2026-04-30
-Stopped at: Plan 14-02 COMPLETE — Shared formatRelativeTime helper + common.timeAgo i18n keys + notification-bell/automations-[id] migrations. 3 tasks, 5 min, 3 commits (5266937 + 99900e7 + 8af73e1). Audit LOW-1 ("Just now") and NEW-LOW-1 (hardcoded EN literals) closed. Plan 14-01 still in progress in parallel (partial uncommitted diff on automation-detail-header.tsx awaiting completion).
-Resume file: None — 14-02 done. Next action: complete Plan 14-01 (parallel work), then phase verifier.
+Stopped at: Plan 15-01 COMPLETE — fetchDashboardData(orgId) single-arg, KpiCards without trends, AutomationPerformance 3-row layout, orphan i18n keys removed. 3 tasks, 5 min, 3 commits (c61fd3c + 93a51a0 + feb14e6). Closes audit LOW-2 (redundant notifications query) and 2 Phase 8 tech-debt items (kpiTrends, avgResponseTime placeholders). Pre-existing working-tree changes (mt-4 styling on greeting row, purple-400 KPI color tweak) noted in 15-01-SUMMARY deviations — mt-4 NOT staged in plan commits, purple tweak incidentally bundled in 93a51a0 due to component-level Edit rewrite.
+Resume file: None — 15-01 done. Next action: complete remaining Phase 15 plans, then phase verifier.

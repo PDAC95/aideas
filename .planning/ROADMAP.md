@@ -35,7 +35,7 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 - [x] **Phase 12: Settings** — Profile, preferences (language, hourly cost), and security management (completed 2026-04-15)
 - [x] **Phase 13: Catalog Coverage Fix** — Add `operations` category and `agencias` industry to catalog UI + i18n (closes audit HIGH-1, HIGH-2) — completed 2026-04-30
 - [x] **Phase 14: i18n & Security Hygiene** — Org ownership check on `updateAutomationStatus`; replace hardcoded "Just now"; wire `notification-bell` time format to next-intl (closes audit MEDIUM-1, LOW-1, NEW-LOW-1) (completed 2026-04-30)
-- [ ] **Phase 15: Dashboard Home Polish** — Drop redundant notifications query; replace hardcoded KPI trend / avgResponseTime placeholders; backfill SUMMARY frontmatter for Phase 8 (closes audit LOW-2 + tech debt)
+- [x] **Phase 15: Dashboard Home Polish** — Drop redundant notifications query; replace hardcoded KPI trend / avgResponseTime placeholders; backfill SUMMARY frontmatter for Phase 8 (closes audit LOW-2 + tech debt) (completed 2026-04-30)
 
 ## Phase Details
 
@@ -182,4 +182,4 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 | 12. Settings | 5/5 | Complete    | 2026-04-29 | - |
 | 13. Catalog Coverage Fix | v1.1 | 1/1 | Complete | 2026-04-30 |
 | 14. i18n & Security Hygiene | 1/2 | Complete    | 2026-04-30 | - |
-| 15. Dashboard Home Polish | v1.1 | 0/? | Pending | - |
+| 15. Dashboard Home Polish | 2/2 | Complete   | 2026-04-30 | - |
