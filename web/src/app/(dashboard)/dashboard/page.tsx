@@ -57,10 +57,7 @@ export default async function DashboardPage() {
     );
   }
 
-  const { automations, executions, kpis } = await fetchDashboardData(
-    user.id,
-    orgId
-  );
+  const { automations, executions, kpis } = await fetchDashboardData(orgId);
 
   // Time-of-day greeting
   const hour = new Date().getHours();

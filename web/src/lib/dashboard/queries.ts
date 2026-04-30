@@ -19,9 +19,10 @@ export async function getOrgId(userId: string): Promise<string | null> {
 
 /**
  * Fetch all dashboard data in parallel for the main dashboard page.
- * Returns automations, recent executions, notifications, and computed KPIs.
+ * Returns automations, recent executions, and computed KPIs.
+ * Notifications are fetched independently in the dashboard layout.
  */
-export async function fetchDashboardData(userId: string, orgId: string) {
+export async function fetchDashboardData(orgId: string) {
   const supabase = await createClient();
 
   const now = new Date();
@@ -30,7 +31,7 @@ export async function fetchDashboardData(userId: string, orgId: string) {
   const dayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
 
   // 1. Fetch automations with template data (exclude archived and deleted)
-  const automationsPromise = supabase
+  const { data: automationsData } = await supabase
     .from("automations")
     .select(`
       id, name, status, last_run_at,
@@ -45,21 +46,7 @@ export async function fetchDashboardData(userId: string, orgId: string) {
     .not("status", "eq", "archived")
     .order("created_at", { ascending: false });
 
-  // 2. Fetch notifications for the bell dropdown (last 20 for this user)
-  const notificationsPromise = supabase
-    .from("notifications")
-    .select("id, type, title, message, is_read, read_at, link, created_at")
-    .eq("user_id", userId)
-    .order("created_at", { ascending: false })
-    .limit(20);
-
-  const [automationsResult, notificationsResult] = await Promise.all([
-    automationsPromise,
-    notificationsPromise,
-  ]);
-
-  const automations = (automationsResult.data ?? []) as unknown as DashboardAutomation[];
-  const notifications = (notificationsResult.data ?? []) as unknown as DashboardNotification[];
+  const automations = (automationsData ?? []) as unknown as DashboardAutomation[];
 
   // Get org automation IDs for scoped queries
   const orgAutomationIds = automations.map((a) => a.id);
@@ -137,7 +124,7 @@ export async function fetchDashboardData(userId: string, orgId: string) {
     });
   }
 
-  return { automations, executions, notifications, kpis };
+  return { automations, executions, kpis };
 }
 
 /**
