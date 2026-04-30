@@ -208,13 +208,9 @@
       },
       "performance": {
         "title": "Automation Performance",
-        "avgResponseTime": "Avg. Response Time",
         "totalExecutions": "Total Executions",
         "successRate": "Success Rate",
         "activeAutomations": "Active Automations"
-      },
-      "kpiTrends": {
-        "noChange": "0%"
       },
       "status": {
         "active": "Active",

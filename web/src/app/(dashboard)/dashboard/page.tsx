@@ -132,9 +132,7 @@ export default async function DashboardPage() {
     totalExecs > 0 ? Math.round((successExecs / totalExecs) * 100) : 0;
 
   // Performance metrics
-  const avgResponseTime = "< 1 min"; // placeholder — real value needs execution duration tracking
   const performanceMetrics = [
-    { label: t("performance.avgResponseTime"), value: avgResponseTime },
     { label: t("performance.totalExecutions"), value: String(totalExecs) },
     { label: t("performance.successRate"), value: `${successRate}%` },
     {
