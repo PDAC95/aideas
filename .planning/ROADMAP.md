@@ -146,7 +146,9 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
   2. `automations/[id]/page.tsx` `buildTimeAgo` helper for `seconds < 60` returns the i18n-translated equivalent (e.g., `t("timeAgo.now")`) instead of the hardcoded `"Just now"`
   3. `notification-bell.tsx` `formatRelativeTime` reads its labels (`now`, `m`, `h`, `d`) from translations passed via props (or via a next-intl client hook) so Spanish locale renders Spanish abbreviations
   4. New i18n keys added to both `en.json` and `es.json` for the notification time abbreviations
-**Plans**: TBD
+**Plans**: 2 plans
+  - [ ] 14-01-PLAN.md — `assertOrgMembership` helper + `updateAutomationStatus` hardening (admin-client write + localized error toast)
+  - [ ] 14-02-PLAN.md — Shared `formatRelativeTime` helper + `common.timeAgo.*` i18n keys + wire notification-bell and automation detail page
 
 ### Phase 15: Dashboard Home Polish
 **Goal**: Dashboard home renders only real values (no hardcoded placeholders) and Phase 8 SUMMARY frontmatter accurately lists completed requirements
@@ -177,5 +179,5 @@ Full details: [milestones/v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 | 11. Reports & Billing | 3/3 | Complete    | 2026-04-15 | - |
 | 12. Settings | 5/5 | Complete    | 2026-04-29 | - |
 | 13. Catalog Coverage Fix | v1.1 | 1/1 | Complete | 2026-04-30 |
-| 14. i18n & Security Hygiene | v1.1 | 0/? | Pending | - |
+| 14. i18n & Security Hygiene | v1.1 | 0/2 | Pending | - |
 | 15. Dashboard Home Polish | v1.1 | 0/? | Pending | - |
