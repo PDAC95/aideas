@@ -41,6 +41,8 @@ key-decisions:
   - "Toast uses gray-900 background matching plan spec rather than green (payment portal not yet available vs. success action)"
   - "Empty state links to /dashboard/automations with CreditCard icon from lucide-react"
 
+requirements_completed: [BILL-01, BILL-02, BILL-03, BILL-04]
+
 # Metrics
 duration: 8min
 completed: 2026-04-15

@@ -41,6 +41,8 @@ key-decisions:
   - "SortHeader extracted as sub-component within breakdown table file — single consumer, no need to share"
   - "Empty state for breakdown table returns null (no rows = no table) — RSC page handles the no-automations empty state"
 
+requirements_completed: [REPT-01, REPT-02, REPT-03, REPT-04]
+
 # Metrics
 duration: 3min
 completed: 2026-04-15

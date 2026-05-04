@@ -1,9 +1,20 @@
 ---
-status: diagnosed
+status: resolved
 trigger: "UAT Phase 06 - 'Verification failed. Please try again.' error on signup"
 created: 2026-04-01T00:00:00Z
-updated: 2026-04-01T00:00:00Z
+updated: 2026-05-04T00:00:00Z
+resolution_type: configuration
 ---
+
+## Resolution Note (2026-05-04)
+
+Closed as **environment configuration**, not a code defect. Root cause is missing `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` (and `RECAPTCHA_SECRET_KEY`) in local `web/.env.local`. Production has these set; this only affects developers running locally without reCAPTCHA keys.
+
+**Tech-debt observation (not blocking v1.1):** The client-side check in `signup-form.tsx:46-54` hard-fails when `executeRecaptcha` is unavailable, while the server-side `verifyRecaptcha` gracefully bypasses when the secret is missing. A future hardening task (post-v1.1) could add a symmetric client-side dev bypass so that local environments without reCAPTCHA keys can still test signup.
+
+**Action for developers:** Set both reCAPTCHA env vars in `.env.local` before testing signup locally. See `CLAUDE.md` env vars section.
+
+No code changes required to close v1.1 milestone.
 
 ## Current Focus
 

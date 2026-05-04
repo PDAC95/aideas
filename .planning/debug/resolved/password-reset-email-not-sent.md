@@ -1,9 +1,18 @@
 ---
-status: diagnosed
+status: resolved
 trigger: "Password recovery email not being received after requesting reset from /forgot-password"
 created: 2026-04-01T12:00:00Z
-updated: 2026-04-01T12:00:00Z
+updated: 2026-05-04T00:00:00Z
+resolution_type: configuration
 ---
+
+## Resolution Note (2026-05-04)
+
+Closed as **environment configuration**, not a code defect. Root cause is missing `NEXT_PUBLIC_SITE_URL` in local `web/.env.local`. Production has the variable set; this only affects developers running locally without a complete `.env.local`.
+
+**Action for developers:** Ensure `NEXT_PUBLIC_SITE_URL` is set (e.g., `http://localhost:3000`) before testing password reset or signup verification flows locally. See `CLAUDE.md` env vars section.
+
+No code changes required to close v1.1 milestone.
 
 ## Current Focus
 

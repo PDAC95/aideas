@@ -32,6 +32,8 @@ key-files:
 key-decisions:
   - "AlertDialog import fix — plan specified 'radix-ui/react-alert-dialog' but project uses '{ AlertDialog } from radix-ui'; auto-fixed as Rule 1"
 
+requirements_completed: [SETT-05, SETT-06]
+
 # Metrics
 duration: 2min
 completed: 2026-04-15
