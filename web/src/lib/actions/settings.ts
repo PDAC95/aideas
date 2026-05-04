@@ -2,6 +2,7 @@
 
 import { createClient as createServerClient } from '@/lib/supabase/server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
+import { assertOrgMembership } from '@/lib/auth/assert-org-membership'
 import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 import { profileSchema, changePasswordSchema } from '@/lib/validations/settings'
@@ -67,17 +68,8 @@ export async function saveCompanyName(
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   if (authError || !user) return { error: 'unauthorized' }
 
-  // Verify org membership with owner or admin role
-  const { data: member } = await supabase
-    .from('organization_members')
-    .select('role')
-    .eq('user_id', user.id)
-    .eq('organization_id', orgId)
-    .single()
-
-  if (!member || !['owner', 'admin'].includes(member.role)) {
-    return { error: 'unauthorized' }
-  }
+  const denied = await assertOrgMembership(supabase, orgId, ['owner', 'admin'])
+  if (denied) return denied
 
   const trimmed = companyName.trim()
   if (!trimmed || trimmed.length > 100) return { error: 'Invalid company name' }
@@ -87,10 +79,22 @@ export async function saveCompanyName(
     .from('organizations')
     .update({ name: trimmed })
     .eq('id', orgId)
-    .select('id')
+    .select('id, name')
 
-  if (error) return { error: error.message }
-  if (!data || data.length === 0) return { error: 'No organization found to update' }
+  if (error) return { error: `DB error: ${error.message}` }
+  if (!data || data.length === 0) return { error: `No org found for id: ${orgId}` }
+
+  // Verify the write actually took effect
+  const { data: verify } = await admin
+    .from('organizations')
+    .select('name')
+    .eq('id', orgId)
+    .single()
+
+  if (verify?.name !== trimmed) {
+    return { error: `Write verification failed: expected "${trimmed}", got "${verify?.name}"` }
+  }
+
   revalidatePath('/dashboard/settings')
   return { success: true }
 }
@@ -136,17 +140,8 @@ export async function saveHourlyCost(
     return { error: 'Invalid hourly cost' }
   }
 
-  // Role check: must be owner or admin
-  const { data: member } = await supabase
-    .from('organization_members')
-    .select('role')
-    .eq('user_id', user.id)
-    .eq('organization_id', orgId)
-    .single()
-
-  if (!member || !['owner', 'admin'].includes(member.role)) {
-    return { error: 'unauthorized' }
-  }
+  const denied = await assertOrgMembership(supabase, orgId, ['owner', 'admin'])
+  if (denied) return denied
 
   const admin = getAdminClient()
 
