@@ -4,7 +4,7 @@
 
 - ✅ **v1.0 Backend Foundation + Auth** — Phases 1-6 (shipped 2026-04-08)
 - ✅ **v1.1 Core Dashboard Experience** — Phases 7-15 (shipped 2026-05-04)
-- 📋 **v1.2 Stripe + Production-Ready** — TBD (planning)
+- 🚧 **v1.2 Admin Dashboard** — Phases 16-22 (in planning, started 2026-05-04)
 
 ## Phases
 
@@ -39,17 +39,115 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 
 </details>
 
-### 📋 v1.2 Stripe + Production-Ready (Planned)
+### 🚧 v1.2 Admin Dashboard (Phases 16-22) — IN PLANNING
 
-**Milestone Goal (TBD — define via `/gsd:new-milestone`):** Wire Stripe Checkout, Customer Portal, and webhooks; address v1.1 carry-over tech debt; production hardening.
+**Milestone Goal:** Build the AIDEAS team admin dashboard at `app.aideas.com/admin/*` so operations can manage templates, attend customer requests, track in-flight automations, and oversee clients — closing the operational loop that v1.1 left open. Stripe deferred to v1.3 (operations-first sequencing).
 
-**Carry-over from v1.1:**
-- Build error: `next/dynamic({ ssr: false })` rejected by Next.js 16 + Turbopack in `web/src/app/(dashboard)/dashboard/automations/[id]/page.tsx:16`
-- Out-of-scope placeholder: `<AutomationSuccessRate trend="+5%" />` in `dashboard/page.tsx:212`
-- Code consolidation: `saveCompanyName` + `saveHourlyCost` should use `assertOrgMembership` helper (Phase 14 introduced it)
-- Asymmetric reCAPTCHA bypass: server gracefully skips when keys missing, client hard-fails — add symmetric dev bypass
+**Sequencing rationale:**
+- Phase 16 (carry-over) lands FIRST to fix the v1.1 Next.js 16 build blocker so CI stays green during admin development.
+- Phase 17 (foundation) is a hard prerequisite for every admin-facing capability — schema, RLS, route gate, layout, helper.
+- Phases 18-21 are capability phases. Catalog (18) ships before Requests (19) because requests reference templates. Automations (20) and Clients (21) follow naturally.
+- Phase 22 (admin home) lands LAST because it aggregates KPIs and activity from all the surfaces above.
+- I18N-01 is cross-cutting and tracked under every UI-bearing phase (17, 18, 19, 20, 21, 22).
 
-Phases TBD.
+#### Summary Checklist
+
+- [ ] **Phase 16: Carry-over Cleanup** — Resolve 4 v1.1 audit tech-debt items so CI is green for v1.2 (3 plans)
+- [ ] **Phase 17: Admin Foundation** — `platform_staff` schema + RLS + `/admin/*` gate + admin layout + `assertPlatformStaff` helper (3 plans)
+- [ ] **Phase 18: Catalog Admin** — CRUD UI for `automation_templates` with active/featured toggles (3 plans)
+- [ ] **Phase 19: Requests Inbox** — List + detail + single-step approve (creates automation) + reject-with-reason (3 plans)
+- [ ] **Phase 20: Automations Admin** — Global cross-org list + read-only detail + status transitions (3 plans)
+- [ ] **Phase 21: Clients Admin** — Orgs list + search + 360° detail + cross-links + free-form internal notes (3 plans)
+- [ ] **Phase 22: Admin Home** — Operational KPIs + activity feed + quick-link cards (2 plans)
+
+## Phase Details
+
+### Phase 16: Carry-over Cleanup
+**Goal:** Resolve the 4 v1.1 audit tech-debt items so the build is green and helpers are consolidated before admin work begins.
+**Depends on:** Nothing (first phase of milestone, builds on v1.1 baseline)
+**Requirements:** CARRY-01, CARRY-02, CARRY-03, CARRY-04
+**Success Criteria** (what must be TRUE):
+  1. `npm run build` and `npm run lint` pass cleanly under Next.js 16 + Turbopack with no errors and no `next/dynamic ssr:false` rejection
+  2. `dashboard/page.tsx` no longer renders the hardcoded `<AutomationSuccessRate trend="+5%" />` placeholder — either a computed value or the surface is removed
+  3. `saveCompanyName` and `saveHourlyCost` server actions use the shared `assertOrgMembership` helper, with no inline duplicated org-membership checks
+  4. A developer running `npm run dev` without `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` configured can complete signup end-to-end (client matches server's graceful bypass)
+**Plans:** TBD (sketched: 16-01 build blocker fix + AutomationSuccessRate, 16-02 assertOrgMembership consolidation in settings.ts, 16-03 reCAPTCHA symmetric client bypass)
+
+### Phase 17: Admin Foundation
+**Goal:** Establish the schema, RLS, route gate, layout, and server-action helper that every admin capability builds on.
+**Depends on:** Phase 16
+**Requirements:** FOUND-01, FOUND-02, FOUND-03, FOUND-04, FOUND-05, I18N-01 (cross-cutting)
+**Success Criteria** (what must be TRUE):
+  1. Migration creates `platform_staff` table with `(user_id, role, created_at)` and the `role` CHECK constraint accepts only `super_admin` or `operator`
+  2. RLS policies on the 8 business tables grant full CRUD to any caller present in `platform_staff`, while preserving existing org-scoped policies for clients
+  3. A non-staff authenticated user navigating to `/admin` is redirected to `/dashboard`; an unauthenticated user is redirected to `/login`; a `platform_staff` member loads the admin shell
+  4. `/admin` renders the customer header/sidebar with a visible "AIDEAS Admin" banner and an admin-specific sidebar (Home, Catalog, Requests, Automations, Clients) — no theme/redesign changes
+  5. `assertPlatformStaff(role?)` returns a typed error when caller is not staff or lacks the required role, and is callable from any server action
+  6. All admin shell strings (banner, sidebar items, role-denied messages) exist in both `en.json` and `es.json` with parity
+**Plans:** TBD (sketched: 17-01 migration + RLS extensions, 17-02 middleware gate + assertPlatformStaff helper, 17-03 admin layout + sidebar + i18n keys)
+
+### Phase 18: Catalog Admin
+**Goal:** Operations can manage the `automation_templates` catalog through UI instead of editing seed.sql.
+**Depends on:** Phase 17
+**Requirements:** CTLG-01, CTLG-02, CTLG-03, CTLG-04, CTLG-05, I18N-01 (cross-cutting)
+**Success Criteria** (what must be TRUE):
+  1. Staff loads `/admin/catalog` and sees ALL templates (including `is_active=false`) with name, slug, category, industries, pricing tier, setup price, monthly price, is_featured, is_active columns; filters by category and industry work
+  2. Staff creates a new template through a form with Zod validation on every required field (name i18n key, slug, description, category, industries[], connected_apps[], pricing_tier, setup_price, monthly_price, setup_time_days, typical_impact_text, avg_minutes_per_task, activity_metric_label) and the new template appears in the list
+  3. Staff edits any field on an existing template; saves persist and the customer-facing `/dashboard/catalog` reflects the change on next load
+  4. Staff toggles `is_active` off on a template and that template no longer appears in the customer catalog (but is still visible in admin list)
+  5. Staff toggles `is_featured` and the template appears/disappears in the customer "Mas populares" tab accordingly
+  6. All admin catalog UI strings (table headers, form labels, validation messages, toggle labels) have EN/ES parity
+**Plans:** TBD (sketched: 18-01 list + filters, 18-02 create/edit form + validation, 18-03 active/featured toggles + customer-side propagation check)
+
+### Phase 19: Requests Inbox
+**Goal:** Operations can attend and triage incoming customer automation requests, with single-step approval that provisions the automation.
+**Depends on:** Phase 18
+**Requirements:** REQS-01, REQS-02, REQS-03, REQS-04, I18N-01 (cross-cutting)
+**Success Criteria** (what must be TRUE):
+  1. Staff loads `/admin/requests` and sees a list of `automation_requests` ordered by `created_at` DESC, filterable by status (pending/approved/rejected), with customer org, template, status, and created date columns
+  2. Staff opens a request detail page that shows customer info, template requested, custom requirements text (if any), status, status history, and creation timestamp
+  3. Staff approves a `pending` request via a single button — request status flips to `approved` AND a new row appears in `automations` with status `in_setup`, scoped to the requesting org and linked to the template (verifiable by SQL)
+  4. Staff rejecting a request must enter a non-empty rejection reason; submitting empty fails form validation; on success the request status is `rejected` and the reason is persisted in request notes
+  5. All inbox UI strings (filters, columns, detail labels, approve/reject buttons, validation errors) have EN/ES parity
+**Plans:** TBD (sketched: 19-01 inbox list + filters, 19-02 detail page + status history, 19-03 approve/reject server actions with assertPlatformStaff)
+
+### Phase 20: Automations Admin
+**Goal:** Operations can monitor and transition the status of every automation across all orgs from a global view.
+**Depends on:** Phase 17 (Phase 19 helpful but not strictly required)
+**Requirements:** AUTM-01, AUTM-02, AUTM-03, AUTM-04, AUTM-05, I18N-01 (cross-cutting)
+**Success Criteria** (what must be TRUE):
+  1. Staff loads `/admin/automations` and sees a global list of all `automations` across all orgs, filterable by status (`draft|pending_review|in_setup|active|paused|failed|archived`), by org, and by template
+  2. Staff transitions an automation from `in_setup` → `active` via a dedicated button; status updates and the change is visible to the owning customer's `/dashboard/automations`
+  3. Staff manually pauses (`active` → `paused`) and resumes (`paused` → `active`) any automation from the admin detail page
+  4. Staff archives an automation (`active|paused` → `archived`) via a dedicated button; archived automations remain in the admin list but disappear from the customer's active filter
+  5. The admin automation detail page shows KPIs (execution count, hours saved), recent execution timeline, owning org, and template info — with NO field editing, only the status transition buttons from above
+  6. All automations admin UI strings (filters, status labels, action buttons, detail labels) have EN/ES parity
+**Plans:** TBD (sketched: 20-01 global list + filters + org/template joins, 20-02 read-only detail page with KPIs + timeline, 20-03 status transition buttons + server actions)
+
+### Phase 21: Clients Admin
+**Goal:** Operations get a 360° view of every customer organization — list, search, members, automations, requests, and free-form internal notes.
+**Depends on:** Phase 19 (request links), Phase 20 (automation links)
+**Requirements:** CLNT-01, CLNT-02, CLNT-03, CLNT-04, CLNT-05, I18N-01 (cross-cutting)
+**Success Criteria** (what must be TRUE):
+  1. Staff loads `/admin/clients` and sees all `organizations` with name, slug, # active automations, # members, and created date columns
+  2. Staff filters/searches clients by name or slug and the list narrows accordingly
+  3. Staff opens a client detail page showing org info, list of members (email, role, last login), list of automations (with status), and list of automation_requests (with status)
+  4. From client detail, staff clicks any automation row to navigate to its admin detail page (Phase 20) and any request row to navigate to its admin detail page (Phase 19)
+  5. Staff adds and edits free-form internal notes per client (e.g., "VIP", "churn risk"); notes persist via a new `organization_notes` column or related table and are visible only on the admin client detail page (never to the customer)
+  6. All clients admin UI strings (table headers, search placeholder, detail section labels, notes editor) have EN/ES parity
+**Plans:** TBD (sketched: 21-01 migration for org notes + list with stats, 21-02 detail page with members/automations/requests + cross-links, 21-03 notes CRUD with assertPlatformStaff)
+
+### Phase 22: Admin Home
+**Goal:** Operations land on `/admin` and immediately see what needs attention — pending requests, in-setup automations, active clients, and weekly signups — plus an activity feed and quick-link cards.
+**Depends on:** Phases 18, 19, 20, 21 (consumes data from all of them)
+**Requirements:** HOME-01, HOME-02, HOME-03, I18N-01 (cross-cutting)
+**Success Criteria** (what must be TRUE):
+  1. Staff loads `/admin` and sees 4 KPI cards with live counts: pending requests, in-setup automations, total active clients, signups this week
+  2. Staff sees an activity feed of the last 15-20 system events (request created, automation activated, signup, status transition) ordered most-recent first, each with a relative timestamp
+  3. Staff sees quick-link cards to the most-used screens — Requests inbox (with pending count badge) and Automations in setup — each clickable to the corresponding admin screen
+  4. KPI counts and activity feed reflect actual database state at request time (no stale or hardcoded values)
+  5. All admin home UI strings (KPI labels, activity feed event types, quick-link card titles) have EN/ES parity
+**Plans:** TBD (sketched: 22-01 KPI cards + queries, 22-02 activity feed + quick-link cards + i18n)
 
 ## Progress
 
@@ -70,3 +168,10 @@ Phases TBD.
 | 13. Catalog Coverage Fix | v1.1 | 1/1 | Complete | 2026-04-30 |
 | 14. i18n & Security Hygiene | v1.1 | 2/2 | Complete | 2026-04-30 |
 | 15. Dashboard Home Polish | v1.1 | 2/2 | Complete | 2026-04-30 |
+| 16. Carry-over Cleanup | v1.2 | 0/3 | Not started | — |
+| 17. Admin Foundation | v1.2 | 0/3 | Not started | — |
+| 18. Catalog Admin | v1.2 | 0/3 | Not started | — |
+| 19. Requests Inbox | v1.2 | 0/3 | Not started | — |
+| 20. Automations Admin | v1.2 | 0/3 | Not started | — |
+| 21. Clients Admin | v1.2 | 0/3 | Not started | — |
+| 22. Admin Home | v1.2 | 0/2 | Not started | — |

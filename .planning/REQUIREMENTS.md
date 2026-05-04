@@ -127,44 +127,44 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CARRY-01 | TBD | Pending |
-| CARRY-02 | TBD | Pending |
-| CARRY-03 | TBD | Pending |
-| CARRY-04 | TBD | Pending |
-| FOUND-01 | TBD | Pending |
-| FOUND-02 | TBD | Pending |
-| FOUND-03 | TBD | Pending |
-| FOUND-04 | TBD | Pending |
-| FOUND-05 | TBD | Pending |
-| CTLG-01 | TBD | Pending |
-| CTLG-02 | TBD | Pending |
-| CTLG-03 | TBD | Pending |
-| CTLG-04 | TBD | Pending |
-| CTLG-05 | TBD | Pending |
-| REQS-01 | TBD | Pending |
-| REQS-02 | TBD | Pending |
-| REQS-03 | TBD | Pending |
-| REQS-04 | TBD | Pending |
-| AUTM-01 | TBD | Pending |
-| AUTM-02 | TBD | Pending |
-| AUTM-03 | TBD | Pending |
-| AUTM-04 | TBD | Pending |
-| AUTM-05 | TBD | Pending |
-| CLNT-01 | TBD | Pending |
-| CLNT-02 | TBD | Pending |
-| CLNT-03 | TBD | Pending |
-| CLNT-04 | TBD | Pending |
-| CLNT-05 | TBD | Pending |
-| HOME-01 | TBD | Pending |
-| HOME-02 | TBD | Pending |
-| HOME-03 | TBD | Pending |
-| I18N-01 | TBD | Pending |
+| CARRY-01 | Phase 16 | Pending |
+| CARRY-02 | Phase 16 | Pending |
+| CARRY-03 | Phase 16 | Pending |
+| CARRY-04 | Phase 16 | Pending |
+| FOUND-01 | Phase 17 | Pending |
+| FOUND-02 | Phase 17 | Pending |
+| FOUND-03 | Phase 17 | Pending |
+| FOUND-04 | Phase 17 | Pending |
+| FOUND-05 | Phase 17 | Pending |
+| CTLG-01 | Phase 18 | Pending |
+| CTLG-02 | Phase 18 | Pending |
+| CTLG-03 | Phase 18 | Pending |
+| CTLG-04 | Phase 18 | Pending |
+| CTLG-05 | Phase 18 | Pending |
+| REQS-01 | Phase 19 | Pending |
+| REQS-02 | Phase 19 | Pending |
+| REQS-03 | Phase 19 | Pending |
+| REQS-04 | Phase 19 | Pending |
+| AUTM-01 | Phase 20 | Pending |
+| AUTM-02 | Phase 20 | Pending |
+| AUTM-03 | Phase 20 | Pending |
+| AUTM-04 | Phase 20 | Pending |
+| AUTM-05 | Phase 20 | Pending |
+| CLNT-01 | Phase 21 | Pending |
+| CLNT-02 | Phase 21 | Pending |
+| CLNT-03 | Phase 21 | Pending |
+| CLNT-04 | Phase 21 | Pending |
+| CLNT-05 | Phase 21 | Pending |
+| HOME-01 | Phase 22 | Pending |
+| HOME-02 | Phase 22 | Pending |
+| HOME-03 | Phase 22 | Pending |
+| I18N-01 | Phases 17, 18, 19, 20, 21, 22 (cross-cutting) | Pending |
 
 **Coverage:**
 - v1.2 requirements: 31 total
-- Mapped to phases: 0 (will be populated by roadmap)
-- Unmapped: 31 ⚠️ (expected pre-roadmap)
+- Mapped to phases: 31 ✓
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-05-04*
-*Last updated: 2026-05-04 after initial definition*
+*Last updated: 2026-05-04 — roadmap created, traceability populated*
