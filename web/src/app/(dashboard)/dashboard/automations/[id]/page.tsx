@@ -8,7 +8,7 @@ import { formatRelativeTime } from "@/lib/utils/time";
 import { AutomationDetailHeader } from "@/components/dashboard/automation-detail-header";
 import { AutomationKpiCards } from "@/components/dashboard/automation-kpi-cards";
 import { ExecutionTimeline } from "@/components/dashboard/execution-timeline";
-import { WeeklyBarChartLoader } from "@/components/dashboard/weekly-bar-chart-loader";
+import { WeeklyBarChart } from "@/components/dashboard/weekly-bar-chart";
 
 interface AutomationDetailPageProps {
   params: Promise<{ id: string }>;
@@ -169,8 +169,8 @@ export default async function AutomationDetailPage({
             executions={enrichedExecutions}
             translations={timelineTranslations}
           />
-          {/* Right: Weekly Bar Chart (SSR-unsafe, loaded via client component wrapper) */}
-          <WeeklyBarChartLoader
+          {/* Right: Weekly Bar Chart (client island — "use client") */}
+          <WeeklyBarChart
             data={weeklyData}
             translations={chartTranslations}
           />

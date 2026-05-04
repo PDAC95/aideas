@@ -1,6 +1,6 @@
 /**
  * WeeklyBarChart — Recharts-based bar chart for weekly execution counts.
- * MUST be imported with next/dynamic({ ssr: false }) to avoid SSR hydration issues.
+ * Client component ("use client") — import directly from RSC consumers.
  */
 "use client";
 
