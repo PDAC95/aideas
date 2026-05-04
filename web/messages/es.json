@@ -203,8 +203,7 @@
         "status": "Estado"
       },
       "successRate": {
-        "title": "Tasa de éxito de automatizaciónes",
-        "trendLabel": "vs semana pasada"
+        "title": "Tasa de éxito de automatizaciónes"
       },
       "performance": {
         "title": "Rendimiento de automatizaciónes",

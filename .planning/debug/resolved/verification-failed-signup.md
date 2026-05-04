@@ -3,18 +3,27 @@ status: resolved
 trigger: "UAT Phase 06 - 'Verification failed. Please try again.' error on signup"
 created: 2026-04-01T00:00:00Z
 updated: 2026-05-04T00:00:00Z
-resolution_type: configuration
+resolution_type: code_fix
+closed_by: phase-16-03
 ---
 
-## Resolution Note (2026-05-04)
+## Final Resolution (2026-05-04, Phase 16-03)
 
-Closed as **environment configuration**, not a code defect. Root cause is missing `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` (and `RECAPTCHA_SECRET_KEY`) in local `web/.env.local`. Production has these set; this only affects developers running locally without reCAPTCHA keys.
+Closed by **code fix** under Phase 16-03 (CARRY-04). The asymmetry called out in the original tech-debt observation was actually corrected.
 
-**Tech-debt observation (not blocking v1.1):** The client-side check in `signup-form.tsx:46-54` hard-fails when `executeRecaptcha` is unavailable, while the server-side `verifyRecaptcha` gracefully bypasses when the secret is missing. A future hardening task (post-v1.1) could add a symmetric client-side dev bypass so that local environments without reCAPTCHA keys can still test signup.
+`web/src/components/auth/signup-form.tsx` now contains a dev-only bypass:
+- When `process.env.NODE_ENV !== "production"` AND `process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY` is unset, the form skips reCAPTCHA, sends `captchaToken=""` to the server, and emits a single `console.warn`.
+- The server's existing `verifyRecaptcha("")` graceful path (when `RECAPTCHA_SECRET_KEY` is also unset) accepts the empty token, so signup completes locally without any reCAPTCHA configuration.
+- Production retains hard-fail behavior — both `NODE_ENV` and `NEXT_PUBLIC_*` vars are statically inlined at build time, so the bypass branch is dead-code-eliminated from production bundles. Confirmed: the string `reCAPTCHA bypass` does not appear in any `.next/**/*.js` runtime chunk.
+- Defense-in-depth: even if the bypass branch ever leaked to production, Google's siteverify would reject the empty token because `RECAPTCHA_SECRET_KEY` MUST be set in production deploys.
 
-**Action for developers:** Set both reCAPTCHA env vars in `.env.local` before testing signup locally. See `CLAUDE.md` env vars section.
+See `.planning/phases/16-carry-over-cleanup/16-03-SUMMARY.md` for full diff and verification evidence.
 
-No code changes required to close v1.1 milestone.
+## Earlier Resolution Note (2026-05-04, superseded)
+
+Originally closed as environment configuration, not a code defect. The tech-debt observation flagged the client/server asymmetry as a future hardening task. Phase 16-03 promoted that hardening from "future" to "done."
+
+**Action for developers:** No env vars required for local signup testing. If you DO set reCAPTCHA env vars locally, the real reCAPTCHA flow runs as expected.
 
 ## Current Focus
 

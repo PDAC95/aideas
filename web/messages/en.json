@@ -203,8 +203,7 @@
         "status": "Status"
       },
       "successRate": {
-        "title": "Automation Success Rate",
-        "trendLabel": "vs last week"
+        "title": "Automation Success Rate"
       },
       "performance": {
         "title": "Automation Performance",

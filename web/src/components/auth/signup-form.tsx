@@ -43,17 +43,30 @@ export function SignupForm() {
   const watchedPassword = watch("password") ?? "";
 
   const handleFormSubmit = async (data: SignupFormData) => {
-    // 1. Get reCAPTCHA token (bypass in development when not configured)
-    let captchaToken = "dev-bypass";
-    if (executeRecaptcha) {
+    // 1. Get reCAPTCHA token — dev-only bypass when site key is missing.
+    //    NEXT_PUBLIC_RECAPTCHA_SITE_KEY and NODE_ENV are statically inlined at build time,
+    //    so this branch is unreachable in production bundles (Vercel builds with NODE_ENV=production).
+    //    Defense-in-depth: server's verifyRecaptcha("") only succeeds when RECAPTCHA_SECRET_KEY is also missing;
+    //    if the bypass ever leaked to prod, Google's siteverify would reject the empty token.
+    const isDevWithoutKey =
+      process.env.NODE_ENV !== "production" &&
+      !process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+
+    let captchaToken = "";
+    if (isDevWithoutKey) {
+      console.warn(
+        "[signup] reCAPTCHA bypass — dev mode, NEXT_PUBLIC_RECAPTCHA_SITE_KEY not set"
+      );
+      // captchaToken remains "" — server's verifyRecaptcha("") returns true when RECAPTCHA_SECRET_KEY is also unset
+    } else if (executeRecaptcha) {
       const token = await executeRecaptcha("signup");
       if (!token) {
         setError("root", { message: t("errors.captchaFailed") });
         return;
       }
       captchaToken = token;
-    } else if (process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY) {
-      // reCAPTCHA configured but not loaded — real failure
+    } else {
+      // Key is configured (or we're in production) but the provider didn't load — real failure.
       setError("root", { message: t("errors.captchaFailed") });
       return;
     }

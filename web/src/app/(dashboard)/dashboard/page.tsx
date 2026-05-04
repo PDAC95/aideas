@@ -144,7 +144,7 @@ export default async function DashboardPage() {
   return (
     <div>
       {/* Row 1: Greeting */}
-      <div className="mb-6 flex items-start justify-between gap-4">
+      <div className="mt-4 mb-6 flex items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             {greeting}
@@ -209,11 +209,7 @@ export default async function DashboardPage() {
         <div className="flex flex-col gap-6">
           <AutomationSuccessRate
             rate={successRate}
-            trend="+5%"
-            translations={{
-              title: t("successRate.title"),
-              trendLabel: t("successRate.trendLabel"),
-            }}
+            translations={{ title: t("successRate.title") }}
           />
           <AutomationPerformance
             metrics={performanceMetrics}
