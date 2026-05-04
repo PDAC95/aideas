@@ -111,16 +111,38 @@ Tech stack: **Next.js 16** (App Router, Turbopack) + **React 19** + **FastAPI** 
 | Avatar upload via Supabase Storage (Phase 12-01) | Consistent storage with rest of stack, RLS-aware | ✓ Good — bucket policies scope per-user, public URLs cached on CDN |
 | Decimal phase numbering for audit gap closures (Phases 13-15) | Clear insertion semantics — "fixes after milestone" vs renumbering | ✓ Good — phases 13/14/15 cleanly close 5 audit findings without disturbing 7-12 history |
 
-## Current Milestone: v1.2 Stripe + Production-Ready (Planning)
+## Current Milestone: v1.2 Admin Dashboard
 
-**Goal (TBD — define via `/gsd:new-milestone`):** Wire Stripe Checkout + Customer Portal + webhooks to convert v1.1's mock payment UI into real billing; address v1.1 build blocker; harden for production traffic.
+**Goal:** Build the AIDEAS team admin dashboard so the operations team can manage templates, attend customer requests, track in-flight automations, and oversee clients — closing the operational loop that v1.1 left open on the customer-facing side. Stripe (originally projected for v1.2) deferred to v1.3, since charging without an admin to fulfill orders would be operationally broken.
 
-**Likely scope:**
-- Stripe Checkout for catalog requests
-- Stripe Customer Portal for "Manage payment"
-- Stripe webhooks (subscription lifecycle, invoice events)
-- FastAPI endpoints for business writes (request/pause/resume/cancel/admin)
-- Carry-over fixes: Next.js 16 build blocker, AutomationSuccessRate trend placeholder, assertOrgMembership consolidation, symmetric reCAPTCHA dev bypass
+**Sequencing rationale:** Operations-first, not product-first. v1.1 shipped half the product (customer side); v1.2 ships the other half (team side). Only with both halves operational does Stripe (v1.3) make sense — otherwise we'd cobrar dinero sin equipo que pueda atender los pedidos.
+
+**Target capabilities:**
+- Foundation: `/admin/*` routes with staff-role gate, admin-tinted layout, `platform_staff` schema with `super_admin | operator` roles (UI for staff invitation deferred)
+- Catalog CRUD — list, create, edit, activate/deactivate `automation_templates` (replaces SQL-direct workflow)
+- Requests inbox — list `automation_requests`, transition status (`pending` → `approved` → `in_setup` → `active` or `rejected`)
+- Automations admin view — global list of all `automations` across all orgs, filterable, manual status changes
+- Clients (orgs) list — list `organizations` with stats (# automations, signup date, last login); detail page with members + automations
+- Admin home — operational metrics dashboard (pending requests, in-setup automations, active clients, weekly signups)
+- Carry-over fixes from v1.1 (own phase): Next.js 16 build blocker, `<AutomationSuccessRate trend="+5%" />` placeholder, `assertOrgMembership` consolidation in settings.ts, symmetric reCAPTCHA dev bypass
+
+**Decisions locked during questioning (2026-05-04):**
+- Access: `app.aideas.com/admin/*` (same app, protected route, no subdomain)
+- Staff identity: new table `platform_staff` (FK to `auth.users`); no flag on profiles, no special org
+- Roles: schema with `role` from day one (`super_admin | operator`); staff-management UI deferred until invitation needed
+- Visual: customer layout reused + "AIDEAS Admin" banner/title for context separation (NO redesign)
+- i18n: strict bilingual EN/ES (project rule, 100% parity)
+- Seed-vs-prod cleanup: deferred to v1.3 production deploy (not a v1.2 concern)
+
+**Out of scope for v1.2 (defer to v1.3+):**
+- Stripe Checkout / Customer Portal / webhooks → v1.3
+- FastAPI endpoints for business writes → revisit alongside Stripe (v1.3)
+- Audit log → post-v1.2
+- Manual notifications / messages to clients → post-v1.2
+- Revenue metrics → naturally arrive with Stripe (v1.3)
+- Request assignment among staff → when there are multiple operators
+- Staff management UI (invite, change role) → when it hurts
+- Bulk actions on requests/automations → when it hurts
 
 ---
-*Last updated: 2026-05-04 after v1.1 milestone shipped*
+*Last updated: 2026-05-04 — milestone v1.2 started after questioning gate*
