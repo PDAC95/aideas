@@ -71,7 +71,10 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
   2. `dashboard/page.tsx` no longer renders the hardcoded `<AutomationSuccessRate trend="+5%" />` placeholder — either a computed value or the surface is removed
   3. `saveCompanyName` and `saveHourlyCost` server actions use the shared `assertOrgMembership` helper, with no inline duplicated org-membership checks
   4. A developer running `npm run dev` without `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` configured can complete signup end-to-end (client matches server's graceful bypass)
-**Plans:** TBD (sketched: 16-01 build blocker fix + AutomationSuccessRate, 16-02 assertOrgMembership consolidation in settings.ts, 16-03 reCAPTCHA symmetric client bypass)
+**Plans:** 3 plans
+- [ ] 16-01-PLAN.md — Fix Next.js 16 build blocker (remove next/dynamic ssr:false wrapper) and strip AutomationSuccessRate trend placeholder
+- [ ] 16-02-PLAN.md — Consolidate org-membership role check via assertOrgMembership in saveCompanyName + saveHourlyCost
+- [ ] 16-03-PLAN.md — Add dev-only reCAPTCHA bypass to signup form (NODE_ENV-gated, empty-string token, prod hard-fails)
 
 ### Phase 17: Admin Foundation
 **Goal:** Establish the schema, RLS, route gate, layout, and server-action helper that every admin capability builds on.
