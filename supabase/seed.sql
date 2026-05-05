@@ -45,12 +45,13 @@ DELETE FROM auth.users;
 -- with fixed UUIDs and then manually create organizations, profiles, and
 -- organization_members with deterministic IDs for FK stability across resets.
 
-ALTER TABLE auth.users DISABLE TRIGGER on_auth_user_created;
+SET session_replication_role = replica;
 
 INSERT INTO auth.users (
     instance_id, id, aud, role, email, encrypted_password,
     email_confirmed_at, raw_user_meta_data,
-    created_at, updated_at, confirmation_token, recovery_token
+    created_at, updated_at, confirmation_token, recovery_token,
+    email_change, email_change_token_new
 )
 VALUES
     -- Acme Corp users
@@ -60,7 +61,8 @@ VALUES
      'alice@acmecorp.com',
      crypt('Password123', gen_salt('bf')),
      NOW(), '{"full_name": "Alice Johnson", "first_name": "Alice", "last_name": "Johnson"}'::jsonb,
-     NOW(), NOW(), '', ''),
+     NOW(), NOW(), '', '',
+     '', ''),
 
     ('00000000-0000-0000-0000-000000000000',
      'a2222222-2222-2222-2222-222222222222',
@@ -68,7 +70,8 @@ VALUES
      'bob@acmecorp.com',
      crypt('Password123', gen_salt('bf')),
      NOW(), '{"full_name": "Bob Martinez", "first_name": "Bob", "last_name": "Martinez"}'::jsonb,
-     NOW(), NOW(), '', ''),
+     NOW(), NOW(), '', '',
+     '', ''),
 
     -- GlobalTech users
     ('00000000-0000-0000-0000-000000000000',
@@ -77,7 +80,8 @@ VALUES
      'carol@globaltech.io',
      crypt('Password123', gen_salt('bf')),
      NOW(), '{"full_name": "Carol Chen", "first_name": "Carol", "last_name": "Chen"}'::jsonb,
-     NOW(), NOW(), '', ''),
+     NOW(), NOW(), '', '',
+     '', ''),
 
     ('00000000-0000-0000-0000-000000000000',
      'b2222222-2222-2222-2222-222222222222',
@@ -85,7 +89,8 @@ VALUES
      'dave@globaltech.io',
      crypt('Password123', gen_salt('bf')),
      NOW(), '{"full_name": "Dave Wilson", "first_name": "Dave", "last_name": "Wilson"}'::jsonb,
-     NOW(), NOW(), '', ''),
+     NOW(), NOW(), '', '',
+     '', ''),
 
     -- Dev user (from project instructions: dev@jappi.ca / Password123)
     ('00000000-0000-0000-0000-000000000000',
@@ -94,9 +99,20 @@ VALUES
      'dev@jappi.ca',
      crypt('Password123', gen_salt('bf')),
      NOW(), '{"full_name": "Dev User", "first_name": "Dev", "last_name": "User"}'::jsonb,
-     NOW(), NOW(), '', '');
+     NOW(), NOW(), '', '',
+     '', ''),
 
-ALTER TABLE auth.users ENABLE TRIGGER on_auth_user_created;
+    -- AIDEAS platform staff (super_admin) — pure account, no org membership
+    ('00000000-0000-0000-0000-000000000000',
+     'aaaa0000-0000-0000-0000-000000000001',
+     'authenticated', 'authenticated',
+     'pdmckinster@gmail.com',
+     crypt('Password123', gen_salt('bf')),
+     NOW(), '{"full_name": "Patrick McKinster", "first_name": "Patrick", "last_name": "McKinster"}'::jsonb,
+     NOW(), NOW(), '', '',
+     '', '');
+
+SET session_replication_role = DEFAULT;
 
 -- =============================================================================
 -- 2. auth.identities (required by Supabase auth for email login)
@@ -135,7 +151,20 @@ VALUES
      'de000000-0000-0000-0000-000000000001',
      'de000000-0000-0000-0000-000000000001',
      '{"sub":"de000000-0000-0000-0000-000000000001","email":"dev@jappi.ca"}'::jsonb,
+     'email', NOW(), NOW(), NOW()),
+
+    ('aaaa0000-0000-0000-0000-000000000001',
+     'aaaa0000-0000-0000-0000-000000000001',
+     'aaaa0000-0000-0000-0000-000000000001',
+     '{"sub":"aaaa0000-0000-0000-0000-000000000001","email":"pdmckinster@gmail.com"}'::jsonb,
      'email', NOW(), NOW(), NOW());
+
+-- AIDEAS platform staff seed — promote pdmckinster@gmail.com to super_admin.
+-- This runs AFTER the admin_foundation migration creates the platform_staff table,
+-- so we can insert directly. Idempotent via ON CONFLICT.
+INSERT INTO public.platform_staff (user_id, role)
+VALUES ('aaaa0000-0000-0000-0000-000000000001', 'super_admin')
+ON CONFLICT (user_id) DO NOTHING;
 
 -- =============================================================================
 -- 3. organizations (2 orgs)
@@ -193,27 +222,27 @@ VALUES
 
 INSERT INTO public.organization_members (id, organization_id, user_id, role, is_active)
 VALUES
-    ('mm111111-0000-0000-0000-000000000001',
+    ('dd111111-0000-0000-0000-000000000001',
      'aaaaaaaa-0000-0000-0000-000000000001',
      'a1111111-1111-1111-1111-111111111111',
      'owner', true),
 
-    ('mm111111-0000-0000-0000-000000000002',
+    ('dd111111-0000-0000-0000-000000000002',
      'aaaaaaaa-0000-0000-0000-000000000001',
      'a2222222-2222-2222-2222-222222222222',
      'operator', true),
 
-    ('mm222222-0000-0000-0000-000000000001',
+    ('dd222222-0000-0000-0000-000000000001',
      'bbbbbbbb-0000-0000-0000-000000000001',
      'b1111111-1111-1111-1111-111111111111',
      'owner', true),
 
-    ('mm222222-0000-0000-0000-000000000002',
+    ('dd222222-0000-0000-0000-000000000002',
      'bbbbbbbb-0000-0000-0000-000000000001',
      'b2222222-2222-2222-2222-222222222222',
      'viewer', true),
 
-    ('mm111111-0000-0000-0000-000000000003',
+    ('dd111111-0000-0000-0000-000000000003',
      'aaaaaaaa-0000-0000-0000-000000000001',
      'de000000-0000-0000-0000-000000000001',
      'admin', true);
@@ -238,7 +267,7 @@ VALUES
 
 -- ==================== SALES (cat 01, 8 templates) ====================
 
-    ('tt0101-0000-0000-0000-000000000001',
+    ('ee010100-0000-0000-0000-000000000001',
      'templates.lead_followup_email.name',
      'lead-followup-email',
      'templates.lead_followup_email.description',
@@ -248,11 +277,11 @@ VALUES
      ARRAY['HubSpot', 'Mailchimp', 'Google Workspace'],
      'templates.lead_followup_email.impact',
      8, 'templates.lead_followup_email.metric_label',
-     ARRAY['Personalized email sequences', 'A/B testing support', 'Engagement tracking', 'Auto-pause on reply'],
+     ARRAY['Personalized email sequences', 'A/B testing support', 'Engagement tracking', 'a0to-pause on reply'],
      ARRAY['Nurture cold leads', 'Follow up after trade shows', 'Re-engage inactive prospects'],
      '{}'::jsonb, 'pro', true, true, 1),
 
-    ('tt0102-0000-0000-0000-000000000001',
+    ('ee010200-0000-0000-0000-000000000001',
      'templates.crm_data_sync.name',
      'crm-data-sync',
      'templates.crm_data_sync.description',
@@ -262,11 +291,11 @@ VALUES
      ARRAY['HubSpot', 'Salesforce', 'Google Workspace'],
      'templates.crm_data_sync.impact',
      15, 'templates.crm_data_sync.metric_label',
-     ARRAY['Bi-directional sync', 'Conflict resolution rules', 'Audit trail logging', 'Field mapping'],
+     ARRAY['Bi-directional sync', 'Conflict resolution rules', 'a0dit trail logging', 'Field mapping'],
      ARRAY['Keep CRM and ERP in sync', 'Eliminate duplicate entries', 'Real-time data updates'],
      '{}'::jsonb, 'business', true, false, 2),
 
-    ('tt0103-0000-0000-0000-000000000001',
+    ('ee010300-0000-0000-0000-000000000001',
      'templates.proposal_generator.name',
      'proposal-generator',
      'templates.proposal_generator.description',
@@ -280,7 +309,7 @@ VALUES
      ARRAY['Generate client proposals fast', 'Standardize proposal format', 'Reduce manual writing'],
      '{}'::jsonb, 'business', true, true, 3),
 
-    ('tt0104-0000-0000-0000-000000000001',
+    ('ee010400-0000-0000-0000-000000000001',
      'templates.quote_builder.name',
      'quote-builder',
      'templates.quote_builder.description',
@@ -290,11 +319,11 @@ VALUES
      ARRAY['HubSpot', 'QuickBooks', 'Google Workspace'],
      'templates.quote_builder.impact',
      12, 'templates.quote_builder.metric_label',
-     ARRAY['Dynamic pricing rules', 'Product catalog integration', 'Auto-expiry reminders', 'One-click to invoice'],
+     ARRAY['Dynamic pricing rules', 'Product catalog integration', 'a0to-expiry reminders', 'One-click to invoice'],
      ARRAY['Quote products and services quickly', 'Handle volume discounts', 'Track quote acceptance rates'],
      '{}'::jsonb, 'pro', true, false, 4),
 
-    ('tt0105-0000-0000-0000-000000000001',
+    ('ee010500-0000-0000-0000-000000000001',
      'templates.pipeline_alerts.name',
      'pipeline-alerts',
      'templates.pipeline_alerts.description',
@@ -308,7 +337,7 @@ VALUES
      ARRAY['Alert reps on deal changes', 'Prevent deals from going cold', 'Keep managers informed'],
      '{}'::jsonb, 'starter', true, false, 5),
 
-    ('tt0106-0000-0000-0000-000000000001',
+    ('ee010600-0000-0000-0000-000000000001',
      'templates.territory_report.name',
      'territory-report',
      'templates.territory_report.description',
@@ -322,7 +351,7 @@ VALUES
      ARRAY['Weekly territory reviews', 'Quota planning support', 'Regional performance comparison'],
      '{}'::jsonb, 'pro', true, false, 6),
 
-    ('tt0107-0000-0000-0000-000000000001',
+    ('ee010700-0000-0000-0000-000000000001',
      'templates.win_loss_analysis.name',
      'win-loss-analysis',
      'templates.win_loss_analysis.description',
@@ -336,7 +365,7 @@ VALUES
      ARRAY['Identify why deals are lost', 'Improve win rates', 'Refine sales messaging'],
      '{}'::jsonb, 'business', true, false, 7),
 
-    ('tt0108-0000-0000-0000-000000000001',
+    ('ee010800-0000-0000-0000-000000000001',
      'templates.sales_forecasting.name',
      'sales-forecasting',
      'templates.sales_forecasting.description',
@@ -352,7 +381,7 @@ VALUES
 
 -- ==================== MARKETING (cat 02, 8 templates) ====================
 
-    ('tt0201-0000-0000-0000-000000000001',
+    ('ee020100-0000-0000-0000-000000000001',
      'templates.content_generation.name',
      'content-generation',
      'templates.content_generation.description',
@@ -366,7 +395,7 @@ VALUES
      ARRAY['Scale content production', 'Maintain brand consistency', 'Reduce writer bottlenecks'],
      '{}'::jsonb, 'pro', true, true, 1),
 
-    ('tt0202-0000-0000-0000-000000000001',
+    ('ee020200-0000-0000-0000-000000000001',
      'templates.social_scheduler.name',
      'social-scheduler',
      'templates.social_scheduler.description',
@@ -380,7 +409,7 @@ VALUES
      ARRAY['Schedule posts weeks in advance', 'Maintain consistent posting', 'Coordinate campaign launches'],
      '{}'::jsonb, 'starter', true, false, 2),
 
-    ('tt0203-0000-0000-0000-000000000001',
+    ('ee020300-0000-0000-0000-000000000001',
      'templates.lead_scoring.name',
      'lead-scoring',
      'templates.lead_scoring.description',
@@ -394,7 +423,7 @@ VALUES
      ARRAY['Focus sales on hot leads', 'Reduce wasted outreach', 'Improve lead-to-close rates'],
      '{}'::jsonb, 'pro', true, true, 3),
 
-    ('tt0204-0000-0000-0000-000000000001',
+    ('ee020400-0000-0000-0000-000000000001',
      'templates.email_campaigns.name',
      'email-campaigns',
      'templates.email_campaigns.description',
@@ -404,11 +433,11 @@ VALUES
      ARRAY['Mailchimp', 'HubSpot', 'Google Workspace'],
      'templates.email_campaigns.impact',
      8, 'templates.email_campaigns.metric_label',
-     ARRAY['Segmented audience targeting', 'Drip sequences', 'Open/click tracking', 'Automated list hygiene'],
+     ARRAY['Segmented audience targeting', 'Drip sequences', 'Open/click tracking', 'a0tomated list hygiene'],
      ARRAY['Nurture subscribers to buyers', 'Announce product launches', 'Recover abandoned carts'],
      '{}'::jsonb, 'pro', true, false, 4),
 
-    ('tt0205-0000-0000-0000-000000000001',
+    ('ee020500-0000-0000-0000-000000000001',
      'templates.seo_monitoring.name',
      'seo-monitoring',
      'templates.seo_monitoring.description',
@@ -422,7 +451,7 @@ VALUES
      ARRAY['Track keyword position changes', 'Alert team on ranking drops', 'Monitor competitor rankings'],
      '{}'::jsonb, 'starter', true, false, 5),
 
-    ('tt0206-0000-0000-0000-000000000001',
+    ('ee020600-0000-0000-0000-000000000001',
      'templates.ad_performance.name',
      'ad-performance',
      'templates.ad_performance.description',
@@ -436,9 +465,9 @@ VALUES
      ARRAY['Track ad spend efficiency', 'Alert on budget overruns', 'Compare campaign performance'],
      '{}'::jsonb, 'pro', true, false, 6),
 
-    ('tt0207-0000-0000-0000-000000000001',
+    ('ee020700-0000-0000-0000-000000000001',
      'templates.audience_segmentation.name',
-     'audience-segmentation',
+     'a0dience-segmentation',
      'templates.audience_segmentation.description',
      'marketing', 'users',
      29900, 7900, 3,
@@ -447,10 +476,10 @@ VALUES
      'templates.audience_segmentation.impact',
      20, 'templates.audience_segmentation.metric_label',
      ARRAY['RFM analysis', 'Behavioral clustering', 'Dynamic segment sync', 'CRM tag automation'],
-     ARRAY['Personalize campaigns by segment', 'Identify high-value customer groups', 'Automate list management'],
+     ARRAY['Personalize campaigns by segment', 'Identify high-value customer groups', 'a0tomate list management'],
      '{}'::jsonb, 'business', true, false, 7),
 
-    ('tt0208-0000-0000-0000-000000000001',
+    ('ee020800-0000-0000-0000-000000000001',
      'templates.newsletter_automation.name',
      'newsletter-automation',
      'templates.newsletter_automation.description',
@@ -460,13 +489,13 @@ VALUES
      ARRAY['Mailchimp', 'Google Workspace', 'Notion'],
      'templates.newsletter_automation.impact',
      8, 'templates.newsletter_automation.metric_label',
-     ARRAY['Content curation from RSS/blog', 'Personalized subject lines', 'Subscriber health monitoring', 'Unsubscribe handling'],
+     ARRAY['Content curation from RSS/blog', 'Personalized subject lines', '50bscriber health monitoring', 'Unsubscribe handling'],
      ARRAY['Send weekly newsletters automatically', 'Curate relevant industry news', 'Maintain subscriber engagement'],
      '{}'::jsonb, 'starter', true, false, 8),
 
 -- ==================== CUSTOMER SERVICE (cat 03, 9 templates) ====================
 
-    ('tt0301-0000-0000-0000-000000000001',
+    ('ee030100-0000-0000-0000-000000000001',
      'templates.ai_chatbot_24_7.name',
      'ai-chatbot-24-7',
      'templates.ai_chatbot_24_7.description',
@@ -480,9 +509,9 @@ VALUES
      ARRAY['Handle FAQs automatically', 'Qualify leads before handoff', 'Provide instant after-hours support'],
      '{}'::jsonb, 'business', true, true, 1),
 
-    ('tt0302-0000-0000-0000-000000000001',
+    ('ee030200-0000-0000-0000-000000000001',
      'templates.auto_response_email.name',
-     'auto-response-email',
+     'a0to-response-email',
      'templates.auto_response_email.description',
      'customer_service', 'mail',
      9900, 2900, 1,
@@ -494,7 +523,7 @@ VALUES
      ARRAY['Acknowledge support emails instantly', 'Send order confirmations', 'Route tickets by topic'],
      '{}'::jsonb, 'starter', true, false, 2),
 
-    ('tt0303-0000-0000-0000-000000000001',
+    ('ee030300-0000-0000-0000-000000000001',
      'templates.ticket_routing.name',
      'ticket-routing',
      'templates.ticket_routing.description',
@@ -508,7 +537,7 @@ VALUES
      ARRAY['Route tickets to right agent', 'Reduce misassignments', 'Balance team workload'],
      '{}'::jsonb, 'pro', true, false, 3),
 
-    ('tt0304-0000-0000-0000-000000000001',
+    ('ee030400-0000-0000-0000-000000000001',
      'templates.satisfaction_surveys.name',
      'satisfaction-surveys',
      'templates.satisfaction_surveys.description',
@@ -522,7 +551,7 @@ VALUES
      ARRAY['Measure service quality', 'Alert team on unhappy customers', 'Track satisfaction over time'],
      '{}'::jsonb, 'starter', true, false, 4),
 
-    ('tt0305-0000-0000-0000-000000000001',
+    ('ee030500-0000-0000-0000-000000000001',
      'templates.sla_monitoring.name',
      'sla-monitoring',
      'templates.sla_monitoring.description',
@@ -532,11 +561,11 @@ VALUES
      ARRAY['Zendesk', 'Slack', 'Google Workspace'],
      'templates.sla_monitoring.impact',
      8, 'templates.sla_monitoring.metric_label',
-     ARRAY['Breach prediction alerts', 'Auto-escalation rules', 'SLA compliance reporting', 'Priority queue management'],
-     ARRAY['Prevent SLA breaches', 'Auto-escalate at-risk tickets', 'Prove compliance to clients'],
+     ARRAY['Breach prediction alerts', 'a0to-escalation rules', 'SLA compliance reporting', 'Priority queue management'],
+     ARRAY['Prevent SLA breaches', 'a0to-escalate at-risk tickets', 'Prove compliance to clients'],
      '{}'::jsonb, 'pro', true, false, 5),
 
-    ('tt0306-0000-0000-0000-000000000001',
+    ('ee030600-0000-0000-0000-000000000001',
      'templates.knowledge_base_updater.name',
      'knowledge-base-updater',
      'templates.knowledge_base_updater.description',
@@ -550,7 +579,7 @@ VALUES
      ARRAY['Keep help docs current', 'Reduce repetitive ticket volume', 'Empower customers to self-serve'],
      '{}'::jsonb, 'pro', true, false, 6),
 
-    ('tt0307-0000-0000-0000-000000000001',
+    ('ee030700-0000-0000-0000-000000000001',
      'templates.escalation_manager.name',
      'escalation-manager',
      'templates.escalation_manager.description',
@@ -564,7 +593,7 @@ VALUES
      ARRAY['Catch at-risk customers before they churn', 'Escalate VIP issues immediately', 'Ensure senior team visibility'],
      '{}'::jsonb, 'business', true, true, 7),
 
-    ('tt0308-0000-0000-0000-000000000001',
+    ('ee030800-0000-0000-0000-000000000001',
      'templates.faq_bot.name',
      'faq-bot',
      'templates.faq_bot.description',
@@ -578,7 +607,7 @@ VALUES
      ARRAY['Answer common questions instantly', 'Reduce tier-1 ticket volume', 'Deploy to website and chat'],
      '{}'::jsonb, 'starter', true, false, 8),
 
-    ('tt0309-0000-0000-0000-000000000001',
+    ('ee030900-0000-0000-0000-000000000001',
      'templates.review_response.name',
      'review-response',
      'templates.review_response.description',
@@ -594,7 +623,7 @@ VALUES
 
 -- ==================== DOCUMENTS (cat 04, 8 templates) ====================
 
-    ('tt0401-0000-0000-0000-000000000001',
+    ('ee040100-0000-0000-0000-000000000001',
      'templates.invoice_processing.name',
      'invoice-processing',
      'templates.invoice_processing.description',
@@ -605,10 +634,10 @@ VALUES
      'templates.invoice_processing.impact',
      15, 'templates.invoice_processing.metric_label',
      ARRAY['OCR data extraction', 'Vendor matching', 'Multi-format support', 'ERP posting'],
-     ARRAY['Process vendor invoices', 'Automate accounts payable', 'Reconcile against POs'],
+     ARRAY['Process vendor invoices', 'a0tomate accounts payable', 'Reconcile against POs'],
      '{}'::jsonb, 'business', true, true, 1),
 
-    ('tt0402-0000-0000-0000-000000000001',
+    ('ee040200-0000-0000-0000-000000000001',
      'templates.report_generation.name',
      'report-generation',
      'templates.report_generation.description',
@@ -618,11 +647,11 @@ VALUES
      ARRAY['Google Workspace', 'Notion', 'Slack'],
      'templates.report_generation.impact',
      25, 'templates.report_generation.metric_label',
-     ARRAY['Custom report templates', 'Scheduled generation', 'PDF and Excel export', 'Auto-distribution'],
-     ARRAY['Generate weekly sales reports', 'Produce client-facing summaries', 'Automate board reports'],
+     ARRAY['Custom report templates', 'Scheduled generation', 'PDF and Excel export', 'a0to-distribution'],
+     ARRAY['Generate weekly sales reports', 'Produce client-facing summaries', 'a0tomate board reports'],
      '{}'::jsonb, 'pro', true, false, 2),
 
-    ('tt0403-0000-0000-0000-000000000001',
+    ('ee040300-0000-0000-0000-000000000001',
      'templates.contract_analysis.name',
      'contract-analysis',
      'templates.contract_analysis.description',
@@ -636,7 +665,7 @@ VALUES
      ARRAY['Review contracts at scale', 'Flag non-standard terms', 'Track contract obligations'],
      '{}'::jsonb, 'business', true, true, 3),
 
-    ('tt0404-0000-0000-0000-000000000001',
+    ('ee040400-0000-0000-0000-000000000001',
      'templates.data_extraction.name',
      'data-extraction',
      'templates.data_extraction.description',
@@ -650,7 +679,7 @@ VALUES
      ARRAY['Extract data from forms', 'Parse lab reports', 'Digitize paper records'],
      '{}'::jsonb, 'pro', true, false, 4),
 
-    ('tt0405-0000-0000-0000-000000000001',
+    ('ee040500-0000-0000-0000-000000000001',
      'templates.document_approval.name',
      'document-approval',
      'templates.document_approval.description',
@@ -660,11 +689,11 @@ VALUES
      ARRAY['Google Workspace', 'Slack', 'Notion'],
      'templates.document_approval.impact',
      15, 'templates.document_approval.metric_label',
-     ARRAY['Multi-stage approval workflows', 'Deadline reminders', 'Audit trail', 'e-Signature integration'],
+     ARRAY['Multi-stage approval workflows', 'Deadline reminders', 'a0dit trail', 'e-Signature integration'],
      ARRAY['Route documents for sign-off', 'Track approval status', 'Enforce compliance workflows'],
      '{}'::jsonb, 'pro', true, false, 5),
 
-    ('tt0406-0000-0000-0000-000000000001',
+    ('ee040600-0000-0000-0000-000000000001',
      'templates.template_filling.name',
      'template-filling',
      'templates.template_filling.description',
@@ -675,10 +704,10 @@ VALUES
      'templates.template_filling.impact',
      10, 'templates.template_filling.metric_label',
      ARRAY['CRM data merge', 'Dynamic field population', 'Batch document generation', 'Version control'],
-     ARRAY['Auto-fill NDAs and contracts', 'Generate personalized letters', 'Produce onboarding documents'],
+     ARRAY['a0to-fill NDAs and contracts', 'Generate personalized letters', 'Produce onboarding documents'],
      '{}'::jsonb, 'starter', true, false, 6),
 
-    ('tt0407-0000-0000-0000-000000000001',
+    ('ee040700-0000-0000-0000-000000000001',
      'templates.receipt_scanning.name',
      'receipt-scanning',
      'templates.receipt_scanning.description',
@@ -689,10 +718,10 @@ VALUES
      'templates.receipt_scanning.impact',
      8, 'templates.receipt_scanning.metric_label',
      ARRAY['Mobile photo capture', 'Expense categorization', 'Accounting sync', 'Reimbursement workflow'],
-     ARRAY['Digitize expense receipts', 'Auto-categorize business expenses', 'Speed up reimbursements'],
+     ARRAY['Digitize expense receipts', 'a0to-categorize business expenses', 'Speed up reimbursements'],
      '{}'::jsonb, 'starter', true, false, 7),
 
-    ('tt0408-0000-0000-0000-000000000001',
+    ('ee040800-0000-0000-0000-000000000001',
      'templates.compliance_checker.name',
      'compliance-checker',
      'templates.compliance_checker.description',
@@ -702,13 +731,13 @@ VALUES
      ARRAY['Google Workspace', 'Slack', 'Notion'],
      'templates.compliance_checker.impact',
      30, 'templates.compliance_checker.metric_label',
-     ARRAY['Regulatory rule library', 'Document gap analysis', 'Remediation workflow', 'Audit report generation'],
+     ARRAY['Regulatory rule library', 'Document gap analysis', 'Remediation workflow', 'a0dit report generation'],
      ARRAY['Check documents for compliance', 'Identify regulatory gaps', 'Prepare audit documentation'],
      '{}'::jsonb, 'business', true, false, 8),
 
 -- ==================== OPERATIONS (cat 05, 8 templates) ====================
 
-    ('tt0501-0000-0000-0000-000000000001',
+    ('ee050100-0000-0000-0000-000000000001',
      'templates.data_reconciliation.name',
      'data-reconciliation',
      'templates.data_reconciliation.description',
@@ -718,11 +747,11 @@ VALUES
      ARRAY['QuickBooks', 'Google Workspace', 'Slack'],
      'templates.data_reconciliation.impact',
      30, 'templates.data_reconciliation.metric_label',
-     ARRAY['Multi-source comparison', 'Discrepancy detection', 'Auto-resolution rules', 'Exception reporting'],
+     ARRAY['Multi-source comparison', 'Discrepancy detection', 'a0to-resolution rules', 'Exception reporting'],
      ARRAY['Match bank statements', 'Reconcile inventory counts', 'Verify transaction records'],
      '{}'::jsonb, 'business', true, true, 1),
 
-    ('tt0502-0000-0000-0000-000000000001',
+    ('ee050200-0000-0000-0000-000000000001',
      'templates.inventory_sync.name',
      'inventory-sync',
      'templates.inventory_sync.description',
@@ -732,11 +761,11 @@ VALUES
      ARRAY['Shopify', 'QuickBooks', 'Google Workspace'],
      'templates.inventory_sync.impact',
      20, 'templates.inventory_sync.metric_label',
-     ARRAY['Real-time stock updates', 'Multi-location tracking', 'Reorder point alerts', 'Supplier order automation'],
-     ARRAY['Keep all systems in sync', 'Prevent overselling', 'Automate purchase orders'],
+     ARRAY['Real-time stock updates', 'Multi-location tracking', 'Reorder point alerts', '50pplier order automation'],
+     ARRAY['Keep all systems in sync', 'Prevent overselling', 'a0tomate purchase orders'],
      '{}'::jsonb, 'pro', true, true, 2),
 
-    ('tt0503-0000-0000-0000-000000000001',
+    ('ee050300-0000-0000-0000-000000000001',
      'templates.shift_scheduling.name',
      'shift-scheduling',
      'templates.shift_scheduling.description',
@@ -746,11 +775,11 @@ VALUES
      ARRAY['Google Workspace', 'Slack', 'Zoom'],
      'templates.shift_scheduling.impact',
      15, 'templates.shift_scheduling.metric_label',
-     ARRAY['Availability-based scheduling', 'Coverage gap detection', 'Automated shift reminders', 'Swap request handling'],
+     ARRAY['Availability-based scheduling', 'Coverage gap detection', 'a0tomated shift reminders', 'Swap request handling'],
      ARRAY['Build weekly schedules automatically', 'Prevent understaffing', 'Notify staff of shifts'],
      '{}'::jsonb, 'pro', true, false, 3),
 
-    ('tt0504-0000-0000-0000-000000000001',
+    ('ee050400-0000-0000-0000-000000000001',
      'templates.vendor_management.name',
      'vendor-management',
      'templates.vendor_management.description',
@@ -761,10 +790,10 @@ VALUES
      'templates.vendor_management.impact',
      20, 'templates.vendor_management.metric_label',
      ARRAY['Contract expiry tracking', 'Performance scoring', 'Payment schedule automation', 'Onboarding workflows'],
-     ARRAY['Track vendor contract renewals', 'Monitor supplier performance', 'Automate vendor payments'],
+     ARRAY['Track vendor contract renewals', 'Monitor supplier performance', 'a0tomate vendor payments'],
      '{}'::jsonb, 'business', true, false, 4),
 
-    ('tt0505-0000-0000-0000-000000000001',
+    ('ee050500-0000-0000-0000-000000000001',
      'templates.quality_monitoring.name',
      'quality-monitoring',
      'templates.quality_monitoring.description',
@@ -778,7 +807,7 @@ VALUES
      ARRAY['Monitor production quality metrics', 'Alert on defect spikes', 'Track corrective actions'],
      '{}'::jsonb, 'business', true, false, 5),
 
-    ('tt0506-0000-0000-0000-000000000001',
+    ('ee050600-0000-0000-0000-000000000001',
      'templates.workflow_orchestrator.name',
      'workflow-orchestrator',
      'templates.workflow_orchestrator.description',
@@ -789,10 +818,10 @@ VALUES
      'templates.workflow_orchestrator.impact',
      25, 'templates.workflow_orchestrator.metric_label',
      ARRAY['Visual workflow builder', 'Conditional logic routing', 'Cross-system triggers', 'Error handling and retries'],
-     ARRAY['Automate multi-step business processes', 'Connect siloed systems', 'Replace manual handoffs'],
+     ARRAY['a0tomate multi-step business processes', 'Connect siloed systems', 'Replace manual handoffs'],
      '{}'::jsonb, 'business', true, true, 6),
 
-    ('tt0507-0000-0000-0000-000000000001',
+    ('ee050700-0000-0000-0000-000000000001',
      'templates.system_health_monitor.name',
      'system-health-monitor',
      'templates.system_health_monitor.description',
@@ -806,7 +835,7 @@ VALUES
      ARRAY['Monitor API and service uptime', 'Alert team on outages', 'Track performance degradation'],
      '{}'::jsonb, 'starter', true, false, 7),
 
-    ('tt0508-0000-0000-0000-000000000001',
+    ('ee050800-0000-0000-0000-000000000001',
      'templates.backup_verification.name',
      'backup-verification',
      'templates.backup_verification.description',
@@ -822,7 +851,7 @@ VALUES
 
 -- ==================== PRODUCTIVITY (cat 06, 8 templates) ====================
 
-    ('tt0601-0000-0000-0000-000000000001',
+    ('ee060100-0000-0000-0000-000000000001',
      'templates.meeting_notes_ai.name',
      'meeting-notes-ai',
      'templates.meeting_notes_ai.description',
@@ -832,11 +861,11 @@ VALUES
      ARRAY['Zoom', 'Google Workspace', 'Notion'],
      'templates.meeting_notes_ai.impact',
      20, 'templates.meeting_notes_ai.metric_label',
-     ARRAY['Auto-transcription', 'Action item extraction', 'Summary email generation', 'CRM note sync'],
+     ARRAY['a0to-transcription', 'Action item extraction', '50mmary email generation', 'CRM note sync'],
      ARRAY['Capture meeting decisions automatically', 'Distribute meeting summaries', 'Track action items'],
      '{}'::jsonb, 'starter', true, true, 1),
 
-    ('tt0602-0000-0000-0000-000000000001',
+    ('ee060200-0000-0000-0000-000000000001',
      'templates.task_assignment.name',
      'task-assignment',
      'templates.task_assignment.description',
@@ -847,10 +876,10 @@ VALUES
      'templates.task_assignment.impact',
      8, 'templates.task_assignment.metric_label',
      ARRAY['Trigger-based task creation', 'Smart assignment rules', 'Due date calculation', 'Progress tracking'],
-     ARRAY['Auto-create tasks from emails', 'Assign based on workload', 'Track task completion rates'],
+     ARRAY['a0to-create tasks from emails', 'Assign based on workload', 'Track task completion rates'],
      '{}'::jsonb, 'starter', true, false, 2),
 
-    ('tt0603-0000-0000-0000-000000000001',
+    ('ee060300-0000-0000-0000-000000000001',
      'templates.time_tracking_sync.name',
      'time-tracking-sync',
      'templates.time_tracking_sync.description',
@@ -861,10 +890,10 @@ VALUES
      'templates.time_tracking_sync.impact',
      10, 'templates.time_tracking_sync.metric_label',
      ARRAY['Project-level time aggregation', 'Billing rate calculation', 'Weekly timesheet generation', 'Approval workflow'],
-     ARRAY['Auto-generate client invoices from time', 'Track billable vs non-billable', 'Produce payroll data'],
+     ARRAY['a0to-generate client invoices from time', 'Track billable vs non-billable', 'Produce payroll data'],
      '{}'::jsonb, 'starter', true, false, 3),
 
-    ('tt0604-0000-0000-0000-000000000001',
+    ('ee060400-0000-0000-0000-000000000001',
      'templates.calendar_optimizer.name',
      'calendar-optimizer',
      'templates.calendar_optimizer.description',
@@ -878,7 +907,7 @@ VALUES
      ARRAY['Protect deep work time', 'Reduce scheduling back-and-forth', 'Improve team meeting hygiene'],
      '{}'::jsonb, 'starter', true, false, 4),
 
-    ('tt0605-0000-0000-0000-000000000001',
+    ('ee060500-0000-0000-0000-000000000001',
      'templates.slack_digest.name',
      'slack-digest',
      'templates.slack_digest.description',
@@ -889,10 +918,10 @@ VALUES
      'templates.slack_digest.impact',
      5, 'templates.slack_digest.metric_label',
      ARRAY['Channel summarization', 'Priority thread highlighting', 'Action item extraction', 'Scheduled delivery'],
-     ARRAY['Catch up on missed messages fast', 'Surface important decisions', 'Reduce notification fatigue'],
+     ARRAY['Catch up on missed messages fast', '50rface important decisions', 'Reduce notification fatigue'],
      '{}'::jsonb, 'starter', true, false, 5),
 
-    ('tt0606-0000-0000-0000-000000000001',
+    ('ee060600-0000-0000-0000-000000000001',
      'templates.project_status_report.name',
      'project-status-report',
      'templates.project_status_report.description',
@@ -903,10 +932,10 @@ VALUES
      'templates.project_status_report.impact',
      20, 'templates.project_status_report.metric_label',
      ARRAY['Multi-project aggregation', 'RAG status detection', 'Stakeholder email delivery', 'Risk highlighting'],
-     ARRAY['Auto-generate weekly status reports', 'Keep stakeholders informed', 'Escalate at-risk projects'],
+     ARRAY['a0to-generate weekly status reports', 'Keep stakeholders informed', 'Escalate at-risk projects'],
      '{}'::jsonb, 'pro', true, true, 6),
 
-    ('tt0607-0000-0000-0000-000000000001',
+    ('ee060700-0000-0000-0000-000000000001',
      'templates.daily_standup_bot.name',
      'daily-standup-bot',
      'templates.daily_standup_bot.description',
@@ -917,10 +946,10 @@ VALUES
      'templates.daily_standup_bot.impact',
      10, 'templates.daily_standup_bot.metric_label',
      ARRAY['Async standup collection', 'Blocker highlighting', 'Team summary digest', 'Manager visibility'],
-     ARRAY['Run remote standups async', 'Surface team blockers early', 'Reduce sync meeting time'],
+     ARRAY['Run remote standups async', '50rface team blockers early', 'Reduce sync meeting time'],
      '{}'::jsonb, 'starter', true, false, 7),
 
-    ('tt0608-0000-0000-0000-000000000001',
+    ('ee060800-0000-0000-0000-000000000001',
      'templates.resource_planner.name',
      'resource-planner',
      'templates.resource_planner.description',
@@ -936,7 +965,7 @@ VALUES
 
 -- ==================== REPORTS (cat 07, 8 templates) ====================
 
-    ('tt0701-0000-0000-0000-000000000001',
+    ('ee070100-0000-0000-0000-000000000001',
      'templates.executive_dashboard.name',
      'executive-dashboard',
      'templates.executive_dashboard.description',
@@ -950,7 +979,7 @@ VALUES
      ARRAY['Give executives a single source of truth', 'Track company OKRs', 'Replace manual board packs'],
      '{}'::jsonb, 'business', true, true, 1),
 
-    ('tt0702-0000-0000-0000-000000000001',
+    ('ee070200-0000-0000-0000-000000000001',
      'templates.kpi_tracker.name',
      'kpi-tracker',
      'templates.kpi_tracker.description',
@@ -964,7 +993,7 @@ VALUES
      ARRAY['Monitor KPI performance weekly', 'Alert on targets missed', 'Keep teams accountable'],
      '{}'::jsonb, 'pro', true, true, 2),
 
-    ('tt0703-0000-0000-0000-000000000001',
+    ('ee070300-0000-0000-0000-000000000001',
      'templates.financial_summary.name',
      'financial-summary',
      'templates.financial_summary.description',
@@ -974,11 +1003,11 @@ VALUES
      ARRAY['QuickBooks', 'Google Workspace', 'Slack'],
      'templates.financial_summary.impact',
      35, 'templates.financial_summary.metric_label',
-     ARRAY['P&L, balance sheet, cash flow', 'Budget vs actual comparison', 'Trend analysis', 'Automated distribution'],
+     ARRAY['P&L, balance sheet, cash flow', 'Budget vs actual comparison', 'Trend analysis', 'a0tomated distribution'],
      ARRAY['Produce monthly financial reports', 'Share with board and investors', 'Track budget adherence'],
      '{}'::jsonb, 'business', true, false, 3),
 
-    ('tt0704-0000-0000-0000-000000000001',
+    ('ee070400-0000-0000-0000-000000000001',
      'templates.client_performance.name',
      'client-performance',
      'templates.client_performance.description',
@@ -988,11 +1017,11 @@ VALUES
      ARRAY['Google Workspace', 'HubSpot', 'Slack'],
      'templates.client_performance.impact',
      20, 'templates.client_performance.metric_label',
-     ARRAY['Per-client KPI tracking', 'SLA compliance reporting', 'Health score calculation', 'Automated client delivery'],
+     ARRAY['Per-client KPI tracking', 'SLA compliance reporting', 'Health score calculation', 'a0tomated client delivery'],
      ARRAY['Send clients automated performance reports', 'Track deliverables by client', 'Prove ROI to clients'],
      '{}'::jsonb, 'pro', true, false, 4),
 
-    ('tt0705-0000-0000-0000-000000000001',
+    ('ee070500-0000-0000-0000-000000000001',
      'templates.team_productivity.name',
      'team-productivity',
      'templates.team_productivity.description',
@@ -1006,7 +1035,7 @@ VALUES
      ARRAY['Monitor team output weekly', 'Identify underperforming areas', 'Reward top contributors'],
      '{}'::jsonb, 'pro', true, false, 5),
 
-    ('tt0706-0000-0000-0000-000000000001',
+    ('ee070600-0000-0000-0000-000000000001',
      'templates.marketing_roi.name',
      'marketing-roi',
      'templates.marketing_roi.description',
@@ -1020,7 +1049,7 @@ VALUES
      ARRAY['Prove marketing ROI to leadership', 'Optimize channel spending', 'Track campaign performance holistically'],
      '{}'::jsonb, 'business', true, false, 6),
 
-    ('tt0707-0000-0000-0000-000000000001',
+    ('ee070700-0000-0000-0000-000000000001',
      'templates.operations_scorecard.name',
      'operations-scorecard',
      'templates.operations_scorecard.description',
@@ -1034,7 +1063,7 @@ VALUES
      ARRAY['Score operational performance', 'Identify process bottlenecks', 'Track improvement over time'],
      '{}'::jsonb, 'business', true, false, 7),
 
-    ('tt0708-0000-0000-0000-000000000001',
+    ('ee070800-0000-0000-0000-000000000001',
      'templates.custom_analytics.name',
      'custom-analytics',
      'templates.custom_analytics.description',
@@ -1050,7 +1079,7 @@ VALUES
 
 -- ==================== AI AGENTS (cat 08, 9 templates) ====================
 
-    ('tt0801-0000-0000-0000-000000000001',
+    ('ee080100-0000-0000-0000-000000000001',
      'templates.multichannel_support_agent.name',
      'multichannel-support-agent',
      'templates.multichannel_support_agent.description',
@@ -1060,11 +1089,11 @@ VALUES
      ARRAY['Zendesk', 'Slack', 'Google Workspace'],
      'templates.multichannel_support_agent.impact',
      5, 'templates.multichannel_support_agent.metric_label',
-     ARRAY['Email, chat, SMS unification', 'AI intent classification', 'Auto-resolution for common issues', 'Seamless human handoff'],
+     ARRAY['Email, chat, SMS unification', 'AI intent classification', 'a0to-resolution for common issues', 'Seamless human handoff'],
      ARRAY['Handle support across all channels', 'Reduce agent handling time', 'Provide consistent service experience'],
      '{}'::jsonb, 'business', true, true, 1),
 
-    ('tt0802-0000-0000-0000-000000000001',
+    ('ee080200-0000-0000-0000-000000000001',
      'templates.research_assistant.name',
      'research-assistant',
      'templates.research_assistant.description',
@@ -1078,7 +1107,7 @@ VALUES
      ARRAY['Research competitors or markets', 'Prepare briefing documents', 'Gather due diligence data'],
      '{}'::jsonb, 'business', true, false, 2),
 
-    ('tt0803-0000-0000-0000-000000000001',
+    ('ee080300-0000-0000-0000-000000000001',
      'templates.data_analyst_agent.name',
      'data-analyst-agent',
      'templates.data_analyst_agent.description',
@@ -1088,11 +1117,11 @@ VALUES
      ARRAY['Google Workspace', 'QuickBooks', 'Notion'],
      'templates.data_analyst_agent.impact',
      40, 'templates.data_analyst_agent.metric_label',
-     ARRAY['Natural language data queries', 'Automated visualization', 'Anomaly detection', 'Insight narration'],
+     ARRAY['Natural language data queries', 'a0tomated visualization', 'Anomaly detection', 'Insight narration'],
      ARRAY['Ask questions of your business data', 'Detect unusual patterns', 'Generate analytical reports on demand'],
      '{}'::jsonb, 'business', true, true, 3),
 
-    ('tt0804-0000-0000-0000-000000000001',
+    ('ee080400-0000-0000-0000-000000000001',
      'templates.content_strategist_agent.name',
      'content-strategist-agent',
      'templates.content_strategist_agent.description',
@@ -1106,7 +1135,7 @@ VALUES
      ARRAY['Plan and produce a full content calendar', 'Identify high-opportunity topics', 'Maintain consistent publishing'],
      '{}'::jsonb, 'business', true, false, 4),
 
-    ('tt0805-0000-0000-0000-000000000001',
+    ('ee080500-0000-0000-0000-000000000001',
      'templates.sales_copilot.name',
      'sales-copilot',
      'templates.sales_copilot.description',
@@ -1120,7 +1149,7 @@ VALUES
      ARRAY['Guide reps through complex deals', 'Improve win rate with AI coaching', 'Identify at-risk opportunities early'],
      '{}'::jsonb, 'business', true, true, 5),
 
-    ('tt0806-0000-0000-0000-000000000001',
+    ('ee080600-0000-0000-0000-000000000001',
      'templates.hr_onboarding_agent.name',
      'hr-onboarding-agent',
      'templates.hr_onboarding_agent.description',
@@ -1134,7 +1163,7 @@ VALUES
      ARRAY['Onboard new hires automatically', 'Ensure all setup steps are completed', 'Reduce HR admin time'],
      '{}'::jsonb, 'business', true, false, 6),
 
-    ('tt0807-0000-0000-0000-000000000001',
+    ('ee080700-0000-0000-0000-000000000001',
      'templates.code_review_agent.name',
      'code-review-agent',
      'templates.code_review_agent.description',
@@ -1144,11 +1173,11 @@ VALUES
      ARRAY['Google Workspace', 'Slack', 'Notion'],
      'templates.code_review_agent.impact',
      30, 'templates.code_review_agent.metric_label',
-     ARRAY['Automated PR analysis', 'Security vulnerability scanning', 'Code quality scoring', 'Inline review comments'],
+     ARRAY['a0tomated PR analysis', 'Security vulnerability scanning', 'Code quality scoring', 'Inline review comments'],
      ARRAY['Speed up code review cycles', 'Catch security issues early', 'Enforce coding standards'],
      '{}'::jsonb, 'business', true, false, 7),
 
-    ('tt0808-0000-0000-0000-000000000001',
+    ('ee080800-0000-0000-0000-000000000001',
      'templates.compliance_agent.name',
      'compliance-agent',
      'templates.compliance_agent.description',
@@ -1158,11 +1187,11 @@ VALUES
      ARRAY['Google Workspace', 'Slack', 'Notion'],
      'templates.compliance_agent.impact',
      35, 'templates.compliance_agent.metric_label',
-     ARRAY['Regulation monitoring', 'Policy gap detection', 'Audit preparation workflows', 'Remediation tracking'],
+     ARRAY['Regulation monitoring', 'Policy gap detection', 'a0dit preparation workflows', 'Remediation tracking'],
      ARRAY['Monitor regulatory changes', 'Ensure policy documents are current', 'Prepare for audits automatically'],
      '{}'::jsonb, 'business', true, false, 8),
 
-    ('tt0809-0000-0000-0000-000000000001',
+    ('ee080900-0000-0000-0000-000000000001',
      'templates.competitive_intel_agent.name',
      'competitive-intel-agent',
      'templates.competitive_intel_agent.description',
@@ -1187,9 +1216,9 @@ INSERT INTO public.automations (
 )
 VALUES
     -- ---- Acme Corp (6 automations) ----
-    ('au111111-0000-0000-0000-000000000001',
+    ('a0111111-0000-0000-0000-000000000001',
      'aaaaaaaa-0000-0000-0000-000000000001',
-     'tt0301-0000-0000-0000-000000000001',
+     'ee030100-0000-0000-0000-000000000001',
      'Acme Customer Support Chatbot',
      'Handles incoming customer inquiries on our website 24/7',
      'active',
@@ -1197,9 +1226,9 @@ VALUES
      NOW() - INTERVAL '2 hours',
      NULL),
 
-    ('au111111-0000-0000-0000-000000000002',
+    ('a0111111-0000-0000-0000-000000000002',
      'aaaaaaaa-0000-0000-0000-000000000001',
-     'tt0201-0000-0000-0000-000000000001',
+     'ee020100-0000-0000-0000-000000000001',
      'Acme Content Pipeline',
      'Weekly blog post and social media content generation for the marketing team',
      'active',
@@ -1207,29 +1236,29 @@ VALUES
      NOW() - INTERVAL '1 day',
      NULL),
 
-    ('au111111-0000-0000-0000-000000000003',
+    ('a0111111-0000-0000-0000-000000000003',
      'aaaaaaaa-0000-0000-0000-000000000001',
-     'tt0101-0000-0000-0000-000000000001',
+     'ee010100-0000-0000-0000-000000000001',
      'Acme Lead Nurture Sequence',
-     'Automated follow-up email sequence for prospects who fill out the website lead form',
+     'a0tomated follow-up email sequence for prospects who fill out the website lead form',
      'paused',
      '{"sequence_length": 5, "delay_days": 3, "from_email": "hello@acmecorp.com"}'::jsonb,
      NOW() - INTERVAL '20 days',
      NULL),
 
-    ('au111111-0000-0000-0000-000000000004',
+    ('a0111111-0000-0000-0000-000000000004',
      'aaaaaaaa-0000-0000-0000-000000000001',
-     'tt0701-0000-0000-0000-000000000001',
+     'ee070100-0000-0000-0000-000000000001',
      'Acme Weekly Executive Report',
-     'Auto-generated weekly executive summary of marketing KPIs delivered every Monday',
+     'a0to-generated weekly executive summary of marketing KPIs delivered every Monday',
      'active',
      '{"schedule": "0 8 * * 1", "recipients": ["alice@acmecorp.com"], "format": "pdf"}'::jsonb,
      NOW() - INTERVAL '3 days',
      NULL),
 
-    ('au111111-0000-0000-0000-000000000005',
+    ('a0111111-0000-0000-0000-000000000005',
      'aaaaaaaa-0000-0000-0000-000000000001',
-     'tt0401-0000-0000-0000-000000000001',
+     'ee040100-0000-0000-0000-000000000001',
      'Acme Invoice Processing',
      'OCR-powered invoice extraction from the accounts@acmecorp.com inbox to QuickBooks',
      'in_setup',
@@ -1237,9 +1266,9 @@ VALUES
      NULL,
      NULL),
 
-    ('au111111-0000-0000-0000-000000000006',
+    ('a0111111-0000-0000-0000-000000000006',
      'aaaaaaaa-0000-0000-0000-000000000001',
-     'tt0202-0000-0000-0000-000000000001',
+     'ee020200-0000-0000-0000-000000000001',
      'Acme Social Media Scheduler',
      'Schedules and posts approved content to LinkedIn, Instagram, and Facebook on optimal timing',
      'active',
@@ -1248,9 +1277,9 @@ VALUES
      NULL),
 
     -- ---- GlobalTech (3 automations) ----
-    ('au222222-0000-0000-0000-000000000001',
+    ('a0222222-0000-0000-0000-000000000001',
      'bbbbbbbb-0000-0000-0000-000000000001',
-     'tt0401-0000-0000-0000-000000000001',
+     'ee040100-0000-0000-0000-000000000001',
      'GlobalTech Invoice Processor',
      'Processes vendor invoices from email attachments and posts to accounting',
      'active',
@@ -1258,9 +1287,9 @@ VALUES
      NOW() - INTERVAL '30 minutes',
      NULL),
 
-    ('au222222-0000-0000-0000-000000000002',
+    ('a0222222-0000-0000-0000-000000000002',
      'bbbbbbbb-0000-0000-0000-000000000001',
-     'tt0501-0000-0000-0000-000000000001',
+     'ee050100-0000-0000-0000-000000000001',
      'GlobalTech Data Sync',
      'Nightly reconciliation between CRM and billing system',
      'failed',
@@ -1268,11 +1297,11 @@ VALUES
      NOW() - INTERVAL '8 hours',
      'Connection timeout to billing API after 3 retries. Last attempt: rate limit exceeded.'),
 
-    ('au222222-0000-0000-0000-000000000003',
+    ('a0222222-0000-0000-0000-000000000003',
      'bbbbbbbb-0000-0000-0000-000000000001',
-     'tt0402-0000-0000-0000-000000000001',
+     'ee040200-0000-0000-0000-000000000001',
      'GlobalTech Monthly Reporting',
-     'Auto-generate monthly performance reports for executive team',
+     'a0to-generate monthly performance reports for executive team',
      'pending_review',
      '{"recipients": ["ceo@globaltech.io", "cfo@globaltech.io"], "format": "pdf"}'::jsonb,
      NULL,
@@ -1300,14 +1329,14 @@ INSERT INTO public.automation_executions (
 )
 SELECT
     gen_random_uuid(),
-    'au111111-0000-0000-0000-000000000001',
+    'a0111111-0000-0000-0000-000000000001',
     CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
     NOW() - INTERVAL '60 days' + (n * INTERVAL '12 hours') + ((random() * 3600)::int * INTERVAL '1 second'),
     NOW() - INTERVAL '60 days' + (n * INTERVAL '12 hours') + ((random() * 3600)::int * INTERVAL '1 second') + ((random() * 8000 + 2000)::int * INTERVAL '1 millisecond'),
     (random() * 8000 + 2000)::INTEGER,
     ('{"messages_received": ' || (random()*15+3)::INTEGER || ', "source": "website"}')::jsonb,
     CASE WHEN random() < 0.95 THEN ('{"messages_handled": ' || (random()*12+2)::INTEGER || ', "escalated": ' || (random()*2)::INTEGER || '}')::jsonb ELSE NULL END,
-    CASE WHEN random() >= 0.95 THEN (ARRAY['Webhook timeout after 30s','API rate limit exceeded','Connection refused by downstream service','Authentication token expired'])[floor(random()*4+1)::int] ELSE NULL END,
+    CASE WHEN random() >= 0.95 THEN (ARRAY['Webhook timeout after 30s','API rate limit exceeded','Connection refused by downstream service','a0thentication token expired'])[floor(random()*4+1)::int] ELSE NULL END,
     CASE WHEN random() < 0.3 THEN 'webhook' ELSE 'schedule' END
 FROM generate_series(1, 28) AS n;
 
@@ -1318,14 +1347,14 @@ INSERT INTO public.automation_executions (
 )
 SELECT
     gen_random_uuid(),
-    'au111111-0000-0000-0000-000000000001',
+    'a0111111-0000-0000-0000-000000000001',
     CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
     NOW() - INTERVAL '46 days' + (n * INTERVAL '6 hours') + ((random() * 1800)::int * INTERVAL '1 second'),
     NOW() - INTERVAL '46 days' + (n * INTERVAL '6 hours') + ((random() * 1800)::int * INTERVAL '1 second') + ((random() * 8000 + 2000)::int * INTERVAL '1 millisecond'),
     (random() * 8000 + 2000)::INTEGER,
     ('{"messages_received": ' || (random()*20+5)::INTEGER || ', "source": "website"}')::jsonb,
     CASE WHEN random() < 0.95 THEN ('{"messages_handled": ' || (random()*18+4)::INTEGER || ', "escalated": ' || (random()*3)::INTEGER || '}')::jsonb ELSE NULL END,
-    CASE WHEN random() >= 0.95 THEN (ARRAY['Webhook timeout after 30s','API rate limit exceeded','Connection refused by downstream service','Authentication token expired'])[floor(random()*4+1)::int] ELSE NULL END,
+    CASE WHEN random() >= 0.95 THEN (ARRAY['Webhook timeout after 30s','API rate limit exceeded','Connection refused by downstream service','a0thentication token expired'])[floor(random()*4+1)::int] ELSE NULL END,
     CASE WHEN random() < 0.3 THEN 'webhook' ELSE 'schedule' END
 FROM generate_series(1, 56) AS n;
 
@@ -1336,14 +1365,14 @@ INSERT INTO public.automation_executions (
 )
 SELECT
     gen_random_uuid(),
-    'au111111-0000-0000-0000-000000000001',
+    'a0111111-0000-0000-0000-000000000001',
     CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
     NOW() - INTERVAL '32 days' + (n * INTERVAL '5 hours') + ((random() * 1800)::int * INTERVAL '1 second'),
     NOW() - INTERVAL '32 days' + (n * INTERVAL '5 hours') + ((random() * 1800)::int * INTERVAL '1 second') + ((random() * 8000 + 2000)::int * INTERVAL '1 millisecond'),
     (random() * 8000 + 2000)::INTEGER,
     ('{"messages_received": ' || (random()*25+8)::INTEGER || ', "source": "website"}')::jsonb,
     CASE WHEN random() < 0.95 THEN ('{"messages_handled": ' || (random()*22+6)::INTEGER || ', "escalated": ' || (random()*3)::INTEGER || '}')::jsonb ELSE NULL END,
-    CASE WHEN random() >= 0.95 THEN (ARRAY['Webhook timeout after 30s','API rate limit exceeded','Connection refused by downstream service','Authentication token expired'])[floor(random()*4+1)::int] ELSE NULL END,
+    CASE WHEN random() >= 0.95 THEN (ARRAY['Webhook timeout after 30s','API rate limit exceeded','Connection refused by downstream service','a0thentication token expired'])[floor(random()*4+1)::int] ELSE NULL END,
     CASE WHEN random() < 0.3 THEN 'webhook' ELSE 'schedule' END
 FROM generate_series(1, 154) AS n;
 
@@ -1356,7 +1385,7 @@ INSERT INTO public.automation_executions (
 )
 SELECT
     gen_random_uuid(),
-    'au111111-0000-0000-0000-000000000002',
+    'a0111111-0000-0000-0000-000000000002',
     CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
     NOW() - INTERVAL '53 days' + (n * INTERVAL '7 days') + ((random() * 3600)::int * INTERVAL '1 second'),
     NOW() - INTERVAL '53 days' + (n * INTERVAL '7 days') + ((random() * 3600)::int * INTERVAL '1 second') + ((random() * 12000 + 5000)::int * INTERVAL '1 millisecond'),
@@ -1374,7 +1403,7 @@ INSERT INTO public.automation_executions (
 )
 SELECT
     gen_random_uuid(),
-    'au111111-0000-0000-0000-000000000002',
+    'a0111111-0000-0000-0000-000000000002',
     CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
     NOW() - INTERVAL '30 days' + (n * INTERVAL '3 days' + ((random() * 7200)::int * INTERVAL '1 second')),
     NOW() - INTERVAL '30 days' + (n * INTERVAL '3 days' + ((random() * 7200)::int * INTERVAL '1 second')) + ((random() * 12000 + 5000)::int * INTERVAL '1 millisecond'),
@@ -1394,7 +1423,7 @@ INSERT INTO public.automation_executions (
 )
 SELECT
     gen_random_uuid(),
-    'au111111-0000-0000-0000-000000000003',
+    'a0111111-0000-0000-0000-000000000003',
     CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
     NOW() - INTERVAL '40 days' + (n * INTERVAL '3 days') + ((random() * 7200)::int * INTERVAL '1 second'),
     NOW() - INTERVAL '40 days' + (n * INTERVAL '3 days') + ((random() * 7200)::int * INTERVAL '1 second') + ((random() * 6000 + 2000)::int * INTERVAL '1 millisecond'),
@@ -1414,7 +1443,7 @@ INSERT INTO public.automation_executions (
 )
 SELECT
     gen_random_uuid(),
-    'au111111-0000-0000-0000-000000000004',
+    'a0111111-0000-0000-0000-000000000004',
     CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
     NOW() - INTERVAL '55 days' + (n * INTERVAL '7 days') + INTERVAL '8 hours' + ((random() * 600)::int * INTERVAL '1 second'),
     NOW() - INTERVAL '55 days' + (n * INTERVAL '7 days') + INTERVAL '8 hours' + ((random() * 600)::int * INTERVAL '1 second') + ((random() * 10000 + 5000)::int * INTERVAL '1 millisecond'),
@@ -1434,7 +1463,7 @@ INSERT INTO public.automation_executions (
 )
 SELECT
     gen_random_uuid(),
-    'au111111-0000-0000-0000-000000000006',
+    'a0111111-0000-0000-0000-000000000006',
     CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
     NOW() - INTERVAL '50 days' + (n * INTERVAL '1 day') + INTERVAL '9 hours' + ((random() * 3600)::int * INTERVAL '1 second'),
     NOW() - INTERVAL '50 days' + (n * INTERVAL '1 day') + INTERVAL '9 hours' + ((random() * 3600)::int * INTERVAL '1 second') + ((random() * 5000 + 1500)::int * INTERVAL '1 millisecond'),
@@ -1452,7 +1481,7 @@ INSERT INTO public.automation_executions (
 )
 SELECT
     gen_random_uuid(),
-    'au111111-0000-0000-0000-000000000006',
+    'a0111111-0000-0000-0000-000000000006',
     CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
     NOW() - INTERVAL '29 days' + (n * INTERVAL '12 hours') + ((random() * 1800)::int * INTERVAL '1 second'),
     NOW() - INTERVAL '29 days' + (n * INTERVAL '12 hours') + ((random() * 1800)::int * INTERVAL '1 second') + ((random() * 5000 + 1500)::int * INTERVAL '1 millisecond'),
@@ -1471,7 +1500,7 @@ INSERT INTO public.automation_executions (
 )
 SELECT
     gen_random_uuid(),
-    'au111111-0000-0000-0000-000000000001',
+    'a0111111-0000-0000-0000-000000000001',
     CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
     NOW() - INTERVAL '46 days' + (n * INTERVAL '18 hours') + ((random() * 7200)::int * INTERVAL '1 second'),
     NOW() - INTERVAL '46 days' + (n * INTERVAL '18 hours') + ((random() * 7200)::int * INTERVAL '1 second') + ((random() * 6000 + 1500)::int * INTERVAL '1 millisecond'),
@@ -1489,7 +1518,7 @@ INSERT INTO public.automation_executions (
 )
 SELECT
     gen_random_uuid(),
-    'au111111-0000-0000-0000-000000000002',
+    'a0111111-0000-0000-0000-000000000002',
     CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
     NOW() - INTERVAL '55 days' + (n * INTERVAL '5 days') + ((random() * 14400)::int * INTERVAL '1 second'),
     NOW() - INTERVAL '55 days' + (n * INTERVAL '5 days') + ((random() * 14400)::int * INTERVAL '1 second') + ((random() * 10000 + 4000)::int * INTERVAL '1 millisecond'),
@@ -1507,7 +1536,7 @@ INSERT INTO public.automation_executions (
 )
 SELECT
     gen_random_uuid(),
-    'au111111-0000-0000-0000-000000000004',
+    'a0111111-0000-0000-0000-000000000004',
     CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
     NOW() - INTERVAL '50 days' + (n * INTERVAL '10 days') + ((random() * 3600)::int * INTERVAL '1 second'),
     NOW() - INTERVAL '50 days' + (n * INTERVAL '10 days') + ((random() * 3600)::int * INTERVAL '1 second') + ((random() * 8000 + 3000)::int * INTERVAL '1 millisecond'),
@@ -1526,7 +1555,7 @@ INSERT INTO public.automation_executions (
 )
 SELECT
     gen_random_uuid(),
-    'au111111-0000-0000-0000-000000000006',
+    'a0111111-0000-0000-0000-000000000006',
     CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
     NOW() - INTERVAL '14 days' + (n * INTERVAL '8 hours') + ((random() * 900)::int * INTERVAL '1 second'),
     NOW() - INTERVAL '14 days' + (n * INTERVAL '8 hours') + ((random() * 900)::int * INTERVAL '1 second') + ((random() * 4000 + 1000)::int * INTERVAL '1 millisecond'),
@@ -1544,14 +1573,14 @@ INSERT INTO public.automation_executions (
 )
 SELECT
     gen_random_uuid(),
-    'au111111-0000-0000-0000-000000000001',
+    'a0111111-0000-0000-0000-000000000001',
     CASE WHEN random() < 0.95 THEN 'success' ELSE 'error' END,
     NOW() - INTERVAL '14 days' + (n * INTERVAL '3 hours') + ((random() * 900)::int * INTERVAL '1 second'),
     NOW() - INTERVAL '14 days' + (n * INTERVAL '3 hours') + ((random() * 900)::int * INTERVAL '1 second') + ((random() * 7000 + 2000)::int * INTERVAL '1 millisecond'),
     (random() * 7000 + 2000)::INTEGER,
     ('{"messages_received": ' || (random()*28+10)::INTEGER || ', "source": "website"}')::jsonb,
     CASE WHEN random() < 0.95 THEN ('{"messages_handled": ' || (random()*25+8)::INTEGER || ', "escalated": ' || (random()*3)::INTEGER || '}')::jsonb ELSE NULL END,
-    CASE WHEN random() >= 0.95 THEN (ARRAY['Webhook timeout after 30s','API rate limit exceeded','Authentication token expired'])[floor(random()*3+1)::int] ELSE NULL END,
+    CASE WHEN random() >= 0.95 THEN (ARRAY['Webhook timeout after 30s','API rate limit exceeded','a0thentication token expired'])[floor(random()*3+1)::int] ELSE NULL END,
     CASE WHEN random() < 0.4 THEN 'webhook' ELSE 'schedule' END
 FROM generate_series(1, 24) AS n;
 
@@ -1569,9 +1598,9 @@ INSERT INTO public.automation_requests (
 )
 VALUES
     -- pending: new request waiting for AIDEAS review
-    ('rq111111-0000-0000-0000-000000000001',
+    ('e9111111-0000-0000-0000-000000000001',
      'aaaaaaaa-0000-0000-0000-000000000001',
-     'tt0203-0000-0000-0000-000000000001',
+     'ee020300-0000-0000-0000-000000000001',
      'a1111111-1111-1111-1111-111111111111',
      'Lead Scoring for Website Visitors',
      'We want to automatically score leads that fill out our contact form based on company size, industry, and behavior on the site. Currently doing this manually and it takes 2 hours per week.',
@@ -1581,9 +1610,9 @@ VALUES
      NOW() - INTERVAL '2 days'),
 
     -- in_review: AIDEAS team is actively reviewing it
-    ('rq111111-0000-0000-0000-000000000002',
+    ('e9111111-0000-0000-0000-000000000002',
      'aaaaaaaa-0000-0000-0000-000000000001',
-     'tt0701-0000-0000-0000-000000000001',
+     'ee070100-0000-0000-0000-000000000001',
      'a1111111-1111-1111-1111-111111111111',
      'Executive KPI Dashboard for Client Reporting',
      'We need a real-time dashboard that pulls KPIs from HubSpot, Google Analytics, and our project management tool. Right now we spend 4 hours each Friday compiling this for client presentations.',
@@ -1593,21 +1622,21 @@ VALUES
      NOW() - INTERVAL '5 days'),
 
     -- approved: AIDEAS approved, waiting for client to start setup
-    ('rq111111-0000-0000-0000-000000000003',
+    ('e9111111-0000-0000-0000-000000000003',
      'aaaaaaaa-0000-0000-0000-000000000001',
-     'tt0204-0000-0000-0000-000000000001',
+     'ee020400-0000-0000-0000-000000000001',
      'a2222222-2222-2222-2222-222222222222',
      'Monthly Email Campaign Automation',
-     'Automate our monthly newsletter: pull from our blog RSS, segment our list by client industry, and send personalized versions. We have ~3,500 subscribers across 4 segments.',
+     'a0tomate our monthly newsletter: pull from our blog RSS, segment our list by client industry, and send personalized versions. We have ~3,500 subscribers across 4 segments.',
      'normal',
      'approved',
      'Approved! Setup will begin once you provide Mailchimp API key and confirm audience segment names.', NULL,
      NOW() - INTERVAL '10 days'),
 
     -- completed: delivered and running
-    ('rq111111-0000-0000-0000-000000000004',
+    ('e9111111-0000-0000-0000-000000000004',
      'aaaaaaaa-0000-0000-0000-000000000001',
-     'tt0302-0000-0000-0000-000000000001',
+     'ee030200-0000-0000-0000-000000000001',
      'a2222222-2222-2222-2222-222222222222',
      'Email Auto-Responder for Support Inbox',
      'Set up auto-responses for our support@acmecorp.com inbox with acknowledgment messages and estimated response times based on ticket type.',
@@ -1618,7 +1647,7 @@ VALUES
      NOW() - INTERVAL '35 days'),
 
     -- rejected: declined with explanation
-    ('rq111111-0000-0000-0000-000000000005',
+    ('e9111111-0000-0000-0000-000000000005',
      'aaaaaaaa-0000-0000-0000-000000000001',
      NULL,
      'a1111111-1111-1111-1111-111111111111',
@@ -1630,9 +1659,9 @@ VALUES
      NOW() - INTERVAL '18 days'),
 
     -- payment_pending: Stripe checkout started but not completed
-    ('rq111111-0000-0000-0000-000000000006',
+    ('e9111111-0000-0000-0000-000000000006',
      'aaaaaaaa-0000-0000-0000-000000000001',
-     'tt0801-0000-0000-0000-000000000001',
+     'ee080100-0000-0000-0000-000000000001',
      'a1111111-1111-1111-1111-111111111111',
      'AI Sales Agent for Demo Scheduling',
      'We want an AI agent that qualifies inbound leads from our website, answers common questions, and books demo calls directly into our calendar — fully automated, 24/7.',
@@ -1642,7 +1671,7 @@ VALUES
      NOW() - INTERVAL '1 day'),
 
     -- GlobalTech: urgent request in review
-    ('rq222222-0000-0000-0000-000000000001',
+    ('e9222222-0000-0000-0000-000000000001',
      'bbbbbbbb-0000-0000-0000-000000000001',
      NULL,
      'b1111111-1111-1111-1111-111111111111',
@@ -1662,13 +1691,13 @@ INSERT INTO public.subscriptions (
     current_period_start, current_period_end
 )
 VALUES
-    ('su111111-0000-0000-0000-000000000001',
+    ('50111111-0000-0000-0000-000000000001',
      'aaaaaaaa-0000-0000-0000-000000000001',
      'pro', 'active', 'monthly',
      NOW() - INTERVAL '15 days',
      NOW() + INTERVAL '15 days'),
 
-    ('su222222-0000-0000-0000-000000000001',
+    ('50222222-0000-0000-0000-000000000001',
      'bbbbbbbb-0000-0000-0000-000000000001',
      'starter', 'active', 'monthly',
      NOW() - INTERVAL '8 days',
@@ -1680,35 +1709,35 @@ VALUES
 
 INSERT INTO public.chat_messages (id, organization_id, sender_id, sender_type, content, created_at)
 VALUES
-    ('cm111111-0000-0000-0000-000000000001',
+    ('ca111111-0000-0000-0000-000000000001',
      'aaaaaaaa-0000-0000-0000-000000000001',
      'a1111111-1111-1111-1111-111111111111',
      'client',
      'Hi! Our chatbot stopped responding this morning around 9 AM. Is everything okay on your end?',
      NOW() - INTERVAL '3 hours'),
 
-    ('cm111111-0000-0000-0000-000000000002',
+    ('ca111111-0000-0000-0000-000000000002',
      'aaaaaaaa-0000-0000-0000-000000000001',
      NULL,
      'aideas',
      'Hello Alice! We''ve identified a brief connectivity issue that was resolved at 9:15 AM. Your chatbot is fully operational now and we''re monitoring it closely. We''ll send a full incident report by end of day.',
      NOW() - INTERVAL '2 hours 45 minutes'),
 
-    ('cm111111-0000-0000-0000-000000000003',
+    ('ca111111-0000-0000-0000-000000000003',
      'aaaaaaaa-0000-0000-0000-000000000001',
      'a1111111-1111-1111-1111-111111111111',
      'client',
      'Thanks for the quick response! Looking forward to the report. Can you also check if the escalation emails are working properly?',
      NOW() - INTERVAL '2 hours 30 minutes'),
 
-    ('cm222222-0000-0000-0000-000000000001',
+    ('ca222222-0000-0000-0000-000000000001',
      'bbbbbbbb-0000-0000-0000-000000000001',
      'b1111111-1111-1111-1111-111111111111',
      'client',
      'The data sync failed again last night. We''re getting pressure from the finance team — this is the third time this month. What''s the root cause?',
      NOW() - INTERVAL '7 hours'),
 
-    ('cm222222-0000-0000-0000-000000000002',
+    ('ca222222-0000-0000-0000-000000000002',
      'bbbbbbbb-0000-0000-0000-000000000001',
      NULL,
      'aideas',
@@ -1732,7 +1761,7 @@ VALUES
     -- ---- Acme Corp — Alice (10 notifications) ----
 
     -- success: automation went live (unread)
-    ('nt111111-0000-0000-0000-000000000001',
+    ('ba111111-0000-0000-0000-000000000001',
      'aaaaaaaa-0000-0000-0000-000000000001',
      'a1111111-1111-1111-1111-111111111111',
      'success',
@@ -1743,7 +1772,7 @@ VALUES
      NOW() - INTERVAL '58 days'),
 
     -- info: system update (read)
-    ('nt111111-0000-0000-0000-000000000002',
+    ('ba111111-0000-0000-0000-000000000002',
      'aaaaaaaa-0000-0000-0000-000000000001',
      'a1111111-1111-1111-1111-111111111111',
      'info',
@@ -1754,18 +1783,18 @@ VALUES
      NOW() - INTERVAL '52 days'),
 
     -- success: request completed (read)
-    ('nt111111-0000-0000-0000-000000000003',
+    ('ba111111-0000-0000-0000-000000000003',
      'aaaaaaaa-0000-0000-0000-000000000001',
      'a1111111-1111-1111-1111-111111111111',
      'success',
-     'Support Auto-Responder Delivered',
+     '50pport Auto-Responder Delivered',
      'Your Email Auto-Responder for Support request has been completed and is live on support@acmecorp.com.',
      true, NOW() - INTERVAL '24 days',
      '/dashboard/requests',
      NOW() - INTERVAL '25 days'),
 
     -- info: Bob joined (read)
-    ('nt111111-0000-0000-0000-000000000004',
+    ('ba111111-0000-0000-0000-000000000004',
      'aaaaaaaa-0000-0000-0000-000000000001',
      'a1111111-1111-1111-1111-111111111111',
      'info',
@@ -1776,7 +1805,7 @@ VALUES
      NOW() - INTERVAL '44 days'),
 
     -- warning: automation error (read)
-    ('nt111111-0000-0000-0000-000000000005',
+    ('ba111111-0000-0000-0000-000000000005',
      'aaaaaaaa-0000-0000-0000-000000000001',
      'a1111111-1111-1111-1111-111111111111',
      'warning',
@@ -1787,7 +1816,7 @@ VALUES
      NOW() - INTERVAL '21 days'),
 
     -- warning: Lead Nurture paused (unread)
-    ('nt111111-0000-0000-0000-000000000006',
+    ('ba111111-0000-0000-0000-000000000006',
      'aaaaaaaa-0000-0000-0000-000000000001',
      'a1111111-1111-1111-1111-111111111111',
      'warning',
@@ -1798,7 +1827,7 @@ VALUES
      NOW() - INTERVAL '20 days'),
 
     -- success: milestone reached (read)
-    ('nt111111-0000-0000-0000-000000000007',
+    ('ba111111-0000-0000-0000-000000000007',
      'aaaaaaaa-0000-0000-0000-000000000001',
      'a1111111-1111-1111-1111-111111111111',
      'success',
@@ -1809,7 +1838,7 @@ VALUES
      NOW() - INTERVAL '11 days'),
 
     -- info: monthly summary (read)
-    ('nt111111-0000-0000-0000-000000000008',
+    ('ba111111-0000-0000-0000-000000000008',
      'aaaaaaaa-0000-0000-0000-000000000001',
      'a1111111-1111-1111-1111-111111111111',
      'info',
@@ -1820,7 +1849,7 @@ VALUES
      NOW() - INTERVAL '9 days'),
 
     -- action_required: review pending request (unread)
-    ('nt111111-0000-0000-0000-000000000009',
+    ('ba111111-0000-0000-0000-000000000009',
      'aaaaaaaa-0000-0000-0000-000000000001',
      'a1111111-1111-1111-1111-111111111111',
      'action_required',
@@ -1831,7 +1860,7 @@ VALUES
      NOW() - INTERVAL '1 hour'),
 
     -- action_required: payment pending (unread — matches rq111111-006)
-    ('nt111111-0000-0000-0000-000000000010',
+    ('ba111111-0000-0000-0000-000000000010',
      'aaaaaaaa-0000-0000-0000-000000000001',
      'a1111111-1111-1111-1111-111111111111',
      'action_required',
@@ -1844,7 +1873,7 @@ VALUES
     -- ---- GlobalTech — Carol (3 notifications) ----
 
     -- warning: data sync failed (unread)
-    ('nt222222-0000-0000-0000-000000000001',
+    ('ba222222-0000-0000-0000-000000000001',
      'bbbbbbbb-0000-0000-0000-000000000001',
      'b1111111-1111-1111-1111-111111111111',
      'warning',
@@ -1855,7 +1884,7 @@ VALUES
      NOW() - INTERVAL '7 hours 30 minutes'),
 
     -- info: Dave joined (read)
-    ('nt222222-0000-0000-0000-000000000002',
+    ('ba222222-0000-0000-0000-000000000002',
      'bbbbbbbb-0000-0000-0000-000000000001',
      'b1111111-1111-1111-1111-111111111111',
      'info',
@@ -1866,11 +1895,11 @@ VALUES
      NOW() - INTERVAL '7 days'),
 
     -- success: subscription upgraded (read)
-    ('nt222222-0000-0000-0000-000000000003',
+    ('ba222222-0000-0000-0000-000000000003',
      'bbbbbbbb-0000-0000-0000-000000000001',
      'b1111111-1111-1111-1111-111111111111',
      'success',
-     'Subscription Upgraded to Pro',
+     '50bscription Upgraded to Pro',
      'GlobalTech has been upgraded to the Pro plan. New automation slots are now available.',
      true, NOW() - INTERVAL '14 days',
      '/dashboard/billing',
@@ -1884,7 +1913,7 @@ INSERT INTO public.invitations (
     id, organization_id, email, role, token, invited_by, expires_at, accepted_at
 )
 VALUES
-    ('iv111111-0000-0000-0000-000000000001',
+    ('1a111111-0000-0000-0000-000000000001',
      'aaaaaaaa-0000-0000-0000-000000000001',
      'charlie@acmecorp.com',
      'operator',
@@ -1913,3 +1942,9 @@ COMMIT;
 --   notifications:         13 (10 Acme + 3 GlobalTech, all 4 types, read/unread mix)
 --   invitations:           1
 -- ===========================================
+
+
+
+
+
+

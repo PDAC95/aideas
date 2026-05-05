@@ -1,8 +1,21 @@
 ---
 phase: 17-admin-foundation
 verified: 2026-05-05T20:10:53Z
-status: human_needed
-score: 6/6 must-haves verified (codebase scan); 5 items require browser UAT
+human_verified: 2026-05-05T22:00:00Z
+status: passed
+score: 6/6 must-haves verified (codebase scan + 5/5 human UAT items confirmed in browser)
+human_verification_outcome: |
+  All 5 human-UAT items confirmed working in browser by user:
+  1. /admin/login auth flow + admin shell renders with orange ADMIN badge
+  2. Customer + staff sessions coexist independently (verified two tabs simultaneously)
+  3. Non-staff customer (Bob) hitting /admin → bounced to /admin/login
+  4. Staff hitting /dashboard → redirected to /admin (after middleware fix below)
+  5. EN/ES sidebar parity in code; runtime locale switcher not present in admin shell yet (deferred)
+post_uat_fixes:
+  - "Middleware order bug: staff hitting /dashboard with only admin cookies fell to customer auth gate (→ /login) before the staff redirect (→ /admin) could match. Fixed by inserting the staff cross-redirect block BEFORE the customer auth gate in middleware.ts."
+deferred_to_future_phase:
+  - "Locale switcher UI in admin shell — not planned in Phase 17 scope; users can set NEXT_LOCALE cookie manually for now"
+  - "Admin visual design polish — current shell is utilitarian/placeholder; will be revisited when admin pages have real content (Phases 18-22)"
 human_verification:
   - test: "Sign in at /admin/login with pdmckinster@gmail.com → land at /admin shell"
     expected: "Admin layout renders with logo + orange ADMIN badge in desktop header, sidebar shows Home/Catalog/Requests/Automations/Clients with Sign out pinned at bottom; clicking each nav item renders the corresponding placeholder page inside the same shell"

@@ -125,6 +125,27 @@ export async function updateSession(request: NextRequest) {
     return supabaseResponse;
   }
 
+  // ---- Staff hitting customer area without a customer session → /admin ----
+  // If a platform_staff member follows a /dashboard link while only their
+  // admin cookies are present, route them to /admin instead of bouncing them
+  // to /login. This must run BEFORE the customer auth gate below.
+  if (
+    !customerUser &&
+    adminUser &&
+    (pathname.startsWith("/dashboard") || pathname.startsWith("/app/"))
+  ) {
+    const { data: staff } = await adminSupabase
+      .from("platform_staff")
+      .select("user_id")
+      .eq("user_id", adminUser.id)
+      .single();
+    if (staff) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/admin";
+      return NextResponse.redirect(url);
+    }
+  }
+
   // ---- Customer-area auth gate (preserved) ----
   if (
     !customerUser &&
