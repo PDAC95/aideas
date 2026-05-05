@@ -25,9 +25,9 @@ import {
   Inbox,
   User as UserIcon,
   X,
+  Bell,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { NotificationBell } from "@/components/dashboard/notification-bell";
 import type { User } from "@supabase/supabase-js";
 import type { DashboardNotification } from "@/lib/dashboard/types";
 
@@ -123,20 +123,22 @@ export function DashboardNav({ user, notifications = [] }: DashboardNavProps) {
 
                 <div className="border-t border-gray-100 dark:border-gray-700" />
 
-                {/* Notifications */}
-                <div className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
-                  <NotificationBell
-                    initialNotifications={notifications}
-                    unreadCount={unreadCount}
-                    userId={user.id}
-                    translations={{
-                      title: tNotif("title"),
-                      markAllRead: tNotif("markAllRead"),
-                      empty: tNotif("empty"),
-                    }}
-                  />
+                {/* Notifications — full page on mobile */}
+                <Link
+                  href="/dashboard/notifications"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                >
+                  <div className="relative">
+                    <Bell className="h-4 w-4" />
+                    {unreadCount > 0 && (
+                      <span className="absolute -top-1.5 -right-1.5 h-4 min-w-[1rem] px-1 flex items-center justify-center rounded-full bg-red-500 text-white text-[10px] font-bold leading-none">
+                        {unreadCount > 99 ? "99+" : unreadCount}
+                      </span>
+                    )}
+                  </div>
                   <span>{tNotif("title")}</span>
-                </div>
+                </Link>
 
                 {/* Inbox */}
                 <Link
