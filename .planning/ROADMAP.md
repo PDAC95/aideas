@@ -53,7 +53,7 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 #### Summary Checklist
 
 - [ ] **Phase 16: Carry-over Cleanup** — Resolve 4 v1.1 audit tech-debt items so CI is green for v1.2 (3 plans)
-- [ ] **Phase 17: Admin Foundation** — `platform_staff` schema + RLS + `/admin/*` gate + admin layout + `assertPlatformStaff` helper (3 plans)
+- [x] **Phase 17: Admin Foundation** — `platform_staff` schema + RLS + `/admin/*` gate + admin layout + `assertPlatformStaff` helper (3 plans) — completed 2026-05-05
 - [ ] **Phase 18: Catalog Admin** — CRUD UI for `automation_templates` with active/featured toggles (3 plans)
 - [ ] **Phase 19: Requests Inbox** — List + detail + single-step approve (creates automation) + reject-with-reason (3 plans)
 - [ ] **Phase 20: Automations Admin** — Global cross-org list + read-only detail + status transitions (3 plans)
@@ -87,10 +87,10 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
   4. `/admin` renders the customer header/sidebar with a visible "AIDEAS Admin" banner and an admin-specific sidebar (Home, Catalog, Requests, Automations, Clients) — no theme/redesign changes
   5. `assertPlatformStaff(role?)` returns a typed error when caller is not staff or lacks the required role, and is callable from any server action
   6. All admin shell strings (banner, sidebar items, role-denied messages) exist in both `en.json` and `es.json` with parity
-**Plans:** 2/3 plans executed
-- [ ] 17-01-PLAN.md — platform_staff schema + helper functions + RLS extensions on 11 business tables + super_admin seed for pdmckinster@gmail.com
-- [ ] 17-02-PLAN.md — Independent admin sessions (sb-admin-* cookie scope), middleware /admin gate + /dashboard staff redirect, /admin/login page + form, signInStaff/signOutStaff actions, assertPlatformStaff helper
-- [ ] 17-03-PLAN.md — Fresh AdminLayout + AdminSidebar + AdminHeader (no customer-component reuse) with ADMIN badge, 5 placeholder pages, admin.* i18n keys with EN/ES parity
+**Plans:** 3/3 plans executed
+- [x] 17-01-PLAN.md — platform_staff schema + helper functions + RLS extensions on 11 business tables + super_admin seed for pdmckinster@gmail.com
+- [x] 17-02-PLAN.md — Independent admin sessions (sb-admin-* cookie scope), middleware /admin gate + /dashboard staff redirect, /admin/login page + form, signInStaff/signOutStaff actions, assertPlatformStaff helper
+- [x] 17-03-PLAN.md — Fresh AdminLayout + AdminSidebar + AdminHeader (no customer-component reuse) with ADMIN badge, 5 placeholder pages, admin.* i18n keys with EN/ES parity
 
 ### Phase 18: Catalog Admin
 **Goal:** Operations can manage the `automation_templates` catalog through UI instead of editing seed.sql.
@@ -175,7 +175,7 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 | 14. i18n & Security Hygiene | v1.1 | 2/2 | Complete | 2026-04-30 |
 | 15. Dashboard Home Polish | v1.1 | 2/2 | Complete | 2026-04-30 |
 | 16. Carry-over Cleanup | v1.2 | 0/3 | Not started | — |
-| 17. Admin Foundation | 2/3 | In Progress|  | — |
+| 17. Admin Foundation | v1.2 | 3/3 | Complete | 2026-05-05 |
 | 18. Catalog Admin | v1.2 | 0/3 | Not started | — |
 | 19. Requests Inbox | v1.2 | 0/3 | Not started | — |
 | 20. Automations Admin | v1.2 | 0/3 | Not started | — |

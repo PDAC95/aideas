@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Admin Dashboard
 status: unknown
-last_updated: "2026-05-05T19:44:41Z"
+last_updated: "2026-05-05T19:59:54Z"
 progress:
   total_phases: 11
   completed_phases: 10
   total_plans: 34
-  completed_plans: 33
+  completed_plans: 34
 ---
 
 # Project State
@@ -18,14 +18,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-04 after v1.2 milestone start)
 
 **Core value:** Customers can monitor automations, request new ones, and see their ROI from a single bilingual dashboard — paired with an operations team who can fulfill what they request.
-**Current focus:** v1.2 Admin Dashboard — Phase 17 Admin Foundation in flight (Plans 01 + 02 complete)
+**Current focus:** v1.2 Admin Dashboard — Phase 17 Admin Foundation complete (3/3 plans); next is Phase 18 Catalog Admin
 
 ## Current Position
 
-Phase: Phase 17 — Admin Foundation — In progress (2/3 plans complete)
-Plan: 17-02 complete; next is 17-03 (Admin shell UI: layout, sidebar, header, i18n wiring)
-Status: Auth boundary shipped — dual-cookie sessions (sb-* customer + sb-admin-* staff), middleware /admin/* gate with platform_staff verification, /admin/login standalone page, signInStaff/signOutStaff server actions, and assertPlatformStaff helper for downstream server actions. Build green.
-Last activity: 2026-05-05 — Plan 17-02 executed (3 tasks, 7 files, 442 LOC; admin auth gate + isolated session cookies + login page)
+Phase: Phase 17 — Admin Foundation — Complete (3/3 plans)
+Plan: 17-03 complete; next is Phase 18 (Catalog Admin) — sketched as 3 plans: 18-01 list + filters, 18-02 create/edit form + validation, 18-03 active/featured toggles
+Status: Admin shell shipped — fresh AdminLayout + AdminSidebar + AdminHeader (no customer-component reuse), orange ADMIN badge, 5 placeholder pages, 27-key admin.* i18n namespace at full EN/ES parity, /admin/login retrofitted to use the namespace. Build green; 6 admin routes registered (/admin + 4 sub-pages + /admin/login).
+Last activity: 2026-05-05 — Plan 17-03 executed (2 tasks, 13 files, 517 LOC; admin shell UI + i18n + login retrofit)
 
 ## Performance Metrics
 
@@ -42,8 +42,20 @@ Last activity: 2026-05-05 — Plan 17-02 executed (3 tasks, 7 files, 442 LOC; ad
 |------------|----------------|-------|---------------|
 | 17-01      | 10             | 2     | 1             |
 | 17-02      | 3              | 3     | 7             |
+| 17-03      | 5              | 2     | 13            |
 
 ## Accumulated Context
+
+### Decisions (Phase 17-03 execution, 2026-05-05)
+
+- **Admin badge color is orange (`bg-orange-500`)** — high-contrast against the dark gray-900 sidebar and the white-text login page; consistent across mobile top bar, sidebar header, login page, and AdminHeader subtitle area, so the visual cue never disappears regardless of viewport.
+- **Sidebar palette intentionally distinct from customer DashboardNav** — gray-900 background, gray-300 inactive text, orange-500/15 + orange-300 active states. Customer side uses white card + purple accents. A staff member who toggles to /admin sees an obviously different UI in <500ms.
+- **AdminHeader hidden on mobile (`lg:flex`)** — the mobile sidebar bar already shows the logo + ADMIN badge inline; a duplicate header would waste vertical space.
+- **Active sidebar state matches both exact path AND prefix** — Home uses `exact: true` so it does not stay highlighted under sub-routes; sub-pages match prefix so e.g. `/admin/catalog/[id]` keeps the Catalog item active.
+- **Spanish strings drop accents** (Catalogo, Cerrar sesion, Contrasena, Solicitudes...) — matches existing es.json convention; keeps Mexican-neutral phrasing.
+- **Server actions return English error strings; client localizes via `localizeError()` switch** — cheaper than refactoring `signInStaff` to return discriminated codes; revisit if more callers need the same strings.
+- **Inline retrofit of `/admin/login` + `AdminLoginForm` to consume `admin.*` keys in 17-03** — avoided a half-translated state where some Phase 17 pages used i18n keys and the entry point did not. I18N-01 is now actually satisfied for the entire phase.
+- **Convention established for Phase 18-22 pages:** `(admin)/admin/<section>/page.tsx` for shell-wrapped pages; `(admin-auth)/admin/login` already lives outside the shell. Future bare/fullscreen admin pages should use a new `(admin-bare)` route group rather than fight the layout.
 
 ### Decisions (Phase 17-02 execution, 2026-05-05)
 
@@ -104,5 +116,5 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 
 ## Session Continuity
 
-**Last session:** 2026-05-05 — Executed Plan 17-02 (Admin auth boundary). Stopped at: Completed 17-02-PLAN.md.
-**Next action:** `/gsd:execute-phase 17` (or `/gsd:execute-plan 17 03`) — execute Plan 17-03 (Admin shell UI: AdminLayout + AdminSidebar + AdminHeader + admin.* i18n namespace). Plan 17-03 consumes `assertPlatformStaff` and `signOutStaff` from 17-02.
+**Last session:** 2026-05-05 — Executed Plan 17-03 (Admin shell UI). Stopped at: Completed 17-03-PLAN.md.
+**Next action:** Phase 17 is complete (3/3 plans). Run `/gsd:verify-work 17` to UAT the admin shell end-to-end (login, navigate sidebar, switch language, logout, verify customer session unaffected). After verification passes, plan Phase 18 (Catalog Admin) — first capability phase that consumes the admin shell.

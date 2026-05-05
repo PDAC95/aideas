@@ -24,7 +24,7 @@ Requirements for v1.2 release. Each maps to roadmap phases.
 - [x] **FOUND-01**: Migration creates `platform_staff` table with `user_id (FK → auth.users PK)`, `role text CHECK ('super_admin'|'operator')`, `created_at timestamptz default now()`, with indexes for FK lookup
 - [x] **FOUND-02**: RLS policies on business tables (`organizations`, `automation_templates`, `automation_requests`, `automations`, `automation_executions`, `subscriptions`, `notifications`, `chat_messages`) extend to grant SELECT/INSERT/UPDATE/DELETE when caller exists in `platform_staff` (org-scope bypass for staff)
 - [x] **FOUND-03**: Middleware blocks unauthorized access to `/admin/*` — redirects clients-only users to `/dashboard`, unauthenticated to `/login`, only `platform_staff` members proceed
-- [ ] **FOUND-04**: `/admin/*` layout reuses customer header/sidebar components with admin-specific sidebar items (Home, Catalog, Requests, Automations, Clients) and a visible "AIDEAS Admin" banner/title to distinguish context
+- [x] **FOUND-04**: `/admin/*` layout reuses customer header/sidebar components with admin-specific sidebar items (Home, Catalog, Requests, Automations, Clients) and a visible "AIDEAS Admin" banner/title to distinguish context
 - [x] **FOUND-05**: Server-action helper `assertPlatformStaff(role?)` verifies caller is in `platform_staff` (and matches required role if specified) before mutation; returns typed error for UI on failure
 
 ### Catalog Admin (CTLG)
@@ -76,7 +76,7 @@ Requirements for v1.2 release. Each maps to roadmap phases.
 
 ### i18n (I18N)
 
-- [ ] **I18N-01**: All admin UI strings have keys in both `en.json` and `es.json` with 100% parity (same project rule as v1.0/v1.1)
+- [x] **I18N-01** (Phase 17 surface complete; cross-cuts 18-22): All admin UI strings have keys in both `en.json` and `es.json` with 100% parity (same project rule as v1.0/v1.1)
 
 ## v1.3+ Future Requirements
 
@@ -134,7 +134,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FOUND-01 | Phase 17 | Complete |
 | FOUND-02 | Phase 17 | Complete |
 | FOUND-03 | Phase 17 | Complete |
-| FOUND-04 | Phase 17 | Pending |
+| FOUND-04 | Phase 17 | Complete |
 | FOUND-05 | Phase 17 | Complete |
 | CTLG-01 | Phase 18 | Pending |
 | CTLG-02 | Phase 18 | Pending |
@@ -158,7 +158,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | HOME-01 | Phase 22 | Pending |
 | HOME-02 | Phase 22 | Pending |
 | HOME-03 | Phase 22 | Pending |
-| I18N-01 | Phases 17, 18, 19, 20, 21, 22 (cross-cutting) | Pending |
+| I18N-01 | Phases 17, 18, 19, 20, 21, 22 (cross-cutting) | Phase 17 surface complete; cross-cuts 18-22 |
 
 **Coverage:**
 - v1.2 requirements: 31 total
