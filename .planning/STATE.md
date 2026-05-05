@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Admin Dashboard
 status: unknown
-last_updated: "2026-05-05T18:08:56.240Z"
+last_updated: "2026-05-05T19:28:53.338Z"
 progress:
-  total_phases: 10
+  total_phases: 11
   completed_phases: 10
-  total_plans: 31
-  completed_plans: 31
+  total_plans: 34
+  completed_plans: 32
 ---
 
 # Project State
@@ -18,14 +18,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-04 after v1.2 milestone start)
 
 **Core value:** Customers can monitor automations, request new ones, and see their ROI from a single bilingual dashboard — paired with an operations team who can fulfill what they request.
-**Current focus:** v1.2 Admin Dashboard — roadmap defined, ready to plan Phase 16
+**Current focus:** v1.2 Admin Dashboard — Phase 17 Admin Foundation in flight (Plan 01 complete)
 
 ## Current Position
 
-Phase: Phase 16 — Carry-over Cleanup — Not started
-Plan: —
-Status: Ready to plan (run `/gsd:plan-phase 16`)
-Last activity: 2026-05-04 — Roadmap created (Phases 16-22), 31/31 v1.2 requirements mapped
+Phase: Phase 17 — Admin Foundation — In progress (1/3 plans complete)
+Plan: 17-01 complete; next is 17-02 (Admin route gate / middleware / assertPlatformStaff helper)
+Status: Database foundation shipped (platform_staff table, helpers, RLS bypass, super_admin seed). Ready to execute 17-02.
+Last activity: 2026-05-05 — Plan 17-01 executed (migration 20260506000001_admin_foundation.sql, 436 LOC, 38 admin RLS policies + 2 helper functions + super_admin seed)
 
 ## Performance Metrics
 
@@ -36,7 +36,22 @@ Last activity: 2026-05-04 — Roadmap created (Phases 16-22), 31/31 v1.2 require
 | Requirements | 54/54 | 38/38 | 31 (planned) |
 | Timeline | 70 days | 21 days | TBD |
 
+### Per-plan execution metrics (v1.2)
+
+| Phase-Plan | Duration (min) | Tasks | Files changed |
+|------------|----------------|-------|---------------|
+| 17-01      | 10             | 2     | 1             |
+
 ## Accumulated Context
+
+### Decisions (Phase 17 execution, 2026-05-05)
+
+- **Helper functions are SECURITY DEFINER + STABLE + `SET search_path = ''`** — callers without RLS access to `platform_staff` can still check membership; STABLE lets the planner hoist the call out of per-row evaluation; empty search_path prevents schema-hijack attacks.
+- **Admin RLS is additive, not replacing** — 38 new admin policies coexist with existing org-scoped client policies; Postgres OR-combines policies for the same command. Clients keep their access exactly as before.
+- **Mutable tables use 4 separate policies (SELECT/INSERT/UPDATE/DELETE)** rather than `FOR ALL` — clearer audit trail, easier to revoke a single verb later.
+- **Immutable tables get SELECT only for admins too** — `automation_executions` and `chat_messages` retain their no-INSERT/UPDATE/DELETE-for-authenticated-users posture even for staff. Soft-delete is a deferred option if a real need arises.
+- **`chat_messages_insert_clients` preserved untouched** — admin chat sends in the future would use service_role (consistent with existing architecture); this surfaces as a flag for Phase 19.
+- **First super_admin seeded inside the migration itself** — idempotent + safe-no-op via `DO $$` block with `RAISE NOTICE` fallback; the moment `pdmckinster@gmail.com` signs up, re-running the migration promotes them.
 
 ### Decisions (v1.2 questioning gate, 2026-05-04)
 
@@ -76,4 +91,5 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 
 ## Session Continuity
 
-**Next action:** `/gsd:plan-phase 16` — decompose Carry-over Cleanup into atomic plans with verification loop.
+**Last session:** 2026-05-05 — Executed Plan 17-01 (Admin Foundation database layer). Stopped at: Completed 17-01-PLAN.md.
+**Next action:** `/gsd:execute-phase 17` (or `/gsd:execute-plan 17 02`) — execute Plan 17-02 (Admin route gate / middleware / `assertPlatformStaff` helper). Plan 17-02 consumes `is_platform_staff()` directly via Supabase RPC or a `platform_staff` self-select.
