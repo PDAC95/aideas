@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Admin Dashboard
 status: unknown
-last_updated: "2026-05-05T19:28:53.338Z"
+last_updated: "2026-05-05T19:44:41Z"
 progress:
   total_phases: 11
   completed_phases: 10
   total_plans: 34
-  completed_plans: 32
+  completed_plans: 33
 ---
 
 # Project State
@@ -18,14 +18,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-04 after v1.2 milestone start)
 
 **Core value:** Customers can monitor automations, request new ones, and see their ROI from a single bilingual dashboard — paired with an operations team who can fulfill what they request.
-**Current focus:** v1.2 Admin Dashboard — Phase 17 Admin Foundation in flight (Plan 01 complete)
+**Current focus:** v1.2 Admin Dashboard — Phase 17 Admin Foundation in flight (Plans 01 + 02 complete)
 
 ## Current Position
 
-Phase: Phase 17 — Admin Foundation — In progress (1/3 plans complete)
-Plan: 17-01 complete; next is 17-02 (Admin route gate / middleware / assertPlatformStaff helper)
-Status: Database foundation shipped (platform_staff table, helpers, RLS bypass, super_admin seed). Ready to execute 17-02.
-Last activity: 2026-05-05 — Plan 17-01 executed (migration 20260506000001_admin_foundation.sql, 436 LOC, 38 admin RLS policies + 2 helper functions + super_admin seed)
+Phase: Phase 17 — Admin Foundation — In progress (2/3 plans complete)
+Plan: 17-02 complete; next is 17-03 (Admin shell UI: layout, sidebar, header, i18n wiring)
+Status: Auth boundary shipped — dual-cookie sessions (sb-* customer + sb-admin-* staff), middleware /admin/* gate with platform_staff verification, /admin/login standalone page, signInStaff/signOutStaff server actions, and assertPlatformStaff helper for downstream server actions. Build green.
+Last activity: 2026-05-05 — Plan 17-02 executed (3 tasks, 7 files, 442 LOC; admin auth gate + isolated session cookies + login page)
 
 ## Performance Metrics
 
@@ -41,8 +41,21 @@ Last activity: 2026-05-05 — Plan 17-01 executed (migration 20260506000001_admi
 | Phase-Plan | Duration (min) | Tasks | Files changed |
 |------------|----------------|-------|---------------|
 | 17-01      | 10             | 2     | 1             |
+| 17-02      | 3              | 3     | 7             |
 
 ## Accumulated Context
+
+### Decisions (Phase 17-02 execution, 2026-05-05)
+
+- **Two-cookie session scheme** — customer (`sb-*`) and admin (`sb-admin-*`) sessions coexist in the same browser via Supabase `cookieOptions.name`. Pattern matches Stripe / Supabase / Vercel where you can be logged into multiple workspaces simultaneously.
+- **Two `getUser()` calls per request** (customer + admin in parallel) — extra ~30ms of network IO traded for correctness. A single Supabase client cannot read two cookie scopes in one pass; `Promise.all` keeps it parallel.
+- **`/admin/*` branch wins over customer logic** — path is checked first; customer auth gates do not run for admin paths. Keeps the two flows from interfering when a customer accidentally hits `/admin` or vice versa.
+- **Non-staff who land in admin scope are SIGNED OUT before bouncing** — defense in depth: prevents a stale admin cookie sitting in a removed staff member's browser.
+- **`signInStaff` server action double-checks platform_staff after Supabase auth** — second query and explicit signOut on failure, so an RLS regression on `platform_staff_select_self` cannot leak admin sessions to non-staff.
+- **No Google OAuth on /admin/login** — staff are seeded by SQL/migration only in v1.2 (per CONTEXT.md). Email/password keeps the surface area minimal.
+- **/admin/login uses hardcoded English (no next-intl yet)** — admin i18n keys are 17-03's job. Cross-plan dependency on a non-existent namespace is avoided.
+- **`(admin-auth)` route group for /admin/login** — kept outside the future `(admin)` shell from 17-03 so it has no sidebar, no header, no auth-gate-component.
+- **Staff-on-/dashboard cross-redirect** — when `customerUser` (sb-* scope) is in `platform_staff`, middleware redirects them to `/admin`. Catches the case where a staff member signs into the customer login by accident.
 
 ### Decisions (Phase 17 execution, 2026-05-05)
 
@@ -91,5 +104,5 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 
 ## Session Continuity
 
-**Last session:** 2026-05-05 — Executed Plan 17-01 (Admin Foundation database layer). Stopped at: Completed 17-01-PLAN.md.
-**Next action:** `/gsd:execute-phase 17` (or `/gsd:execute-plan 17 02`) — execute Plan 17-02 (Admin route gate / middleware / `assertPlatformStaff` helper). Plan 17-02 consumes `is_platform_staff()` directly via Supabase RPC or a `platform_staff` self-select.
+**Last session:** 2026-05-05 — Executed Plan 17-02 (Admin auth boundary). Stopped at: Completed 17-02-PLAN.md.
+**Next action:** `/gsd:execute-phase 17` (or `/gsd:execute-plan 17 03`) — execute Plan 17-03 (Admin shell UI: AdminLayout + AdminSidebar + AdminHeader + admin.* i18n namespace). Plan 17-03 consumes `assertPlatformStaff` and `signOutStaff` from 17-02.

@@ -23,9 +23,9 @@ Requirements for v1.2 release. Each maps to roadmap phases.
 
 - [x] **FOUND-01**: Migration creates `platform_staff` table with `user_id (FK → auth.users PK)`, `role text CHECK ('super_admin'|'operator')`, `created_at timestamptz default now()`, with indexes for FK lookup
 - [x] **FOUND-02**: RLS policies on business tables (`organizations`, `automation_templates`, `automation_requests`, `automations`, `automation_executions`, `subscriptions`, `notifications`, `chat_messages`) extend to grant SELECT/INSERT/UPDATE/DELETE when caller exists in `platform_staff` (org-scope bypass for staff)
-- [ ] **FOUND-03**: Middleware blocks unauthorized access to `/admin/*` — redirects clients-only users to `/dashboard`, unauthenticated to `/login`, only `platform_staff` members proceed
+- [x] **FOUND-03**: Middleware blocks unauthorized access to `/admin/*` — redirects clients-only users to `/dashboard`, unauthenticated to `/login`, only `platform_staff` members proceed
 - [ ] **FOUND-04**: `/admin/*` layout reuses customer header/sidebar components with admin-specific sidebar items (Home, Catalog, Requests, Automations, Clients) and a visible "AIDEAS Admin" banner/title to distinguish context
-- [ ] **FOUND-05**: Server-action helper `assertPlatformStaff(role?)` verifies caller is in `platform_staff` (and matches required role if specified) before mutation; returns typed error for UI on failure
+- [x] **FOUND-05**: Server-action helper `assertPlatformStaff(role?)` verifies caller is in `platform_staff` (and matches required role if specified) before mutation; returns typed error for UI on failure
 
 ### Catalog Admin (CTLG)
 
@@ -133,9 +133,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CARRY-04 | Phase 16 | Pending |
 | FOUND-01 | Phase 17 | Complete |
 | FOUND-02 | Phase 17 | Complete |
-| FOUND-03 | Phase 17 | Pending |
+| FOUND-03 | Phase 17 | Complete |
 | FOUND-04 | Phase 17 | Pending |
-| FOUND-05 | Phase 17 | Pending |
+| FOUND-05 | Phase 17 | Complete |
 | CTLG-01 | Phase 18 | Pending |
 | CTLG-02 | Phase 18 | Pending |
 | CTLG-03 | Phase 18 | Pending |
