@@ -54,6 +54,21 @@ export default async function AutomationDetailPage({
   // Get translations
   const t = await getTranslations("dashboard.automations");
   const tCommon = await getTranslations("common");
+  const tTemplates = await getTranslations("templates");
+
+  // Resolve i18n keys stored in template fields (activity_metric_label is a key like
+  // "templates.content_generation.metric_label", not a literal string)
+  const resolveTemplateKey = (key: string | null | undefined): string => {
+    if (!key) return "";
+    const stripped = key.startsWith("templates.") ? key.slice("templates.".length) : key;
+    try {
+      return tTemplates(stripped);
+    } catch {
+      return "";
+    }
+  };
+
+  const resolvedMetricLabel = resolveTemplateKey(automation.template?.activity_metric_label);
 
   // Status labels
   const statusLabels: Record<string, string> = {
@@ -149,7 +164,7 @@ export default async function AutomationDetailPage({
       <div className="mt-6">
         <AutomationKpiCards
           metricCount={isInSetup ? "---" : monthlyMetricCount}
-          metricLabel={automation.template?.activity_metric_label ?? ""}
+          metricLabel={resolvedMetricLabel}
           hoursSaved={isInSetup ? "---" : hoursSaved}
           hoursSavedLabel={t("detail.kpi.hoursSaved")}
           monthlyCharge={isInSetup ? "---" : formattedPrice}

@@ -43,24 +43,49 @@ export default async function AutomationsPage({
     statusParam && isValidStatus(statusParam) ? statusParam : null;
 
   // Fetch data and translations in parallel
-  const [automations, t, locale] = await Promise.all([
+  const [automations, t, tTemplates, locale] = await Promise.all([
     fetchAutomationsPage(orgId),
     getTranslations("dashboard.automations"),
+    getTranslations("templates"),
     getLocale(),
   ]);
 
+  // Resolve i18n keys stored in template fields (activity_metric_label is a key like
+  // "templates.content_generation.metric_label", not a literal string)
+  const resolveTemplateKey = (key: string | null | undefined): string | null => {
+    if (!key) return null;
+    // Format: "templates.{slug_snake}.{field}" — strip the leading "templates." namespace
+    const stripped = key.startsWith("templates.") ? key.slice("templates.".length) : key;
+    try {
+      return tTemplates(stripped);
+    } catch {
+      return null;
+    }
+  };
+
+  const automationsWithResolvedLabels = automations.map((automation) => {
+    if (!automation.template) return automation;
+    return {
+      ...automation,
+      template: {
+        ...automation.template,
+        activity_metric_label: resolveTemplateKey(automation.template.activity_metric_label),
+      },
+    };
+  });
+
   // Compute tab counts
   const counts = {
-    all: automations.length,
-    active: automations.filter((a) => a.status === "active").length,
-    in_setup: automations.filter((a) => a.status === "in_setup").length,
-    paused: automations.filter((a) => a.status === "paused").length,
+    all: automationsWithResolvedLabels.length,
+    active: automationsWithResolvedLabels.filter((a) => a.status === "active").length,
+    in_setup: automationsWithResolvedLabels.filter((a) => a.status === "in_setup").length,
+    paused: automationsWithResolvedLabels.filter((a) => a.status === "paused").length,
   };
 
   // Filter automations if a valid status filter is active
   const filteredAutomations = activeFilter
-    ? automations.filter((a) => a.status === activeFilter)
-    : automations;
+    ? automationsWithResolvedLabels.filter((a) => a.status === activeFilter)
+    : automationsWithResolvedLabels;
 
   // Build status labels for StatusBadge
   const statusLabels: Record<string, string> = {
@@ -71,9 +96,10 @@ export default async function AutomationsPage({
   };
 
   // Card translations (template strings with {count} / {price} placeholders)
+  // Use t.raw() for templates so the client component can interpolate values via .replace()
   const cardTranslations = {
-    monthlyMetric: t("card.monthlyMetric"),
-    monthlyPrice: t("card.monthlyPrice"),
+    monthlyMetric: t.raw("card.monthlyMetric") as string,
+    monthlyPrice: t.raw("card.monthlyPrice") as string,
     configuring: t("card.configuring"),
     noData: t("card.noData"),
   };
@@ -86,7 +112,7 @@ export default async function AutomationsPage({
     paused: t("filter.paused"),
   };
 
-  const totalCount = automations.length;
+  const totalCount = automationsWithResolvedLabels.length;
 
   return (
     <div>
