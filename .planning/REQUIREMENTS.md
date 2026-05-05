@@ -12,10 +12,10 @@ Requirements for v1.2 release. Each maps to roadmap phases.
 
 > Closes v1.1 audit tech-debt before admin work begins. Ideally lands as the first phase to keep CI green during admin development.
 
-- [ ] **CARRY-01**: `npm run build` passes cleanly under Next.js 16 + Turbopack — resolves the `next/dynamic({ ssr: false })` rejection in `web/src/app/(dashboard)/dashboard/automations/[id]/page.tsx:16`
-- [ ] **CARRY-02**: `<AutomationSuccessRate trend="+5%" />` placeholder in `dashboard/page.tsx:212` is replaced with a computed value or removed (along with its UI surface)
-- [ ] **CARRY-03**: `saveCompanyName` and `saveHourlyCost` server actions consolidate org-membership checks via the `assertOrgMembership` helper introduced in Phase 14-01 (no inline duplicated checks)
-- [ ] **CARRY-04**: Client-side reCAPTCHA gracefully bypasses when `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` is missing (symmetric with server-side `verifyRecaptcha` behavior), unblocking local dev without keys
+- [x] **CARRY-01**: `npm run build` passes cleanly under Next.js 16 + Turbopack — resolves the `next/dynamic({ ssr: false })` rejection in `web/src/app/(dashboard)/dashboard/automations/[id]/page.tsx:16`
+- [x] **CARRY-02**: `<AutomationSuccessRate trend="+5%" />` placeholder in `dashboard/page.tsx:212` is replaced with a computed value or removed (along with its UI surface)
+- [x] **CARRY-03**: `saveCompanyName` and `saveHourlyCost` server actions consolidate org-membership checks via the `assertOrgMembership` helper introduced in Phase 14-01 (no inline duplicated checks)
+- [x] **CARRY-04**: Client-side reCAPTCHA gracefully bypasses when `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` is missing (symmetric with server-side `verifyRecaptcha` behavior), unblocking local dev without keys
 
 ### Foundation (FOUND)
 
@@ -127,10 +127,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CARRY-01 | Phase 16 | Pending |
-| CARRY-02 | Phase 16 | Pending |
-| CARRY-03 | Phase 16 | Pending |
-| CARRY-04 | Phase 16 | Pending |
+| CARRY-01 | Phase 16 | Complete |
+| CARRY-02 | Phase 16 | Complete |
+| CARRY-03 | Phase 16 | Complete |
+| CARRY-04 | Phase 16 | Complete |
 | FOUND-01 | Phase 17 | Complete |
 | FOUND-02 | Phase 17 | Complete |
 | FOUND-03 | Phase 17 | Complete |
