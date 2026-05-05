@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { getTranslations } from "next-intl/server";
 import { AdminLoginForm } from "@/components/admin/admin-login-form";
 
 interface AdminLoginPageProps {
@@ -9,17 +10,20 @@ interface AdminLoginPageProps {
  * Standalone admin login page.
  *
  * Lives in the `(admin-auth)` route group so it does NOT inherit the
- * admin shell layout (sidebar/header) that 17-03 will introduce.
+ * admin shell layout (sidebar/header) from the `(admin)` group.
  * Middleware routes already-authenticated staff away from this page.
+ *
+ * Strings come from the `admin.*` next-intl namespace (added in 17-03)
+ * so EN/ES parity is enforced repository-wide.
  */
 export default async function AdminLoginPage({
   searchParams,
 }: AdminLoginPageProps) {
   const { error } = await searchParams;
+  const t = await getTranslations("admin");
+
   const errorMessage =
-    error === "not_staff"
-      ? "This account is not registered as platform staff. Sign in with a staff account or contact your administrator."
-      : null;
+    error === "not_staff" ? t("login.errors.notStaff") : null;
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6 bg-[#111] text-white">
@@ -34,15 +38,15 @@ export default async function AdminLoginPage({
             priority
           />
           <span className="px-2 py-0.5 rounded-md bg-orange-500 text-white text-xs font-bold tracking-wider">
-            ADMIN
+            {t("badge")}
           </span>
         </div>
 
         <div className="space-y-1">
-          <h1 className="text-2xl font-bold tracking-tight">Staff sign-in</h1>
-          <p className="text-white/60 text-sm">
-            For AIDEAS team members only.
-          </p>
+          <h1 className="text-2xl font-bold tracking-tight">
+            {t("login.title")}
+          </h1>
+          <p className="text-white/60 text-sm">{t("login.subtitle")}</p>
         </div>
 
         {errorMessage && (
@@ -51,7 +55,17 @@ export default async function AdminLoginPage({
           </div>
         )}
 
-        <AdminLoginForm />
+        <AdminLoginForm
+          labels={{
+            emailLabel: t("login.emailLabel"),
+            passwordLabel: t("login.passwordLabel"),
+            submit: t("login.submit"),
+            submitting: t("login.submitting"),
+            invalidCredentials: t("login.errors.invalidCredentials"),
+            missingFields: t("login.errors.missingFields"),
+            notStaff: t("login.errors.notStaff"),
+          }}
+        />
       </div>
     </div>
   );

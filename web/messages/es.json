@@ -870,5 +870,54 @@
       "impact": "Mantiene a tu equipo 10 veces mejor informado sobre los movimientos de la competencia, permitiendo respuestas estratégicas más rápidas",
       "metric_label": "Reportes de inteligencia entregados"
     }
+  },
+  "admin": {
+    "badge": "ADMIN",
+    "shell": {
+      "subtitle": "Consola interna del equipo AIDEAS"
+    },
+    "nav": {
+      "home": "Inicio",
+      "catalog": "Catalogo",
+      "requests": "Solicitudes",
+      "automations": "Automatizaciones",
+      "clients": "Clientes",
+      "logout": "Cerrar sesion"
+    },
+    "login": {
+      "title": "Acceso de equipo",
+      "subtitle": "Solo para miembros del equipo AIDEAS.",
+      "emailLabel": "Correo",
+      "passwordLabel": "Contrasena",
+      "submit": "Entrar",
+      "submitting": "Entrando...",
+      "errors": {
+        "invalidCredentials": "Credenciales invalidas.",
+        "notStaff": "Esta cuenta no esta registrada como personal de la plataforma. Inicia sesion con una cuenta de equipo o contacta a tu administrador.",
+        "missingFields": "Correo y contrasena son obligatorios."
+      }
+    },
+    "placeholders": {
+      "home": {
+        "title": "Inicio admin",
+        "body": "El tablero operativo llega en la Fase 22 con KPIs, actividad y accesos rapidos."
+      },
+      "catalog": {
+        "title": "Admin de catalogo",
+        "body": "El CRUD de plantillas llega en la Fase 18."
+      },
+      "requests": {
+        "title": "Bandeja de solicitudes",
+        "body": "Lista, detalle y flujo de aprobacion/rechazo en la Fase 19."
+      },
+      "automations": {
+        "title": "Admin de automatizaciones",
+        "body": "Lista global entre organizaciones y transiciones de estado en la Fase 20."
+      },
+      "clients": {
+        "title": "Admin de clientes",
+        "body": "Lista de clientes, vista 360 y notas internas en la Fase 21."
+      }
+    }
   }
 }

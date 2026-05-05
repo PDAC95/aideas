@@ -870,5 +870,54 @@
       "impact": "Keeps your team 10x better informed on competitive moves, enabling faster strategic responses",
       "metric_label": "Intel reports delivered"
     }
+  },
+  "admin": {
+    "badge": "ADMIN",
+    "shell": {
+      "subtitle": "AIDEAS internal staff console"
+    },
+    "nav": {
+      "home": "Home",
+      "catalog": "Catalog",
+      "requests": "Requests",
+      "automations": "Automations",
+      "clients": "Clients",
+      "logout": "Sign out"
+    },
+    "login": {
+      "title": "Staff sign-in",
+      "subtitle": "For AIDEAS team members only.",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "submit": "Sign in",
+      "submitting": "Signing in...",
+      "errors": {
+        "invalidCredentials": "Invalid credentials.",
+        "notStaff": "This account is not registered as platform staff. Sign in with a staff account or contact your administrator.",
+        "missingFields": "Email and password are required."
+      }
+    },
+    "placeholders": {
+      "home": {
+        "title": "Admin Home",
+        "body": "Operational dashboard arrives in Phase 22 with KPIs, activity feed, and quick links."
+      },
+      "catalog": {
+        "title": "Catalog Admin",
+        "body": "Template CRUD lands in Phase 18."
+      },
+      "requests": {
+        "title": "Requests Inbox",
+        "body": "Request list, detail, and approve/reject flow ship in Phase 19."
+      },
+      "automations": {
+        "title": "Automations Admin",
+        "body": "Global cross-org list and status transitions ship in Phase 20."
+      },
+      "clients": {
+        "title": "Clients Admin",
+        "body": "Client list, 360-degree detail, and internal notes ship in Phase 21."
+      }
+    }
   }
 }
