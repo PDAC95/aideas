@@ -87,7 +87,10 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
   4. `/admin` renders the customer header/sidebar with a visible "AIDEAS Admin" banner and an admin-specific sidebar (Home, Catalog, Requests, Automations, Clients) — no theme/redesign changes
   5. `assertPlatformStaff(role?)` returns a typed error when caller is not staff or lacks the required role, and is callable from any server action
   6. All admin shell strings (banner, sidebar items, role-denied messages) exist in both `en.json` and `es.json` with parity
-**Plans:** TBD (sketched: 17-01 migration + RLS extensions, 17-02 middleware gate + assertPlatformStaff helper, 17-03 admin layout + sidebar + i18n keys)
+**Plans:** 3 plans
+- [ ] 17-01-PLAN.md — platform_staff schema + helper functions + RLS extensions on 11 business tables + super_admin seed for pdmckinster@gmail.com
+- [ ] 17-02-PLAN.md — Independent admin sessions (sb-admin-* cookie scope), middleware /admin gate + /dashboard staff redirect, /admin/login page + form, signInStaff/signOutStaff actions, assertPlatformStaff helper
+- [ ] 17-03-PLAN.md — Fresh AdminLayout + AdminSidebar + AdminHeader (no customer-component reuse) with ADMIN badge, 5 placeholder pages, admin.* i18n keys with EN/ES parity
 
 ### Phase 18: Catalog Admin
 **Goal:** Operations can manage the `automation_templates` catalog through UI instead of editing seed.sql.
