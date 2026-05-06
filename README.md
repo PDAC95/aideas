@@ -1,5 +1,75 @@
 # AIDEAS
 
+## Quick Start (desarrollo local)
+
+### Prerequisitos
+
+- **Docker Desktop** instalado y corriendo
+- **Node.js 20+**
+- **Python 3.12+** (solo si necesitas el API backend)
+
+### Paso 1: Base de datos (Supabase local)
+
+```bash
+cd c:\dev\12ai
+
+# Levanta PostgreSQL, Auth, Storage en Docker (primera vez tarda ~5 min)
+npx supabase start
+
+# Crea tablas y carga datos de prueba
+npx supabase db reset
+```
+
+> Los warnings de `SUPABASE_AUTH_EXTERNAL_GOOGLE_*` se pueden ignorar (solo afectan login con Google).
+
+### Paso 2: Frontend (Next.js)
+
+```bash
+cd c:\dev\12ai\web
+npm run dev
+```
+
+Abre http://localhost:3000
+
+### Paso 3 (opcional): Backend API (FastAPI)
+
+Solo necesario si trabajas con las rutas del API Python. El dashboard y auth funcionan sin esto.
+
+```bash
+cd c:\dev\12ai\api
+venv\Scripts\activate
+uvicorn src.main:app --reload
+```
+
+### Usuarios de prueba
+
+Todos usan password: `Password123@`
+
+| Email | Organizacion | Rol |
+|-------|-------------|-----|
+| alice@acmecorp.com | Acme Corp | Admin (mas datos de prueba) |
+| bob@acmecorp.com | Acme Corp | Member |
+| carol@globaltech.io | GlobalTech | Admin |
+| dave@globaltech.io | GlobalTech | Member |
+| dev@jappi.ca | Dev | Dev |
+
+### Herramientas utiles
+
+| Herramienta | URL | Para que sirve |
+|-------------|-----|----------------|
+| App | http://localhost:3000 | Frontend Next.js |
+| Supabase Studio | http://127.0.0.1:54323 | Explorar DB, ver tablas, editar datos |
+| Mailpit | http://127.0.0.1:54324 | Ver emails enviados (verificacion, recovery) |
+| API Docs | http://localhost:8000/docs | Swagger del backend Python (si esta corriendo) |
+
+### Problemas comunes
+
+- **"fetch failed" en consola**: Supabase no esta corriendo. Abre Docker Desktop y corre `npx supabase start`
+- **"Invalid login credentials"**: Corre `npx supabase db reset` para recargar los usuarios seed
+- **Pagina en blanco despues de login**: Limpia cookies del navegador o abre en incognito
+
+---
+
 AI-powered automation solutions for small and medium businesses.
 
 ## Overview
