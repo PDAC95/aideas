@@ -103,7 +103,10 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
   4. Staff toggles `is_active` off on a template and that template no longer appears in the customer catalog (but is still visible in admin list)
   5. Staff toggles `is_featured` and the template appears/disappears in the customer "Mas populares" tab accordingly
   6. All admin catalog UI strings (table headers, form labels, validation messages, toggle labels) have EN/ES parity
-**Plans:** TBD (sketched: 18-01 list + filters, 18-02 create/edit form + validation, 18-03 active/featured toggles + customer-side propagation check)
+**Plans:** 3 plans
+- [ ] 18-01-PLAN.md — Translations infrastructure: new `automation_template_translations` table + RLS + 528-row backfill from messages JSON + customer query refactor (locale-aware JOIN) so admin edits propagate without redeploy
+- [ ] 18-02-PLAN.md — `/admin/catalog` list page with hybrid table+grid views, search/category/industry filters, inline `is_active`/`is_featured` toggles with optimistic update + warn-but-allow modal for templates with live automations, full EN/ES parity for `admin.catalog.*`
+- [ ] 18-03-PLAN.md — `/admin/catalog/new` + `/admin/catalog/[slug]/edit` single-page grouped form (5 sections, 13 fields, 8 bilingual inputs), slug auto-gen + lock, Zod validation with draft mode, atomic create (template + 8 translations), upsert on edit
 
 ### Phase 19: Requests Inbox
 **Goal:** Operations can attend and triage incoming customer automation requests, with single-step approval that provisions the automation.
@@ -176,7 +179,7 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 | 15. Dashboard Home Polish | v1.1 | 2/2 | Complete | 2026-04-30 |
 | 16. Carry-over Cleanup | v1.2 | 0/3 | Not started | — |
 | 17. Admin Foundation | v1.2 | Complete    | 2026-05-05 | 2026-05-05 |
-| 18. Catalog Admin | v1.2 | 0/3 | Not started | — |
+| 18. Catalog Admin | v1.2 | 0/3 | Planned | — |
 | 19. Requests Inbox | v1.2 | 0/3 | Not started | — |
 | 20. Automations Admin | v1.2 | 0/3 | Not started | — |
 | 21. Clients Admin | v1.2 | 0/3 | Not started | — |
