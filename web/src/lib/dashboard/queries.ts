@@ -312,47 +312,94 @@ export async function fetchAutomationDetail(automationId: string, orgId: string)
 
 /**
  * Fetch all active catalog templates sorted by sort_order.
- * Returns fields needed for the catalog grid cards.
+ * Joins automation_template_translations filtered by locale + field='name' so
+ * each row carries its resolved displayName at request time. This means an
+ * admin edit to a translation row is visible on the next page load with no
+ * redeploy (Phase 18 requirement).
  */
-export async function fetchCatalogTemplates(): Promise<CatalogTemplate[]> {
+export async function fetchCatalogTemplates(locale: string): Promise<CatalogTemplate[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("automation_templates")
     .select(`
-      id, name, slug, category, icon,
+      id, slug, category, icon,
       setup_price, monthly_price,
       industry_tags, connected_apps,
-      is_featured, sort_order
+      is_featured, sort_order,
+      translations:automation_template_translations!inner(field, value, locale)
     `)
     .eq("is_active", true)
+    .eq("translations.locale", locale)
+    .eq("translations.field", "name")
     .order("sort_order", { ascending: true });
 
   if (error) throw error;
-  return (data ?? []) as unknown as CatalogTemplate[];
+
+  // Each row carries a translations array with at most 1 entry (the matching
+  // name row for the current locale). Map it to displayName, defensively
+  // falling back to slug if no translation row was returned.
+  type RawRow = Omit<CatalogTemplate, "displayName"> & {
+    translations: Array<{ field: string; value: string; locale: string }>;
+  };
+  const rows = (data ?? []) as unknown as RawRow[];
+  return rows.map(({ translations, ...rest }) => ({
+    ...rest,
+    displayName: translations[0]?.value ?? rest.slug,
+  }));
 }
 
 /**
  * Fetch a single active catalog template by slug.
- * Returns all detail fields for the template detail page.
- * Returns null if not found or not active.
+ * Joins all 4 translation rows for the requested locale so the detail page
+ * can render resolved name, description, typical_impact_text, and
+ * activity_metric_label without bundling messages JSON.
+ * Returns null if the template doesn't exist or is inactive.
  */
-export async function fetchTemplateBySlug(slug: string): Promise<CatalogTemplateDetail | null> {
+export async function fetchTemplateBySlug(
+  slug: string,
+  locale: string
+): Promise<CatalogTemplateDetail | null> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("automation_templates")
     .select(`
-      id, name, slug, description, category, icon,
+      id, slug, category, icon,
       setup_price, monthly_price, setup_time_days,
       industry_tags, connected_apps,
-      typical_impact_text, avg_minutes_per_task, activity_metric_label,
-      is_featured, sort_order
+      avg_minutes_per_task,
+      is_featured, sort_order,
+      translations:automation_template_translations!inner(field, value, locale)
     `)
     .eq("slug", slug)
     .eq("is_active", true)
+    .eq("translations.locale", locale)
     .single();
 
-  if (error) return null;
-  return data as unknown as CatalogTemplateDetail;
+  if (error || !data) return null;
+
+  type RawDetail = Omit<
+    CatalogTemplateDetail,
+    "displayName" | "displayDescription" | "displayImpact" | "displayMetricLabel"
+  > & {
+    translations: Array<{ field: string; value: string; locale: string }>;
+  };
+  const row = data as unknown as RawDetail;
+  const byField = new Map(row.translations.map((t) => [t.field, t.value]));
+
+  // If no translations were returned (broken FK or missing backfill), bail —
+  // the page would render blanks and the user would see nothing useful.
+  if (byField.size === 0) return null;
+
+  const { translations, ...rest } = row;
+  void translations;
+
+  return {
+    ...rest,
+    displayName: byField.get("name") ?? slug,
+    displayDescription: byField.get("description") ?? "",
+    displayImpact: byField.get("typical_impact_text") ?? "",
+    displayMetricLabel: byField.get("activity_metric_label") ?? "",
+  };
 }
 
 /**

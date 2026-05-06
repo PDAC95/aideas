@@ -84,8 +84,8 @@ export interface WeeklyChartData {
 
 export interface CatalogTemplate {
   id: string;
-  name: string;           // i18n key: "templates.{slug_snake}.name"
   slug: string;
+  displayName: string;    // resolved string from automation_template_translations.name for current locale
   category: string;
   icon: string;
   setup_price: number;    // integer cents
@@ -97,11 +97,11 @@ export interface CatalogTemplate {
 }
 
 export interface CatalogTemplateDetail extends CatalogTemplate {
-  description: string;           // i18n key: "templates.{slug_snake}.description"
-  typical_impact_text: string;   // i18n key: "templates.{slug_snake}.impact"
+  displayDescription: string;     // from automation_template_translations.description
+  displayImpact: string;          // from automation_template_translations.typical_impact_text
+  displayMetricLabel: string;     // from automation_template_translations.activity_metric_label
   setup_time_days: number;
   avg_minutes_per_task: number;
-  activity_metric_label: string; // i18n key: "templates.{slug_snake}.metric_label"
 }
 
 export interface ReportsKpi {

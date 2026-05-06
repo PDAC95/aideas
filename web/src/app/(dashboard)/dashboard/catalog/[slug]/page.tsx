@@ -46,48 +46,24 @@ export default async function CatalogDetailPage({
   // Read route params (Next.js 15/16 — params is a Promise)
   const { slug } = await params;
 
-  // Fetch template data and translations in parallel
-  const [template, t, tTemplates, locale] = await Promise.all([
-    fetchTemplateBySlug(slug),
+  // Resolve locale first so we can pass it to fetchTemplateBySlug — the query
+  // joins automation_template_translations filtered by locale to produce
+  // resolved displayName/displayDescription/displayImpact.
+  const locale = await getLocale();
+
+  // Fetch template (with resolved display strings) and chrome translations.
+  const [template, t] = await Promise.all([
+    fetchTemplateBySlug(slug, locale),
     getTranslations("dashboard.catalog"),
-    getTranslations("templates"),
-    getLocale(),
   ]);
 
   if (!template) {
     notFound();
   }
 
-  // Resolve i18n display strings from the template name i18n key
-  // template.name is like "templates.lead_followup_email.name"
-  // Extract the slug_snake part: "lead_followup_email"
-  const nameParts = template.name.split(".");
-  // nameParts[0] = "templates", nameParts[1] = slug_snake, nameParts[2] = "name"
-  const slugSnake = nameParts.length >= 3 ? nameParts[1] : template.slug.replace(/-/g, "_");
+  const { displayName, displayDescription, displayImpact } = template;
 
-  let displayName: string;
-  let displayDescription: string;
-  let displayImpact: string;
-
-  try {
-    displayName = tTemplates(`${slugSnake}.name`);
-  } catch {
-    displayName = template.name;
-  }
-
-  try {
-    displayDescription = tTemplates(`${slugSnake}.description`);
-  } catch {
-    displayDescription = template.description;
-  }
-
-  try {
-    displayImpact = tTemplates(`${slugSnake}.impact`);
-  } catch {
-    displayImpact = template.typical_impact_text;
-  }
-
-  // Category label
+  // Category label (chrome translation, not template-specific copy)
   let categoryLabel: string;
   try {
     categoryLabel = t(`categories.${template.category}`);
