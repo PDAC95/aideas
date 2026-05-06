@@ -918,6 +918,69 @@
         "title": "Admin de clientes",
         "body": "Lista de clientes, vista 360 y notas internas en la Fase 21."
       }
+    },
+    "catalog": {
+      "title": "Plantillas",
+      "subtitle": "Administra el catalogo cliente",
+      "newButton": "Nueva plantilla",
+      "viewToggle": {
+        "table": "Tabla",
+        "grid": "Cuadricula"
+      },
+      "search": {
+        "placeholder": "Buscar por nombre o slug..."
+      },
+      "filters": {
+        "categoryAll": "Todas las categorias",
+        "industryAll": "Todas las industrias",
+        "categories": {
+          "customer_service": "Atencion al cliente",
+          "documents": "Documentos",
+          "marketing": "Marketing",
+          "sales": "Ventas",
+          "operations": "Operaciones",
+          "productivity": "Productividad",
+          "reports": "Reportes",
+          "ai_agents": "Agentes IA"
+        },
+        "industries": {
+          "retail": "Retail",
+          "salud": "Salud",
+          "legal": "Legal",
+          "inmobiliaria": "Inmobiliaria",
+          "restaurantes": "Restaurantes",
+          "agencias": "Agencias"
+        }
+      },
+      "columns": {
+        "name": "Nombre",
+        "slug": "Slug",
+        "category": "Categoria",
+        "industries": "Industrias",
+        "pricingTier": "Plan de precios",
+        "setupPrice": "Setup",
+        "monthlyPrice": "Mensual",
+        "active": "Activa",
+        "featured": "Destacada"
+      },
+      "toggle": {
+        "activeOn": "Activa",
+        "activeOff": "Inactiva",
+        "featuredOn": "Destacada",
+        "featuredOff": "No destacada",
+        "errorRevert": "No se pudo guardar. Se revirtio."
+      },
+      "deactivateModal": {
+        "title": "Desactivar plantilla?",
+        "body": "Esta plantilla tiene {count} automatizaciones activas. Se ocultara del catalogo cliente; las existentes seguiran funcionando. Continuar?",
+        "confirm": "Desactivar",
+        "cancel": "Cancelar"
+      },
+      "empty": {
+        "title": "Ninguna plantilla coincide con tus filtros",
+        "cta": "Limpiar filtros"
+      },
+      "count": "{filtered} de {total} plantillas"
     }
   }
 }

@@ -918,6 +918,69 @@
         "title": "Clients Admin",
         "body": "Client list, 360-degree detail, and internal notes ship in Phase 21."
       }
+    },
+    "catalog": {
+      "title": "Templates",
+      "subtitle": "Manage the customer-facing catalog",
+      "newButton": "New template",
+      "viewToggle": {
+        "table": "Table",
+        "grid": "Grid"
+      },
+      "search": {
+        "placeholder": "Search by name or slug..."
+      },
+      "filters": {
+        "categoryAll": "All categories",
+        "industryAll": "All industries",
+        "categories": {
+          "customer_service": "Customer service",
+          "documents": "Documents",
+          "marketing": "Marketing",
+          "sales": "Sales",
+          "operations": "Operations",
+          "productivity": "Productivity",
+          "reports": "Reports",
+          "ai_agents": "AI agents"
+        },
+        "industries": {
+          "retail": "Retail",
+          "salud": "Health",
+          "legal": "Legal",
+          "inmobiliaria": "Real estate",
+          "restaurantes": "Restaurants",
+          "agencias": "Agencies"
+        }
+      },
+      "columns": {
+        "name": "Name",
+        "slug": "Slug",
+        "category": "Category",
+        "industries": "Industries",
+        "pricingTier": "Pricing tier",
+        "setupPrice": "Setup",
+        "monthlyPrice": "Monthly",
+        "active": "Active",
+        "featured": "Featured"
+      },
+      "toggle": {
+        "activeOn": "Active",
+        "activeOff": "Inactive",
+        "featuredOn": "Featured",
+        "featuredOff": "Not featured",
+        "errorRevert": "Could not save. Reverted."
+      },
+      "deactivateModal": {
+        "title": "Deactivate template?",
+        "body": "This template has {count} active automations. It will be hidden from the customer catalog; existing automations keep running. Continue?",
+        "confirm": "Deactivate",
+        "cancel": "Cancel"
+      },
+      "empty": {
+        "title": "No templates match your filters",
+        "cta": "Clear filters"
+      },
+      "count": "{filtered} of {total} templates"
     }
   }
 }
