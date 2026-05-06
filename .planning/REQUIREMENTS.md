@@ -32,7 +32,7 @@ Requirements for v1.2 release. Each maps to roadmap phases.
 > CRUD for `automation_templates`. Replaces editing seed.sql by hand.
 
 - [x] **CTLG-01**: Staff sees a table with ALL templates (including `is_active=false`), filterable by category and industry, with columns: name, slug, category, industries, pricing_tier, setup_price, monthly_price, is_featured, is_active
-- [ ] **CTLG-02**: Staff can create a new template via a form with all required fields (name i18n key, slug, description, category, industries[], connected_apps[], pricing_tier, setup_price, monthly_price, setup_time_days, typical_impact_text, avg_minutes_per_task, activity_metric_label) and Zod validation
+- [x] **CTLG-02**: Staff can create a new template via a form with all required fields (name i18n key, slug, description, category, industries[], connected_apps[], pricing_tier, setup_price, monthly_price, setup_time_days, typical_impact_text, avg_minutes_per_task, activity_metric_label) and Zod validation
 - [x] **CTLG-03**: Staff can edit any field of an existing template and save changes; updates reflect immediately in the customer-facing catalog
 - [x] **CTLG-04**: Staff can toggle `is_active` on a template; inactive templates disappear from the customer catalog without being deleted
 - [x] **CTLG-05**: Staff can toggle `is_featured` on a template (controls appearance in customer "Mas populares" tab)
@@ -137,7 +137,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FOUND-04 | Phase 17 | Complete |
 | FOUND-05 | Phase 17 | Complete |
 | CTLG-01 | Phase 18 | Complete |
-| CTLG-02 | Phase 18 | Pending |
+| CTLG-02 | Phase 18 | Complete |
 | CTLG-03 | Phase 18 | Complete |
 | CTLG-04 | Phase 18 | Complete |
 | CTLG-05 | Phase 18 | Complete |

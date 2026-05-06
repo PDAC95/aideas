@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Admin Dashboard
 status: in_progress
-last_updated: "2026-05-06T17:41:00Z"
+last_updated: "2026-05-06T17:59:14Z"
 progress:
   total_phases: 7
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 20
-  completed_plans: 5
+  completed_plans: 6
 ---
 
 # Project State
@@ -18,14 +18,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-04 after v1.2 milestone start)
 
 **Core value:** Customers can monitor automations, request new ones, and see their ROI from a single bilingual dashboard — paired with an operations team who can fulfill what they request.
-**Current focus:** v1.2 Admin Dashboard — Phase 17 Admin Foundation complete (3/3 plans); next is Phase 18 Catalog Admin
+**Current focus:** v1.2 Admin Dashboard — Phase 17 Admin Foundation complete (3/3 plans); Phase 18 Catalog Admin complete (3/3 plans); next is Phase 19 Requests Inbox.
 
 ## Current Position
 
-Phase: Phase 18 — Catalog Admin — In progress (2/3 plans)
-Plan: 18-01 + 18-02 complete; next is 18-03 (admin create/edit form + Zod validation with draft mode + grouped sections + bilingual translation inputs).
-Status: /admin/catalog hybrid list (table default + grid toggle) shipped with URL-synced search + category/industry filters and inline is_active / is_featured switches. CatalogToggleCell flips optimistically, reverts on server-action failure, and opens a warn-but-allow modal when deactivating a template with active|in_setup|paused|pending_review automations. fetchAdminCatalogTemplates(locale) returns ALL templates (including inactive) plus has_active_automations counts; toggleTemplateActive / toggleTemplateFeatured server actions are gated by assertPlatformStaff and revalidate both /admin/catalog and /dashboard/catalog so customer side updates without redeploy. admin.catalog.* i18n namespace added (40 keys per locale, 682 total parity).
-Last activity: 2026-05-06 — Plan 18-02 executed (2 tasks, 9 files; admin catalog list + toggle actions + i18n).
+Phase: Phase 18 — Catalog Admin — Complete (3/3 plans). Ready for `/gsd:verify-work 18` and merge.
+Plan: 18-03 complete (admin create/edit form). All Phase 18 plans shipped.
+Status: /admin/catalog/new and /admin/catalog/[slug]/edit pages alive with single-page grouped form (5 sections: Basic info, Categorization, Pricing, Metrics, Translations). Slug auto-generates from name_en via NFKD slugify; locked on edit. Industries render as 6 togglable chips; connected_apps as multi-select with chips + 12-app datalist. Strict Zod validation: adminCatalogTemplateActiveSchema (when is_active=true) requires all 8 translations + 4 numerics + at least one industry; adminCatalogTemplateBaseSchema (when is_active=false) skips activation gates so partial work can be saved as draft. Custom RHF resolver bridges form-layer USD strings + blank-as-null numerics to Zod-layer cents + integers + nullables. createTemplate inserts the template row + 8 translation rows atomically (rollback on partial failure); updateTemplate UPDATEs the templates row + UPSERTs 8 translation rows on (template_id, locale, field). Both revalidate /admin/catalog AND /dashboard/catalog. admin.catalog.form.* i18n namespace added (47 keys per locale, 729 total parity). 28 routes built (up from 26).
+Last activity: 2026-05-06 — Plan 18-03 executed (2 tasks, 8 files; create/edit form + actions + schemas + i18n form keys).
 
 ## Performance Metrics
 
@@ -45,8 +45,25 @@ Last activity: 2026-05-06 — Plan 18-02 executed (2 tasks, 9 files; admin catal
 | 17-03      | 5              | 2     | 13            |
 | 18-01      | 16             | 2     | 5             |
 | 18-02      | 10             | 2     | 9             |
+| 18-03      | 12             | 2     | 8             |
 
 ## Accumulated Context
+
+### Decisions (Phase 18-03 execution, 2026-05-06)
+
+- **Pricing input layer is USD, schema layer is cents.** The form's price fields accept dollars with `step=0.01` and `inputMode=decimal`; submit calls `dollarsToCents` to round to integer cents; edit pre-fills via `centsToDollarString` so the operator sees what they typed (or close to it). Zod only ever validates cents, so server-side validation matches what gets persisted. Pattern reusable for any future price-input form (Phase 19+).
+- **Custom RHF resolver instead of `zodResolver`.** `zodResolver` from `@hookform/resolvers/zod` expects 1:1 form-to-schema mapping; this form has different shapes (USD strings, blank-as-null numerics, snake_case price field rename). The custom resolver runs `formToZodInput` first, then `safeParse`, then maps `setup_price` -> `setup_price_dollars` and `monthly_price` -> `monthly_price_dollars` paths back onto form fields. Pattern reusable when form values diverge from schema values.
+- **Schema selection inside the resolver, not via prop swap.** The resolver reads `is_active` from values on each invocation and picks `adminCatalogTemplateActiveSchema` vs `adminCatalogTemplateBaseSchema` accordingly. After `is_active` toggles, an effect calls `form.trigger()` (only when the form has been submitted at least once) so existing errors update without remounting. Cheaper than swapping resolvers via props.
+- **Slug auto-gen on EN-name keystroke + sticky manual-edit flag.** A `slugManuallyEdited` ref starts `false` on create / `true` on edit. As long as the user has not typed in the slug field directly, name_en changes auto-rewrite the slug via NFKD-normalize-and-strip-accents slugify (capped at 100 chars). On edit pages the ref starts `true` so the slug is treated as immutable; the input is also visually disabled with a lock icon.
+- **Slug input disabled (not hidden) on edit pages.** Communicates the lock-after-creation constraint without removing the value from view. CONTEXT.md prescribed lock-after-creation; this is the visual treatment.
+- **Connected apps as multi-select with datalist, NOT chips.** Industries are a fixed 6-element enum and chip-toggle scales fine; connected_apps grows over time so chip-toggle would explode. Multi-select with chips-as-selected and a datalist of 12 common suggestions (Slack, HubSpot, Salesforce, Zapier, Notion, Airtable, Stripe, Google Workspace, WhatsApp, Mailchimp, Zoho, Pipedrive) is the planner's prescribed shape — and free-text additions via Enter remain possible.
+- **Industries chips reuse the customer catalog visual pattern** (border-purple when selected). Operators flipping between admin and customer catalog see the same toggle pattern.
+- **Atomic create with best-effort rollback.** Supabase JS does not expose transactions across multiple `.from(...)` calls. Strategy: INSERT template -> INSERT 8 translations -> on translation failure DELETE the template. If both fail, log the orphan templateId for manual cleanup. In practice the only way both fail is the DB going offline mid-write.
+- **Update path uses UPSERT on `(template_id, locale, field)` instead of DELETE + INSERT.** Idempotent re-saves; partial saves don't clear other locales' rows. The PK on the table makes the UPSERT a single round trip.
+- **Legacy text columns kept and synced to EN.** `automation_templates.{name, description, typical_impact_text, activity_metric_label}` written with EN translation values on every create/update so any unmigrated reader still sees sane strings. Drop only when no consumer remains.
+- **Active toggle as HTML checkbox, not a Switch.** shadcn/ui in this project does not ship a Switch primitive (only Button, Card, Form, Input, Label). A checkbox + label hint communicates draft-vs-active at zero new-component cost.
+- **Spanish translations stay accent-free** ("Informacion basica", "Categorizacion", "Categoria", "Metricas", "Traducciones"). Matches existing es.json convention.
+- **Form pattern with conditional refinement for draft mode** (base schema = always-required structural; superRefine = activation gates) is reusable for any future "save as draft / publish" workflow (Phase 19 request templates, Phase 22 marketing campaigns).
 
 ### Decisions (Phase 18-02 execution, 2026-05-06)
 
@@ -135,9 +152,9 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 
 ### Pending Todos
 
-(none — Plan 18-03 next)
+(none — Phase 18 complete, ready for `/gsd:verify-work 18` then merge `feature/phase-18-catalog-admin` back to `main`; next is `/gsd:plan-phase 19` for Requests Inbox)
 
 ## Session Continuity
 
-**Last session:** 2026-05-06 — Executed Plan 18-02 (admin catalog list with inline toggles). Stopped at: Completed 18-02-PLAN.md.
-**Next action:** Plan 18-03 (admin create/edit form with Zod validation, draft mode, grouped sections, bilingual translation inputs) is up next on the `feature/phase-18-catalog-admin` branch. The /admin/catalog/[slug]/edit and /admin/catalog/new links from 18-02's table/header are dead until 18-03 ships. After 18-03 lands, run `/gsd:verify-work 18` and merge the branch back to main.
+**Last session:** 2026-05-06 — Executed Plan 18-03 (admin catalog create/edit form). Stopped at: Completed 18-03-PLAN.md.
+**Next action:** Phase 18 (Catalog Admin) is complete (3/3 plans). Run `/gsd:verify-work 18` to UAT the full admin catalog flow (list + filters + toggles + warn modal + create + edit + draft mode + bilingual + customer-side reflection). After verification passes, merge `feature/phase-18-catalog-admin` back to `main`. Then start Phase 19 (Requests Inbox) with `/gsd:discuss-phase 19` -> `/gsd:plan-phase 19` -> `/gsd:execute-phase 19`.
