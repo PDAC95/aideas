@@ -40,22 +40,6 @@ CREATE TABLE public.organizations (
 
 ALTER TABLE public.organizations ENABLE ROW LEVEL SECURITY;
 
--- SELECT: authenticated users who are members of the org (and org is not deleted)
-CREATE POLICY "organizations_select_members"
-    ON public.organizations
-    FOR SELECT
-    TO authenticated
-    USING (
-        deleted_at IS NULL
-        AND EXISTS (
-            SELECT 1
-            FROM public.organization_members om
-            WHERE om.organization_id = id
-              AND om.user_id = (SELECT auth.uid())
-              AND om.is_active = true
-        )
-    );
-
 -- Writes are service_role only (no INSERT/UPDATE/DELETE policies for authenticated users)
 
 CREATE TRIGGER organizations_updated_at
@@ -160,3 +144,23 @@ CREATE TRIGGER organization_members_updated_at
 
 CREATE INDEX idx_organization_members_organization_id ON public.organization_members (organization_id);
 CREATE INDEX idx_organization_members_user_id ON public.organization_members (user_id);
+
+-- ---------------------------------------------------------------------------
+-- organizations RLS — requires organization_members to exist first
+-- ---------------------------------------------------------------------------
+
+-- SELECT: authenticated users who are members of the org (and org is not deleted)
+CREATE POLICY "organizations_select_members"
+    ON public.organizations
+    FOR SELECT
+    TO authenticated
+    USING (
+        deleted_at IS NULL
+        AND EXISTS (
+            SELECT 1
+            FROM public.organization_members om
+            WHERE om.organization_id = id
+              AND om.user_id = (SELECT auth.uid())
+              AND om.is_active = true
+        )
+    );
