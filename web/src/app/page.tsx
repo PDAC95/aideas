@@ -1,6 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import LandingPage from "@/components/landing/landing-page";
 
 export default async function Home() {
   const supabase = await createClient();
@@ -8,10 +7,11 @@ export default async function Home() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // If logged in, redirect to dashboard
+  // Middleware handles routing: auth → /dashboard, unauth → static landing
+  // This is a fallback in case middleware doesn't intercept
   if (user) {
     redirect("/dashboard");
   }
 
-  return <LandingPage />;
+  redirect("/landing/index.html");
 }

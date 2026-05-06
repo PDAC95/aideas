@@ -1,29 +1,12 @@
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { BarChart3 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { getOrgId, fetchReportsData } from "@/lib/dashboard/queries";
 import { ReportsPeriodSelector } from "@/components/dashboard/reports-period-selector";
 import { ReportsKpiCards } from "@/components/dashboard/reports-kpi-cards";
+import { ReportsWeeklyChartLoader } from "@/components/dashboard/reports-weekly-chart-loader";
 import { ReportsBreakdownTable } from "@/components/dashboard/reports-breakdown-table";
-
-/**
- * ReportsWeeklyChart uses Recharts which requires browser APIs.
- * Must be imported via next/dynamic with { ssr: false }.
- */
-const ReportsWeeklyChart = dynamic(
-  () =>
-    import("@/components/dashboard/reports-weekly-chart").then((mod) => ({
-      default: mod.ReportsWeeklyChart,
-    })),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="h-[280px] animate-pulse bg-gray-100 dark:bg-gray-800 rounded-xl" />
-    ),
-  }
-);
 
 const VALID_PERIODS = ["this_month", "last_month", "last_3_months"];
 
@@ -127,7 +110,7 @@ export default async function ReportsPage({
         translations={kpiTranslations}
       />
 
-      <ReportsWeeklyChart
+      <ReportsWeeklyChartLoader
         data={data.weeklyChart}
         translations={chartTranslations}
       />
