@@ -980,7 +980,62 @@
         "title": "Ninguna plantilla coincide con tus filtros",
         "cta": "Limpiar filtros"
       },
-      "count": "{filtered} de {total} plantillas"
+      "count": "{filtered} de {total} plantillas",
+      "form": {
+        "newTitle": "Crear nueva plantilla",
+        "editTitle": "Editar plantilla",
+        "submitCreate": "Crear plantilla",
+        "submitUpdate": "Guardar cambios",
+        "submitting": "Guardando...",
+        "cancel": "Cancelar",
+        "sections": {
+          "basicInfo": "Informacion basica",
+          "categorization": "Categorizacion",
+          "pricing": "Precios",
+          "metrics": "Metricas",
+          "translations": "Traducciones"
+        },
+        "fields": {
+          "slug": "Slug",
+          "slugHelp": "Auto-generado desde el nombre. Bloqueado despues de crear.",
+          "isActive": "Activa en catalogo",
+          "isActiveHelp": "Cuando esta apagada, se guarda como borrador y se omite la validacion de campos requeridos",
+          "isFeatured": "Destacada (Mas populares)",
+          "sortOrder": "Orden",
+          "icon": "Icono",
+          "iconHelp": "Nombre del icono Lucide (opcional)",
+          "category": "Categoria",
+          "industries": "Industrias",
+          "industriesHelp": "Selecciona todas las que apliquen",
+          "connectedApps": "Apps conectadas",
+          "connectedAppsHelp": "Agrega nombres de apps; Enter para confirmar cada una",
+          "connectedAppsPlaceholder": "Escribe el nombre de una app y presiona Enter",
+          "pricingTier": "Plan de precios",
+          "setupPrice": "Precio de setup (USD)",
+          "monthlyPrice": "Precio mensual (USD)",
+          "setupTimeDays": "Tiempo de setup (dias)",
+          "avgMinutesPerTask": "Minutos promedio por tarea",
+          "nameEn": "Nombre (Ingles)",
+          "nameEs": "Nombre (Espanol)",
+          "descriptionEn": "Descripcion (Ingles)",
+          "descriptionEs": "Descripcion (Espanol)",
+          "impactEn": "Impacto tipico (Ingles)",
+          "impactEs": "Impacto tipico (Espanol)",
+          "metricLabelEn": "Etiqueta de metrica (Ingles)",
+          "metricLabelEs": "Etiqueta de metrica (Espanol)"
+        },
+        "errors": {
+          "required_when_active": "Requerido cuando la plantilla esta activa",
+          "invalid_slug": "El slug debe ser minusculas, numeros y guiones",
+          "slug_taken": "Ya existe una plantilla con este slug",
+          "pick_at_least_one": "Selecciona al menos una",
+          "create_failed": "No se pudo crear la plantilla. Reintenta.",
+          "update_failed": "No se pudieron guardar los cambios. Reintenta.",
+          "not_found": "Plantilla no encontrada",
+          "not_authenticated": "Tu sesion expiro. Vuelve a iniciar sesion.",
+          "not_staff": "No tienes permisos para esta accion."
+        }
+      }
     }
   }
 }

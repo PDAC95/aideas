@@ -980,7 +980,62 @@
         "title": "No templates match your filters",
         "cta": "Clear filters"
       },
-      "count": "{filtered} of {total} templates"
+      "count": "{filtered} of {total} templates",
+      "form": {
+        "newTitle": "Create new template",
+        "editTitle": "Edit template",
+        "submitCreate": "Create template",
+        "submitUpdate": "Save changes",
+        "submitting": "Saving...",
+        "cancel": "Cancel",
+        "sections": {
+          "basicInfo": "Basic info",
+          "categorization": "Categorization",
+          "pricing": "Pricing",
+          "metrics": "Metrics",
+          "translations": "Translations"
+        },
+        "fields": {
+          "slug": "Slug",
+          "slugHelp": "Auto-generated from name. Locked after creation.",
+          "isActive": "Active in catalog",
+          "isActiveHelp": "When OFF, template is saved as draft and required-field validation is skipped",
+          "isFeatured": "Featured (Mas populares)",
+          "sortOrder": "Sort order",
+          "icon": "Icon",
+          "iconHelp": "Lucide icon name (optional)",
+          "category": "Category",
+          "industries": "Industries",
+          "industriesHelp": "Select all that apply",
+          "connectedApps": "Connected apps",
+          "connectedAppsHelp": "Add app names; press Enter to confirm each",
+          "connectedAppsPlaceholder": "Type an app name and press Enter",
+          "pricingTier": "Pricing tier",
+          "setupPrice": "Setup price (USD)",
+          "monthlyPrice": "Monthly price (USD)",
+          "setupTimeDays": "Setup time (days)",
+          "avgMinutesPerTask": "Avg minutes per task",
+          "nameEn": "Name (English)",
+          "nameEs": "Name (Spanish)",
+          "descriptionEn": "Description (English)",
+          "descriptionEs": "Description (Spanish)",
+          "impactEn": "Typical impact (English)",
+          "impactEs": "Typical impact (Spanish)",
+          "metricLabelEn": "Activity metric label (English)",
+          "metricLabelEs": "Activity metric label (Spanish)"
+        },
+        "errors": {
+          "required_when_active": "Required when template is active",
+          "invalid_slug": "Slug must be lowercase letters, numbers, and hyphens",
+          "slug_taken": "A template with this slug already exists",
+          "pick_at_least_one": "Pick at least one",
+          "create_failed": "Could not create template. Please retry.",
+          "update_failed": "Could not save changes. Please retry.",
+          "not_found": "Template not found",
+          "not_authenticated": "Your session expired. Please sign in again.",
+          "not_staff": "You are not authorized to perform this action."
+        }
+      }
     }
   }
 }
