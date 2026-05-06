@@ -22,13 +22,22 @@ export type ToggleResult =
       error: "invalid_input" | "not_authenticated" | "not_staff" | "update_failed";
     };
 
+// Loose UUID-shape regex (8-4-4-4-12 hex). The seed uses custom non-RFC
+// UUIDs like "ee030100-0000-0000-0000-000000000001" for readability, which
+// Zod v4's strict uuid() rejects (requires version digit 1-8). IDs come
+// from the DB, not user input — shape validation is sufficient.
+const uuidShape = z.string().regex(
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+  "Invalid id"
+);
+
 const toggleActiveSchema = z.object({
-  templateId: z.string().uuid(),
+  templateId: uuidShape,
   nextActive: z.boolean(),
 });
 
 const toggleFeaturedSchema = z.object({
-  templateId: z.string().uuid(),
+  templateId: uuidShape,
   nextFeatured: z.boolean(),
 });
 
@@ -50,6 +59,7 @@ export async function toggleTemplateActive(input: {
 }): Promise<ToggleResult> {
   const parsed = toggleActiveSchema.safeParse(input);
   if (!parsed.success) {
+    console.error("[toggleTemplateActive] invalid_input", { input, issues: parsed.error.issues });
     return { ok: false, error: "invalid_input" };
   }
 
