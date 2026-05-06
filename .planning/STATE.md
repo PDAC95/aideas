@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Admin Dashboard
 status: in_progress
-last_updated: "2026-05-06T16:59:48Z"
+last_updated: "2026-05-06T17:41:00Z"
 progress:
   total_phases: 7
   completed_phases: 1
   total_plans: 20
-  completed_plans: 4
+  completed_plans: 5
 ---
 
 # Project State
@@ -22,10 +22,10 @@ See: .planning/PROJECT.md (updated 2026-05-04 after v1.2 milestone start)
 
 ## Current Position
 
-Phase: Phase 18 — Catalog Admin — In progress (1/3 plans)
-Plan: 18-01 complete (translations data plane); next is 18-02 (admin create/edit form + Zod validation) followed by 18-03 (active/featured inline toggles).
-Status: automation_template_translations table shipped with 528-row backfill from web/messages/{en,es}.json, RLS posture mirroring the catalog (SELECT to authenticated, admin CRUD via is_platform_staff). Customer /dashboard/catalog list and detail pages no longer call getTranslations("templates") for template-specific copy; queries JOIN the translations table by locale. Customer side renders identically to before; admin write surfaces are unblocked for 18-02/18-03.
-Last activity: 2026-05-06 — Plan 18-01 executed (2 tasks, 5 files; translations table + customer query refactor)
+Phase: Phase 18 — Catalog Admin — In progress (2/3 plans)
+Plan: 18-01 + 18-02 complete; next is 18-03 (admin create/edit form + Zod validation with draft mode + grouped sections + bilingual translation inputs).
+Status: /admin/catalog hybrid list (table default + grid toggle) shipped with URL-synced search + category/industry filters and inline is_active / is_featured switches. CatalogToggleCell flips optimistically, reverts on server-action failure, and opens a warn-but-allow modal when deactivating a template with active|in_setup|paused|pending_review automations. fetchAdminCatalogTemplates(locale) returns ALL templates (including inactive) plus has_active_automations counts; toggleTemplateActive / toggleTemplateFeatured server actions are gated by assertPlatformStaff and revalidate both /admin/catalog and /dashboard/catalog so customer side updates without redeploy. admin.catalog.* i18n namespace added (40 keys per locale, 682 total parity).
+Last activity: 2026-05-06 — Plan 18-02 executed (2 tasks, 9 files; admin catalog list + toggle actions + i18n).
 
 ## Performance Metrics
 
@@ -44,8 +44,21 @@ Last activity: 2026-05-06 — Plan 18-01 executed (2 tasks, 5 files; translation
 | 17-02      | 3              | 3     | 7             |
 | 17-03      | 5              | 2     | 13            |
 | 18-01      | 16             | 2     | 5             |
+| 18-02      | 10             | 2     | 9             |
 
 ## Accumulated Context
+
+### Decisions (Phase 18-02 execution, 2026-05-06)
+
+- **Toggle translations packaged together** — `deactivateModal` is nested under `translations.toggle` rather than living as a sibling. The table/grid components forward a single `toggle` prop into `CatalogToggleCell`. The original PLAN sketch placed `deactivateModal` as a sibling and failed type-check; nesting it under `toggle` is the cleaner shape and is now the canonical layout for any future toggle-with-modal cell.
+- **Search filters by name OR slug** (admin-specific). Customer-facing search-by-name is unchanged. Admin operators routinely need to find a template by its slug when debugging URLs (e.g., the customer reported a 404 on `/dashboard/catalog/audience-segmentation`).
+- **View toggle defaults to `table`.** URL only carries `?view=grid` when explicitly chosen, so a refresh on default-table is a no-op and a refresh after switching to grid stays on grid. Operators get table density by default; grid is opt-in.
+- **Warn-modal is purely client-side.** Server action accepts the deactivation either direction. CONTEXT.md prescribed warn-but-allow over hard-block; if a determined attacker bypasses the warning the only consequence is that the template is deactivated, which is the action they asked for. Server-side enforcement adds zero security and would just make the action less reusable.
+- **Two queries instead of one with a count subquery.** `fetchAdminCatalogTemplates` issues a templates SELECT + an automations SELECT and reduces the latter into a Map keyed by `template_id`. Simple, readable, well under 50ms in practice. Single-query alternatives with a Postgres count aggregate forced awkward Supabase typings.
+- **Inactive rows still render their toggle** so an operator can flip them back on. Opacity-60 is the only visual cue. Hiding inactive rows behind a separate tab would break the muscle memory of "find any template, click switch".
+- **Pricing-tier badge tones** — gray (starter) / purple-50 (pro) / purple-100 (business). Subtle escalation reused from Phase 11's billing card; no new design tokens.
+- **Server-action skeleton established for the rest of v1.2:** `createAdminServerClient -> assertPlatformStaff -> Zod parse -> Supabase mutation -> revalidatePath(admin) + revalidatePath(customer)`. Phase 19/20/21 server actions will clone this shape verbatim.
+- **Translation-prop pattern established:** server resolves `t('foo')` and `t.raw('templateString')` into a plain object, then passes the object as `translations` to a `'use client'` component. No `useTranslations()` in the client tree. Keeps the client component framework-agnostic and easy to test.
 
 ### Decisions (Phase 18-01 execution, 2026-05-06)
 
@@ -122,9 +135,9 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 
 ### Pending Todos
 
-(none — Plan 18-02 next)
+(none — Plan 18-03 next)
 
 ## Session Continuity
 
-**Last session:** 2026-05-06 — Executed Plan 18-01 (translations data plane). Stopped at: Completed 18-01-PLAN.md.
-**Next action:** Plan 18-02 (admin create/edit form with Zod validation, draft mode, and grouped sections) is up next on the `feature/phase-18-catalog-admin` branch. After 18-02 and 18-03 land, run `/gsd:verify-work 18` and merge the branch back to main.
+**Last session:** 2026-05-06 — Executed Plan 18-02 (admin catalog list with inline toggles). Stopped at: Completed 18-02-PLAN.md.
+**Next action:** Plan 18-03 (admin create/edit form with Zod validation, draft mode, grouped sections, bilingual translation inputs) is up next on the `feature/phase-18-catalog-admin` branch. The /admin/catalog/[slug]/edit and /admin/catalog/new links from 18-02's table/header are dead until 18-03 ships. After 18-03 lands, run `/gsd:verify-work 18` and merge the branch back to main.
