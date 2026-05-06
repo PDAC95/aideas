@@ -61,7 +61,7 @@ export function ActivityFeed({ executions, translations }: ActivityFeedProps) {
         </h2>
         <Link
           href="/dashboard/reports"
-          className="flex items-center gap-1 text-sm text-purple-600 dark:text-purple-400 hover:underline"
+          className="flex items-center gap-1 text-sm text-purple-400 dark:text-purple-300 hover:underline"
         >
           {translations.viewAll}
           <ArrowRight className="h-3.5 w-3.5" />

@@ -32,7 +32,7 @@ export function AutomationList({
         </h2>
         <Link
           href="/dashboard/automations"
-          className="flex items-center gap-1 text-sm text-purple-600 dark:text-purple-400 hover:underline"
+          className="flex items-center gap-1 text-sm text-purple-400 dark:text-purple-300 hover:underline"
         >
           {translations.viewAll}
           <ArrowRight className="h-3.5 w-3.5" />
@@ -59,7 +59,7 @@ export function AutomationList({
               >
                 {/* Rank number */}
                 {rankByExecutions && (
-                  <span className="text-purple-600 dark:text-purple-400 font-bold text-sm shrink-0 w-6">
+                  <span className="text-purple-400 dark:text-purple-300 font-bold text-sm shrink-0 w-6">
                     #{index + 1}
                   </span>
                 )}
@@ -99,7 +99,7 @@ export function AutomationList({
       <div className="px-6 py-3 border-t border-gray-100 dark:border-gray-700 mt-auto">
         <Link
           href="/dashboard/catalog"
-          className="flex items-center justify-center gap-2 w-full py-2 border border-dashed border-gray-300 dark:border-gray-600 rounded-lg text-sm text-muted-foreground hover:text-purple-600 dark:hover:text-purple-400 hover:border-purple-400 dark:hover:border-purple-500 transition-colors"
+          className="flex items-center justify-center gap-2 w-full py-2 border border-dashed border-gray-300 dark:border-gray-600 rounded-lg text-sm text-muted-foreground hover:text-purple-600 dark:hover:text-purple-400 hover:border-purple-300 dark:hover:border-purple-400 transition-colors"
         >
           <Plus className="h-4 w-4" />
           {translations.newAutomation}

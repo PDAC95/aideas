@@ -40,6 +40,8 @@ export function ResetPasswordForm() {
         setError('root', { message: 'noSession' })
       } else if (result.error === 'weak_password') {
         setError('root', { message: 'weakPassword' })
+      } else if (result.error === 'same_password') {
+        setError('root', { message: 'samePassword' })
       } else {
         setError('root', { message: 'generic' })
       }

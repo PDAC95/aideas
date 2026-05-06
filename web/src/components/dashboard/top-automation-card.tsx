@@ -20,7 +20,7 @@ export function TopAutomationCard({
   }
 
   return (
-    <div className="bg-gradient-to-r from-purple-600 to-pink-500 rounded-xl p-6 min-h-[140px] flex flex-col justify-between text-white">
+    <div className="bg-gradient-to-r from-purple-300 to-pink-300 dark:from-purple-400/80 dark:to-pink-400/80 rounded-xl p-6 min-h-[140px] flex flex-col justify-between text-white">
       <div>
         <p className="text-xs font-semibold uppercase tracking-widest text-white/80">
           {translations.title}

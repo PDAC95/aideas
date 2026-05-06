@@ -195,7 +195,7 @@ export function SettingsProfileCard({
       if (isAdminOrOwner && companyName.trim() !== (org.orgName ?? "")) {
         const companyResult = await saveCompanyName(org.orgId, companyName);
         if ("error" in companyResult) {
-          setToast({ message: translations.error, type: "error" });
+          setToast({ message: companyResult.error, type: "error" });
           setIsSaving(false);
           return;
         }

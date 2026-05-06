@@ -184,7 +184,7 @@ export function ReportsBreakdownTable({
           >
             {showAll
               ? translations.showLess
-              : translations.viewAll.replace("{count}", String(rows.length))}
+              : `${translations.viewAll} (${rows.length})`}
           </button>
         </div>
       )}
