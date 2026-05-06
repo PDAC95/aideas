@@ -1,0 +1,137 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "about": "Nosotros",
+    "works": "Soluciones",
+    "news": "Casos de Uso",
+    "contact": "Contacto",
+    "login": "Iniciar Sesion",
+    "signup": "Comenzar"
+  },
+  "home": {
+    "subtitle_lead": "Automatizacion con IA",
+    "title": "AIDEAS",
+    "subtitle": "Tu aliado tecnologico en inteligencia artificial",
+    "credits": "AIDEAS"
+  },
+  "about": {
+    "name": "Sobre AIDEAS",
+    "role": "Tu Aliado en IA",
+    "bio": "Dinos que frena tu negocio — nosotros construimos la automatizacion para resolverlo. Desde <a class=\"link-effect\" href=\"#contact\">soluciones listas para implementar</a> hasta sistemas completamente personalizados, nuestro equipo se encarga de todo el proceso. Tu describes el problema, nosotros entregamos el resultado.",
+    "born": "Tus Resultados",
+    "age": "IA Primero",
+    "education": "Custom y Predefinidas",
+    "experience": "Soporte 24/7",
+    "position": "Servicio Completo",
+    "location": "Remoto — Mundial",
+    "label_born": "Enfoque",
+    "label_age": "Enfoque",
+    "label_education": "Soluciones",
+    "label_experience": "Soporte",
+    "label_position": "Modelo",
+    "label_location": "Alcance",
+    "being_around": "Areas que transformamos",
+    "years_count": "17",
+    "years_label": "Industrias",
+    "download_cv": "Comenzar"
+  },
+  "skills": {
+    "languages_subtitle": "Como",
+    "languages_title": "Trabajamos",
+    "lang_1": "1. Cuentanos tu problema",
+    "lang_2": "2. Disenamos la solucion",
+    "lang_3": "3. La construimos e implementamos",
+    "lang_4": "4. La mantenemos y optimizamos",
+    "skills_subtitle": "Que",
+    "skills_title": "Usamos",
+    "skill_1": "IA y Machine Learning",
+    "skill_2": "Integraciones Custom",
+    "skill_3": "Automatizacion de Flujos",
+    "skill_4": "Datos y Analitica"
+  },
+  "services": {
+    "service_1_subtitle": "Automatizacion",
+    "service_1_title": "de Negocios",
+    "service_2_subtitle": "Experiencia",
+    "service_2_title": "del Cliente",
+    "service_3_subtitle": "Contenido",
+    "service_3_title": "a Escala",
+    "service_4_subtitle": "Inteligencia",
+    "service_4_title": "de Datos"
+  },
+  "facts": {
+    "subtitle": "Construido para impactar",
+    "title": "Por que AIDEAS",
+    "fact_1_label": "Automatizaciones Listas",
+    "fact_2_label": "Integraciones",
+    "fact_3_label": "Horas Ahorradas al Mes",
+    "fact_4_label": "% Disponibilidad"
+  },
+  "testimonials": {
+    "quote_1": "Pasabamos 20 horas a la semana procesando emails manualmente. AIDEAS analizo nuestro flujo, construyo una automatizacion a medida, y ahora se ejecuta sola — clasificacion, respuestas y escalacion. <a class=\"link-effect\" href=\"#contact\">Totalmente autonoma</a>.",
+    "author_1": "Agencia de Marketing",
+    "quote_2": "Nuestro tiempo de respuesta al cliente bajo de horas a segundos. AIDEAS implemento un asistente de IA que entiende nuestros productos y maneja el 80% de las consultas sin intervencion humana.",
+    "author_2": "Marca de E-commerce",
+    "quote_3": "Necesitabamos un motor de contenido, no solo una herramienta. AIDEAS construyo un pipeline completo — desde investigacion hasta publicacion — que maneja nuestras redes en piloto automatico mientras nos enfocamos en estrategia.",
+    "author_3": "Startup Digital"
+  },
+  "works": {
+    "subtitle": "194+ automatizaciones listas",
+    "title": "Catalogo de Soluciones",
+    "view_image": "Saber Mas",
+    "watch_video": "Ver Demo",
+    "caption": "Estos son solo ejemplos. Tenemos 194+ automatizaciones listas — y si tu necesidad no esta cubierta, la construimos desde cero. Sea cual sea tu reto, tenemos una solucion."
+  },
+  "news": {
+    "subtitle": "Resultados reales de negocios reales",
+    "title": "Casos de Uso",
+    "view_photos": "Ver Ejemplos",
+    "view_image": "Ver Detalles",
+    "watch_video": "Ver Demo",
+    "news_1_date": "Email y Bandeja",
+    "news_1_title": "Flujos de Email Inteligentes",
+    "news_1_txt": "Desde auto-clasificacion hasta respuestas redactadas por IA, construimos sistemas que administran tu bandeja para que tu equipo se enfoque en <a class=\"link-effect\" href=\"#contact\">lo que importa</a>.",
+    "news_2_date": "Documentos y Datos",
+    "news_2_title": "Inteligencia Documental",
+    "news_2_txt": "Facturas, contratos, curriculos — construimos sistemas de IA que leen, extraen y organizan tus documentos automaticamente. Sin mas <a class=\"link-effect\" href=\"#contact\">captura manual de datos</a>.",
+    "news_3_date": "Atencion al Cliente",
+    "news_3_title": "Soporte con IA",
+    "news_3_txt": "Implementamos asistentes inteligentes en WhatsApp, Telegram o tu sitio web — entrenados en tu negocio, respondiendo a tus clientes <a class=\"link-effect\" href=\"#contact\">las 24 horas</a>.",
+    "news_4_date": "Marketing y Contenido",
+    "news_4_title": "Motor de Contenido",
+    "news_4_txt": "Construimos pipelines automatizados que investigan, crean y publican contenido en todos tus canales. La voz de tu marca, <a class=\"link-effect\" href=\"#contact\">impulsada por IA</a>.",
+    "label_date": "Categoria",
+    "label_client": "Plataformas",
+    "label_duration": "Plazo",
+    "client_name": "Multiples",
+    "duration_value": "1-2 Semanas",
+    "website_btn": "Comenzar"
+  },
+  "contact": {
+    "subtitle": "Tienes una idea? Un problema? Un proceso que odias?",
+    "title": "Hablemos",
+    "address_subtitle": "Cobertura",
+    "address_title": "Ubicacion",
+    "address_text": "Estados Unidos y Canada",
+    "email_subtitle": "Escribenos",
+    "email_title": "Correo",
+    "phone_subtitle": "Llamanos",
+    "phone_title": "Telefono",
+    "form_name": "Nombre",
+    "form_email": "Correo",
+    "form_message": "Describe el problema que quieres resolver — sin importar que tan unico sea, encontraremos la forma de automatizarlo",
+    "form_send": "Enviar Mensaje",
+    "form_success": "Mensaje enviado! Te contactaremos en menos de 24 horas.",
+    "form_error": "Algo salio mal. Intentalo de nuevo."
+  },
+  "service_descs": {
+    "desc_1": "Optimiza operaciones con flujos inteligentes que manejan tareas repetitivas, aprobaciones y procesamiento de datos automaticamente.",
+    "desc_2": "Implementa asistentes de IA que entienden tu negocio y responden a clientes instantaneamente en todos los canales.",
+    "desc_3": "Genera, optimiza y publica contenido en todos tus canales con pipelines de IA que mantienen la voz de tu marca.",
+    "desc_4": "Transforma datos en bruto en insights accionables con reportes automatizados, predicciones y deteccion de anomalias."
+  },
+  "lang_switcher": {
+    "en": "EN",
+    "es": "ES"
+  }
+}

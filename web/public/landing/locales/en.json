@@ -1,0 +1,137 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "works": "Solutions",
+    "news": "Use Cases",
+    "contact": "Contact",
+    "login": "Login",
+    "signup": "Get Started"
+  },
+  "home": {
+    "subtitle_lead": "AI Automation",
+    "title": "AIDEAS",
+    "subtitle": "Your AI technology partner",
+    "credits": "AIDEAS"
+  },
+  "about": {
+    "name": "About AIDEAS",
+    "role": "Your AI Partner",
+    "bio": "Tell us what slows your business down — we'll build the automation to fix it. From <a class=\"link-effect\" href=\"#contact\">ready-to-deploy solutions</a> to fully custom systems built from scratch, our team handles the entire process. You describe the problem, we deliver the result.",
+    "born": "Your Results",
+    "age": "AI-First",
+    "education": "Custom & Ready-Made",
+    "experience": "24/7 Support",
+    "position": "Fully Managed",
+    "location": "Remote — Worldwide",
+    "label_born": "Focus",
+    "label_age": "Approach",
+    "label_education": "Solutions",
+    "label_experience": "Support",
+    "label_position": "Model",
+    "label_location": "Reach",
+    "being_around": "Areas we transform",
+    "years_count": "17",
+    "years_label": "Industries",
+    "download_cv": "Get Started"
+  },
+  "skills": {
+    "languages_subtitle": "How we",
+    "languages_title": "Work",
+    "lang_1": "1. Tell us your problem",
+    "lang_2": "2. We design the solution",
+    "lang_3": "3. We build & deploy it",
+    "lang_4": "4. We maintain & optimize",
+    "skills_subtitle": "What we",
+    "skills_title": "Use",
+    "skill_1": "AI & Machine Learning",
+    "skill_2": "Custom Integrations",
+    "skill_3": "Workflow Automation",
+    "skill_4": "Data & Analytics"
+  },
+  "services": {
+    "service_1_subtitle": "Business",
+    "service_1_title": "Automation",
+    "service_2_subtitle": "Customer",
+    "service_2_title": "Experience",
+    "service_3_subtitle": "Content",
+    "service_3_title": "at Scale",
+    "service_4_subtitle": "Data",
+    "service_4_title": "Intelligence"
+  },
+  "facts": {
+    "subtitle": "Built for impact",
+    "title": "Why AIDEAS",
+    "fact_1_label": "Ready-to-Deploy Automations",
+    "fact_2_label": "Integrations",
+    "fact_3_label": "Hours Saved Monthly",
+    "fact_4_label": "% Uptime"
+  },
+  "testimonials": {
+    "quote_1": "We spent 20 hours a week processing emails manually. AIDEAS analyzed our workflow, built a custom automation, and now it runs itself — classification, responses, and escalation. <a class=\"link-effect\" href=\"#contact\">Completely hands-off</a>.",
+    "author_1": "Marketing Agency",
+    "quote_2": "Our support response time dropped from hours to seconds. AIDEAS deployed an AI assistant that understands our products and handles 80% of customer inquiries without human intervention.",
+    "author_2": "E-commerce Brand",
+    "quote_3": "We needed a content engine, not just a tool. AIDEAS built an end-to-end pipeline — from research to publishing — that runs our social media on autopilot while we focus on strategy.",
+    "author_3": "Digital Startup"
+  },
+  "works": {
+    "subtitle": "194+ automations ready to deploy",
+    "title": "Solutions Catalog",
+    "view_image": "Learn More",
+    "watch_video": "Watch Demo",
+    "caption": "These are just examples. We have 194+ ready-to-deploy automations — and if your need isn't covered, we build it from scratch. Whatever your challenge, we have a solution."
+  },
+  "news": {
+    "subtitle": "Real results from real businesses",
+    "title": "Use Cases",
+    "view_photos": "See Examples",
+    "view_image": "See Details",
+    "watch_video": "Watch Demo",
+    "news_1_date": "Email & Inbox",
+    "news_1_title": "Intelligent Email Workflows",
+    "news_1_txt": "From auto-classification to AI-drafted responses, we build systems that manage your inbox so your team can focus on <a class=\"link-effect\" href=\"#contact\">work that matters</a>.",
+    "news_2_date": "Documents & Data",
+    "news_2_title": "Document Intelligence",
+    "news_2_txt": "Invoices, contracts, resumes — we build AI systems that read, extract, and organize your documents automatically. No more <a class=\"link-effect\" href=\"#contact\">manual data entry</a>.",
+    "news_3_date": "Customer Support",
+    "news_3_title": "AI-Powered Support",
+    "news_3_txt": "We deploy smart assistants on WhatsApp, Telegram, or your website — trained on your business, answering customers <a class=\"link-effect\" href=\"#contact\">around the clock</a>.",
+    "news_4_date": "Marketing & Content",
+    "news_4_title": "Content Engine",
+    "news_4_txt": "We build automated pipelines that research, create, and publish content across your channels. Your brand voice, <a class=\"link-effect\" href=\"#contact\">powered by AI</a>.",
+    "label_date": "Category",
+    "label_client": "Platforms",
+    "label_duration": "Timeline",
+    "client_name": "Multiple",
+    "duration_value": "1-2 Weeks",
+    "website_btn": "Get Started"
+  },
+  "contact": {
+    "subtitle": "Have an idea? A problem? A process you hate?",
+    "title": "Let's Talk",
+    "address_subtitle": "Coverage",
+    "address_title": "Location",
+    "address_text": "United States & Canada",
+    "email_subtitle": "Write Us",
+    "email_title": "E-mail",
+    "phone_subtitle": "Call Us",
+    "phone_title": "Phone",
+    "form_name": "Name",
+    "form_email": "Email",
+    "form_message": "Describe the problem you want solved — no matter how unique, we'll find a way to automate it",
+    "form_send": "Send Message",
+    "form_success": "Message sent! We'll reach out within 24 hours.",
+    "form_error": "Something went wrong. Please try again."
+  },
+  "service_descs": {
+    "desc_1": "Streamline operations with intelligent workflows that handle repetitive tasks, approvals, and data processing automatically.",
+    "desc_2": "Deploy AI assistants that understand your business and respond to customers instantly across every channel.",
+    "desc_3": "Generate, optimize, and publish content across all your channels with AI-powered pipelines that maintain your brand voice.",
+    "desc_4": "Transform raw data into actionable insights with automated reporting, forecasting, and anomaly detection systems."
+  },
+  "lang_switcher": {
+    "en": "EN",
+    "es": "ES"
+  }
+}
