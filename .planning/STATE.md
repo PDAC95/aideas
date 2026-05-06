@@ -1,14 +1,14 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
+milestone: v1.2
 milestone_name: Admin Dashboard
-status: unknown
-last_updated: "2026-05-05T20:13:17.835Z"
+status: in_progress
+last_updated: "2026-05-06T16:59:48Z"
 progress:
-  total_phases: 11
-  completed_phases: 11
-  total_plans: 34
-  completed_plans: 34
+  total_phases: 7
+  completed_phases: 1
+  total_plans: 20
+  completed_plans: 4
 ---
 
 # Project State
@@ -22,10 +22,10 @@ See: .planning/PROJECT.md (updated 2026-05-04 after v1.2 milestone start)
 
 ## Current Position
 
-Phase: Phase 17 — Admin Foundation — Complete (3/3 plans)
-Plan: 17-03 complete; next is Phase 18 (Catalog Admin) — sketched as 3 plans: 18-01 list + filters, 18-02 create/edit form + validation, 18-03 active/featured toggles
-Status: Admin shell shipped — fresh AdminLayout + AdminSidebar + AdminHeader (no customer-component reuse), orange ADMIN badge, 5 placeholder pages, 27-key admin.* i18n namespace at full EN/ES parity, /admin/login retrofitted to use the namespace. Build green; 6 admin routes registered (/admin + 4 sub-pages + /admin/login).
-Last activity: 2026-05-05 — Plan 17-03 executed (2 tasks, 13 files, 517 LOC; admin shell UI + i18n + login retrofit)
+Phase: Phase 18 — Catalog Admin — In progress (1/3 plans)
+Plan: 18-01 complete (translations data plane); next is 18-02 (admin create/edit form + Zod validation) followed by 18-03 (active/featured inline toggles).
+Status: automation_template_translations table shipped with 528-row backfill from web/messages/{en,es}.json, RLS posture mirroring the catalog (SELECT to authenticated, admin CRUD via is_platform_staff). Customer /dashboard/catalog list and detail pages no longer call getTranslations("templates") for template-specific copy; queries JOIN the translations table by locale. Customer side renders identically to before; admin write surfaces are unblocked for 18-02/18-03.
+Last activity: 2026-05-06 — Plan 18-01 executed (2 tasks, 5 files; translations table + customer query refactor)
 
 ## Performance Metrics
 
@@ -43,8 +43,17 @@ Last activity: 2026-05-05 — Plan 17-03 executed (2 tasks, 13 files, 517 LOC; a
 | 17-01      | 10             | 2     | 1             |
 | 17-02      | 3              | 3     | 7             |
 | 17-03      | 5              | 2     | 13            |
+| 18-01      | 16             | 2     | 5             |
 
 ## Accumulated Context
+
+### Decisions (Phase 18-01 execution, 2026-05-06)
+
+- **Two-source backfill (migration + seed)** — the migration's DO block backfills against the existing 66 templates in prod, and seed.sql gains a 528-INSERT block before COMMIT for local resets (where migrations run before seed and the DO block noops). Both paths are idempotent via `INSERT ... SELECT ... ON CONFLICT DO NOTHING`.
+- **Locale-aware embed JOIN** — customer queries pass `locale` to `fetchCatalogTemplates(locale)` and `fetchTemplateBySlug(slug, locale)`, then embed-join `automation_template_translations` filtered by `translations.locale` and (for the list query) `translations.field='name'`. One round trip per page; resolved display strings come back in a single rowset.
+- **Keep messages/templates JSON namespace untouched** — backfill seeded the table from those values, no other consumer was identified, and removing keys from a shipped i18n bundle has its own risks. Cleanup deferred until callers are inventoried.
+- **Defensive null fallbacks in the query layer** — `displayName` falls back to `slug`; the detail query returns `null` if no translation rows are returned. Cheap safety net for any admin DELETE that orphans translations later.
+- **Auto-fixed pre-existing slug corruption** — `seed.sql` shipped two corrupted slugs (`'a0dience-segmentation'` -> `'audience-segmentation'`, `'a0to-response-email'` -> `'auto-response-email'`) that were already user-visible at the URL level. Fixed inline as Rule 1 (Bug). Remaining `a0` typos in `features[]` / `use_cases[]` logged in `.planning/phases/18-catalog-admin/deferred-items.md`.
 
 ### Decisions (Phase 17-03 execution, 2026-05-05)
 
@@ -109,12 +118,13 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 ### Blockers/Concerns
 
 - v1.1 build blocker: `next/dynamic ssr:false` in `web/src/app/(dashboard)/dashboard/automations/[id]/page.tsx:16` breaks `npm run build` under Next.js 16 + Turbopack. Targeted by Phase 16 (CARRY-01) so CI is green before Phase 17 begins.
+- Pre-existing `a0` typos in `seed.sql` `features[]` / `use_cases[]` and a few `automation_requests` body strings (~25 occurrences). Customer-visible only as faint copy issues (catalog list does not render `features` / `use_cases`). Logged in `.planning/phases/18-catalog-admin/deferred-items.md` for a separate cleanup commit.
 
 ### Pending Todos
 
-(none — fresh roadmap, ready to plan Phase 16)
+(none — Plan 18-02 next)
 
 ## Session Continuity
 
-**Last session:** 2026-05-05 — Executed Plan 17-03 (Admin shell UI). Stopped at: Completed 17-03-PLAN.md.
-**Next action:** Phase 17 is complete (3/3 plans). Run `/gsd:verify-work 17` to UAT the admin shell end-to-end (login, navigate sidebar, switch language, logout, verify customer session unaffected). After verification passes, plan Phase 18 (Catalog Admin) — first capability phase that consumes the admin shell.
+**Last session:** 2026-05-06 — Executed Plan 18-01 (translations data plane). Stopped at: Completed 18-01-PLAN.md.
+**Next action:** Plan 18-02 (admin create/edit form with Zod validation, draft mode, and grouped sections) is up next on the `feature/phase-18-catalog-admin` branch. After 18-02 and 18-03 land, run `/gsd:verify-work 18` and merge the branch back to main.
