@@ -411,6 +411,73 @@ This project uses the GSD planning methodology. All planning artifacts live in `
 - **Never force push** without explicit permission
 - **Stage specific files** — avoid `git add .` or `git add -A`
 
+### Branching Strategy (MANDATORY)
+
+**Every phase MUST be developed on its own feature branch. Never commit phase work directly to `main`.**
+
+#### Branch Naming
+
+```
+feature/phase-XX-<phase-slug>
+```
+
+**Examples:**
+- `feature/phase-18-catalog-admin`
+- `feature/phase-19-requests-inbox`
+- `feature/phase-20-automations-admin`
+
+For hotfixes outside the phase flow:
+- `fix/<short-description>` (e.g., `fix/auth-callback-cookies`)
+
+#### Phase Lifecycle (MANDATORY)
+
+1. **Before starting a phase**: ensure `main` is clean (`git status` empty), pull latest (`git pull origin main`)
+2. **Create the branch**: `git checkout -b feature/phase-XX-<slug>`
+3. **Develop on the branch**: every commit during the phase goes here, never to `main`
+4. **Push the branch frequently**: `git push -u origin feature/phase-XX-<slug>` (so work is backed up and visible)
+5. **When phase verification PASSES**: open a PR (or merge locally if solo)
+6. **Merge to main**:
+   - Solo dev: `git checkout main && git merge --no-ff feature/phase-XX-<slug>` (preserves phase history)
+   - Team: open a PR, get review, squash-merge or merge-commit per repo convention
+7. **Push main**: `git push origin main`
+8. **Delete the branch**: `git branch -d feature/phase-XX-<slug>` and `git push origin --delete feature/phase-XX-<slug>`
+9. **Tag if it closes a milestone**: `git tag -a vX.Y -m "..."` then `git push origin vX.Y`
+
+#### Pre-Merge Checklist (MUST be true before merging to main)
+
+- [ ] All phase plans have SUMMARY.md
+- [ ] VERIFICATION.md status is `passed` (or `human_needed` and human UAT done)
+- [ ] `npm run build` passes locally
+- [ ] `npm run lint` passes locally
+- [ ] Manual UAT completed (golden path + responsive + dark mode + EN/ES)
+- [ ] No leftover `console.log`, `TODO` markers, or commented-out code
+- [ ] No secrets, `.env*`, or large binary files staged
+- [ ] All staged files reviewed with `git diff --cached`
+
+### Working Tree Hygiene (MANDATORY)
+
+- **Never start a new phase if `git status` is dirty.** Clean up first: commit, stash, or discard.
+- **Never let modified files accumulate across sessions.** Triage and commit/discard at end of each session.
+- **Never modify an already-committed migration file.** If a migration has a bug, write a new fix migration with a later timestamp (`YYYYMMDDHHMMSS_fix_<description>.sql`).
+- **Never commit local CLI artifacts.** `supabase/.branches/`, `supabase/snippets/`, `.next/`, `node_modules/` must be in `.gitignore`.
+
+### Push & Remote Discipline
+
+- **Push frequently** to backup work (at least daily, ideally per commit)
+- **Never let local main get more than ~5 commits ahead of origin/main** without pushing
+- **Never push to `main` if branch protection is on** — open a PR
+- **Never force-push to `main` or `develop`** under any circumstance
+- **Force-push to feature branches** only with `--force-with-lease` (safer than `--force`)
+
+### When Things Go Wrong
+
+| Situation | Action |
+|-----------|--------|
+| Committed to wrong branch | `git reset HEAD~N` to unstage, `git checkout correct-branch`, re-commit |
+| Committed sensitive data | STOP, do NOT push. Reset and rewrite. If already pushed, rotate the secret and use `git filter-repo` |
+| Merge conflict | Resolve manually, never `git checkout --theirs/--ours` blindly |
+| Want to undo a public commit | `git revert <sha>` (creates a new commit), never rewrite published history |
+
 ---
 
 ## TESTING STRATEGY
