@@ -19,32 +19,15 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
     redirect("/login");
   }
 
-  // Parallel fetch: templates, catalog chrome translations, locale
-  const [templates, t, locale] = await Promise.all([
-    fetchCatalogTemplates(),
+  // Resolve locale first so we can pass it to fetchCatalogTemplates.
+  const locale = await getLocale();
+
+  // Parallel fetch: locale-aware templates (with displayName already resolved
+  // from automation_template_translations) and catalog chrome translations.
+  const [templates, t] = await Promise.all([
+    fetchCatalogTemplates(locale),
     getTranslations("dashboard.catalog"),
-    getLocale(),
   ]);
-
-  // Template name translations (namespace: "templates")
-  const tTemplates = await getTranslations("templates");
-
-  // Resolve display names for each template
-  // template.name stores keys like "templates.lead_followup_email.name"
-  // extract middle segment and look up via tTemplates("lead_followup_email.name")
-  const templatesWithNames = templates.map((template) => {
-    // name format: "templates.{slug_snake}.name"
-    const parts = template.name.split(".");
-    // parts[0] = "templates", parts[1] = slug_snake, parts[2] = "name"
-    const slugSnake = parts[1] ?? template.slug.replace(/-/g, "_");
-    let displayName: string;
-    try {
-      displayName = tTemplates(`${slugSnake}.name`);
-    } catch {
-      displayName = slugSnake.replace(/_/g, " ");
-    }
-    return { ...template, displayName };
-  });
 
   // Read search params (Next.js 15+ — searchParams is a Promise)
   const { category, industry, search } = await searchParams;
@@ -84,7 +67,7 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
 
   return (
     <CatalogClient
-      templates={templatesWithNames}
+      templates={templates}
       initialCategory={category ?? "all"}
       initialIndustry={industry ?? "all"}
       initialSearch={search ?? ""}
