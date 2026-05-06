@@ -135,7 +135,12 @@
       "Bash(git -C c:/dev/12ai diff web/src/components/dashboard/sign-out.tsx web/src/components/dashboard/top-automation-card.tsx)",
       "Bash(git -C c:/dev/12ai diff web/src/app/\\\\\\(auth\\\\\\)/auth/callback/route.ts)",
       "Bash(git -C c:/dev/12ai diff README.md)",
-      "Bash(git -C c:/dev/12ai diff .planning/config.json .claude/settings.json .claude/settings.local.json)"
+      "Bash(git -C c:/dev/12ai diff .planning/config.json .claude/settings.json .claude/settings.local.json)",
+      "Bash(git -C c:/dev/12ai add .planning/phases/18-catalog-admin/18-01-PLAN.md .planning/phases/18-catalog-admin/18-02-PLAN.md)",
+      "Bash(git -C c:/dev/12ai commit -m \"docs\\(18\\): apply plan-checker revisions \\(9th column pricing_tier in 18-02, parity check in 18-01\\)\")",
+      "Bash(git -C c:/dev/12ai status)",
+      "Bash(git -C c:/dev/12ai add .claude/settings.local.json)",
+      "Bash(git -C c:/dev/12ai commit -m \"chore: update claude local permissions\")"
     ],
     "additionalDirectories": [
       "c:\\dev\\12ai\\.planning\\debug",
