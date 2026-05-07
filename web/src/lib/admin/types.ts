@@ -93,3 +93,88 @@ export interface AdminRequestStatusCounts {
   approved: number;
   rejected: number;
 }
+
+/**
+ * The 7 real status values for `automations.status` (CHECK constraint set by
+ * migration 20260305000002 + 20260409000001 in_setup expansion).
+ */
+export type AdminAutomationStatus =
+  | "draft"
+  | "pending_review"
+  | "in_setup"
+  | "active"
+  | "paused"
+  | "failed"
+  | "archived";
+
+/**
+ * Status tabs surfaced in the admin Automations list. Default tab is "active"
+ * (the most-trafficked operational view). The 5 main statuses each get a tab;
+ * "draft" and "pending_review" are intentionally NOT given tabs — they're
+ * intermediate states automations rarely sit in (per CONTEXT.md "Claude's
+ * Discretion") and would clutter the tab strip. Rows in those statuses still
+ * surface in the per-row "status" badge if a query somehow returns them.
+ */
+export type AdminAutomationTab =
+  | "active"
+  | "in_setup"
+  | "paused"
+  | "failed"
+  | "archived";
+
+export const ADMIN_AUTOMATION_TABS: readonly AdminAutomationTab[] = [
+  "active",
+  "in_setup",
+  "paused",
+  "failed",
+  "archived",
+] as const;
+
+/**
+ * Tab counters — one number per tab. Used by the list page to render
+ * "(N)" on each tab without an extra round trip per tab.
+ */
+export type AdminAutomationStatusCounts = Record<AdminAutomationTab, number>;
+
+/**
+ * Single row in the admin automations list table. The 6 columns the table
+ * renders map 1:1 to fields below; `id` is carried for the row link.
+ */
+export interface AdminAutomationRow {
+  id: string;
+  name: string;
+  organizationId: string;
+  organizationName: string;
+  templateId: string | null;
+  templateDisplayName: string | null; // null when template_id is null (custom automation)
+  status: AdminAutomationStatus | string; // string for forward-compat
+  executionsCount: number;
+  createdAt: string; // ISO 8601
+}
+
+/**
+ * Filter-bar option shapes. Org and Template dropdowns are populated by
+ * fetchAdminAutomationFilterOptions, which returns the orgs and templates
+ * that have at least one automation row. Empty values mean "no filter".
+ */
+export interface AdminAutomationOrgOption {
+  id: string;
+  name: string;
+}
+
+export interface AdminAutomationTemplateOption {
+  id: string;
+  displayName: string;
+}
+
+/**
+ * Combined input shape for fetchAdminAutomations. The list page parses
+ * searchParams into this shape and passes it through.
+ */
+export interface AdminAutomationListFilters {
+  tab: AdminAutomationTab;
+  organizationId: string | null;
+  templateId: string | null;
+  nameQuery: string | null;
+  locale: string;
+}
