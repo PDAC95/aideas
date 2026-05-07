@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { fetchAdminAutomationDetail } from "@/lib/admin/automation-queries";
 import { AdminAutomationDetail } from "@/components/admin/automations/admin-automation-detail";
+import { AutomationTransitionButtons } from "@/components/admin/automations/automation-transition-buttons";
 
 interface AdminAutomationDetailPageProps {
   params: Promise<{ id: string }>;
@@ -68,12 +69,45 @@ export default async function AdminAutomationDetailPage({
     },
   };
 
+  const actionTranslations = {
+    activate: t("actions.activate"),
+    activating: t("actions.activating"),
+    pause: t("actions.pause"),
+    pausing: t("actions.pausing"),
+    resume: t("actions.resume"),
+    resuming: t("actions.resuming"),
+    archive: t("actions.archive"),
+    errorStateChanged: t("actions.errorStateChanged"),
+    errorGeneric: t("actions.errorGeneric"),
+    archiveModal: {
+      title: t("archiveModal.title"),
+      body: t("archiveModal.body"),
+      cancel: t("archiveModal.cancel"),
+      confirm: t("archiveModal.confirm"),
+      confirming: t("archiveModal.confirming"),
+      errorStateChanged: t("archiveModal.errorStateChanged"),
+      errorGeneric: t("archiveModal.errorGeneric"),
+    },
+  };
+
+  const transitionableStatuses = ["in_setup", "active", "paused"] as const;
+  const isTransitionable = (
+    transitionableStatuses as readonly string[]
+  ).includes(detail.status as string);
+  const actions = isTransitionable ? (
+    <AutomationTransitionButtons
+      automationId={detail.id}
+      currentStatus={detail.status as "in_setup" | "active" | "paused"}
+      translations={actionTranslations}
+    />
+  ) : null;
+
   return (
     <AdminAutomationDetail
       detail={detail}
       locale={locale}
       translations={translations}
-      actions={null}
+      actions={actions}
     />
   );
 }
