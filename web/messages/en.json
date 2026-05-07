@@ -1001,6 +1001,26 @@
         },
         "setupNotes": {
           "sectionTitle": "Setup notes"
+        },
+        "actions": {
+          "activate": "Activate",
+          "activating": "Activating...",
+          "pause": "Pause",
+          "pausing": "Pausing...",
+          "resume": "Resume",
+          "resuming": "Resuming...",
+          "archive": "Archive",
+          "errorStateChanged": "This automation was already updated by another staff member. Reloading.",
+          "errorGeneric": "Something went wrong. Please try again."
+        },
+        "archiveModal": {
+          "title": "Archive this automation?",
+          "body": "Archived automations stop running and disappear from the customer's active list. This is irreversible from the customer side; staff can still see archived rows in the admin list.",
+          "cancel": "Cancel",
+          "confirm": "Archive",
+          "confirming": "Archiving...",
+          "errorStateChanged": "This automation was already updated by another staff member. Reloading.",
+          "errorGeneric": "Something went wrong. Please try again."
         }
       }
     },

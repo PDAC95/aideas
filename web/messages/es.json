@@ -1001,6 +1001,26 @@
         },
         "setupNotes": {
           "sectionTitle": "Notas de configuracion"
+        },
+        "actions": {
+          "activate": "Activar",
+          "activating": "Activando...",
+          "pause": "Pausar",
+          "pausing": "Pausando...",
+          "resume": "Reanudar",
+          "resuming": "Reanudando...",
+          "archive": "Archivar",
+          "errorStateChanged": "Esta automatizacion ya fue actualizada por otro miembro del equipo. Recargando.",
+          "errorGeneric": "Algo salio mal. Intentalo de nuevo."
+        },
+        "archiveModal": {
+          "title": "Archivar esta automatizacion?",
+          "body": "Las automatizaciones archivadas dejan de ejecutarse y desaparecen de la lista activa del cliente. Esto es irreversible desde el lado del cliente; el equipo aun puede ver las filas archivadas en la lista de admin.",
+          "cancel": "Cancelar",
+          "confirm": "Archivar",
+          "confirming": "Archivando...",
+          "errorStateChanged": "Esta automatizacion ya fue actualizada por otro miembro del equipo. Recargando.",
+          "errorGeneric": "Algo salio mal. Intentalo de nuevo."
         }
       }
     },
