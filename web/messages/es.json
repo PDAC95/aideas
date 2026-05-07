@@ -919,6 +919,36 @@
         "body": "Lista de clientes, vista 360 y notas internas en la Fase 21."
       }
     },
+    "requests": {
+      "list": {
+        "title": "Bandeja de solicitudes",
+        "subtitle": "Solicitudes de automatizacion de clientes pendientes de revision.",
+        "tabs": {
+          "pending": "Pendientes ({count})",
+          "approved": "Aprobadas ({count})",
+          "rejected": "Rechazadas ({count})"
+        },
+        "columns": {
+          "customer": "Cliente",
+          "template": "Plantilla",
+          "status": "Estado",
+          "customRequirements": "Requisitos personalizados",
+          "createdAt": "Creada"
+        },
+        "statusBadges": {
+          "pending": "Pendiente",
+          "approved": "Aprobada",
+          "rejected": "Rechazada"
+        },
+        "empty": {
+          "pending": "Nada en espera. Las nuevas solicitudes de clientes aparecen aqui primero.",
+          "approved": "Aun no hay solicitudes aprobadas. Aprueba desde la pestana Pendientes para poblar esta lista.",
+          "rejected": "No hay solicitudes rechazadas."
+        },
+        "noTemplate": "Solicitud personalizada",
+        "noRequirements": "Sin requisitos adicionales"
+      }
+    },
     "catalog": {
       "title": "Plantillas",
       "subtitle": "Administra el catalogo cliente",

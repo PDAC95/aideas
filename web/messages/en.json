@@ -919,6 +919,36 @@
         "body": "Client list, 360-degree detail, and internal notes ship in Phase 21."
       }
     },
+    "requests": {
+      "list": {
+        "title": "Requests Inbox",
+        "subtitle": "Customer automation requests waiting for review.",
+        "tabs": {
+          "pending": "Pending ({count})",
+          "approved": "Approved ({count})",
+          "rejected": "Rejected ({count})"
+        },
+        "columns": {
+          "customer": "Customer",
+          "template": "Template",
+          "status": "Status",
+          "customRequirements": "Custom requirements",
+          "createdAt": "Created"
+        },
+        "statusBadges": {
+          "pending": "Pending",
+          "approved": "Approved",
+          "rejected": "Rejected"
+        },
+        "empty": {
+          "pending": "Nothing waiting. New customer requests appear here first.",
+          "approved": "No approved requests yet. Approve from the Pending tab to populate this list.",
+          "rejected": "No rejected requests."
+        },
+        "noTemplate": "Custom request",
+        "noRequirements": "No additional requirements"
+      }
+    },
     "catalog": {
       "title": "Templates",
       "subtitle": "Manage the customer-facing catalog",
