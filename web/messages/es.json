@@ -906,10 +906,6 @@
         "title": "Admin de catalogo",
         "body": "El CRUD de plantillas llega en la Fase 18."
       },
-      "requests": {
-        "title": "Bandeja de solicitudes",
-        "body": "Lista, detalle y flujo de aprobacion/rechazo en la Fase 19."
-      },
       "automations": {
         "title": "Admin de automatizaciones",
         "body": "Lista global entre organizaciones y transiciones de estado en la Fase 20."
@@ -947,6 +943,70 @@
         },
         "noTemplate": "Solicitud personalizada",
         "noRequirements": "Sin requisitos adicionales"
+      },
+      "detail": {
+        "backLink": "Volver a solicitudes",
+        "sections": {
+          "customer": "Cliente",
+          "request": "Solicitud",
+          "timeline": "Linea de tiempo",
+          "result": "Resultado"
+        },
+        "customer": {
+          "org": "Organizacion",
+          "slug": "Slug",
+          "plan": "Plan",
+          "noPlan": "Sin plan activo",
+          "signupDate": "Fecha de registro",
+          "activeAutomations": "Automatizaciones activas",
+          "requester": "Solicitada por",
+          "viewClient": "Ver perfil del cliente"
+        },
+        "request": {
+          "title": "Titulo",
+          "template": "Plantilla",
+          "customRequirements": "Requisitos personalizados",
+          "urgency": "Urgencia",
+          "urgencyValues": {
+            "low": "Baja",
+            "normal": "Normal",
+            "urgent": "Urgente"
+          }
+        },
+        "timeline": {
+          "createdBy": "Creada por {user}",
+          "approvedBy": "Aprobada por {user}",
+          "rejectedBy": "Rechazada por {user}",
+          "staffPlaceholder": "Equipo AIDEAS"
+        },
+        "result": {
+          "approvedTitle": "Esta solicitud fue aprobada.",
+          "approvedBody": "Se provisiono una automatizacion en modo de configuracion.",
+          "automationLink": "Abrir automatizacion",
+          "rejectedTitle": "Esta solicitud fue rechazada.",
+          "rejectedReason": "Motivo: {reason}",
+          "rejectedNoReason": "No se registro un motivo."
+        },
+        "actions": {
+          "approve": "Aprobar",
+          "approving": "Aprobando...",
+          "reject": "Rechazar",
+          "errorStateChanged": "Esta solicitud ya fue procesada por otro miembro del equipo. Recargando.",
+          "errorGeneric": "Algo salio mal. Intentalo de nuevo."
+        },
+        "rejectModal": {
+          "title": "Rechazar esta solicitud",
+          "body": "Explica al cliente por que se rechaza su solicitud. El motivo se envia en una notificacion al cliente — redactalo en consecuencia.",
+          "placeholder": "Explica por que esta solicitud no puede cumplirse (10-500 caracteres)",
+          "cancel": "Cancelar",
+          "confirm": "Rechazar solicitud",
+          "confirming": "Rechazando...",
+          "errorTooShort": "El motivo debe tener al menos 10 caracteres.",
+          "errorTooLong": "El motivo debe tener 500 caracteres o menos.",
+          "errorStateChanged": "Esta solicitud ya fue procesada por otro miembro del equipo. Recargando.",
+          "errorGeneric": "Algo salio mal. Intentalo de nuevo.",
+          "charCounter": "{count}/{max}"
+        }
       }
     },
     "catalog": {

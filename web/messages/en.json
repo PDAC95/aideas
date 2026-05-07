@@ -906,10 +906,6 @@
         "title": "Catalog Admin",
         "body": "Template CRUD lands in Phase 18."
       },
-      "requests": {
-        "title": "Requests Inbox",
-        "body": "Request list, detail, and approve/reject flow ship in Phase 19."
-      },
       "automations": {
         "title": "Automations Admin",
         "body": "Global cross-org list and status transitions ship in Phase 20."
@@ -947,6 +943,70 @@
         },
         "noTemplate": "Custom request",
         "noRequirements": "No additional requirements"
+      },
+      "detail": {
+        "backLink": "Back to requests",
+        "sections": {
+          "customer": "Customer",
+          "request": "Request",
+          "timeline": "Status timeline",
+          "result": "Outcome"
+        },
+        "customer": {
+          "org": "Organization",
+          "slug": "Slug",
+          "plan": "Plan",
+          "noPlan": "No active plan",
+          "signupDate": "Signup date",
+          "activeAutomations": "Active automations",
+          "requester": "Requested by",
+          "viewClient": "View client profile"
+        },
+        "request": {
+          "title": "Title",
+          "template": "Template",
+          "customRequirements": "Custom requirements",
+          "urgency": "Urgency",
+          "urgencyValues": {
+            "low": "Low",
+            "normal": "Normal",
+            "urgent": "Urgent"
+          }
+        },
+        "timeline": {
+          "createdBy": "Created by {user}",
+          "approvedBy": "Approved by {user}",
+          "rejectedBy": "Rejected by {user}",
+          "staffPlaceholder": "AIDEAS staff"
+        },
+        "result": {
+          "approvedTitle": "This request was approved.",
+          "approvedBody": "An automation has been provisioned in setup mode.",
+          "automationLink": "Open automation",
+          "rejectedTitle": "This request was rejected.",
+          "rejectedReason": "Reason: {reason}",
+          "rejectedNoReason": "No reason was recorded."
+        },
+        "actions": {
+          "approve": "Approve",
+          "approving": "Approving...",
+          "reject": "Reject",
+          "errorStateChanged": "This request was already processed by another staff member. Reloading.",
+          "errorGeneric": "Something went wrong. Please try again."
+        },
+        "rejectModal": {
+          "title": "Reject this request",
+          "body": "Tell the customer why their request is being rejected. The reason is sent to them in a notification — phrase accordingly.",
+          "placeholder": "Explain why this request cannot be fulfilled (10-500 chars)",
+          "cancel": "Cancel",
+          "confirm": "Reject request",
+          "confirming": "Rejecting...",
+          "errorTooShort": "Reason must be at least 10 characters.",
+          "errorTooLong": "Reason must be 500 characters or fewer.",
+          "errorStateChanged": "This request was already processed by another staff member. Reloading.",
+          "errorGeneric": "Something went wrong. Please try again.",
+          "charCounter": "{count}/{max}"
+        }
       }
     },
     "catalog": {
