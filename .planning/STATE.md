@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Admin Dashboard
 status: in_progress
-last_updated: "2026-05-06T17:59:14Z"
+last_updated: "2026-05-07T13:28:04Z"
 progress:
   total_phases: 7
   completed_phases: 2
   total_plans: 20
-  completed_plans: 6
+  completed_plans: 7
 ---
 
 # Project State
@@ -18,14 +18,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-04 after v1.2 milestone start)
 
 **Core value:** Customers can monitor automations, request new ones, and see their ROI from a single bilingual dashboard — paired with an operations team who can fulfill what they request.
-**Current focus:** v1.2 Admin Dashboard — Phase 17 Admin Foundation complete (3/3 plans); Phase 18 Catalog Admin complete (3/3 plans); next is Phase 19 Requests Inbox.
+**Current focus:** v1.2 Admin Dashboard — Phase 17 Admin Foundation complete (3/3 plans); Phase 18 Catalog Admin complete (3/3 plans); Phase 19 Requests Inbox in progress (1/3 plans).
 
 ## Current Position
 
-Phase: Phase 18 — Catalog Admin — Complete (3/3 plans). Ready for `/gsd:verify-work 18` and merge.
-Plan: 18-03 complete (admin create/edit form). All Phase 18 plans shipped.
-Status: /admin/catalog/new and /admin/catalog/[slug]/edit pages alive with single-page grouped form (5 sections: Basic info, Categorization, Pricing, Metrics, Translations). Slug auto-generates from name_en via NFKD slugify; locked on edit. Industries render as 6 togglable chips; connected_apps as multi-select with chips + 12-app datalist. Strict Zod validation: adminCatalogTemplateActiveSchema (when is_active=true) requires all 8 translations + 4 numerics + at least one industry; adminCatalogTemplateBaseSchema (when is_active=false) skips activation gates so partial work can be saved as draft. Custom RHF resolver bridges form-layer USD strings + blank-as-null numerics to Zod-layer cents + integers + nullables. createTemplate inserts the template row + 8 translation rows atomically (rollback on partial failure); updateTemplate UPDATEs the templates row + UPSERTs 8 translation rows on (template_id, locale, field). Both revalidate /admin/catalog AND /dashboard/catalog. admin.catalog.form.* i18n namespace added (47 keys per locale, 729 total parity). 28 routes built (up from 26).
-Last activity: 2026-05-06 — Plan 18-03 executed (2 tasks, 8 files; create/edit form + actions + schemas + i18n form keys).
+Phase: Phase 19 — Requests Inbox — In progress (1/3 plans).
+Plan: 19-01 complete (data plane: setup_notes migration + admin request queries + shared types). 19-02 (list page UI) is next.
+Status: automations gains a nullable setup_notes TEXT column (idempotent migration 20260508000001) so the future approve action can persist customer custom_requirements onto the new automation. web/src/lib/admin/types.ts ships AdminRequestStatus | AdminRequestRow | AdminRequestDetail | AdminRequestStatusCounts. web/src/lib/admin/request-queries.ts ships fetchAdminRequests({status, locale}) (FIFO when pending else DESC, embed-joined with org + locale-filtered template translation), fetchAdminRequestStatusCounts() (single-pass tab counters bucketed client-side), fetchAdminRequestDetail(id, locale) (full detail with org plan from subscriptions, active-like automations count, deterministic resultingAutomationId when approved). All three gated by assertPlatformStaff and throw on non-ok. Defensive normalization for the subscription !left embed handles both object-shape and array-shape returns. Existing /admin/requests placeholder page untouched.
+Last activity: 2026-05-07 — Plan 19-01 executed (2 tasks, 3 files; migration + types + queries).
 
 ## Performance Metrics
 
@@ -46,8 +46,18 @@ Last activity: 2026-05-06 — Plan 18-03 executed (2 tasks, 8 files; create/edit
 | 18-01      | 16             | 2     | 5             |
 | 18-02      | 10             | 2     | 9             |
 | 18-03      | 12             | 2     | 8             |
+| 19-01      | 4              | 2     | 3             |
 
 ## Accumulated Context
+
+### Decisions (Phase 19-01 execution, 2026-05-07)
+
+- **`automations.setup_notes` is plain nullable TEXT.** No CHECK, no default. NULL is the correct sentinel for automations not created via the approve-request flow; populated only when the operator approves a request and we copy `automation_requests.description` (the customer's custom_requirements text) onto the new row. Migration `20260508000001_automations_setup_notes.sql` uses `ADD COLUMN IF NOT EXISTS` for re-run safety.
+- **`resultingAutomationId` is derived per-call, not persisted as a column.** `fetchAdminRequestDetail` matches `(organization_id, template_id, created_at >= request.created_at)` and takes the earliest hit. Avoids a schema migration; deterministic at v1.2 volume; if collisions ever surface in v1.3 we add a foreign key. Pattern: derive ephemeral relations on the read path before paying for a column.
+- **Single-query tab counts, bucketed client-side.** `fetchAdminRequestStatusCounts` issues ONE `select id, status` for the three statuses we surface, then buckets in JS — three separate count queries would burn three RTTs. Same trick is reusable for any small fixed-cardinality status counter (Phase 20 automations admin tabs, Phase 22 home dashboard).
+- **All admin query functions throw on auth failure.** Mirrors `fetchAdminCatalogTemplates`. The admin layout (Phase 17-03) gates the route, so reaching these without staff is a programmer error — not user input. A `Result` union here would push dead code into every caller.
+- **Defensive `subscription` embed-shape normalization.** Although `subscriptions.UNIQUE(organization_id)` makes it 1-to-1, Supabase JS's PostgREST resolver sometimes returns single-row LEFT embeds as `T | null` and sometimes as `T[]`. `fetchAdminRequestDetail` accepts both via `Array.isArray(detail.subscription) ? detail.subscription[0] ?? null : detail.subscription ?? null`. Reusable defense for any future `!left` embed on a UNIQUE-FK relation (Phase 20 automations -> latest execution, Phase 21 clients -> primary owner).
+- **Admin shared types live in `web/src/lib/admin/types.ts`.** Future admin features (Phase 20 automations admin, Phase 21 clients admin) extend this single file rather than each shipping their own; query files import from it. Keeps the AdminX type surface discoverable.
 
 ### Decisions (Phase 18-03 execution, 2026-05-06)
 
@@ -152,9 +162,9 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 
 ### Pending Todos
 
-(none — Phase 18 complete, ready for `/gsd:verify-work 18` then merge `feature/phase-18-catalog-admin` back to `main`; next is `/gsd:plan-phase 19` for Requests Inbox)
+(none — Phase 19-01 data plane is in; Plan 19-02 list page UI is next on the same branch `feature/phase-19-requests-inbox`. Plan 19-03 will land approve/reject server actions and the detail page, plus a new migration `20260508000001_automations_setup_notes.sql` apply on the dev DB before integration testing.)
 
 ## Session Continuity
 
-**Last session:** 2026-05-06 — Executed Plan 18-03 (admin catalog create/edit form). Stopped at: Completed 18-03-PLAN.md.
-**Next action:** Phase 18 (Catalog Admin) is complete (3/3 plans). Run `/gsd:verify-work 18` to UAT the full admin catalog flow (list + filters + toggles + warn modal + create + edit + draft mode + bilingual + customer-side reflection). After verification passes, merge `feature/phase-18-catalog-admin` back to `main`. Then start Phase 19 (Requests Inbox) with `/gsd:discuss-phase 19` -> `/gsd:plan-phase 19` -> `/gsd:execute-phase 19`.
+**Last session:** 2026-05-07 — Executed Plan 19-01 (data plane: setup_notes migration + admin request queries + shared types). Stopped at: Completed 19-01-PLAN.md.
+**Next action:** Continue Phase 19 with Plan 19-02 (list page UI). The list page consumes `fetchAdminRequests({status, locale})` and `fetchAdminRequestStatusCounts()` from `web/src/lib/admin/request-queries.ts` — no new Supabase calls in the route layer. After 19-02 ships, Plan 19-03 wires the detail page + approve/reject server actions and an automation-id derivation that depends on the new `automations.setup_notes` column.
