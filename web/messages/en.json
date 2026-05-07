@@ -906,13 +906,55 @@
         "title": "Catalog Admin",
         "body": "Template CRUD lands in Phase 18."
       },
-      "automations": {
-        "title": "Automations Admin",
-        "body": "Global cross-org list and status transitions ship in Phase 20."
-      },
       "clients": {
         "title": "Clients Admin",
         "body": "Client list, 360-degree detail, and internal notes ship in Phase 21."
+      }
+    },
+    "automations": {
+      "list": {
+        "title": "Automations",
+        "subtitle": "Every customer automation across all organizations.",
+        "tabs": {
+          "active": "Active ({count})",
+          "in_setup": "In setup ({count})",
+          "paused": "Paused ({count})",
+          "failed": "Failed ({count})",
+          "archived": "Archived ({count})"
+        },
+        "filters": {
+          "orgLabel": "Organization",
+          "orgAll": "All organizations",
+          "templateLabel": "Template",
+          "templateAll": "All templates",
+          "searchLabel": "Search by name",
+          "searchPlaceholder": "Filter by automation name..."
+        },
+        "columns": {
+          "name": "Name",
+          "customer": "Customer",
+          "template": "Template",
+          "status": "Status",
+          "executions": "Executions",
+          "createdAt": "Created"
+        },
+        "statusBadges": {
+          "active": "Active",
+          "in_setup": "In setup",
+          "paused": "Paused",
+          "failed": "Failed",
+          "archived": "Archived",
+          "draft": "Draft",
+          "pending_review": "Pending review"
+        },
+        "empty": {
+          "active": "No active automations match the current filters.",
+          "in_setup": "No automations are currently in setup.",
+          "paused": "No paused automations.",
+          "failed": "No failed automations. (That's a good thing.)",
+          "archived": "No archived automations."
+        },
+        "noTemplate": "Custom"
       }
     },
     "requests": {

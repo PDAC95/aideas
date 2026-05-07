@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import type {
@@ -48,17 +48,27 @@ export function AdminAutomationsFilters({
   const params = useSearchParams();
   const [, startTransition] = useTransition();
 
-  // Local mirrors so the inputs feel snappy (controlled).
+  // Local mirrors so the inputs feel snappy (controlled). We sync to URL
+  // changes during render via the "useState as cache" pattern (React docs:
+  // "Storing information from previous renders") — when the URL signature
+  // diverges from the last one we observed, we re-seed local state from the
+  // URL. This avoids the cascading-renders pitfall of setState-in-useEffect.
+  const urlOrg = params.get("org") ?? "";
+  const urlTemplate = params.get("template") ?? "";
+  const urlQuery = params.get("q") ?? "";
+  const urlSig = `${urlOrg}|${urlTemplate}|${urlQuery}`;
+
   const [orgValue, setOrgValue] = useState(initial.org ?? "");
   const [templateValue, setTemplateValue] = useState(initial.template ?? "");
   const [queryValue, setQueryValue] = useState(initial.q ?? "");
+  const [lastSyncedSig, setLastSyncedSig] = useState<string>(urlSig);
 
-  // Re-sync local state when the URL changes externally (e.g., tab click resets the URL).
-  useEffect(() => {
-    setOrgValue(params.get("org") ?? "");
-    setTemplateValue(params.get("template") ?? "");
-    setQueryValue(params.get("q") ?? "");
-  }, [params]);
+  if (urlSig !== lastSyncedSig) {
+    setLastSyncedSig(urlSig);
+    setOrgValue(urlOrg);
+    setTemplateValue(urlTemplate);
+    setQueryValue(urlQuery);
+  }
 
   const pushUrl = (overrides: {
     org?: string;
