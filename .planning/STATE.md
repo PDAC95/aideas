@@ -1,14 +1,27 @@
 ---
 gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: Admin Dashboard
+status: unknown
+last_updated: "2026-05-07T18:20:57.491Z"
+progress:
+  total_phases: 13
+  completed_phases: 13
+  total_plans: 40
+  completed_plans: 40
+---
+
+---
+gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Admin Dashboard
 status: in_progress
-last_updated: "2026-05-06T17:59:14Z"
+last_updated: "2026-05-07T13:47:31Z"
 progress:
   total_phases: 7
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 20
-  completed_plans: 6
+  completed_plans: 9
 ---
 
 # Project State
@@ -18,14 +31,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-04 after v1.2 milestone start)
 
 **Core value:** Customers can monitor automations, request new ones, and see their ROI from a single bilingual dashboard — paired with an operations team who can fulfill what they request.
-**Current focus:** v1.2 Admin Dashboard — Phase 17 Admin Foundation complete (3/3 plans); Phase 18 Catalog Admin complete (3/3 plans); next is Phase 19 Requests Inbox.
+**Current focus:** v1.2 Admin Dashboard — Phase 17 Admin Foundation complete (3/3 plans); Phase 18 Catalog Admin complete (3/3 plans); Phase 19 Requests Inbox complete (3/3 plans, awaiting human UAT). Phase 20 (Automations Admin) is next.
 
 ## Current Position
 
-Phase: Phase 18 — Catalog Admin — Complete (3/3 plans). Ready for `/gsd:verify-work 18` and merge.
-Plan: 18-03 complete (admin create/edit form). All Phase 18 plans shipped.
-Status: /admin/catalog/new and /admin/catalog/[slug]/edit pages alive with single-page grouped form (5 sections: Basic info, Categorization, Pricing, Metrics, Translations). Slug auto-generates from name_en via NFKD slugify; locked on edit. Industries render as 6 togglable chips; connected_apps as multi-select with chips + 12-app datalist. Strict Zod validation: adminCatalogTemplateActiveSchema (when is_active=true) requires all 8 translations + 4 numerics + at least one industry; adminCatalogTemplateBaseSchema (when is_active=false) skips activation gates so partial work can be saved as draft. Custom RHF resolver bridges form-layer USD strings + blank-as-null numerics to Zod-layer cents + integers + nullables. createTemplate inserts the template row + 8 translation rows atomically (rollback on partial failure); updateTemplate UPDATEs the templates row + UPSERTs 8 translation rows on (template_id, locale, field). Both revalidate /admin/catalog AND /dashboard/catalog. admin.catalog.form.* i18n namespace added (47 keys per locale, 729 total parity). 28 routes built (up from 26).
-Last activity: 2026-05-06 — Plan 18-03 executed (2 tasks, 8 files; create/edit form + actions + schemas + i18n form keys).
+Phase: Phase 19 — Requests Inbox — Complete (3/3 plans, awaiting human UAT).
+Plan: 19-03 complete. Operations team can now triage incoming customer requests end-to-end: list at /admin/requests with status tabs (19-02), detail at /admin/requests/[id] with customer card + request body + status timeline + approve/reject actions (19-03), Approve provisions a real in_setup automation atomically with notification fan-out, Reject captures a 10..500 char reason via Zod and notifies with the reason verbatim. Race-condition guard returns typed 'state_changed' error on stale state.
+Status: Phase 19 ships REQS-01..04 + I18N-01. approveRequest server action: assertPlatformStaff -> Zod parse -> SELECT pending guard -> INSERT automation (status='in_setup', name="{Template} for {Org}", setup_notes=request.description) -> UPDATE request to approved with `.eq('status','pending')` second guard -> best-effort notifyOrgMembers (success type) -> revalidate admin + customer paths. rejectRequest: same skeleton but UPDATE { status:'rejected', notes:reason }, notification type='warning' with reason verbatim. Detail page server-rendered; ApproveRequestButton + RejectRequestModal are the only client components, passed via `actions: ReactNode` slot when status='pending'. 41 admin.requests.detail i18n leaf keys per locale with full parity (total 791); admin.placeholders.requests removed. tsc + scoped lint exit 0; npm run build exits 0 emitting both /admin/requests and /admin/requests/[id] (with NEXT_TURBOPACK_EXPERIMENTAL_USE_SYSTEM_TLS_CERTS=1 Google Fonts sandbox flag).
+Last activity: 2026-05-07 — Plan 19-03 executed (3 tasks, 8 files; Zod schemas + server actions + detail page + components + i18n + placeholder cleanup). Phase 19 ready for human UAT.
 
 ## Performance Metrics
 
@@ -46,8 +59,41 @@ Last activity: 2026-05-06 — Plan 18-03 executed (2 tasks, 8 files; create/edit
 | 18-01      | 16             | 2     | 5             |
 | 18-02      | 10             | 2     | 9             |
 | 18-03      | 12             | 2     | 8             |
+| 19-01      | 4              | 2     | 3             |
+| 19-02      | 5              | 3     | 5             |
+| 19-03      | 6              | 3     | 8             |
 
 ## Accumulated Context
+
+### Decisions (Phase 19-03 execution, 2026-05-07)
+
+- **Approve flow ordering is INSERT-then-UPDATE.** Failure modes inverted: an orphan in_setup automation with a still-pending request is recoverable via Phase 20 (operator archives the orphan). The opposite ordering (UPDATE first) would leave the customer seeing "approved" with no actual automation row — silently lying about work being underway. INSERT first, UPDATE second is the safer asymmetric failure mode.
+- **Double race guard for concurrent staff approvals.** A pre-flight `SELECT status='pending'` plus a second `.eq('status','pending')` clause on the UPDATE statement at the SQL layer ensures concurrent staff cannot both succeed. The first staff to UPDATE wins; the second sees the request as no-longer-pending on their pre-flight (or matches zero rows on UPDATE) and returns the typed `state_changed` error to the client, which alerts and refreshes.
+- **Best-effort notification fan-out, not transactional.** Helper `notifyOrgMembers` swallows errors and logs warnings; never propagates to caller. CONTEXT.md explicit: notification failures must NOT block approve/reject. The customer's in-app notification is best-effort messaging, not a contract — the source of truth is the request + automation rows.
+- **Notification copy is pre-rendered English strings on the server.** Mirrors how Phase 8 dashboard notifications render `notifications.title` / `notifications.message` verbatim. Switching to keyed messages requires a notification i18n layer; deferred to v1.3.
+- **REJECT_REASON_MIN=10, MAX=500 enforced AFTER trim** via Zod `transform(s=>s.trim()).pipe(min(10).max(500))`. Catches whitespace-padding tricks and "x"/"no" non-reasons while still permitting short-but-coherent phrases like "Falta info" / "Duplicado" per CONTEXT.md's "intentional friction" guidance. Constants are exported from the schema file so the client modal mirrors server limits (Confirm stays disabled until the server would accept).
+- **Action slot via `actions: ReactNode` prop, not `children`.** Lets the server layout decide WHERE the slot renders (inside the request card, after the body, under a top border, only when status='pending') while still allowing client-component children to live inside the otherwise-server tree. Cleaner than a fragment with conditional siblings.
+- **Field-error extraction for reject.** The Zod transform-then-pipe shape returns issues at `path: ["reason"]`. The action extracts the issue's message code (`reason_too_short` / `reason_too_long`) and forwards as a typed `fieldError` so the modal shows the right localized message without parsing Zod error envelopes on the client.
+- **Server-action skeleton + notification fan-out helper are reusable** for Phase 20+ admin status transitions. The pattern `assertPlatformStaff -> Zod parse -> pre-flight SELECT -> mutation with second SQL guard -> revalidatePath admin + customer paths` is now battle-tested twice (Phase 18 toggles, this plan's approve/reject); Phase 20 transitions (in_setup -> active, active <-> paused, archive) clone it verbatim. `notifyOrgMembers(supabase, organizationId, type, title, message, link)` is the right shape for any "tell the customer their X changed state" event.
+
+### Decisions (Phase 19-02 execution, 2026-05-07)
+
+- **Tabs are client; table is server.** The 5-column table has no client state — every row's interactive surface is a `<Link>` which works fine in a server component. Only the active-tab decision needs `useRouter`/`useSearchParams`/`usePathname`, so only that strip pays the client-bundle cost. Pattern reusable for any URL-state-driven filter on top of an otherwise-static admin table.
+- **Default-tab canonicalization on Pending click.** When the user clicks Pending we `searchParams.delete("status")` instead of `set("status","pending")`. Refresh on Pending stays bare (`/admin/requests`); refresh on Approved keeps `?status=approved`. Shareable URLs are minimal and the canonical default never accumulates a redundant query string.
+- **`t.raw()` for `{count}` tab labels.** The placeholder is left unresolved server-side; the client substitutes it from live counts at render time. Reading via `t("tabs.pending", { count })` would freeze the value at request-time and skip the substitution layer, which would break any future client-side action that mutates counts without a full server round-trip.
+- **`coerceStatus()` silently falls back to pending.** A user fat-fingering `?status=garbage` lands silently on Pending. No 404, no error toast — the canonical default is the right landing for any unknown value. Validation: `(VALID_STATUSES as string[]).includes(raw)`.
+- **Status badges use amber/green/red** (CONTEXT.md "Claude's Discretion"). Amber on Pending reads as "waiting" more clearly than blue, and the green/red pair on Approved/Rejected matches universal terminal-state semantics.
+- **`admin.placeholders.requests` preserved deliberately.** Removing those keys now would risk a half-translated state for any environment that hadn't pulled this commit. Plan 19-03 (which fully replaces the last placeholder consumer with the detail page) is the right place for that cleanup.
+- **Translation-prop pattern reused verbatim from Phase 18.** Server resolves `t('foo')` and `t.raw('templateString')` into a plain object, then forwards it as a `translations` prop to a client subtree. No `useTranslations()` in the client tree. Established pattern across catalog admin and now requests admin; Phase 20+ will keep cloning it.
+
+### Decisions (Phase 19-01 execution, 2026-05-07)
+
+- **`automations.setup_notes` is plain nullable TEXT.** No CHECK, no default. NULL is the correct sentinel for automations not created via the approve-request flow; populated only when the operator approves a request and we copy `automation_requests.description` (the customer's custom_requirements text) onto the new row. Migration `20260508000001_automations_setup_notes.sql` uses `ADD COLUMN IF NOT EXISTS` for re-run safety.
+- **`resultingAutomationId` is derived per-call, not persisted as a column.** `fetchAdminRequestDetail` matches `(organization_id, template_id, created_at >= request.created_at)` and takes the earliest hit. Avoids a schema migration; deterministic at v1.2 volume; if collisions ever surface in v1.3 we add a foreign key. Pattern: derive ephemeral relations on the read path before paying for a column.
+- **Single-query tab counts, bucketed client-side.** `fetchAdminRequestStatusCounts` issues ONE `select id, status` for the three statuses we surface, then buckets in JS — three separate count queries would burn three RTTs. Same trick is reusable for any small fixed-cardinality status counter (Phase 20 automations admin tabs, Phase 22 home dashboard).
+- **All admin query functions throw on auth failure.** Mirrors `fetchAdminCatalogTemplates`. The admin layout (Phase 17-03) gates the route, so reaching these without staff is a programmer error — not user input. A `Result` union here would push dead code into every caller.
+- **Defensive `subscription` embed-shape normalization.** Although `subscriptions.UNIQUE(organization_id)` makes it 1-to-1, Supabase JS's PostgREST resolver sometimes returns single-row LEFT embeds as `T | null` and sometimes as `T[]`. `fetchAdminRequestDetail` accepts both via `Array.isArray(detail.subscription) ? detail.subscription[0] ?? null : detail.subscription ?? null`. Reusable defense for any future `!left` embed on a UNIQUE-FK relation (Phase 20 automations -> latest execution, Phase 21 clients -> primary owner).
+- **Admin shared types live in `web/src/lib/admin/types.ts`.** Future admin features (Phase 20 automations admin, Phase 21 clients admin) extend this single file rather than each shipping their own; query files import from it. Keeps the AdminX type surface discoverable.
 
 ### Decisions (Phase 18-03 execution, 2026-05-06)
 
@@ -152,9 +198,11 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 
 ### Pending Todos
 
-(none — Phase 18 complete, ready for `/gsd:verify-work 18` then merge `feature/phase-18-catalog-admin` back to `main`; next is `/gsd:plan-phase 19` for Requests Inbox)
+(none — Phase 19 is functionally complete (3/3 plans). Awaiting human UAT per the recommended steps in 19-03-SUMMARY.md before opening the merge PR for `feature/phase-19-requests-inbox` -> `main`. Migration `20260508000001_automations_setup_notes.sql` from 19-01 must be applied on the dev DB before approve/reject UAT — local apply path: `supabase migration up` or whatever the project's apply path is. The "Open automation →" link from approved-status detail pages goes to `/admin/automations/[id]` which is dead until Phase 20 ships; the "View client profile →" link from the customer card goes to `/admin/clients/[orgId]` which is dead until Phase 21 ships — both accepted per CONTEXT.md.)
 
 ## Session Continuity
 
-**Last session:** 2026-05-06 — Executed Plan 18-03 (admin catalog create/edit form). Stopped at: Completed 18-03-PLAN.md.
-**Next action:** Phase 18 (Catalog Admin) is complete (3/3 plans). Run `/gsd:verify-work 18` to UAT the full admin catalog flow (list + filters + toggles + warn modal + create + edit + draft mode + bilingual + customer-side reflection). After verification passes, merge `feature/phase-18-catalog-admin` back to `main`. Then start Phase 19 (Requests Inbox) with `/gsd:discuss-phase 19` -> `/gsd:plan-phase 19` -> `/gsd:execute-phase 19`.
+**Last session:** 2026-05-07 — Executed Plan 19-03 (Zod schemas + approve/reject server actions + detail page at /admin/requests/[id] + AdminRequestDetail server layout + ApproveRequestButton + RejectRequestModal client components + admin.requests.detail i18n namespace EN/ES + cleanup of admin.placeholders.requests). Phase 19 functionally complete (3/3 plans), awaiting human UAT. Stopped at: Completed 19-03-PLAN.md.
+**Next action:** Run human UAT for Phase 19 (sign in to /admin, hit /admin/requests, click into the seed pending request, exercise Approve and Reject paths, verify customer notifications + detail timeline + terminal-state result panels in EN and ES). On UAT pass, write 19-VERIFICATION.md and merge `feature/phase-19-requests-inbox` -> `main`. Then start Phase 20 (Automations Admin) with `/gsd:discuss-phase` on a new branch `feature/phase-20-automations-admin`.
+
+2026-05-07 — Phase 19 hotfix: expanded admin requests inbox from 3 to 7 statuses via 3-tab grouping (pending tab now also shows in_review/payment_pending/payment_failed; approved tab also shows completed). Approve/Reject still locked to status='pending' exactly.

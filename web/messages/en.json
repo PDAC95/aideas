@@ -906,10 +906,6 @@
         "title": "Catalog Admin",
         "body": "Template CRUD lands in Phase 18."
       },
-      "requests": {
-        "title": "Requests Inbox",
-        "body": "Request list, detail, and approve/reject flow ship in Phase 19."
-      },
       "automations": {
         "title": "Automations Admin",
         "body": "Global cross-org list and status transitions ship in Phase 20."
@@ -917,6 +913,105 @@
       "clients": {
         "title": "Clients Admin",
         "body": "Client list, 360-degree detail, and internal notes ship in Phase 21."
+      }
+    },
+    "requests": {
+      "list": {
+        "title": "Requests Inbox",
+        "subtitle": "Customer automation requests waiting for review.",
+        "tabs": {
+          "pending": "Pending ({count})",
+          "approved": "Approved ({count})",
+          "rejected": "Rejected ({count})"
+        },
+        "columns": {
+          "customer": "Customer",
+          "template": "Template",
+          "status": "Status",
+          "customRequirements": "Custom requirements",
+          "createdAt": "Created"
+        },
+        "statusBadges": {
+          "pending": "Pending",
+          "in_review": "In review",
+          "approved": "Approved",
+          "completed": "Completed",
+          "rejected": "Rejected",
+          "payment_pending": "Payment pending",
+          "payment_failed": "Payment failed"
+        },
+        "empty": {
+          "pending": "Nothing waiting. New customer requests appear here first.",
+          "approved": "No approved requests yet. Approve from the Pending tab to populate this list.",
+          "rejected": "No rejected requests."
+        },
+        "noTemplate": "Custom request",
+        "noRequirements": "No additional requirements"
+      },
+      "detail": {
+        "backLink": "Back to requests",
+        "nonActionable": "This request is in another workflow stage. No action available from this page.",
+        "sections": {
+          "customer": "Customer",
+          "request": "Request",
+          "timeline": "Status timeline",
+          "result": "Outcome"
+        },
+        "customer": {
+          "org": "Organization",
+          "slug": "Slug",
+          "plan": "Plan",
+          "noPlan": "No active plan",
+          "signupDate": "Signup date",
+          "activeAutomations": "Active automations",
+          "requester": "Requested by",
+          "viewClient": "View client profile"
+        },
+        "request": {
+          "title": "Title",
+          "template": "Template",
+          "customRequirements": "Custom requirements",
+          "urgency": "Urgency",
+          "urgencyValues": {
+            "low": "Low",
+            "normal": "Normal",
+            "urgent": "Urgent"
+          }
+        },
+        "timeline": {
+          "createdBy": "Created by {user}",
+          "approvedBy": "Approved by {user}",
+          "rejectedBy": "Rejected by {user}",
+          "staffPlaceholder": "AIDEAS staff"
+        },
+        "result": {
+          "approvedTitle": "This request was approved.",
+          "approvedBody": "An automation has been provisioned in setup mode.",
+          "automationLink": "Open automation",
+          "rejectedTitle": "This request was rejected.",
+          "rejectedReason": "Reason: {reason}",
+          "rejectedNoReason": "No reason was recorded."
+        },
+        "actions": {
+          "approve": "Approve",
+          "approving": "Approving...",
+          "reject": "Reject",
+          "errorStateChanged": "This request was already processed by another staff member. Reloading.",
+          "errorGeneric": "Something went wrong. Please try again."
+        },
+        "rejectModal": {
+          "title": "Reject this request",
+          "body": "Tell the customer why their request is being rejected. The reason is sent to them in a notification — phrase accordingly.",
+          "placeholder": "Explain why this request cannot be fulfilled (10-500 chars)",
+          "cancel": "Cancel",
+          "confirm": "Reject request",
+          "confirming": "Rejecting...",
+          "errorTooShort": "Reason must be at least 10 characters.",
+          "errorTooLong": "Reason must be 500 characters or fewer.",
+          "errorStateChanged": "This request was already processed by another staff member. Reloading.",
+          "errorGeneric": "Something went wrong. Please try again.",
+          "charCounter": "{count}/{max}"
+        }
       }
     },
     "catalog": {

@@ -41,10 +41,10 @@ Requirements for v1.2 release. Each maps to roadmap phases.
 
 > Attend incoming customer requests.
 
-- [ ] **REQS-01**: Staff sees list of `automation_requests` filterable by status (pending/approved/rejected), ordered by `created_at` DESC, with columns: customer (org name), template requested, status, created date
-- [ ] **REQS-02**: Staff opens request detail page showing customer info, template requested, custom requirements text (if any), status, status history, and creation timestamp
-- [ ] **REQS-03**: Staff approves a `pending` request — single-step transition that sets request status to `approved` AND creates a new row in `automations` with status `in_setup`, scoped to the requesting org and linked to the template
-- [ ] **REQS-04**: Staff rejects a `pending` request — transition requires a non-empty rejection reason (form validation, stored in request notes); request status becomes `rejected`
+- [x] **REQS-01**: Staff sees list of `automation_requests` filterable by status (pending/approved/rejected), ordered by `created_at` DESC, with columns: customer (org name), template requested, status, created date
+- [x] **REQS-02**: Staff opens request detail page showing customer info, template requested, custom requirements text (if any), status, status history, and creation timestamp
+- [x] **REQS-03**: Staff approves a `pending` request — single-step transition that sets request status to `approved` AND creates a new row in `automations` with status `in_setup`, scoped to the requesting org and linked to the template
+- [x] **REQS-04**: Staff rejects a `pending` request — transition requires a non-empty rejection reason (form validation, stored in request notes); request status becomes `rejected`
 
 ### Automations Admin (AUTM)
 
@@ -141,10 +141,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CTLG-03 | Phase 18 | Complete |
 | CTLG-04 | Phase 18 | Complete |
 | CTLG-05 | Phase 18 | Complete |
-| REQS-01 | Phase 19 | Pending |
-| REQS-02 | Phase 19 | Pending |
-| REQS-03 | Phase 19 | Pending |
-| REQS-04 | Phase 19 | Pending |
+| REQS-01 | Phase 19 | Complete |
+| REQS-02 | Phase 19 | Complete |
+| REQS-03 | Phase 19 | Complete |
+| REQS-04 | Phase 19 | Complete |
 | AUTM-01 | Phase 20 | Pending |
 | AUTM-02 | Phase 20 | Pending |
 | AUTM-03 | Phase 20 | Pending |

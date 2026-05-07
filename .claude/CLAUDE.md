@@ -52,6 +52,10 @@
 - `operations` category in seed data has no UI tab or i18n key
 - `agencias` industry in seed data has no UI chip or i18n key
 
+**Phase 19:**
+- Race-condition error toast disappears too fast — when Tab B hits `state_changed`, `router.refresh()` replaces the toast almost immediately. UX polish: persist toast ~3-5s before refresh. Surface: `web/src/components/admin/requests/approve-request-button.tsx`, `reject-request-modal.tsx`.
+- Language switcher missing in admin layout — Phase 17 cross-cutting gap blocking I18N runtime UAT for all admin surfaces (17-22). Surface: `web/src/app/(admin)/admin/layout.tsx` or admin header component.
+
 ### Known Integration Issues
 
 - `activity-feed.tsx:63` links to `/dashboard/reports` (now resolved — Phase 11 shipped)
