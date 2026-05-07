@@ -6,6 +6,8 @@ import type {
   AdminAutomationOrgOption,
   AdminAutomationTemplateOption,
   AdminAutomationListFilters,
+  AdminAutomationDetail,
+  AdminAutomationExecutionEntry,
 } from "./types";
 import { ADMIN_AUTOMATION_TABS } from "./types";
 
@@ -247,4 +249,186 @@ export async function fetchAdminAutomationFilterOptions(input: {
   );
 
   return { orgs, templates };
+}
+
+const TIMELINE_LIMIT = 20;
+
+/**
+ * Defensive embed-shape normalizer for Supabase JS PostgREST embeds.
+ * !inner / !left embeds on UNIQUE-FK relations sometimes return as `T`
+ * (single object) and sometimes as `T[]`. Normalize to `T | null`.
+ *
+ * Pattern established by Phase 19-01 (subscriptions embed); reused here for
+ * automations -> organizations !inner and automations -> automation_templates !left.
+ */
+function singleEmbed<T>(v: T | T[] | null | undefined): T | null {
+  if (v == null) return null;
+  return Array.isArray(v) ? v[0] ?? null : v;
+}
+
+/**
+ * Detail view: single automation + org + template (with translation) + 4 KPIs +
+ * last-20 executions, all in two round trips:
+ *   1. SELECT automation joined with organizations + automation_templates
+ *      (+translation) + the template's avg_minutes_per_task (needed for hours
+ *      saved). One query.
+ *   2. SELECT all executions for this automation (id, status, started_at,
+ *      completed_at, duration_ms, error_message). One query — used to
+ *      compute totalExecutions, successfulExecutions, successRate, lastRunAt
+ *      (already on the automation row but used as fallback if column is stale),
+ *      AND to slice the last 20 for the timeline.
+ *
+ * If the automation row is soft-deleted or missing, returns null. The page
+ * layer triggers notFound() on null.
+ *
+ * Throws on auth failure (admin layout already gates the route).
+ */
+export async function fetchAdminAutomationDetail(
+  automationId: string,
+  locale: string
+): Promise<AdminAutomationDetail | null> {
+  const supabase = await createAdminServerClient();
+  const auth = await assertPlatformStaff(supabase);
+  if (!auth.ok) {
+    throw new Error(`fetchAdminAutomationDetail: not authorized (${auth.error})`);
+  }
+
+  const { data, error } = await supabase
+    .from("automations")
+    .select(
+      `
+      id, name, description, status, setup_notes, last_run_at, created_at, updated_at,
+      organization:organizations!inner(id, name, slug),
+      template:automation_templates!left(
+        id, slug, category, monthly_price, avg_minutes_per_task,
+        translations:automation_template_translations!left(field, value, locale)
+      )
+      `
+    )
+    .eq("id", automationId)
+    .is("deleted_at", null)
+    .eq("template.translations.locale", locale)
+    .eq("template.translations.field", "name")
+    .maybeSingle();
+
+  if (error) throw error;
+  if (!data) return null;
+
+  type RawTemplate = {
+    id: string;
+    slug: string;
+    category: string;
+    monthly_price: number | null;
+    avg_minutes_per_task: number | null;
+    translations: Array<{ field: string; value: string; locale: string }> | null;
+  };
+  type RawOrganization = { id: string; name: string; slug: string };
+  type RawDetail = {
+    id: string;
+    name: string;
+    description: string | null;
+    status: string;
+    setup_notes: string | null;
+    last_run_at: string | null;
+    created_at: string;
+    updated_at: string;
+    organization: RawOrganization | RawOrganization[] | null;
+    template: RawTemplate | RawTemplate[] | null;
+  };
+  const detail = data as unknown as RawDetail;
+
+  // Defensive embed-shape normalization (see 20-01-SUMMARY gotcha).
+  const organization = singleEmbed(detail.organization);
+  const template = singleEmbed(detail.template);
+  if (!organization) {
+    // Should be impossible (FK + !inner), but if it ever happens, treat as 404.
+    return null;
+  }
+
+  // Pull every execution for this automation. Volume is small per automation;
+  // pull all (no pagination) so we can compute KPIs accurately AND slice the
+  // last 20 for the timeline without a second query.
+  const { data: execData, error: execError } = await supabase
+    .from("automation_executions")
+    .select(
+      "id, status, started_at, completed_at, duration_ms, error_message"
+    )
+    .eq("automation_id", automationId)
+    .order("started_at", { ascending: false });
+
+  if (execError) throw execError;
+
+  type RawExec = {
+    id: string;
+    status: string;
+    started_at: string;
+    completed_at: string | null;
+    duration_ms: number | null;
+    error_message: string | null;
+  };
+  const allExecs = (execData ?? []) as RawExec[];
+
+  const totalExecutions = allExecs.length;
+  const successfulExecutions = allExecs.filter(
+    (e) => e.status === "success"
+  ).length;
+  const successRate =
+    totalExecutions > 0 ? successfulExecutions / totalExecutions : null;
+
+  // Hours saved = (successfulExecutions × avg_minutes_per_task) / 60
+  // Rounded to 1 decimal place. Mirror the Phase 8 dashboard formula.
+  const avgMinutes = template?.avg_minutes_per_task ?? 0;
+  const totalMinutes = successfulExecutions * avgMinutes;
+  const hoursSaved = Math.round((totalMinutes / 60) * 10) / 10;
+
+  // Pull lastRunAt from the row column; fall back to the most recent execution
+  // start time if the column lags.
+  const lastRunAt = detail.last_run_at ?? allExecs[0]?.started_at ?? null;
+
+  // Timeline: last 20 (allExecs is already DESC by started_at).
+  const recentExecutions: AdminAutomationExecutionEntry[] = allExecs
+    .slice(0, TIMELINE_LIMIT)
+    .map((e) => ({
+      id: e.id,
+      status: e.status,
+      startedAt: e.started_at,
+      completedAt: e.completed_at,
+      durationMs: e.duration_ms,
+      errorMessage: e.error_message,
+    }));
+
+  // Template translation resolution.
+  const tmplName = template?.translations?.[0]?.value ?? null;
+  const tmplFallback = template?.slug ?? null;
+  const templateDisplayName = template
+    ? tmplName ?? tmplFallback
+    : null;
+
+  return {
+    id: detail.id,
+    name: detail.name,
+    description: detail.description,
+    status: detail.status,
+    setupNotes: detail.setup_notes,
+    createdAt: detail.created_at,
+    updatedAt: detail.updated_at,
+    lastRunAt,
+
+    organizationId: organization.id,
+    organizationName: organization.name,
+    organizationSlug: organization.slug,
+
+    templateId: template?.id ?? null,
+    templateSlug: template?.slug ?? null,
+    templateDisplayName,
+    templateCategory: template?.category ?? null,
+    templateMonthlyPriceCents: template?.monthly_price ?? null,
+
+    totalExecutions,
+    successfulExecutions,
+    successRate,
+    hoursSaved,
+
+    recentExecutions,
+  };
 }

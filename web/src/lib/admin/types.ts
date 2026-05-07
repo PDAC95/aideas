@@ -178,3 +178,58 @@ export interface AdminAutomationListFilters {
   nameQuery: string | null;
   locale: string;
 }
+
+/**
+ * Single execution entry surfaced in the admin detail timeline.
+ *
+ * `durationMs` is the raw milliseconds duration from the DB column
+ * `automation_executions.duration_ms` (plain INTEGER — see migration
+ * 20260305000002 line 120). The timeline component computes
+ * Math.round(durationMs / 1000) before substituting into the i18n template
+ * `{seconds}s` for a friendlier display.
+ */
+export interface AdminAutomationExecutionEntry {
+  id: string;
+  status: "running" | "success" | "error" | "cancelled" | string;
+  startedAt: string;          // ISO 8601
+  completedAt: string | null; // ISO 8601 or null while running
+  durationMs: number | null;
+  errorMessage: string | null;
+}
+
+/**
+ * Full detail object backing /admin/automations/[id]. Composed in one fn call;
+ * carries the four KPI values precomputed by the query layer so the UI is a
+ * pure render.
+ */
+export interface AdminAutomationDetail {
+  id: string;
+  name: string;
+  description: string | null;
+  status: AdminAutomationStatus | string;
+  setupNotes: string | null;
+  createdAt: string;
+  updatedAt: string;
+  lastRunAt: string | null;
+
+  // Org card data
+  organizationId: string;
+  organizationName: string;
+  organizationSlug: string;
+
+  // Template card data (may be all-null for custom automations)
+  templateId: string | null;
+  templateSlug: string | null;
+  templateDisplayName: string | null;
+  templateCategory: string | null;
+  templateMonthlyPriceCents: number | null;
+
+  // KPIs (precomputed)
+  totalExecutions: number;
+  successfulExecutions: number;
+  successRate: number | null;        // 0..1, or null when totalExecutions=0
+  hoursSaved: number;                 // rounded to 1 decimal place
+
+  // Last-20 execution timeline
+  recentExecutions: AdminAutomationExecutionEntry[];
+}
