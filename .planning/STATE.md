@@ -29,12 +29,12 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Admin Dashboard
 status: in_progress
-last_updated: "2026-05-07T19:42:00Z"
+last_updated: "2026-05-07T20:05:01Z"
 progress:
   total_phases: 7
   completed_phases: 3
   total_plans: 20
-  completed_plans: 10
+  completed_plans: 11
 ---
 
 # Project State
@@ -44,14 +44,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-04 after v1.2 milestone start)
 
 **Core value:** Customers can monitor automations, request new ones, and see their ROI from a single bilingual dashboard — paired with an operations team who can fulfill what they request.
-**Current focus:** v1.2 Admin Dashboard — Phase 17/18/19 complete (Phase 19 awaiting human UAT). Phase 20 (Automations Admin) IN PROGRESS — plan 20-01 just shipped (1/3 plans complete).
+**Current focus:** v1.2 Admin Dashboard — Phase 17/18/19 complete (Phase 19 awaiting human UAT). Phase 20 (Automations Admin) IN PROGRESS — plans 20-01 + 20-02 shipped (2/3 plans complete).
 
 ## Current Position
 
-Phase: Phase 20 — Automations Admin — In progress (1/3 plans complete).
-Plan: 20-01 complete. /admin/automations is now a real cross-org list view: 5 status tabs (Active default / In setup / Paused / Failed / Archived) URL-synced to ?status=, three combinable filters (org dropdown / template dropdown / 300ms-debounced name search) URL-synced to ?org / ?template / ?q, and a 6-column server-rendered table (Name / Customer / Template / Status / Executions / Created) ordered created_at DESC. Each Name cell links to /admin/automations/[id] (dead until 20-02 ships).
-Status: Phase 20 ships AUTM-01 + I18N-01 (this slice). New file `web/src/lib/admin/automation-queries.ts` exports fetchAdminAutomations + fetchAdminAutomationStatusCounts + fetchAdminAutomationFilterOptions, all gated by assertPlatformStaff. Per-row execution counts via second bucketed query. Tab values map 1:1 to DB statuses (no TAB_TO_STATUSES indirection). 6 new types appended to admin/types.ts (AdminRequest* untouched). 32 new admin.automations.list.* leaf keys per locale; admin.placeholders.automations removed. tsc + scoped lint exit 0; npm run build exits 0 emitting /admin/automations as dynamic.
-Last activity: 2026-05-07 — Plan 20-01 executed (3 tasks, 8 files; types + queries + 3 components + page + i18n + placeholder cleanup). Phase 20 plan 20-02 is next.
+Phase: Phase 20 — Automations Admin — In progress (2/3 plans complete).
+Plan: 20-02 complete. /admin/automations/[id] is now a real read-only detail surface: header (name + status badge + reserved actions ReactNode slot), 4-card KPI grid (Total executions, Hours saved, Success rate, Last execution) with locale-aware Intl formatters and 'Never' / '—' fallbacks, last-20 execution timeline (status dot + label + relative timestamp + optional duration in seconds + truncated error preview), 2-column body with right-side org card + template card (with template_id-null empty state) + setup_notes inline section (renders only when non-empty after trim). Plan 20-01's row Name links from the list view now resolve to a live page.
+Status: Phase 20 ships AUTM-05 + I18N-01 (this slice). fetchAdminAutomationDetail appended to automation-queries.ts (assertPlatformStaff-gated, two round trips, defensive singleEmbed normalization for organizations !inner and automation_templates !left, maybeSingle + soft-delete filter, null on missing for the page to 404). 2 new types appended to admin/types.ts (AdminAutomationDetail, AdminAutomationExecutionEntry). 31 new admin.automations.detail.* leaf keys per locale (857 total leaf keys after this plan, full EN/ES parity). All 4 new files server-rendered (no 'use client' anywhere). tsc + scoped lint exit 0; npm run build exits 0 emitting both /admin/automations and /admin/automations/[id] as dynamic.
+Last activity: 2026-05-07 — Plan 20-02 executed (3 tasks, 8 files; types + query fn + 3 server components + detail page + i18n). Phase 20 plan 20-03 is next (status transition buttons through the now-wired actions ReactNode slot).
 
 ## Performance Metrics
 
@@ -76,8 +76,23 @@ Last activity: 2026-05-07 — Plan 20-01 executed (3 tasks, 8 files; types + que
 | 19-02      | 5              | 3     | 5             |
 | 19-03      | 6              | 3     | 8             |
 | 20-01      | 12             | 3     | 8             |
+| 20-02      | 7              | 3     | 8             |
 
 ## Accumulated Context
+
+### Decisions (Phase 20-02 execution, 2026-05-07)
+
+- **Defensive singleEmbed() normalization for both !inner AND !left UNIQUE-FK embeds.** Even though FK + UNIQUE constraints make automations→organizations and automations→automation_templates 1-to-1, Supabase JS PostgREST sometimes returns single-row embeds as T (single object) and sometimes as T[] (length 0..1). Phase 20-01's SUMMARY explicitly flagged this as a 20-02 concern; the detail fetcher applies the normalizer from day 1. Helper is internal to automation-queries.ts; copy-don't-export when Phase 21 needs the same defense for clients↔owner.
+- **Two round trips for the detail query, not three.** Pulled ALL executions (`.order(started_at, desc)`) instead of separate aggregate + slice queries. KPIs (total, successful, success rate) and the last-20 timeline both derive from the same rowset. Acceptable at v1.2 volume; revisit only if a single automation crosses ~10k executions.
+- **Hours saved formula mirrors Phase 8 dashboard exactly.** `round((successfulExecutions × template.avg_minutes_per_task) / 60, 1 decimal)`. avg_minutes_per_task may be NULL → coerced to 0 so the multiplication is safe; row shows 0.0h, which is correct given we have no time-savings signal otherwise. Reuse pattern for Phase 22 admin home aggregate "hours saved across all orgs" KPI.
+- **lastRunAt prefers automations.last_run_at column with execution-most-recent as fallback.** Defends against writer-process lag (column never written, e.g. test seed data) — the most recent execution's started_at is the next-best signal.
+- **Setup notes section renders ONLY when value is non-empty after .trim().** Avoids an empty purple card for any seed automation whose setup_notes is the empty string or whitespace-only. CONTEXT.md prescribed inline (not collapsible).
+- **Actions ReactNode slot only renders when truthy.** `{actions && (<div>{actions}</div>)}` — passing actions={null} from the page (this plan) yields a header with no flex wrap container, no empty whitespace. Plan 20-03 will swap null for the four contextual transition buttons; the layout container is already in place. Same pattern as Phase 19-03 admin-request-detail; reuse for Phase 21 (client account actions) and Phase 22 (admin home contextual actions).
+- **Status badge palette covers all 7 real DB statuses.** Unlike the list view (which tabs only the 5 main ones), the detail page might receive an automation in `draft` or `pending_review` and must render a sensible badge. Palette: active=green, in_setup=blue, paused=amber, failed=red, archived=gray, draft=gray, pending_review=purple. Fallback to draft palette for any unknown future status string.
+- **Monthly price formatted as USD currency with 2 decimals via Intl.NumberFormat.** Schema stores cents (Phase 18-03 convention); detail divides by 100 and formats. Locale-aware separators on free.
+- **Custom-automation empty state copy in template card.** When template_id is null, show 'Custom automation' heading + 'This automation was set up without a catalog template.' body — operator-friendly explanation rather than a NULL/dash. Reusable copy pattern.
+- **All four new files are server components.** No `"use client"` directive anywhere; Intl.RelativeTimeFormat / Intl.NumberFormat run on the server during render. Zero hydration cost. The actions slot is the only seam where a client subtree could enter (Plan 20-03 will pass client transition buttons through it).
+- **Translation-string wins; slug is the fallback for templateDisplayName.** `translations[0]?.value ?? slug ?? null`. Cheap defense against any future row-level translation deletion.
 
 ### Decisions (Phase 20-01 execution, 2026-05-07)
 
@@ -224,14 +239,16 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 ### Pending Todos
 
 - **Phase 19 still awaiting human UAT** (separate from Phase 20 work). Migration `20260508000001_automations_setup_notes.sql` from 19-01 must be applied on the dev DB before approve/reject UAT.
-- **Phase 20 plans 20-02 + 20-03 remain.** 20-02 ships the detail page at /admin/automations/[id] (AUTM-05) — the Name links from the new list view are dead until that ships. 20-03 ships the four status transition actions (AUTM-02..04). Both build on the query layer + types delivered in 20-01.
-- **Cross-phase dead links accepted per CONTEXT.md:** "Open automation →" from Phase 19 approved-status detail goes to /admin/automations/[id] (dead until 20-02). "View client profile →" goes to /admin/clients/[orgId] (dead until Phase 21).
+- **Phase 20 plan 20-03 remains.** 20-03 ships the four status transition actions (AUTM-02..04) through the actions ReactNode slot already wired into AdminAutomationDetail by 20-02. Builds on the query layer + types delivered by 20-01 + 20-02.
+- **Cross-phase dead links accepted per CONTEXT.md:** "Open automation →" from Phase 19 approved-status detail now resolves to a live page (20-02 shipped). "View client profile →" goes to /admin/clients/[orgId] (still dead until Phase 21).
 
 ## Session Continuity
 
-**Last session:** 2026-05-07T19:42:00Z
-**Stopped at:** Completed 20-01-PLAN.md
-**Next action:** Start Phase 20 plan 20-02 (admin detail page at /admin/automations/[id] — AUTM-05). Continues on `feature/phase-20-automations-admin`. Embed-shape gotcha (Array.isArray defensive normalizer for `automation_templates !left` and any UNIQUE-FK !left embed) is documented in 20-01-SUMMARY.md "TypeScript-shape gotchas" section — bake into the detail query from day 1.
+**Last session:** 2026-05-07T20:05:01Z
+**Stopped at:** Completed 20-02-PLAN.md
+**Next action:** Start Phase 20 plan 20-03 (status transition buttons — AUTM-02..04). Continues on `feature/phase-20-automations-admin`. The actions ReactNode slot in AdminAutomationDetail is already wired and battle-tested with `null`; plan 20-03 will swap null for a `<AdminAutomationTransitions>` client component containing the four contextual buttons. Server actions clone the Phase 19-03 skeleton (`assertPlatformStaff -> Zod parse -> pre-flight SELECT -> mutation with second SQL guard -> revalidatePath admin + customer paths`).
+
+2026-05-07 — Phase 20 plan 20-02 shipped: /admin/automations/[id] real read-only detail surface (header + status badge + reserved actions slot, 4-card KPI grid, last-20 execution timeline, org card + template card + setup_notes). 31 new admin.automations.detail.* leaf keys per locale (857 total). AUTM-05 + I18N-01 (this slice) satisfied. fetchAdminAutomationDetail in automation-queries.ts; defensive singleEmbed normalization; two round trips. All 4 new files server-rendered. tsc + scoped lint exit 0; npm run build emits both /admin/automations and /admin/automations/[id] as dynamic.
 
 2026-05-07 — Phase 20 plan 20-01 shipped: /admin/automations real cross-org list (5 status tabs + 3 combinable filters + 6-column table + full EN/ES i18n). placeholder removed. AUTM-01 + I18N-01 (this slice) satisfied. tsc + scoped lint exit 0; npm run build emits /admin/automations as dynamic.
 
