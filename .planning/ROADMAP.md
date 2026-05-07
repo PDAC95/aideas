@@ -134,8 +134,8 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
   4. Staff archives an automation (`active|paused` → `archived`) via a dedicated button; archived automations remain in the admin list but disappear from the customer's active filter
   5. The admin automation detail page shows KPIs (execution count, hours saved), recent execution timeline, owning org, and template info — with NO field editing, only the status transition buttons from above
   6. All automations admin UI strings (filters, status labels, action buttons, detail labels) have EN/ES parity
-**Plans:** 3 plans
-- [ ] 20-01-PLAN.md — Admin queries (fetchAdminAutomations + status counts + filter options) + `/admin/automations` list page with 5 status tabs, 3 URL-synced filters (org/template/name search), 6-column table, full EN/ES i18n; removes `admin.placeholders.automations` keys
+**Plans:** 1/3 plans complete
+- [x] 20-01-PLAN.md — Admin queries (fetchAdminAutomations + status counts + filter options) + `/admin/automations` list page with 5 status tabs, 3 URL-synced filters (org/template/name search), 6-column table, full EN/ES i18n; removes `admin.placeholders.automations` keys
 - [ ] 20-02-PLAN.md — `fetchAdminAutomationDetail` query + `/admin/automations/[id]` read-only detail page (header with status badge + reserved actions slot, 4 KPI cards, last-20 execution timeline, org card, template card, setup_notes inline section); `admin.automations.detail.*` i18n
 - [ ] 20-03-PLAN.md — Four server actions (activateAutomation/pauseAutomation/resumeAutomation/archiveAutomation) gated by `assertPlatformStaff` with race-condition guard + best-effort notification fan-out; AutomationTransitionButtons + ArchiveAutomationModal client components fill the detail header actions slot contextually per status; `admin.automations.detail.actions.*` + `admin.automations.detail.archiveModal.*` i18n
 
@@ -187,6 +187,6 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 | 17. Admin Foundation | v1.2 | Complete    | 2026-05-05 | 2026-05-05 |
 | 18. Catalog Admin | 3/3 | Complete   | 2026-05-06 | — |
 | 19. Requests Inbox | 3/3 | Complete    | 2026-05-07 | — |
-| 20. Automations Admin | v1.2 | 0/3 | Not started | — |
+| 20. Automations Admin | v1.2 | 1/3 | In progress | — |
 | 21. Clients Admin | v1.2 | 0/3 | Not started | — |
 | 22. Admin Home | v1.2 | 0/2 | Not started | — |

@@ -29,12 +29,12 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Admin Dashboard
 status: in_progress
-last_updated: "2026-05-07T13:47:31Z"
+last_updated: "2026-05-07T19:42:00Z"
 progress:
   total_phases: 7
   completed_phases: 3
   total_plans: 20
-  completed_plans: 9
+  completed_plans: 10
 ---
 
 # Project State
@@ -44,14 +44,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-04 after v1.2 milestone start)
 
 **Core value:** Customers can monitor automations, request new ones, and see their ROI from a single bilingual dashboard — paired with an operations team who can fulfill what they request.
-**Current focus:** v1.2 Admin Dashboard — Phase 17 Admin Foundation complete (3/3 plans); Phase 18 Catalog Admin complete (3/3 plans); Phase 19 Requests Inbox complete (3/3 plans, awaiting human UAT). Phase 20 (Automations Admin) is next.
+**Current focus:** v1.2 Admin Dashboard — Phase 17/18/19 complete (Phase 19 awaiting human UAT). Phase 20 (Automations Admin) IN PROGRESS — plan 20-01 just shipped (1/3 plans complete).
 
 ## Current Position
 
-Phase: Phase 19 — Requests Inbox — Complete (3/3 plans, awaiting human UAT).
-Plan: 19-03 complete. Operations team can now triage incoming customer requests end-to-end: list at /admin/requests with status tabs (19-02), detail at /admin/requests/[id] with customer card + request body + status timeline + approve/reject actions (19-03), Approve provisions a real in_setup automation atomically with notification fan-out, Reject captures a 10..500 char reason via Zod and notifies with the reason verbatim. Race-condition guard returns typed 'state_changed' error on stale state.
-Status: Phase 19 ships REQS-01..04 + I18N-01. approveRequest server action: assertPlatformStaff -> Zod parse -> SELECT pending guard -> INSERT automation (status='in_setup', name="{Template} for {Org}", setup_notes=request.description) -> UPDATE request to approved with `.eq('status','pending')` second guard -> best-effort notifyOrgMembers (success type) -> revalidate admin + customer paths. rejectRequest: same skeleton but UPDATE { status:'rejected', notes:reason }, notification type='warning' with reason verbatim. Detail page server-rendered; ApproveRequestButton + RejectRequestModal are the only client components, passed via `actions: ReactNode` slot when status='pending'. 41 admin.requests.detail i18n leaf keys per locale with full parity (total 791); admin.placeholders.requests removed. tsc + scoped lint exit 0; npm run build exits 0 emitting both /admin/requests and /admin/requests/[id] (with NEXT_TURBOPACK_EXPERIMENTAL_USE_SYSTEM_TLS_CERTS=1 Google Fonts sandbox flag).
-Last activity: 2026-05-07 — Plan 19-03 executed (3 tasks, 8 files; Zod schemas + server actions + detail page + components + i18n + placeholder cleanup). Phase 19 ready for human UAT.
+Phase: Phase 20 — Automations Admin — In progress (1/3 plans complete).
+Plan: 20-01 complete. /admin/automations is now a real cross-org list view: 5 status tabs (Active default / In setup / Paused / Failed / Archived) URL-synced to ?status=, three combinable filters (org dropdown / template dropdown / 300ms-debounced name search) URL-synced to ?org / ?template / ?q, and a 6-column server-rendered table (Name / Customer / Template / Status / Executions / Created) ordered created_at DESC. Each Name cell links to /admin/automations/[id] (dead until 20-02 ships).
+Status: Phase 20 ships AUTM-01 + I18N-01 (this slice). New file `web/src/lib/admin/automation-queries.ts` exports fetchAdminAutomations + fetchAdminAutomationStatusCounts + fetchAdminAutomationFilterOptions, all gated by assertPlatformStaff. Per-row execution counts via second bucketed query. Tab values map 1:1 to DB statuses (no TAB_TO_STATUSES indirection). 6 new types appended to admin/types.ts (AdminRequest* untouched). 32 new admin.automations.list.* leaf keys per locale; admin.placeholders.automations removed. tsc + scoped lint exit 0; npm run build exits 0 emitting /admin/automations as dynamic.
+Last activity: 2026-05-07 — Plan 20-01 executed (3 tasks, 8 files; types + queries + 3 components + page + i18n + placeholder cleanup). Phase 20 plan 20-02 is next.
 
 ## Performance Metrics
 
@@ -75,8 +75,20 @@ Last activity: 2026-05-07 — Plan 19-03 executed (3 tasks, 8 files; Zod schemas
 | 19-01      | 4              | 2     | 3             |
 | 19-02      | 5              | 3     | 5             |
 | 19-03      | 6              | 3     | 8             |
+| 20-01      | 12             | 3     | 8             |
 
 ## Accumulated Context
+
+### Decisions (Phase 20-01 execution, 2026-05-07)
+
+- **Tab values map 1:1 to real DB status values for automations.** Unlike Phase 19 Requests (where 7 DB statuses fold into 3 UI tabs via `TAB_TO_STATUSES`), automations expose 5 tabs that exactly equal 5 of the 7 real statuses (`active` / `in_setup` / `paused` / `failed` / `archived`). The URL `?status=` value, the SQL `.eq('status', ...)` filter, and the i18n key all share the same string. Eliminates an indirection layer at the cost of nothing — `draft` and `pending_review` are intentionally not tabbed (CONTEXT.md "Claude's Discretion") because automations rarely sit in those states. Pattern is more readable; reuse for Phase 21 Clients Admin if its tabs map 1:1 to real statuses.
+- **Per-row aggregate counts via second bucketed query, not per-row aggregate.** `fetchAdminAutomations` issues one main rowset query, then ONE more `.in('automation_id', ids)` against `automation_executions` and buckets in JS keyed by `automation_id`. N-aggregate alternative explodes round trips for any list view; Postgres aggregate alternative forces awkward Supabase JS typings. Battle-tested at Phase 18 (`automations` count per template) and now here; established pattern for any "list rows + per-row count from a child table" admin surface.
+- **Filter chain ordering matters and is now battle-tested twice.** `.eq(status).is(deleted_at,null).eq(translations.locale).eq(translations.field)` THEN optional filters THEN `.order(...)`. Mirrors `request-queries.ts` verbatim. Mixing this order has caused embedded-filter bugs in older postgrest-js. Worth re-asserting for Phase 20-02 + 20-03.
+- **URL-state sync via render-time setState comparison, not useEffect.** First draft used `useEffect(() => setLocal(params))` to honor external URL changes (e.g., when the tabs component resets the search params). The project's `react-hooks/set-state-in-effect` ESLint rule rejected it (cascading-renders). Refactored to the React-docs "storing information from previous renders" pattern: derive `urlSig` during render, store `lastSyncedSig` in useState, call setState in render only when they diverge. Same external behavior, zero cascading renders. Pattern reusable for ANY client component that needs to honor external URL/prop changes without `useEffect(() => setState(prop))`.
+- **`ilike` search escapes `%` and `_` in user input** so a search like `100%` doesn't blow into a wildcard. Reuse for any future free-text search filter (Phase 20-02 detail-page comments search? Phase 21 client search?).
+- **Customer-side `/dashboard/automations` was intentionally NOT modified.** Archived rows are already filtered out in `web/src/lib/dashboard/queries.ts` via `.not("status","eq","archived")` per Phase 09. CONTEXT.md's "Archived: filtered out of customer view" was already satisfied; this plan only touches the admin surface.
+- **No `Create automation` button** on this list. Operators don't create automations from the global view — they create via the approve-request flow (Phase 19) or via Phase 20-02 detail page actions. Surface stays focused on triage + drill-down.
+- **Embed-shape gotcha noted for plan 20-02.** Supabase JS embed shapes for `!inner` joins on UNIQUE-FK relations sometimes return as `T` (single object) and sometimes as `T[]`. Plan 20-02 detail page joining `automations -> automation_templates !left -> translations !left -> automation_executions` will need the defensive `Array.isArray(x) ? x[0] ?? null : x ?? null` normalizer that Phase 19-01 established for `subscriptions`. Bake into the detail query from day 1.
 
 ### Decisions (Phase 19-03 execution, 2026-05-07)
 
@@ -211,11 +223,16 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 
 ### Pending Todos
 
-(none — Phase 19 is functionally complete (3/3 plans). Awaiting human UAT per the recommended steps in 19-03-SUMMARY.md before opening the merge PR for `feature/phase-19-requests-inbox` -> `main`. Migration `20260508000001_automations_setup_notes.sql` from 19-01 must be applied on the dev DB before approve/reject UAT — local apply path: `supabase migration up` or whatever the project's apply path is. The "Open automation →" link from approved-status detail pages goes to `/admin/automations/[id]` which is dead until Phase 20 ships; the "View client profile →" link from the customer card goes to `/admin/clients/[orgId]` which is dead until Phase 21 ships — both accepted per CONTEXT.md.)
+- **Phase 19 still awaiting human UAT** (separate from Phase 20 work). Migration `20260508000001_automations_setup_notes.sql` from 19-01 must be applied on the dev DB before approve/reject UAT.
+- **Phase 20 plans 20-02 + 20-03 remain.** 20-02 ships the detail page at /admin/automations/[id] (AUTM-05) — the Name links from the new list view are dead until that ships. 20-03 ships the four status transition actions (AUTM-02..04). Both build on the query layer + types delivered in 20-01.
+- **Cross-phase dead links accepted per CONTEXT.md:** "Open automation →" from Phase 19 approved-status detail goes to /admin/automations/[id] (dead until 20-02). "View client profile →" goes to /admin/clients/[orgId] (dead until Phase 21).
 
 ## Session Continuity
 
-**Last session:** 2026-05-07T19:09:17.840Z
-**Next action:** Run human UAT for Phase 19 (sign in to /admin, hit /admin/requests, click into the seed pending request, exercise Approve and Reject paths, verify customer notifications + detail timeline + terminal-state result panels in EN and ES). On UAT pass, write 19-VERIFICATION.md and merge `feature/phase-19-requests-inbox` -> `main`. Then start Phase 20 (Automations Admin) with `/gsd:discuss-phase` on a new branch `feature/phase-20-automations-admin`.
+**Last session:** 2026-05-07T19:42:00Z
+**Stopped at:** Completed 20-01-PLAN.md
+**Next action:** Start Phase 20 plan 20-02 (admin detail page at /admin/automations/[id] — AUTM-05). Continues on `feature/phase-20-automations-admin`. Embed-shape gotcha (Array.isArray defensive normalizer for `automation_templates !left` and any UNIQUE-FK !left embed) is documented in 20-01-SUMMARY.md "TypeScript-shape gotchas" section — bake into the detail query from day 1.
+
+2026-05-07 — Phase 20 plan 20-01 shipped: /admin/automations real cross-org list (5 status tabs + 3 combinable filters + 6-column table + full EN/ES i18n). placeholder removed. AUTM-01 + I18N-01 (this slice) satisfied. tsc + scoped lint exit 0; npm run build emits /admin/automations as dynamic.
 
 2026-05-07 — Phase 19 hotfix: expanded admin requests inbox from 3 to 7 statuses via 3-tab grouping (pending tab now also shows in_review/payment_pending/payment_failed; approved tab also shows completed). Approve/Reject still locked to status='pending' exactly.
