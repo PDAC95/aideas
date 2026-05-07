@@ -3,6 +3,20 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Admin Dashboard
 status: unknown
+stopped_at: Completed 20-03-PLAN.md
+last_updated: "2026-05-07T20:18:51.063Z"
+progress:
+  total_phases: 14
+  completed_phases: 14
+  total_plans: 43
+  completed_plans: 43
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: Admin Dashboard
+status: unknown
 last_updated: "2026-05-07T19:09:17.846Z"
 progress:
   total_phases: 14
@@ -29,12 +43,12 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Admin Dashboard
 status: in_progress
-last_updated: "2026-05-07T20:05:01Z"
+last_updated: "2026-05-07T20:15:56Z"
 progress:
   total_phases: 7
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 20
-  completed_plans: 11
+  completed_plans: 12
 ---
 
 # Project State
@@ -44,14 +58,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-04 after v1.2 milestone start)
 
 **Core value:** Customers can monitor automations, request new ones, and see their ROI from a single bilingual dashboard — paired with an operations team who can fulfill what they request.
-**Current focus:** v1.2 Admin Dashboard — Phase 17/18/19 complete (Phase 19 awaiting human UAT). Phase 20 (Automations Admin) IN PROGRESS — plans 20-01 + 20-02 shipped (2/3 plans complete).
+**Current focus:** v1.2 Admin Dashboard — Phase 17/18/19/20 complete (Phase 19 + 20 awaiting human UAT). Phase 21 (Clients Admin) is next.
 
 ## Current Position
 
-Phase: Phase 20 — Automations Admin — In progress (2/3 plans complete).
-Plan: 20-02 complete. /admin/automations/[id] is now a real read-only detail surface: header (name + status badge + reserved actions ReactNode slot), 4-card KPI grid (Total executions, Hours saved, Success rate, Last execution) with locale-aware Intl formatters and 'Never' / '—' fallbacks, last-20 execution timeline (status dot + label + relative timestamp + optional duration in seconds + truncated error preview), 2-column body with right-side org card + template card (with template_id-null empty state) + setup_notes inline section (renders only when non-empty after trim). Plan 20-01's row Name links from the list view now resolve to a live page.
-Status: Phase 20 ships AUTM-05 + I18N-01 (this slice). fetchAdminAutomationDetail appended to automation-queries.ts (assertPlatformStaff-gated, two round trips, defensive singleEmbed normalization for organizations !inner and automation_templates !left, maybeSingle + soft-delete filter, null on missing for the page to 404). 2 new types appended to admin/types.ts (AdminAutomationDetail, AdminAutomationExecutionEntry). 31 new admin.automations.detail.* leaf keys per locale (857 total leaf keys after this plan, full EN/ES parity). All 4 new files server-rendered (no 'use client' anywhere). tsc + scoped lint exit 0; npm run build exits 0 emitting both /admin/automations and /admin/automations/[id] as dynamic.
-Last activity: 2026-05-07 — Plan 20-02 executed (3 tasks, 8 files; types + query fn + 3 server components + detail page + i18n). Phase 20 plan 20-03 is next (status transition buttons through the now-wired actions ReactNode slot).
+Phase: Phase 20 — Automations Admin — COMPLETE (3/3 plans).
+Plan: 20-03 complete. /admin/automations/[id] header now renders contextual 0..2 transition buttons by status: in_setup -> green Activate; active -> amber Pause + outline-red Archive; paused -> green Resume + outline-red Archive; archived/draft/pending_review/failed -> no buttons. Activate/Pause/Resume are direct-click; Archive opens a confirmation modal. All four server actions (activateAutomation, pauseAutomation, resumeAutomation, archiveAutomation) gated by assertPlatformStaff, race-guarded at app + SQL layer, fan out best-effort customer notifications with CONTEXT.md-verbatim copy, revalidate admin + customer paths. 16 new admin.automations.detail.actions/archiveModal i18n keys per locale (873 total leaf keys, full EN/ES parity).
+Status: Phase 20 SHIPS AUTM-02 + AUTM-03 + AUTM-04 + I18N-01 (this slice). Combined with 20-01 (AUTM-01) and 20-02 (AUTM-05), all 5 Phase 20 requirements are now satisfied. Two new client component files (automation-transition-buttons.tsx, archive-automation-modal.tsx); two new lib files (validations/admin-automation.ts, actions/admin-automations.ts). Page update at (admin)/admin/automations/[id]/page.tsx wires actions through the AdminAutomationDetail actions ReactNode slot. tsc + scoped lint exit 0; npm run build exits 0 emitting both /admin/automations and /admin/automations/[id] as dynamic.
+Last activity: 2026-05-07 — Plan 20-03 executed (3 tasks, 7 files; Zod schema + 4 server actions + 2 client components + page update + i18n). Phase 20 is now ready for human UAT and merge to main. Phase 21 (Clients Admin) is unblocked.
 
 ## Performance Metrics
 
@@ -77,8 +91,26 @@ Last activity: 2026-05-07 — Plan 20-02 executed (3 tasks, 8 files; types + que
 | 19-03      | 6              | 3     | 8             |
 | 20-01      | 12             | 3     | 8             |
 | 20-02      | 7              | 3     | 8             |
+| 20-03      | 5              | 3     | 7             |
 
 ## Accumulated Context
+
+### Decisions (Phase 20-03 execution, 2026-05-07)
+
+- **Shared `doTransition` primitive over four copy-pasted actions.** Single race-guard + revalidatePath + notification fan-out site; four thin wrappers (activateAutomation, pauseAutomation, resumeAutomation, archiveAutomation) provide the from/to/notification-copy specifics. Easier to evolve. Reusable for any future state-machine admin action where 2..N transitions share the same scaffolding (Phase 21 client suspend/reactivate, Phase 22 admin-driven status flips).
+- **`notifyOrgMembers` helper duplicated from `admin-requests.ts` (~30 LOC), not imported.** Per CONTEXT.md guidance: each action module owns its own helper so per-domain copy / notification type / link rules can evolve independently. The duplication cost is small and stable.
+- **Notification copy pre-rendered English on the server**, mirroring Phase 19 approve/reject. Switching to keyed messages requires a notification i18n layer; deferred to v1.3 per CONTEXT.md. All four transition titles + messages match CONTEXT.md verbatim (see SUMMARY notification-copy table).
+- **Notification `link` is `/dashboard/automations` for ALL four transitions** — gives the customer a single click to see the affected automation in their list. Per CONTEXT.md.
+- **Archive is the only transition with a confirmation modal.** Activate / pause / resume are direct-click. Friction-only-where-it-matters principle (irreversible-from-customer-side warrants confirmation; reversible state flips do not). Per AUTM-04.
+- **All four actions accept the same `TransitionAutomationInput` shape** (uuid + expectedStatus enum: in_setup|active|paused). Zod accepts any of the three values; each action then enforces its specific allowed-from list at the body layer (e.g. `activateAutomation` rejects expectedStatus='paused' as `invalid_input`). Belt-and-braces.
+- **Defense-in-depth race guard at two layers.** App-level pre-flight `SELECT id, name, organization_id, status` + status check + SQL-level `.eq('id', automationId).eq('status', expectedStatus)` on UPDATE. Two concurrent staff clicks: first wins; second's pre-flight catches state change OR (rare interleaving) UPDATE matches zero rows. Either way the second client gets `state_changed` and `router.refresh()`.
+- **`expectedStatus` narrowing via runtime guard + type assertion in page.tsx.** `transitionableStatuses` tuple `as const`; page does `(transitionableStatuses as readonly string[]).includes(detail.status as string)` then asserts to the union. Simple, no intermediate switch, lint-clean.
+- **`ArchiveAutomationModal` owns its trigger button inside the component.** Same pattern as `RejectRequestModal`; cleaner prop API than children-as-trigger. Reusable for any "trigger + modal" admin action requiring confirmation.
+- **Customer-side propagation relies on `revalidatePath` + best-effort notification fan-out**, NOT a Supabase Realtime subscription on `automations`. Same posture as Phase 19. CONTEXT.md amended "Propagation pattern" section. If UAT reveals stale UI on the customer side after a status flip, a Realtime channel can be added later.
+- **Status badge palette already covers all 7 DB statuses (Plan 20-02).** This plan adds active transitions for the operational subset {in_setup, active, paused} only. Header for archived/draft/pending_review/failed renders the badge but with empty actions slot — `{actions && (...)}` in `AdminAutomationDetail` (Plan 20-02) gracefully collapses an empty wrapper.
+- **No `audit_log` or persistence of who-flipped-status-when** — explicitly deferred per CONTEXT.md.
+- **No RLS changes.** Phase 17's admin policies on `automations` and `notifications` already cover this work end-to-end.
+- **Customer-side query unchanged.** Phase 09's `.not("status", "eq", "archived")` on `/dashboard/automations` already filters archived from the default customer view; revalidate-on-archive refreshes the list correctly.
 
 ### Decisions (Phase 20-02 execution, 2026-05-07)
 
@@ -239,14 +271,17 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 ### Pending Todos
 
 - **Phase 19 still awaiting human UAT** (separate from Phase 20 work). Migration `20260508000001_automations_setup_notes.sql` from 19-01 must be applied on the dev DB before approve/reject UAT.
-- **Phase 20 plan 20-03 remains.** 20-03 ships the four status transition actions (AUTM-02..04) through the actions ReactNode slot already wired into AdminAutomationDetail by 20-02. Builds on the query layer + types delivered by 20-01 + 20-02.
+- **Phase 20 awaits human UAT** (5 transitions × EN + ES locale; race-condition smoke; customer-side notification appears under /dashboard/notifications; archived row disappears from customer's /dashboard/automations active filter). Recommended UAT items captured in 20-03-SUMMARY.md.
+- **Phase 20 ready to merge to main** once human UAT passes. After merge, Phase 21 (Clients Admin) starts on a new feature branch.
 - **Cross-phase dead links accepted per CONTEXT.md:** "Open automation →" from Phase 19 approved-status detail now resolves to a live page (20-02 shipped). "View client profile →" goes to /admin/clients/[orgId] (still dead until Phase 21).
 
 ## Session Continuity
 
-**Last session:** 2026-05-07T20:05:01Z
-**Stopped at:** Completed 20-02-PLAN.md
-**Next action:** Start Phase 20 plan 20-03 (status transition buttons — AUTM-02..04). Continues on `feature/phase-20-automations-admin`. The actions ReactNode slot in AdminAutomationDetail is already wired and battle-tested with `null`; plan 20-03 will swap null for a `<AdminAutomationTransitions>` client component containing the four contextual buttons. Server actions clone the Phase 19-03 skeleton (`assertPlatformStaff -> Zod parse -> pre-flight SELECT -> mutation with second SQL guard -> revalidatePath admin + customer paths`).
+**Last session:** 2026-05-07T20:18:51.060Z
+**Stopped at:** Completed 20-03-PLAN.md
+**Next action:** Phase 20 is complete (5/5 requirements + I18N-01). Run human UAT against the 5 transitions × EN + ES locale on `feature/phase-20-automations-admin`, then merge the branch to `main` per the project's branching strategy. Phase 21 (Clients Admin) starts next on a fresh feature branch — patterns from Phase 20 (cross-org list with URL-state tabs/filters, read-only detail page with actions ReactNode slot, shared transition primitive with race guard + notification fan-out) all transfer directly.
+
+2026-05-07 — Phase 20 plan 20-03 shipped: /admin/automations/[id] header now renders contextual 0..2 transition buttons (in_setup -> Activate; active -> Pause + Archive; paused -> Resume + Archive). 4 server actions (activate/pause/resume/archive) gated by assertPlatformStaff with two-layer race guard + best-effort customer notification fan-out + revalidate admin + customer paths. Archive opens a confirmation modal; the other three are direct-click. 16 new admin.automations.detail.actions/archiveModal i18n keys per locale (873 total). AUTM-02 + AUTM-03 + AUTM-04 + I18N-01 (this slice) satisfied. Phase 20 complete: AUTM-01..05 + I18N-01.
 
 2026-05-07 — Phase 20 plan 20-02 shipped: /admin/automations/[id] real read-only detail surface (header + status badge + reserved actions slot, 4-card KPI grid, last-20 execution timeline, org card + template card + setup_notes). 31 new admin.automations.detail.* leaf keys per locale (857 total). AUTM-05 + I18N-01 (this slice) satisfied. fetchAdminAutomationDetail in automation-queries.ts; defensive singleEmbed normalization; two round trips. All 4 new files server-rendered. tsc + scoped lint exit 0; npm run build emits both /admin/automations and /admin/automations/[id] as dynamic.
 
