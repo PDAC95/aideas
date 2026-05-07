@@ -51,7 +51,7 @@ Operations get a global, cross-org view of every `automation` at `/admin/automat
 ### Customer-side visibility (`/dashboard/automations`)
 - **Archived:** Filtered out of the default customer view. A separate `Archived` tab/filter on the customer surface lets them inspect history. (May require a small adjustment to Phase 09's filter logic — check during planning.)
 - **Paused:** Visible in the customer's active list with a `Paused` status badge. No customer action — only admin can resume.
-- **Realtime propagation:** Status changes propagate via Supabase Realtime to the customer's `/dashboard/automations` and detail page. If the customer has the page open, the status badge updates without refresh. Same realtime pattern Phase 19 already validated for notifications/state changes.
+- **Propagation pattern:** Server actions call `revalidatePath('/dashboard/automations')` and `revalidatePath('/dashboard/automations/[id]')` after each transition. The customer sees the change on their next navigation/refresh, plus the notification fan-out gives near-instant signal via the notification surface. **No Supabase Realtime subscription** — same pattern Phase 19 ships (revalidate + notification + next-load freshness). A future polish phase can add a `postgres_changes` subscription on the customer page if desired; not in scope for Phase 20.
 
 ### i18n
 - New namespace `admin.automations.list.*` for tabs, columns, filters, search placeholder, empty states.
