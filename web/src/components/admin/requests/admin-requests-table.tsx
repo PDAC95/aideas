@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import type { AdminRequestRow } from "@/lib/admin/types";
+import type { AdminRequestRow, AdminRequestStatus } from "@/lib/admin/types";
 
 interface AdminRequestsTableProps {
   rows: AdminRequestRow[];
@@ -13,21 +13,29 @@ interface AdminRequestsTableProps {
       customRequirements: string;
       createdAt: string;
     };
-    statusBadges: {
-      pending: string;
-      approved: string;
-      rejected: string;
-    };
+    statusBadges: Record<AdminRequestStatus, string>;
     empty: string;
     noTemplate: string;
     noRequirements: string;
   };
 }
 
-const STATUS_BADGE_CLASS: Record<string, string> = {
+/**
+ * Badge color per REAL DB status value (not per tab). A row in the Pending
+ * tab might be `in_review` or `payment_failed`; the badge reflects that.
+ */
+const STATUS_BADGE_CLASS: Record<AdminRequestStatus, string> = {
   pending:
     "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-200",
+  in_review:
+    "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-200",
+  payment_pending:
+    "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-200",
+  payment_failed:
+    "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-200",
   approved:
+    "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-200",
+  completed:
     "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-200",
   rejected: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-200",
 };
@@ -102,12 +110,10 @@ export function AdminRequestsTable({
         </thead>
         <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
           {rows.map((row) => {
-            const badgeKey = (
-              row.status in translations.statusBadges ? row.status : "pending"
-            ) as keyof typeof translations.statusBadges;
-            const badgeLabel = translations.statusBadges[badgeKey];
+            const badgeLabel =
+              translations.statusBadges[row.status] ?? row.status;
             const badgeCls =
-              STATUS_BADGE_CLASS[badgeKey] ?? STATUS_BADGE_CLASS.pending;
+              STATUS_BADGE_CLASS[row.status] ?? STATUS_BADGE_CLASS.pending;
             return (
               <tr
                 key={row.id}

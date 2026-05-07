@@ -60,8 +60,12 @@ export default async function AdminRequestsPage({
     },
     statusBadges: {
       pending: t("statusBadges.pending"),
+      in_review: t("statusBadges.in_review"),
       approved: t("statusBadges.approved"),
+      completed: t("statusBadges.completed"),
       rejected: t("statusBadges.rejected"),
+      payment_pending: t("statusBadges.payment_pending"),
+      payment_failed: t("statusBadges.payment_failed"),
     },
     empty: t(
       `empty.${tab}` as "empty.pending" | "empty.approved" | "empty.rejected"

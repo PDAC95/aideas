@@ -933,8 +933,12 @@
         },
         "statusBadges": {
           "pending": "Pendiente",
+          "in_review": "En revision",
           "approved": "Aprobada",
-          "rejected": "Rechazada"
+          "completed": "Completada",
+          "rejected": "Rechazada",
+          "payment_pending": "Pago pendiente",
+          "payment_failed": "Pago fallido"
         },
         "empty": {
           "pending": "Nada en espera. Las nuevas solicitudes de clientes aparecen aqui primero.",
