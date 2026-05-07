@@ -172,13 +172,15 @@ export async function fetchAdminRequestDetail(
       id, organization_id, template_id, user_id,
       title, description, urgency, status, notes,
       created_at, updated_at, completed_at,
-      organization:organizations!inner(id, name, slug, created_at),
+      organization:organizations!inner(
+        id, name, slug, created_at,
+        subscriptions:subscriptions!left(plan, status)
+      ),
       requester:profiles!inner(id, email, full_name),
       template:automation_templates!left(
         id, slug,
         translations:automation_template_translations!left(field, value, locale)
-      ),
-      subscription:subscriptions!left(plan, status)
+      )
       `
     )
     .eq("id", requestId)
@@ -203,14 +205,22 @@ export async function fetchAdminRequestDetail(
     created_at: string;
     updated_at: string;
     completed_at: string | null;
-    organization: { id: string; name: string; slug: string; created_at: string };
+    organization: {
+      id: string;
+      name: string;
+      slug: string;
+      created_at: string;
+      subscriptions:
+        | Array<{ plan: string; status: string }>
+        | { plan: string; status: string }
+        | null;
+    };
     requester: { id: string; email: string; full_name: string | null };
     template: {
       id: string;
       slug: string;
       translations: Array<{ field: string; value: string; locale: string }> | null;
     } | null;
-    subscription: Array<{ plan: string; status: string }> | { plan: string; status: string } | null;
   };
   const detail = data as unknown as RawDetail;
 
@@ -245,9 +255,9 @@ export async function fetchAdminRequestDetail(
 
   // Subscription may come back as a single object OR a one-element array
   // depending on how Supabase resolves the !left embed. Normalize either way.
-  const sub = Array.isArray(detail.subscription)
-    ? detail.subscription[0] ?? null
-    : detail.subscription ?? null;
+  const sub = Array.isArray(detail.organization.subscriptions)
+    ? detail.organization.subscriptions[0] ?? null
+    : detail.organization.subscriptions ?? null;
 
   return {
     id: detail.id,
