@@ -3,7 +3,7 @@ import {
   fetchAdminRequests,
   fetchAdminRequestStatusCounts,
 } from "@/lib/admin/request-queries";
-import type { AdminRequestStatus } from "@/lib/admin/types";
+import type { AdminRequestTab } from "@/lib/admin/types";
 import { AdminRequestsTabs } from "@/components/admin/requests/admin-requests-tabs";
 import { AdminRequestsTable } from "@/components/admin/requests/admin-requests-table";
 
@@ -11,15 +11,11 @@ interface AdminRequestsPageProps {
   searchParams: Promise<{ status?: string }>;
 }
 
-const VALID_STATUSES: AdminRequestStatus[] = [
-  "pending",
-  "approved",
-  "rejected",
-];
+const VALID_TABS: AdminRequestTab[] = ["pending", "approved", "rejected"];
 
-function coerceStatus(raw: string | undefined): AdminRequestStatus {
-  if (raw && (VALID_STATUSES as string[]).includes(raw)) {
-    return raw as AdminRequestStatus;
+function coerceTab(raw: string | undefined): AdminRequestTab {
+  if (raw && (VALID_TABS as string[]).includes(raw)) {
+    return raw as AdminRequestTab;
   }
   return "pending";
 }
@@ -41,10 +37,10 @@ export default async function AdminRequestsPage({
 }: AdminRequestsPageProps) {
   const locale = await getLocale();
   const { status: rawStatus } = await searchParams;
-  const status = coerceStatus(rawStatus);
+  const tab = coerceTab(rawStatus);
 
   const [rows, counts, t] = await Promise.all([
-    fetchAdminRequests({ status, locale }),
+    fetchAdminRequests({ tab, locale }),
     fetchAdminRequestStatusCounts(),
     getTranslations("admin.requests.list"),
   ]);
@@ -68,7 +64,7 @@ export default async function AdminRequestsPage({
       rejected: t("statusBadges.rejected"),
     },
     empty: t(
-      `empty.${status}` as "empty.pending" | "empty.approved" | "empty.rejected"
+      `empty.${tab}` as "empty.pending" | "empty.approved" | "empty.rejected"
     ),
     noTemplate: t("noTemplate"),
     noRequirements: t("noRequirements"),
@@ -86,7 +82,7 @@ export default async function AdminRequestsPage({
       </div>
 
       <AdminRequestsTabs
-        active={status}
+        active={tab}
         counts={counts}
         translations={translations.tabs}
       />

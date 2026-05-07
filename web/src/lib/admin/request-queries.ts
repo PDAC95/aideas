@@ -4,8 +4,10 @@ import type {
   AdminRequestRow,
   AdminRequestDetail,
   AdminRequestStatus,
+  AdminRequestTab,
   AdminRequestStatusCounts,
 } from "./types";
+import { TAB_TO_STATUSES } from "./types";
 
 const ACTIVE_LIKE_STATUSES = [
   "active",
@@ -23,11 +25,12 @@ function preview(text: string | null | undefined): string {
 }
 
 /**
- * List automation_requests for the admin inbox, scoped to a single status tab.
+ * List automation_requests for the admin inbox, scoped to a single UI TAB
+ * (which fans out to one or more real DB statuses via TAB_TO_STATUSES).
  *
  * Ordering rule (per CONTEXT.md):
- *   - status='pending'  -> created_at ASC  (FIFO, oldest waiting first)
- *   - any other status  -> created_at DESC (most recent first)
+ *   - tab="pending"  -> created_at ASC  (FIFO, oldest waiting first)
+ *   - any other tab  -> created_at DESC (most recent first)
  *
  * Joins:
  *   - organizations (for org name)
@@ -37,7 +40,7 @@ function preview(text: string | null | undefined): string {
  *     request title.
  */
 export async function fetchAdminRequests(input: {
-  status: AdminRequestStatus;
+  tab: AdminRequestTab;
   locale: string;
 }): Promise<AdminRequestRow[]> {
   const supabase = await createAdminServerClient();
@@ -46,7 +49,8 @@ export async function fetchAdminRequests(input: {
     throw new Error(`fetchAdminRequests: not authorized (${auth.error})`);
   }
 
-  const ascending = input.status === "pending";
+  const ascending = input.tab === "pending";
+  const statuses = TAB_TO_STATUSES[input.tab];
 
   const { data, error } = await supabase
     .from("automation_requests")
@@ -60,7 +64,7 @@ export async function fetchAdminRequests(input: {
       )
       `
     )
-    .eq("status", input.status)
+    .in("status", statuses as unknown as string[])
     .is("deleted_at", null)
     .eq("template.translations.locale", input.locale)
     .eq("template.translations.field", "name")
@@ -103,9 +107,9 @@ export async function fetchAdminRequests(input: {
 }
 
 /**
- * Tab counters. One round trip — pull only id+status for non-deleted rows in
- * the three statuses we surface and bucket client-side. Used by the list page
- * header so each tab shows "(N)" without a separate query per tab.
+ * Tab counters. Three count-only queries (one per TAB) using the TAB→statuses
+ * mapping. Each query uses `count: 'exact', head: true` so we never transfer
+ * row data — just the count. The UI shows "(N)" on each tab from this result.
  */
 export async function fetchAdminRequestStatusCounts(): Promise<AdminRequestStatusCounts> {
   const supabase = await createAdminServerClient();
@@ -114,19 +118,24 @@ export async function fetchAdminRequestStatusCounts(): Promise<AdminRequestStatu
     throw new Error(`fetchAdminRequestStatusCounts: not authorized (${auth.error})`);
   }
 
-  const { data, error } = await supabase
-    .from("automation_requests")
-    .select("id, status")
-    .in("status", ["pending", "approved", "rejected"])
-    .is("deleted_at", null);
+  const tabs: AdminRequestTab[] = ["pending", "approved", "rejected"];
 
-  if (error) throw error;
+  const results = await Promise.all(
+    tabs.map(async (tab) => {
+      const statuses = TAB_TO_STATUSES[tab];
+      const { count, error } = await supabase
+        .from("automation_requests")
+        .select("id", { count: "exact", head: true })
+        .in("status", statuses as unknown as string[])
+        .is("deleted_at", null);
+      if (error) throw error;
+      return [tab, count ?? 0] as const;
+    })
+  );
 
   const counts: AdminRequestStatusCounts = { pending: 0, approved: 0, rejected: 0 };
-  for (const row of (data ?? []) as Array<{ status: string }>) {
-    if (row.status === "pending" || row.status === "approved" || row.status === "rejected") {
-      counts[row.status] += 1;
-    }
+  for (const [tab, n] of results) {
+    counts[tab] = n;
   }
   return counts;
 }
@@ -257,7 +266,7 @@ export async function fetchAdminRequestDetail(
     title: detail.title,
     customRequirements: detail.description,
     urgency: detail.urgency,
-    status: detail.status,
+    status: detail.status as AdminRequestStatus,
     notes: detail.notes,
     createdAt: detail.created_at,
     updatedAt: detail.updated_at,

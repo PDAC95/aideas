@@ -4,12 +4,12 @@ import { useTransition } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import type {
-  AdminRequestStatus,
+  AdminRequestTab,
   AdminRequestStatusCounts,
 } from "@/lib/admin/types";
 
 interface AdminRequestsTabsProps {
-  active: AdminRequestStatus;
+  active: AdminRequestTab;
   counts: AdminRequestStatusCounts;
   translations: {
     pending: string; // raw "Pending ({count})"
@@ -18,7 +18,7 @@ interface AdminRequestsTabsProps {
   };
 }
 
-const STATUSES: AdminRequestStatus[] = ["pending", "approved", "rejected"];
+const TABS: AdminRequestTab[] = ["pending", "approved", "rejected"];
 
 /**
  * Status tabs for /admin/requests. Owns URL state for the active tab via the
@@ -38,17 +38,17 @@ export function AdminRequestsTabs({
   const params = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
-  const labelFor = (status: AdminRequestStatus) =>
-    translations[status].replace("{count}", String(counts[status]));
+  const labelFor = (tab: AdminRequestTab) =>
+    translations[tab].replace("{count}", String(counts[tab]));
 
-  const onClick = (status: AdminRequestStatus) => {
-    if (status === active) return;
+  const onClick = (tab: AdminRequestTab) => {
+    if (tab === active) return;
     const next = new URLSearchParams(params.toString());
-    if (status === "pending") {
+    if (tab === "pending") {
       // canonical default: drop the param so refresh stays on Pending
       next.delete("status");
     } else {
-      next.set("status", status);
+      next.set("status", tab);
     }
     const qs = next.toString();
     startTransition(() => {
@@ -62,16 +62,16 @@ export function AdminRequestsTabs({
       aria-label="Request status"
       className="flex gap-1 border-b border-gray-200 dark:border-gray-700"
     >
-      {STATUSES.map((status) => {
-        const isActive = status === active;
+      {TABS.map((tab) => {
+        const isActive = tab === active;
         return (
           <button
-            key={status}
+            key={tab}
             role="tab"
             aria-selected={isActive}
             type="button"
             disabled={isPending}
-            onClick={() => onClick(status)}
+            onClick={() => onClick(tab)}
             className={cn(
               "relative -mb-px px-4 py-2 text-sm font-medium transition-colors",
               "border-b-2",
@@ -81,7 +81,7 @@ export function AdminRequestsTabs({
               isPending && "opacity-60 cursor-wait"
             )}
           >
-            {labelFor(status)}
+            {labelFor(tab)}
           </button>
         );
       })}
