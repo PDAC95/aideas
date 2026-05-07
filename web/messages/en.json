@@ -955,6 +955,53 @@
           "archived": "No archived automations."
         },
         "noTemplate": "Custom"
+      },
+      "detail": {
+        "backLink": "Back to automations",
+        "statusBadges": {
+          "active": "Active",
+          "in_setup": "In setup",
+          "paused": "Paused",
+          "failed": "Failed",
+          "archived": "Archived",
+          "draft": "Draft",
+          "pending_review": "Pending review"
+        },
+        "kpis": {
+          "totalExecutions": "Total executions",
+          "hoursSaved": "Hours saved",
+          "successRate": "Success rate",
+          "lastExecution": "Last execution",
+          "never": "Never",
+          "notAvailable": "—"
+        },
+        "timeline": {
+          "title": "Recent executions",
+          "empty": "No executions yet.",
+          "duration": "{seconds}s",
+          "statusLabels": {
+            "running": "Running",
+            "success": "Success",
+            "error": "Error",
+            "cancelled": "Cancelled"
+          }
+        },
+        "org": {
+          "sectionTitle": "Organization",
+          "slugLabel": "Slug",
+          "viewClient": "View client profile"
+        },
+        "template": {
+          "sectionTitle": "Template",
+          "categoryLabel": "Category",
+          "monthlyPriceLabel": "Monthly price",
+          "noPrice": "—",
+          "noTemplate": "Custom automation",
+          "noTemplateBody": "This automation was set up without a catalog template."
+        },
+        "setupNotes": {
+          "sectionTitle": "Setup notes"
+        }
       }
     },
     "requests": {

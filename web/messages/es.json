@@ -955,6 +955,53 @@
           "archived": "No hay automatizaciones archivadas."
         },
         "noTemplate": "Personalizada"
+      },
+      "detail": {
+        "backLink": "Volver a automatizaciones",
+        "statusBadges": {
+          "active": "Activa",
+          "in_setup": "En configuracion",
+          "paused": "Pausada",
+          "failed": "Con errores",
+          "archived": "Archivada",
+          "draft": "Borrador",
+          "pending_review": "En revision"
+        },
+        "kpis": {
+          "totalExecutions": "Ejecuciones totales",
+          "hoursSaved": "Horas ahorradas",
+          "successRate": "Tasa de exito",
+          "lastExecution": "Ultima ejecucion",
+          "never": "Nunca",
+          "notAvailable": "—"
+        },
+        "timeline": {
+          "title": "Ejecuciones recientes",
+          "empty": "Sin ejecuciones todavia.",
+          "duration": "{seconds}s",
+          "statusLabels": {
+            "running": "En curso",
+            "success": "Exito",
+            "error": "Error",
+            "cancelled": "Cancelada"
+          }
+        },
+        "org": {
+          "sectionTitle": "Organizacion",
+          "slugLabel": "Slug",
+          "viewClient": "Ver perfil del cliente"
+        },
+        "template": {
+          "sectionTitle": "Plantilla",
+          "categoryLabel": "Categoria",
+          "monthlyPriceLabel": "Precio mensual",
+          "noPrice": "—",
+          "noTemplate": "Automatizacion personalizada",
+          "noTemplateBody": "Esta automatizacion se configuro sin una plantilla del catalogo."
+        },
+        "setupNotes": {
+          "sectionTitle": "Notas de configuracion"
+        }
       }
     },
     "requests": {
