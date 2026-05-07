@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Admin Dashboard
 status: in_progress
-last_updated: "2026-05-07T13:28:04Z"
+last_updated: "2026-05-07T13:35:37Z"
 progress:
   total_phases: 7
   completed_phases: 2
   total_plans: 20
-  completed_plans: 7
+  completed_plans: 8
 ---
 
 # Project State
@@ -18,14 +18,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-04 after v1.2 milestone start)
 
 **Core value:** Customers can monitor automations, request new ones, and see their ROI from a single bilingual dashboard — paired with an operations team who can fulfill what they request.
-**Current focus:** v1.2 Admin Dashboard — Phase 17 Admin Foundation complete (3/3 plans); Phase 18 Catalog Admin complete (3/3 plans); Phase 19 Requests Inbox in progress (1/3 plans).
+**Current focus:** v1.2 Admin Dashboard — Phase 17 Admin Foundation complete (3/3 plans); Phase 18 Catalog Admin complete (3/3 plans); Phase 19 Requests Inbox in progress (2/3 plans).
 
 ## Current Position
 
-Phase: Phase 19 — Requests Inbox — In progress (1/3 plans).
-Plan: 19-01 complete (data plane: setup_notes migration + admin request queries + shared types). 19-02 (list page UI) is next.
-Status: automations gains a nullable setup_notes TEXT column (idempotent migration 20260508000001) so the future approve action can persist customer custom_requirements onto the new automation. web/src/lib/admin/types.ts ships AdminRequestStatus | AdminRequestRow | AdminRequestDetail | AdminRequestStatusCounts. web/src/lib/admin/request-queries.ts ships fetchAdminRequests({status, locale}) (FIFO when pending else DESC, embed-joined with org + locale-filtered template translation), fetchAdminRequestStatusCounts() (single-pass tab counters bucketed client-side), fetchAdminRequestDetail(id, locale) (full detail with org plan from subscriptions, active-like automations count, deterministic resultingAutomationId when approved). All three gated by assertPlatformStaff and throw on non-ok. Defensive normalization for the subscription !left embed handles both object-shape and array-shape returns. Existing /admin/requests placeholder page untouched.
-Last activity: 2026-05-07 — Plan 19-01 executed (2 tasks, 3 files; migration + types + queries).
+Phase: Phase 19 — Requests Inbox — In progress (2/3 plans).
+Plan: 19-02 complete (list page UI: real /admin/requests with status tabs, table, and full EN/ES i18n). 19-03 (detail page + approve/reject server actions) is next.
+Status: /admin/requests is no longer a placeholder. Server-rendered page consumes fetchAdminRequests({status, locale}) and fetchAdminRequestStatusCounts() in parallel, validates ?status= via coerceStatus() (silent fallback to pending), and forwards a pre-resolved translations object to AdminRequestsTabs (client; URL-synced) and AdminRequestsTable (server; 5 columns; rows are <Link>s to /admin/requests/[id] which is dead until 19-03). Tabs default canonicalizes by dropping the param on Pending so /admin/requests stays bare on refresh; t.raw() keeps {count} unresolved so live counts substitute correctly client-side. 18 i18n leaf keys per locale in admin.requests.list.* with full parity. admin.placeholders.requests intentionally preserved for 19-03 to remove. tsc + scoped lint exit 0; npm run build exits 0 with NEXT_TURBOPACK_EXPERIMENTAL_USE_SYSTEM_TLS_CERTS=1 (Google Fonts sandbox issue same as 19-01).
+Last activity: 2026-05-07 — Plan 19-02 executed (3 tasks, 5 files; i18n + tabs + table + page).
 
 ## Performance Metrics
 
@@ -47,8 +47,19 @@ Last activity: 2026-05-07 — Plan 19-01 executed (2 tasks, 3 files; migration +
 | 18-02      | 10             | 2     | 9             |
 | 18-03      | 12             | 2     | 8             |
 | 19-01      | 4              | 2     | 3             |
+| 19-02      | 5              | 3     | 5             |
 
 ## Accumulated Context
+
+### Decisions (Phase 19-02 execution, 2026-05-07)
+
+- **Tabs are client; table is server.** The 5-column table has no client state — every row's interactive surface is a `<Link>` which works fine in a server component. Only the active-tab decision needs `useRouter`/`useSearchParams`/`usePathname`, so only that strip pays the client-bundle cost. Pattern reusable for any URL-state-driven filter on top of an otherwise-static admin table.
+- **Default-tab canonicalization on Pending click.** When the user clicks Pending we `searchParams.delete("status")` instead of `set("status","pending")`. Refresh on Pending stays bare (`/admin/requests`); refresh on Approved keeps `?status=approved`. Shareable URLs are minimal and the canonical default never accumulates a redundant query string.
+- **`t.raw()` for `{count}` tab labels.** The placeholder is left unresolved server-side; the client substitutes it from live counts at render time. Reading via `t("tabs.pending", { count })` would freeze the value at request-time and skip the substitution layer, which would break any future client-side action that mutates counts without a full server round-trip.
+- **`coerceStatus()` silently falls back to pending.** A user fat-fingering `?status=garbage` lands silently on Pending. No 404, no error toast — the canonical default is the right landing for any unknown value. Validation: `(VALID_STATUSES as string[]).includes(raw)`.
+- **Status badges use amber/green/red** (CONTEXT.md "Claude's Discretion"). Amber on Pending reads as "waiting" more clearly than blue, and the green/red pair on Approved/Rejected matches universal terminal-state semantics.
+- **`admin.placeholders.requests` preserved deliberately.** Removing those keys now would risk a half-translated state for any environment that hadn't pulled this commit. Plan 19-03 (which fully replaces the last placeholder consumer with the detail page) is the right place for that cleanup.
+- **Translation-prop pattern reused verbatim from Phase 18.** Server resolves `t('foo')` and `t.raw('templateString')` into a plain object, then forwards it as a `translations` prop to a client subtree. No `useTranslations()` in the client tree. Established pattern across catalog admin and now requests admin; Phase 20+ will keep cloning it.
 
 ### Decisions (Phase 19-01 execution, 2026-05-07)
 
@@ -162,9 +173,9 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 
 ### Pending Todos
 
-(none — Phase 19-01 data plane is in; Plan 19-02 list page UI is next on the same branch `feature/phase-19-requests-inbox`. Plan 19-03 will land approve/reject server actions and the detail page, plus a new migration `20260508000001_automations_setup_notes.sql` apply on the dev DB before integration testing.)
+(none — Phase 19-02 list page is in; Plan 19-03 (detail page + approve/reject server actions + cleanup of `admin.placeholders.requests` keys) is next on the same branch `feature/phase-19-requests-inbox`. Migration `20260508000001_automations_setup_notes.sql` still needs to be applied on the dev DB before 19-03 integration testing — local apply path: `supabase migration up` or whatever the project's apply path is.)
 
 ## Session Continuity
 
-**Last session:** 2026-05-07 — Executed Plan 19-01 (data plane: setup_notes migration + admin request queries + shared types). Stopped at: Completed 19-01-PLAN.md.
-**Next action:** Continue Phase 19 with Plan 19-02 (list page UI). The list page consumes `fetchAdminRequests({status, locale})` and `fetchAdminRequestStatusCounts()` from `web/src/lib/admin/request-queries.ts` — no new Supabase calls in the route layer. After 19-02 ships, Plan 19-03 wires the detail page + approve/reject server actions and an automation-id derivation that depends on the new `automations.setup_notes` column.
+**Last session:** 2026-05-07 — Executed Plan 19-02 (list page UI: i18n namespace + AdminRequestsTabs client + AdminRequestsTable server + real /admin/requests page replacing the Phase 17 placeholder). Stopped at: Completed 19-02-PLAN.md.
+**Next action:** Continue Phase 19 with Plan 19-03 (detail page at `/admin/requests/[id]` + approve/reject server actions + final cleanup of `admin.placeholders.requests` i18n keys). The detail page consumes `fetchAdminRequestDetail(id, locale)` from `web/src/lib/admin/request-queries.ts`; the approve action will copy `automation_requests.description` -> `automations.setup_notes` via the column added in 19-01.
