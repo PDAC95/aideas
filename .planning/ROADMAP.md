@@ -55,7 +55,7 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 - [ ] **Phase 16: Carry-over Cleanup** — Resolve 4 v1.1 audit tech-debt items so CI is green for v1.2 (3 plans)
 - [x] **Phase 17: Admin Foundation** — `platform_staff` schema + RLS + `/admin/*` gate + admin layout + `assertPlatformStaff` helper (3 plans) — completed 2026-05-05
 - [x] **Phase 18: Catalog Admin** — CRUD UI for `automation_templates` with active/featured toggles (3 plans) (completed 2026-05-06)
-- [ ] **Phase 19: Requests Inbox** — List + detail + single-step approve (creates automation) + reject-with-reason (3 plans)
+- [x] **Phase 19: Requests Inbox** — List + detail + single-step approve (creates automation) + reject-with-reason (3 plans) (completed 2026-05-07)
 - [ ] **Phase 20: Automations Admin** — Global cross-org list + read-only detail + status transitions (3 plans)
 - [ ] **Phase 21: Clients Admin** — Orgs list + search + 360° detail + cross-links + free-form internal notes (3 plans)
 - [ ] **Phase 22: Admin Home** — Operational KPIs + activity feed + quick-link cards (2 plans)
@@ -118,10 +118,10 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
   3. Staff approves a `pending` request via a single button — request status flips to `approved` AND a new row appears in `automations` with status `in_setup`, scoped to the requesting org and linked to the template (verifiable by SQL)
   4. Staff rejecting a request must enter a non-empty rejection reason; submitting empty fails form validation; on success the request status is `rejected` and the reason is persisted in request notes
   5. All inbox UI strings (filters, columns, detail labels, approve/reject buttons, validation errors) have EN/ES parity
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 - [x] 19-01-PLAN.md — Migration: ADD `setup_notes` TEXT column to `automations` + admin queries (`fetchAdminRequests`, `fetchAdminRequestStatusCounts`, `fetchAdminRequestDetail`) gated by `assertPlatformStaff`
-- [ ] 19-02-PLAN.md — `/admin/requests` list page with status tabs (Pending/Approved/Rejected with counters), 5-column table, FIFO ordering for pending and DESC for others, URL-synced tab state, and `admin.requests.list.*` i18n namespace
-- [ ] 19-03-PLAN.md — `/admin/requests/[id]` detail page with customer card + status timeline + result panel, single-click approve (atomically creates `in_setup` automation + flips request status + best-effort notification fan-out), reject modal with 10..500 char Zod-validated reason + notification fan-out with reason verbatim, race-condition guard (state_changed error + page reload), and `admin.requests.detail.*` i18n namespace
+- [x] 19-02-PLAN.md — `/admin/requests` list page with status tabs (Pending/Approved/Rejected with counters), 5-column table, FIFO ordering for pending and DESC for others, URL-synced tab state, and `admin.requests.list.*` i18n namespace
+- [x] 19-03-PLAN.md — `/admin/requests/[id]` detail page with customer card + status timeline + result panel, single-click approve (atomically creates `in_setup` automation + flips request status + best-effort notification fan-out), reject modal with 10..500 char Zod-validated reason + notification fan-out with reason verbatim, race-condition guard (state_changed error + page reload), and `admin.requests.detail.*` i18n namespace
 
 ### Phase 20: Automations Admin
 **Goal:** Operations can monitor and transition the status of every automation across all orgs from a global view.
@@ -183,7 +183,7 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 | 16. Carry-over Cleanup | v1.2 | 0/3 | Not started | — |
 | 17. Admin Foundation | v1.2 | Complete    | 2026-05-05 | 2026-05-05 |
 | 18. Catalog Admin | 3/3 | Complete   | 2026-05-06 | — |
-| 19. Requests Inbox | 2/3 | In Progress|  | — |
+| 19. Requests Inbox | 3/3 | Complete   | 2026-05-07 | — |
 | 20. Automations Admin | v1.2 | 0/3 | Not started | — |
 | 21. Clients Admin | v1.2 | 0/3 | Not started | — |
 | 22. Admin Home | v1.2 | 0/2 | Not started | — |
