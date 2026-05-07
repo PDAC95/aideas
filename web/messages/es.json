@@ -950,6 +950,7 @@
       },
       "detail": {
         "backLink": "Volver a solicitudes",
+        "nonActionable": "Esta solicitud esta en otra etapa del flujo. Sin acciones disponibles desde esta pagina.",
         "sections": {
           "customer": "Cliente",
           "request": "Solicitud",

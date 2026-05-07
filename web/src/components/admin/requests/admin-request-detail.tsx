@@ -1,7 +1,10 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import type { AdminRequestDetail as AdminRequestDetailType } from "@/lib/admin/types";
+import type {
+  AdminRequestDetail as AdminRequestDetailType,
+  AdminRequestStatus,
+} from "@/lib/admin/types";
 
 interface AdminRequestDetailProps {
   detail: AdminRequestDetailType;
@@ -12,6 +15,7 @@ interface AdminRequestDetailProps {
     sectionRequest: string;
     sectionTimeline: string;
     sectionResult: string;
+    nonActionable: string;
     customer: {
       org: string;
       slug: string;
@@ -45,18 +49,39 @@ interface AdminRequestDetailProps {
       rejectedReason: string;
       rejectedNoReason: string;
     };
-    statusBadges: { pending: string; approved: string; rejected: string };
+    statusBadges: Record<AdminRequestStatus, string>;
   };
   actions?: ReactNode; // approve + reject buttons, only when status='pending'
 }
 
-const STATUS_BADGE_CLASS: Record<string, string> = {
+/** Badge color per real DB status (one of 7). */
+const STATUS_BADGE_CLASS: Record<AdminRequestStatus, string> = {
   pending:
     "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-200",
+  in_review:
+    "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-200",
+  payment_pending:
+    "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-200",
+  payment_failed:
+    "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-200",
   approved:
+    "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-200",
+  completed:
     "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-200",
   rejected: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-200",
 };
+
+/**
+ * Real DB statuses that surface in the Pending tab but are NOT actionable
+ * from this UI (admin can't approve/reject `in_review`, `payment_pending`,
+ * or `payment_failed` — they're owned by other flows). For these we render
+ * a small localized note in place of the action buttons.
+ */
+const NON_ACTIONABLE_PENDING_STATUSES: readonly AdminRequestStatus[] = [
+  "in_review",
+  "payment_pending",
+  "payment_failed",
+] as const;
 
 function formatDateTime(iso: string, locale: string): string {
   try {
@@ -85,11 +110,11 @@ export function AdminRequestDetail({
   translations,
   actions,
 }: AdminRequestDetailProps) {
-  const status = detail.status as "pending" | "approved" | "rejected";
+  const status = detail.status;
   const badgeCls = STATUS_BADGE_CLASS[status] ?? STATUS_BADGE_CLASS.pending;
-  const badgeLabel =
-    translations.statusBadges[status as keyof typeof translations.statusBadges] ??
-    detail.status;
+  const badgeLabel = translations.statusBadges[status] ?? status;
+  const isNonActionablePending =
+    NON_ACTIONABLE_PENDING_STATUSES.includes(status);
 
   const urgencyLabel =
     translations.request.urgencyValues[
@@ -237,6 +262,13 @@ export function AdminRequestDetail({
             {status === "pending" && actions && (
               <div className="flex flex-wrap gap-2 pt-3 border-t border-gray-100 dark:border-gray-800">
                 {actions}
+              </div>
+            )}
+            {isNonActionablePending && (
+              <div className="pt-3 border-t border-gray-100 dark:border-gray-800">
+                <p className="text-xs italic text-gray-500 dark:text-gray-400">
+                  {translations.nonActionable}
+                </p>
               </div>
             )}
           </section>

@@ -950,6 +950,7 @@
       },
       "detail": {
         "backLink": "Back to requests",
+        "nonActionable": "This request is in another workflow stage. No action available from this page.",
         "sections": {
           "customer": "Customer",
           "request": "Request",

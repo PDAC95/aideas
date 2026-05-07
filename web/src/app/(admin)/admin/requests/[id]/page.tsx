@@ -41,6 +41,7 @@ export default async function AdminRequestDetailPage({
     sectionRequest: t("sections.request"),
     sectionTimeline: t("sections.timeline"),
     sectionResult: t("sections.result"),
+    nonActionable: t("nonActionable"),
     customer: {
       org: t("customer.org"),
       slug: t("customer.slug"),
@@ -80,8 +81,12 @@ export default async function AdminRequestDetailPage({
     },
     statusBadges: {
       pending: tList("statusBadges.pending"),
+      in_review: tList("statusBadges.in_review"),
       approved: tList("statusBadges.approved"),
+      completed: tList("statusBadges.completed"),
       rejected: tList("statusBadges.rejected"),
+      payment_pending: tList("statusBadges.payment_pending"),
+      payment_failed: tList("statusBadges.payment_failed"),
     },
   };
 
