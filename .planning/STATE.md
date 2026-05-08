@@ -3,6 +3,20 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Admin Dashboard
 status: unknown
+stopped_at: Phase 21 context gathered
+last_updated: "2026-05-08T15:12:43.147Z"
+progress:
+  total_phases: 15
+  completed_phases: 14
+  total_plans: 44
+  completed_plans: 44
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: Admin Dashboard
+status: unknown
 stopped_at: Completed 20-04-PLAN.md
 last_updated: "2026-05-08T14:50:42.941Z"
 progress:
@@ -302,8 +316,8 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 
 ## Session Continuity
 
-**Last session:** 2026-05-08T14:06:54Z
-**Stopped at:** Completed 20-04-PLAN.md
+**Last session:** 2026-05-08T15:12:43.142Z
+**Stopped at:** Phase 21 context gathered
 **Next action:** Phase 20 is now fully verified at strict ROADMAP wording (5/5 requirements + I18N-01 cross-cutting). Run human UAT on `feature/phase-20-automations-admin` covering both the original 20-01..03 surfaces (5 transitions × EN + ES) AND the new 20-04 catch-all tab (5 manual flows in 20-04-SUMMARY.md "Manual UAT" section). Then merge the branch to `main` per the project's branching strategy. Phase 21 (Clients Admin) starts next on a fresh feature branch — patterns from Phase 20 (cross-org list with URL-state tabs/filters, read-only detail page with actions ReactNode slot, shared transition primitive with race guard + notification fan-out, AND the new UI-only synthetic catch-all tab pattern) all transfer directly.
 
 2026-05-08 — Phase 20 plan 20-04 shipped: AUTM-01 strict-ROADMAP-wording gap closed via conditional 'Other' / 'Otros' catch-all tab in /admin/automations surfacing draft + pending_review rows under a single counter when count > 0 (hidden when count === 0). 'other' threaded through AdminAutomationTab union, ADMIN_AUTOMATION_TABS array, fetchAdminAutomations (.in branch), fetchAdminAutomationStatusCounts (6th HEAD count), page tabsTranslations + empty-union, AdminAutomationsTabs prop type + early-return guard. 2 new i18n leaf keys per locale (875 total). REQUIREMENTS.md AUTM-01 flipped to [x] + Traceability row to Complete. 6 atomic commits in 6 minutes.
