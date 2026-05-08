@@ -43,12 +43,12 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Admin Dashboard
 status: in_progress
-last_updated: "2026-05-07T20:15:56Z"
+last_updated: "2026-05-08T14:06:54Z"
 progress:
   total_phases: 7
   completed_phases: 4
-  total_plans: 20
-  completed_plans: 12
+  total_plans: 21
+  completed_plans: 13
 ---
 
 # Project State
@@ -62,10 +62,10 @@ See: .planning/PROJECT.md (updated 2026-05-04 after v1.2 milestone start)
 
 ## Current Position
 
-Phase: Phase 20 — Automations Admin — COMPLETE (3/3 plans).
-Plan: 20-03 complete. /admin/automations/[id] header now renders contextual 0..2 transition buttons by status: in_setup -> green Activate; active -> amber Pause + outline-red Archive; paused -> green Resume + outline-red Archive; archived/draft/pending_review/failed -> no buttons. Activate/Pause/Resume are direct-click; Archive opens a confirmation modal. All four server actions (activateAutomation, pauseAutomation, resumeAutomation, archiveAutomation) gated by assertPlatformStaff, race-guarded at app + SQL layer, fan out best-effort customer notifications with CONTEXT.md-verbatim copy, revalidate admin + customer paths. 16 new admin.automations.detail.actions/archiveModal i18n keys per locale (873 total leaf keys, full EN/ES parity).
-Status: Phase 20 SHIPS AUTM-02 + AUTM-03 + AUTM-04 + I18N-01 (this slice). Combined with 20-01 (AUTM-01) and 20-02 (AUTM-05), all 5 Phase 20 requirements are now satisfied. Two new client component files (automation-transition-buttons.tsx, archive-automation-modal.tsx); two new lib files (validations/admin-automation.ts, actions/admin-automations.ts). Page update at (admin)/admin/automations/[id]/page.tsx wires actions through the AdminAutomationDetail actions ReactNode slot. tsc + scoped lint exit 0; npm run build exits 0 emitting both /admin/automations and /admin/automations/[id] as dynamic.
-Last activity: 2026-05-07 — Plan 20-03 executed (3 tasks, 7 files; Zod schema + 4 server actions + 2 client components + page update + i18n). Phase 20 is now ready for human UAT and merge to main. Phase 21 (Clients Admin) is unblocked.
+Phase: Phase 20 — Automations Admin — COMPLETE (4/4 plans). AUTM-01 strict-ROADMAP-wording gap closed.
+Plan: 20-04 complete. /admin/automations now renders a conditional "Other" / "Otros" catch-all tab in the 6th slot, surfacing rows whose status is draft OR pending_review under a single combined counter. The tab is rendered ONLY when count(draft) + count(pending_review) > 0 — when both counts are zero the strip cleanly shows the original 5 tabs. Direct URL ?status=other is a valid landing (coerceTab is data-driven via ADMIN_AUTOMATION_TABS.includes). Per-row status badge continues to render the underlying real status (Draft / Pending review) via the existing statusBadges keys. 2 new i18n leaf keys per locale (875 total, full EN/ES parity). 7 files modified, 6 atomic commits, 6 minutes.
+Status: Phase 20 ships AUTM-01 strict satisfied. All 5 AUTM requirements + I18N-01 cross-cutting surface complete. REQUIREMENTS.md AUTM-01 flipped to [x]; Traceability row to Complete. tsc + scoped lint exit 0; npm run build exits 0 emitting /admin/automations as dynamic.
+Last activity: 2026-05-08 — Plan 20-04 executed (6 tasks, 7 files; UI-only synthetic catch-all tab pattern). Phase 20 is now fully verified at strict ROADMAP wording and ready for human UAT + merge to main. Phase 21 (Clients Admin) remains unblocked.
 
 ## Performance Metrics
 
@@ -92,8 +92,19 @@ Last activity: 2026-05-07 — Plan 20-03 executed (3 tasks, 7 files; Zod schema 
 | 20-01      | 12             | 3     | 8             |
 | 20-02      | 7              | 3     | 8             |
 | 20-03      | 5              | 3     | 7             |
+| 20-04      | 6              | 6     | 7             |
 
 ## Accumulated Context
+
+### Decisions (Phase 20-04 execution, 2026-05-08)
+
+- **Synthetic UI-only tab value, not a DB status.** Adding `"other"` to `AdminAutomationStatus` would have lied about what the DB CHECK constraint allows. Keeping the union strictly real-DB-statuses preserves type safety for anything that touches `automations.status` directly; the new `"other"` lives only in `AdminAutomationTab` (the type that drives the UI strip + URL state). Reusable for any future "group these N statuses under one tab" admin pattern.
+- **Reuse existing per-row status badges.** Each row inside the catch-all keeps its real underlying status badge (Draft / Pending review) via the already-existing `statusBadges.draft` and `statusBadges.pending_review` keys. The user sees a clean "Other (N)" tab BUT each row still tells them which exact pre-operational state it's in. No new badge keys.
+- **Single early-return guard inside `.map`** instead of `ADMIN_AUTOMATION_TABS.filter(...).map(...)`. Preserves React key alignment, doesn't duplicate the array, matches the component's existing style. The guard is one load-bearing line: `if (tab === "other" && counts.other === 0) return null;`.
+- **`coerceTab` required NO edit.** It was already data-driven via `(ADMIN_AUTOMATION_TABS as readonly string[]).includes(raw)`. Adding `"other"` to the array made `?status=other` a valid landing URL automatically. Small but clean architectural payoff of data-driven design.
+- **Filter chain refactor was minimal.** Dropped the inline `.eq("status", filters.tab)` from the chain, branched it as `query = query.eq(...)` or `query = query.in(...)`, then continued via `query = query.is(...).eq(...).eq(...)`. Equivalent SQL output for non-other tabs; correct SQL for `tab === "other"`. Filter ordering preserved verbatim.
+- **`translations.other` required, not optional.** The page always passes it; making it optional would invite regressions where a future locale forgets to populate it. Required is the safer default for a strict EN/ES parity project.
+- **i18n strings stay accent-free in Spanish** ("Otros", "borrador", "revision", "automatizacion") — matches the existing `admin.*` namespace convention from Phases 17-20.
 
 ### Decisions (Phase 20-03 execution, 2026-05-07)
 
@@ -277,9 +288,11 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 
 ## Session Continuity
 
-**Last session:** 2026-05-07T20:18:51.060Z
-**Stopped at:** Completed 20-03-PLAN.md
-**Next action:** Phase 20 is complete (5/5 requirements + I18N-01). Run human UAT against the 5 transitions × EN + ES locale on `feature/phase-20-automations-admin`, then merge the branch to `main` per the project's branching strategy. Phase 21 (Clients Admin) starts next on a fresh feature branch — patterns from Phase 20 (cross-org list with URL-state tabs/filters, read-only detail page with actions ReactNode slot, shared transition primitive with race guard + notification fan-out) all transfer directly.
+**Last session:** 2026-05-08T14:06:54Z
+**Stopped at:** Completed 20-04-PLAN.md
+**Next action:** Phase 20 is now fully verified at strict ROADMAP wording (5/5 requirements + I18N-01 cross-cutting). Run human UAT on `feature/phase-20-automations-admin` covering both the original 20-01..03 surfaces (5 transitions × EN + ES) AND the new 20-04 catch-all tab (5 manual flows in 20-04-SUMMARY.md "Manual UAT" section). Then merge the branch to `main` per the project's branching strategy. Phase 21 (Clients Admin) starts next on a fresh feature branch — patterns from Phase 20 (cross-org list with URL-state tabs/filters, read-only detail page with actions ReactNode slot, shared transition primitive with race guard + notification fan-out, AND the new UI-only synthetic catch-all tab pattern) all transfer directly.
+
+2026-05-08 — Phase 20 plan 20-04 shipped: AUTM-01 strict-ROADMAP-wording gap closed via conditional 'Other' / 'Otros' catch-all tab in /admin/automations surfacing draft + pending_review rows under a single counter when count > 0 (hidden when count === 0). 'other' threaded through AdminAutomationTab union, ADMIN_AUTOMATION_TABS array, fetchAdminAutomations (.in branch), fetchAdminAutomationStatusCounts (6th HEAD count), page tabsTranslations + empty-union, AdminAutomationsTabs prop type + early-return guard. 2 new i18n leaf keys per locale (875 total). REQUIREMENTS.md AUTM-01 flipped to [x] + Traceability row to Complete. 6 atomic commits in 6 minutes.
 
 2026-05-07 — Phase 20 plan 20-03 shipped: /admin/automations/[id] header now renders contextual 0..2 transition buttons (in_setup -> Activate; active -> Pause + Archive; paused -> Resume + Archive). 4 server actions (activate/pause/resume/archive) gated by assertPlatformStaff with two-layer race guard + best-effort customer notification fan-out + revalidate admin + customer paths. Archive opens a confirmation modal; the other three are direct-click. 16 new admin.automations.detail.actions/archiveModal i18n keys per locale (873 total). AUTM-02 + AUTM-03 + AUTM-04 + I18N-01 (this slice) satisfied. Phase 20 complete: AUTM-01..05 + I18N-01.
 
