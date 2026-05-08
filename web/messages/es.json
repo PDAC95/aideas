@@ -933,6 +933,90 @@
           "next": "Siguiente",
           "page": "Pagina {page} de {total}"
         }
+      },
+      "detail": {
+        "backLink": "← Todos los clientes",
+        "header": {
+          "slugLabel": "Slug",
+          "createdLabel": "Creado",
+          "membersLabel": "Miembros",
+          "activeAutomationsLabel": "Automatizaciones activas",
+          "pendingRequestsLabel": "Solicitudes pendientes"
+        },
+        "tabs": {
+          "automations": "Automatizaciones ({count})",
+          "requests": "Solicitudes ({count})",
+          "members": "Miembros ({count})",
+          "notes": "Notas ({count})"
+        },
+        "automations": {
+          "columns": {
+            "name": "Nombre",
+            "status": "Estado",
+            "template": "Plantilla",
+            "createdAt": "Creada",
+            "lastRun": "Ultima ejecucion"
+          },
+          "noTemplate": "Personalizada",
+          "neverRun": "Nunca",
+          "empty": "Este cliente aun no tiene automatizaciones.",
+          "viewAll": "Ver todo en /admin/automations →"
+        },
+        "requests": {
+          "columns": {
+            "title": "Titulo",
+            "status": "Estado",
+            "submittedBy": "Enviada por",
+            "createdAt": "Creada"
+          },
+          "empty": "Este cliente aun no tiene solicitudes.",
+          "viewAll": "Ver todo en /admin/requests →"
+        },
+        "members": {
+          "columns": {
+            "email": "Correo",
+            "fullName": "Nombre completo",
+            "role": "Rol",
+            "lastLogin": "Ultimo acceso",
+            "joined": "Se unio"
+          },
+          "roles": {
+            "owner": "Propietario",
+            "admin": "Admin",
+            "operator": "Operador",
+            "viewer": "Lector"
+          },
+          "noFullName": "—",
+          "neverLoggedIn": "Nunca",
+          "inactive": "Inactivo",
+          "empty": "Este cliente aun no tiene miembros."
+        },
+        "notes": {
+          "empty": "Aun no hay notas internas.",
+          "writtenBy": "{name} el {date}",
+          "edited": "(editada)",
+          "comingSoon": "La edicion de notas llega en el Plan 21-03."
+        },
+        "statusBadges": {
+          "automation": {
+            "draft": "Borrador",
+            "pending_review": "En revision",
+            "in_setup": "En configuracion",
+            "active": "Activa",
+            "paused": "Pausada",
+            "failed": "Con errores",
+            "archived": "Archivada"
+          },
+          "request": {
+            "pending": "Pendiente",
+            "in_review": "En revision",
+            "approved": "Aprobada",
+            "completed": "Completada",
+            "rejected": "Rechazada",
+            "payment_pending": "Pago pendiente",
+            "payment_failed": "Pago fallido"
+          }
+        }
       }
     },
     "automations": {

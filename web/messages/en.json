@@ -933,6 +933,90 @@
           "next": "Next",
           "page": "Page {page} of {total}"
         }
+      },
+      "detail": {
+        "backLink": "← All clients",
+        "header": {
+          "slugLabel": "Slug",
+          "createdLabel": "Created",
+          "membersLabel": "Members",
+          "activeAutomationsLabel": "Active automations",
+          "pendingRequestsLabel": "Pending requests"
+        },
+        "tabs": {
+          "automations": "Automations ({count})",
+          "requests": "Requests ({count})",
+          "members": "Members ({count})",
+          "notes": "Notes ({count})"
+        },
+        "automations": {
+          "columns": {
+            "name": "Name",
+            "status": "Status",
+            "template": "Template",
+            "createdAt": "Created",
+            "lastRun": "Last execution"
+          },
+          "noTemplate": "Custom",
+          "neverRun": "Never",
+          "empty": "This client has no automations yet.",
+          "viewAll": "View all in /admin/automations →"
+        },
+        "requests": {
+          "columns": {
+            "title": "Title",
+            "status": "Status",
+            "submittedBy": "Submitted by",
+            "createdAt": "Created"
+          },
+          "empty": "This client has no requests yet.",
+          "viewAll": "View all in /admin/requests →"
+        },
+        "members": {
+          "columns": {
+            "email": "Email",
+            "fullName": "Full name",
+            "role": "Role",
+            "lastLogin": "Last login",
+            "joined": "Joined"
+          },
+          "roles": {
+            "owner": "Owner",
+            "admin": "Admin",
+            "operator": "Operator",
+            "viewer": "Viewer"
+          },
+          "noFullName": "—",
+          "neverLoggedIn": "Never",
+          "inactive": "Inactive",
+          "empty": "This client has no members yet."
+        },
+        "notes": {
+          "empty": "No internal notes yet.",
+          "writtenBy": "{name} on {date}",
+          "edited": "(edited)",
+          "comingSoon": "Editing notes lands in Plan 21-03."
+        },
+        "statusBadges": {
+          "automation": {
+            "draft": "Draft",
+            "pending_review": "Pending review",
+            "in_setup": "In setup",
+            "active": "Active",
+            "paused": "Paused",
+            "failed": "Failed",
+            "archived": "Archived"
+          },
+          "request": {
+            "pending": "Pending",
+            "in_review": "In review",
+            "approved": "Approved",
+            "completed": "Completed",
+            "rejected": "Rejected",
+            "payment_pending": "Payment pending",
+            "payment_failed": "Payment failed"
+          }
+        }
       }
     },
     "automations": {
