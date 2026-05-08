@@ -4,12 +4,12 @@ milestone: v1.0
 milestone_name: Admin Dashboard
 status: unknown
 stopped_at: Phase 21 context gathered
-last_updated: "2026-05-08T15:12:43.147Z"
+last_updated: "2026-05-08T16:05:42.953Z"
 progress:
   total_phases: 15
   completed_phases: 14
-  total_plans: 44
-  completed_plans: 44
+  total_plans: 47
+  completed_plans: 45
 ---
 
 ---
@@ -90,10 +90,10 @@ See: .planning/PROJECT.md (updated 2026-05-04 after v1.2 milestone start)
 
 ## Current Position
 
-Phase: Phase 20 — Automations Admin — COMPLETE (4/4 plans). AUTM-01 strict-ROADMAP-wording gap closed.
-Plan: 20-04 complete. /admin/automations now renders a conditional "Other" / "Otros" catch-all tab in the 6th slot, surfacing rows whose status is draft OR pending_review under a single combined counter. The tab is rendered ONLY when count(draft) + count(pending_review) > 0 — when both counts are zero the strip cleanly shows the original 5 tabs. Direct URL ?status=other is a valid landing (coerceTab is data-driven via ADMIN_AUTOMATION_TABS.includes). Per-row status badge continues to render the underlying real status (Draft / Pending review) via the existing statusBadges keys. 2 new i18n leaf keys per locale (875 total, full EN/ES parity). 7 files modified, 6 atomic commits, 6 minutes.
-Status: Phase 20 ships AUTM-01 strict satisfied. All 5 AUTM requirements + I18N-01 cross-cutting surface complete. REQUIREMENTS.md AUTM-01 flipped to [x]; Traceability row to Complete. tsc + scoped lint exit 0; npm run build exits 0 emitting /admin/automations as dynamic.
-Last activity: 2026-05-08 — Plan 20-04 executed (6 tasks, 7 files; UI-only synthetic catch-all tab pattern). Phase 20 is now fully verified at strict ROADMAP wording and ready for human UAT + merge to main. Phase 21 (Clients Admin) remains unblocked.
+Phase: Phase 21 — Clients Admin — IN PROGRESS (1/3 plans complete).
+Plan: 21-01 complete. /admin/clients placeholder replaced with real cross-org list (5 columns: Name link, Slug mono, # Active automations right-aligned, # Members right-aligned, Created date) + 300ms ILIKE-debounced ?q= search on (name OR slug) + ?page= pager (25/page, "Page X of Y" + "{from}-{to} of {total}", hidden when totalPages <= 1). organization_notes table shipped with 4 admin-only RLS policies + 2 indexes + updated_at trigger — foundation for Plan 21-03 notes CRUD. fetchAdminClients(filters) gated by assertPlatformStaff, two-round-trip strategy (paginated orgs + count: exact + parallel pair of .in() queries against automations/organization_members bucketed in JS). 15 new admin.clients.list.* leaf keys per locale, full EN/ES parity, admin.placeholders.clients removed. CLNT-01 + CLNT-02 + I18N-01 (this slice) satisfied. 6 files created, 4 modified, 3 atomic commits, 5 minutes.
+Status: Plan 21-01 ships CLNT-01 + CLNT-02. tsc --noEmit exits 0; scoped ESLint exits 0; i18n parity script confirms EN/ES match and old placeholder keys removed. `npm run build` blocked by pre-existing Google Fonts TLS issue affecting every Next.js 16 build on this host (logged in deferred-items.md, not introduced by 21-01).
+Last activity: 2026-05-08 — Plan 21-01 executed (3 tasks, 10 files; migration + types/query + page/components/i18n). Plan 21-02 (detail page with all tabs incl. notes read view) is next; can clone 21-01 patterns verbatim.
 
 ## Performance Metrics
 
@@ -121,8 +121,26 @@ Last activity: 2026-05-08 — Plan 20-04 executed (6 tasks, 7 files; UI-only syn
 | 20-02      | 7              | 3     | 8             |
 | 20-03      | 5              | 3     | 7             |
 | 20-04      | 6              | 6     | 7             |
+| 21-01      | 5              | 3     | 10            |
 
 ## Accumulated Context
+
+### Decisions (Phase 21-01 execution, 2026-05-08)
+
+- **Migration owned by 21-01, not 21-03.** Pulling `organization_notes` into Plan 1 means Plan 21-02's detail page can render the (initially empty) Notes tab on day one, and Plan 21-03 only adds writes — no migration race between sibling plans. Establishes a "plan-1-of-phase migration foundation" pattern reusable for any phase whose later plans need writes against a fresh table.
+- **4 RLS policies, one per verb, all gated by `is_platform_staff((SELECT auth.uid()))`.** Mirrors the `organizations` admin policies in `20260506000001_admin_foundation.sql`. Clearer audit trail than `FOR ALL`; easier to revoke a single verb later. No customer-facing policy exists on this table at all — RLS denies customer reads by default.
+- **`author_id` references `profiles(id) ON DELETE RESTRICT`** so a staff-author profile cannot be deleted while their notes exist (preserves audit trail). `organization_id` references `organizations(id) ON DELETE CASCADE` so notes follow their org if the org is hard-deleted.
+- **Two round trips, not embeds.** Main paginated org query (`.range()` + `{ count: "exact" }` for totalCount in same response) + parallel pair of `.in("organization_id", orgIds)` queries against `automations` + `organization_members`, bucketed in JS keyed by `organization_id`. Established Phase 20 pattern; embed-style child counts cause Supabase JS typing pain and aren't faster at our volume. Reuse for 21-02's per-org KPI widgets.
+- **`ACTIVE_LIKE_STATUSES = ["active","in_setup","paused","pending_review"]` duplicated, not imported from request-queries.** 4-element `as const` tuple. Cross-module import would couple two query modules; duplication is cheaper and keeps each module self-contained.
+- **Defensive ILIKE wildcard escape on user input.** `filters.q.replace(/[%_]/g, c => "\\" + c)` before `.or("name.ilike.{pat},slug.ilike.{pat}")`. Defends against a search like `100%` exploding into a wildcard. Same defense Phase 20 uses; reuse for 21-02 if it ever adds free-text search.
+- **`.or()` syntax for multi-column ILIKE.** Single string with comma-separated branches: `name.ilike.${pat},slug.ilike.${pat}`. Supabase JS PostgREST pattern. Reuse for any future multi-column free-text search.
+- **Defensive page/pageSize coercion.** `Math.max(1, Math.floor(filters.page) || 1)` and `Math.min(MAX_PAGE_SIZE=100, Math.max(1, Math.floor(filters.pageSize) || 25))` so a hostile `?pageSize=10000` URL caps at 100 and `?page=garbage` lands on 1.
+- **Render-time setState comparison for URL sync (no useEffect).** Search component derives `urlQ` during render, compares against `lastSyncedQ` stored in useState, calls setValue in render only when they diverge. Pattern proven in Phase 20-01 (avoids `react-hooks/set-state-in-effect`). Reuse for any client subtree on 21-02's detail page that needs to honor external URL changes.
+- **Pagination component returns null when totalPages <= 1.** Caller doesn't have to branch; component decides. Same shape reusable for any paginated child component on 21-02 or Phase 22.
+- **Resetting `?q=` drops `?page=`.** A user who narrows their search shouldn't land on a page 3 that no longer exists for the new filtered result. URL-state-correctness pattern.
+- **Row link `/admin/clients/${row.id}` 404s until 21-02 ships.** CONTEXT.md accepts cross-plan dead links between sequential plans (Phase 19 SUMMARY established the pattern); worth being explicit so no executor wastes a deviation reverting it.
+- **`admin.clients.list.*` namespace shape locked in for 21-02 / 21-03 to extend.** 15 leaf keys: title/subtitle, search.{label,placeholder,clear}, columns.{name,slug,activeAutomations,members,createdAt}, empty.{noResults,noOrgs}, pagination.{label,previous,next,page}. 21-02 should add `admin.clients.detail.*` peer namespace under `admin.clients`; 21-03 adds `admin.clients.detail.notes.*` peer under `clients.detail`. Pagination `label` and `page` use string templates `{from}/{to}/{total}` and `{page}/{total}` respectively, substituted client-side via `t.raw()` (NOT via `t()` interpolation) so the placeholder lives unresolved on the server-side string and the client owns the live count substitution. Reuse for any future paginated admin list.
+- **Spanish stays accent-free** ("Clientes", "Buscar por nombre o slug", "Pagina", "Anterior", "Siguiente", "Limpiar busqueda") — matches the existing `admin.*` namespace convention from Phases 17-20.
 
 ### Decisions (Phase 20-04 execution, 2026-05-08)
 
@@ -309,16 +327,21 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 
 ### Pending Todos
 
-- **Phase 19 still awaiting human UAT** (separate from Phase 20 work). Migration `20260508000001_automations_setup_notes.sql` from 19-01 must be applied on the dev DB before approve/reject UAT.
+- **Phase 21 in progress** on `feature/phase-21-clients-admin` branch. 1/3 plans complete (21-01 shipped). 21-02 (detail page with all tabs incl. notes read view) is next; 21-03 (notes CRUD) is last.
+- **Migration `20260509000001_organization_notes.sql` from 21-01 must be applied to the dev DB before 21-02 detail page can render the Notes tab against real data** (empty state will work on a fresh DB without the migration, but reads obviously won't return anything).
+- **Phase 19 still awaiting human UAT** (separate from Phase 21 work). Migration `20260508000001_automations_setup_notes.sql` from 19-01 must be applied on the dev DB before approve/reject UAT.
 - **Phase 20 awaits human UAT** (5 transitions × EN + ES locale; race-condition smoke; customer-side notification appears under /dashboard/notifications; archived row disappears from customer's /dashboard/automations active filter). Recommended UAT items captured in 20-03-SUMMARY.md.
-- **Phase 20 ready to merge to main** once human UAT passes. After merge, Phase 21 (Clients Admin) starts on a new feature branch.
-- **Cross-phase dead links accepted per CONTEXT.md:** "Open automation →" from Phase 19 approved-status detail now resolves to a live page (20-02 shipped). "View client profile →" goes to /admin/clients/[orgId] (still dead until Phase 21).
+- **Phase 20 ready to merge to main** once human UAT passes.
+- **Cross-phase dead links accepted per CONTEXT.md:** "Open automation →" from Phase 19 approved-status detail resolves to a live page (20-02). "View client profile →" goes to /admin/clients/[orgId] — list page is now live (21-01) but the detail link still 404s until 21-02 ships.
+- **Pre-existing build environment issue:** `npm run build` fails locally due to Google Fonts TLS error (unrelated to any phase code). Logged in `.planning/phases/21-clients-admin/deferred-items.md`. Recommended fix: `experimental.turbopackUseSystemTlsCerts: true` in `next.config.ts` or self-host font assets.
 
 ## Session Continuity
 
-**Last session:** 2026-05-08T15:12:43.142Z
-**Stopped at:** Phase 21 context gathered
-**Next action:** Phase 20 is now fully verified at strict ROADMAP wording (5/5 requirements + I18N-01 cross-cutting). Run human UAT on `feature/phase-20-automations-admin` covering both the original 20-01..03 surfaces (5 transitions × EN + ES) AND the new 20-04 catch-all tab (5 manual flows in 20-04-SUMMARY.md "Manual UAT" section). Then merge the branch to `main` per the project's branching strategy. Phase 21 (Clients Admin) starts next on a fresh feature branch — patterns from Phase 20 (cross-org list with URL-state tabs/filters, read-only detail page with actions ReactNode slot, shared transition primitive with race guard + notification fan-out, AND the new UI-only synthetic catch-all tab pattern) all transfer directly.
+**Last session:** 2026-05-08T16:03:59Z
+**Stopped at:** Completed 21-01-PLAN.md
+**Next action:** Plan 21-02 (Clients detail page with tabs incl. notes read view) is next. The detail page can clone 21-01's two-round-trip + bucket-in-JS query shape, render-time setState URL sync, and `admin.clients.*` i18n namespace verbatim. Run `/gsd:execute-phase 21-clients-admin` to spawn 21-02. Branch: `feature/phase-21-clients-admin`. Apply the migration `20260509000001_organization_notes.sql` on the dev DB before testing the detail page's Notes tab (or accept the empty state).
+
+2026-05-08 — Phase 21 plan 21-01 shipped: /admin/clients placeholder replaced with real cross-org list (5 columns: Name link, Slug mono, # Active automations right-aligned, # Members right-aligned, Created date) + 300ms ILIKE-debounced ?q= search on (name OR slug) + ?page= pager (25/page, hidden when totalPages <= 1). organization_notes table shipped with 4 admin-only RLS policies + 2 indexes + updated_at trigger — foundation for Plan 21-03 notes CRUD. fetchAdminClients(filters) gated by assertPlatformStaff, two-round-trip strategy. 15 new admin.clients.list.* leaf keys per locale (EN/ES parity). admin.placeholders.clients removed. CLNT-01 + CLNT-02 + I18N-01 (this slice) satisfied. tsc + scoped lint exit 0. 6 files created, 4 modified, 3 atomic commits, 5 minutes.
 
 2026-05-08 — Phase 20 plan 20-04 shipped: AUTM-01 strict-ROADMAP-wording gap closed via conditional 'Other' / 'Otros' catch-all tab in /admin/automations surfacing draft + pending_review rows under a single counter when count > 0 (hidden when count === 0). 'other' threaded through AdminAutomationTab union, ADMIN_AUTOMATION_TABS array, fetchAdminAutomations (.in branch), fetchAdminAutomationStatusCounts (6th HEAD count), page tabsTranslations + empty-union, AdminAutomationsTabs prop type + early-return guard. 2 new i18n leaf keys per locale (875 total). REQUIREMENTS.md AUTM-01 flipped to [x] + Traceability row to Complete. 6 atomic commits in 6 minutes.
 
