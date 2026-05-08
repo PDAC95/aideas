@@ -141,11 +141,39 @@ export default async function AdminClientDetailPage({
     empty: t("members.empty"),
   };
 
+  // Notes editor (CLNT-05). The `entry` dict re-uses notes.writtenBy /
+  // notes.edited (parent namespace) so view-mode metadata stays consistent
+  // with the rest of the surface; the editor.entry namespace owns the
+  // edit/delete-mode strings.
   const notesTabTranslations = {
     empty: t("notes.empty"),
-    writtenBy: t.raw("notes.writtenBy") as string,
-    edited: t("notes.edited"),
-    comingSoon: t("notes.comingSoon"),
+    create: {
+      addLabel: t("notes.editor.create.addLabel"),
+      placeholder: t("notes.editor.create.placeholder"),
+      save: t("notes.editor.create.save"),
+      saving: t("notes.editor.create.saving"),
+      cancel: t("notes.editor.create.cancel"),
+      errorTooShort: t("notes.editor.create.errorTooShort"),
+      errorTooLong: t("notes.editor.create.errorTooLong"),
+      errorGeneric: t("notes.editor.create.errorGeneric"),
+      charCounter: t.raw("notes.editor.create.charCounter") as string,
+    },
+    entry: {
+      edit: t("notes.editor.entry.edit"),
+      delete: t("notes.editor.entry.delete"),
+      save: t("notes.editor.entry.save"),
+      saving: t("notes.editor.entry.saving"),
+      cancel: t("notes.editor.entry.cancel"),
+      confirmDelete: t("notes.editor.entry.confirmDelete"),
+      confirmDeleteBody: t("notes.editor.entry.confirmDeleteBody"),
+      deleting: t("notes.editor.entry.deleting"),
+      edited: t("notes.edited"),
+      writtenBy: t.raw("notes.writtenBy") as string,
+      errorTooShort: t("notes.editor.entry.errorTooShort"),
+      errorTooLong: t("notes.editor.entry.errorTooLong"),
+      errorGeneric: t("notes.editor.entry.errorGeneric"),
+      charCounter: t.raw("notes.editor.entry.charCounter") as string,
+    },
   };
 
   const counts = {
@@ -185,6 +213,7 @@ export default async function AdminClientDetailPage({
   } else {
     body = (
       <AdminClientNotesTab
+        organizationId={detail.id}
         notes={detail.notes}
         locale={locale}
         translations={notesTabTranslations}

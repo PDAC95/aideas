@@ -995,7 +995,33 @@
           "empty": "Aun no hay notas internas.",
           "writtenBy": "{name} el {date}",
           "edited": "(editada)",
-          "comingSoon": "La edicion de notas llega en el Plan 21-03."
+          "editor": {
+            "create": {
+              "addLabel": "Agregar nota",
+              "placeholder": "Nota interna (VIP, riesgo de cancelacion, contexto, etc.)",
+              "save": "Guardar",
+              "saving": "Guardando…",
+              "cancel": "Cancelar",
+              "errorTooShort": "La nota no puede estar vacia.",
+              "errorTooLong": "La nota excede 5000 caracteres.",
+              "errorGeneric": "No se pudo guardar la nota. Intentalo de nuevo.",
+              "charCounter": "{n} / {max}"
+            },
+            "entry": {
+              "edit": "Editar",
+              "delete": "Eliminar",
+              "save": "Guardar",
+              "saving": "Guardando…",
+              "cancel": "Cancelar",
+              "confirmDelete": "Eliminar esta nota?",
+              "confirmDeleteBody": "Esta accion no se puede deshacer.",
+              "deleting": "Eliminando…",
+              "errorTooShort": "La nota no puede estar vacia.",
+              "errorTooLong": "La nota excede 5000 caracteres.",
+              "errorGeneric": "No se pudieron guardar los cambios. Intentalo de nuevo.",
+              "charCounter": "{n} / {max}"
+            }
+          }
         },
         "statusBadges": {
           "automation": {

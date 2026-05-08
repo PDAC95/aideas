@@ -995,7 +995,33 @@
           "empty": "No internal notes yet.",
           "writtenBy": "{name} on {date}",
           "edited": "(edited)",
-          "comingSoon": "Editing notes lands in Plan 21-03."
+          "editor": {
+            "create": {
+              "addLabel": "Add note",
+              "placeholder": "Internal note (VIP, churn risk, context, etc.)",
+              "save": "Save",
+              "saving": "Saving…",
+              "cancel": "Cancel",
+              "errorTooShort": "Note cannot be empty.",
+              "errorTooLong": "Note exceeds 5000 characters.",
+              "errorGeneric": "Could not save note. Try again.",
+              "charCounter": "{n} / {max}"
+            },
+            "entry": {
+              "edit": "Edit",
+              "delete": "Delete",
+              "save": "Save",
+              "saving": "Saving…",
+              "cancel": "Cancel",
+              "confirmDelete": "Delete this note?",
+              "confirmDeleteBody": "This cannot be undone.",
+              "deleting": "Deleting…",
+              "errorTooShort": "Note cannot be empty.",
+              "errorTooLong": "Note exceeds 5000 characters.",
+              "errorGeneric": "Could not save changes. Try again.",
+              "charCounter": "{n} / {max}"
+            }
+          }
         },
         "statusBadges": {
           "automation": {
