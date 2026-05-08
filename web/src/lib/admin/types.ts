@@ -110,17 +110,19 @@ export type AdminAutomationStatus =
 /**
  * Status tabs surfaced in the admin Automations list. Default tab is "active"
  * (the most-trafficked operational view). The 5 main statuses each get a tab;
- * "draft" and "pending_review" are intentionally NOT given tabs — they're
- * intermediate states automations rarely sit in (per CONTEXT.md "Claude's
- * Discretion") and would clutter the tab strip. Rows in those statuses still
- * surface in the per-row "status" badge if a query somehow returns them.
+ * "draft" and "pending_review" are folded into a single non-default catch-all
+ * tab "other" that is rendered ONLY when count(draft) + count(pending_review)
+ * > 0 (per Phase 20-04 gap closure — closes the only partial gap from
+ * 20-VERIFICATION.md). When both counts are zero the "other" tab is hidden
+ * and the strip shows the original 5 tabs only.
  */
 export type AdminAutomationTab =
   | "active"
   | "in_setup"
   | "paused"
   | "failed"
-  | "archived";
+  | "archived"
+  | "other";
 
 export const ADMIN_AUTOMATION_TABS: readonly AdminAutomationTab[] = [
   "active",
@@ -128,6 +130,7 @@ export const ADMIN_AUTOMATION_TABS: readonly AdminAutomationTab[] = [
   "paused",
   "failed",
   "archived",
+  "other",
 ] as const;
 
 /**
