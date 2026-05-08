@@ -236,3 +236,43 @@ export interface AdminAutomationDetail {
   // Last-20 execution timeline
   recentExecutions: AdminAutomationExecutionEntry[];
 }
+
+/**
+ * Single row in the admin clients list table. The 5 columns the table renders
+ * map 1:1 to fields below; `id` is carried for the row link to /admin/clients/[id].
+ *
+ * `activeAutomationsCount` mirrors Phase 19's ACTIVE_LIKE_STATUSES set
+ * ("active" | "in_setup" | "paused" | "pending_review") so the same definition
+ * of "active" is used across the admin surface.
+ */
+export interface AdminClientRow {
+  id: string;
+  name: string;
+  slug: string;
+  activeAutomationsCount: number;
+  membersCount: number;
+  createdAt: string; // ISO 8601
+}
+
+/**
+ * Filter shape for fetchAdminClients. The list page parses searchParams into
+ * this shape and passes it through.
+ *
+ * - q: ILIKE substring against (name OR slug). Empty string / null = no filter.
+ * - page: 1-indexed page number. <= 0 coerces to 1 in the query.
+ * - pageSize: rows per page. The list page passes 25 (CONTEXT.md). Cap at 100
+ *   to defend against hostile URL ?pageSize=10000.
+ */
+export interface AdminClientListFilters {
+  q: string | null;
+  page: number;
+  pageSize: number;
+}
+
+export interface AdminClientsListResult {
+  rows: AdminClientRow[];
+  totalCount: number; // total matching the q filter (across all pages)
+  page: number; // echoed back, after coercion
+  pageSize: number; // echoed back, after coercion
+  totalPages: number; // Math.max(1, Math.ceil(totalCount / pageSize))
+}
