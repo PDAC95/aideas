@@ -39,10 +39,11 @@ export async function fetchAdminAutomations(
   }
 
   // Filter chain order MUST match request-queries.ts verbatim:
-  //   1. .eq("status", ...).is("deleted_at", null)
-  //   2. The two translation .eq calls (locale + field) IMMEDIATELY after
-  //   3. Optional filters (organizationId / templateId / nameQuery)
-  //   4. Final .order(...) call
+  //   1. Status filter (.eq for single-status tabs, .in for the "other" catch-all)
+  //   2. .is("deleted_at", null)
+  //   3. The two translation .eq calls (locale + field) IMMEDIATELY after
+  //   4. Optional filters (organizationId / templateId / nameQuery)
+  //   5. Final .order(...) call
   // Mixing this order has caused embedded-filter bugs in older postgrest-js.
   let query = supabase
     .from("automations")
@@ -55,8 +56,17 @@ export async function fetchAdminAutomations(
         translations:automation_template_translations!left(field, value, locale)
       )
       `
-    )
-    .eq("status", filters.tab) // tab values map 1:1 to real DB statuses
+    );
+
+  // Status filter — "other" is a UI-layer catch-all bucket for draft + pending_review;
+  // every other tab maps 1:1 to a real DB status value.
+  if (filters.tab === "other") {
+    query = query.in("status", ["draft", "pending_review"]);
+  } else {
+    query = query.eq("status", filters.tab);
+  }
+
+  query = query
     .is("deleted_at", null)
     .eq("template.translations.locale", filters.locale)
     .eq("template.translations.field", "name");
@@ -142,11 +152,17 @@ export async function fetchAdminAutomationStatusCounts(): Promise<AdminAutomatio
 
   const results = await Promise.all(
     ADMIN_AUTOMATION_TABS.map(async (tab) => {
-      const { count, error } = await supabase
+      // The "other" tab is a UI catch-all for draft + pending_review.
+      // Issue an .in() HEAD count instead of .eq for that bucket.
+      const baseQuery = supabase
         .from("automations")
         .select("id", { count: "exact", head: true })
-        .eq("status", tab)
         .is("deleted_at", null);
+      const filtered =
+        tab === "other"
+          ? baseQuery.in("status", ["draft", "pending_review"])
+          : baseQuery.eq("status", tab);
+      const { count, error } = await filtered;
       if (error) throw error;
       return [tab, count ?? 0] as const;
     })
@@ -158,6 +174,7 @@ export async function fetchAdminAutomationStatusCounts(): Promise<AdminAutomatio
     paused: 0,
     failed: 0,
     archived: 0,
+    other: 0,
   } as AdminAutomationStatusCounts;
   for (const [tab, n] of results) {
     counts[tab] = n;
