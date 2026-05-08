@@ -920,7 +920,8 @@
           "in_setup": "In setup ({count})",
           "paused": "Paused ({count})",
           "failed": "Failed ({count})",
-          "archived": "Archived ({count})"
+          "archived": "Archived ({count})",
+          "other": "Other ({count})"
         },
         "filters": {
           "orgLabel": "Organization",
@@ -952,7 +953,8 @@
           "in_setup": "No automations are currently in setup.",
           "paused": "No paused automations.",
           "failed": "No failed automations. (That's a good thing.)",
-          "archived": "No archived automations."
+          "archived": "No archived automations.",
+          "other": "No draft or pre-review automations match the current filters."
         },
         "noTemplate": "Custom"
       },

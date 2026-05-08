@@ -920,7 +920,8 @@
           "in_setup": "En configuracion ({count})",
           "paused": "Pausadas ({count})",
           "failed": "Con errores ({count})",
-          "archived": "Archivadas ({count})"
+          "archived": "Archivadas ({count})",
+          "other": "Otros ({count})"
         },
         "filters": {
           "orgLabel": "Organizacion",
@@ -952,7 +953,8 @@
           "in_setup": "No hay automatizaciones en configuracion.",
           "paused": "No hay automatizaciones pausadas.",
           "failed": "No hay automatizaciones con errores. (Eso es bueno.)",
-          "archived": "No hay automatizaciones archivadas."
+          "archived": "No hay automatizaciones archivadas.",
+          "other": "Ninguna automatizacion en borrador o en revision coincide con los filtros actuales."
         },
         "noTemplate": "Personalizada"
       },
