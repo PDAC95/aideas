@@ -188,6 +188,6 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 | 17. Admin Foundation | v1.2 | Complete    | 2026-05-05 | 2026-05-05 |
 | 18. Catalog Admin | 3/3 | Complete   | 2026-05-06 | — |
 | 19. Requests Inbox | 3/3 | Complete    | 2026-05-07 | — |
-| 20. Automations Admin | 4/4 | Complete   | 2026-05-08 | — |
+| 20. Automations Admin | 4/4 | Complete    | 2026-05-08 | — |
 | 21. Clients Admin | v1.2 | 0/3 | Not started | — |
 | 22. Admin Home | v1.2 | 0/2 | Not started | — |
