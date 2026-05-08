@@ -905,10 +905,34 @@
       "catalog": {
         "title": "Catalog Admin",
         "body": "Template CRUD lands in Phase 18."
-      },
-      "clients": {
-        "title": "Clients Admin",
-        "body": "Client list, 360-degree detail, and internal notes ship in Phase 21."
+      }
+    },
+    "clients": {
+      "list": {
+        "title": "Clients",
+        "subtitle": "Every customer organization across all tenants.",
+        "search": {
+          "label": "Search",
+          "placeholder": "Search by name or slug",
+          "clear": "Clear search"
+        },
+        "columns": {
+          "name": "Name",
+          "slug": "Slug",
+          "activeAutomations": "Active automations",
+          "members": "Members",
+          "createdAt": "Created"
+        },
+        "empty": {
+          "noResults": "No organizations match your search.",
+          "noOrgs": "No organizations exist yet."
+        },
+        "pagination": {
+          "label": "{from}-{to} of {total}",
+          "previous": "Previous",
+          "next": "Next",
+          "page": "Page {page} of {total}"
+        }
       }
     },
     "automations": {

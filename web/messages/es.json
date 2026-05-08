@@ -905,10 +905,34 @@
       "catalog": {
         "title": "Admin de catalogo",
         "body": "El CRUD de plantillas llega en la Fase 18."
-      },
-      "clients": {
-        "title": "Admin de clientes",
-        "body": "Lista de clientes, vista 360 y notas internas en la Fase 21."
+      }
+    },
+    "clients": {
+      "list": {
+        "title": "Clientes",
+        "subtitle": "Todas las organizaciones de clientes en todos los tenants.",
+        "search": {
+          "label": "Buscar",
+          "placeholder": "Buscar por nombre o slug",
+          "clear": "Limpiar busqueda"
+        },
+        "columns": {
+          "name": "Nombre",
+          "slug": "Slug",
+          "activeAutomations": "Automatizaciones activas",
+          "members": "Miembros",
+          "createdAt": "Creado"
+        },
+        "empty": {
+          "noResults": "Ninguna organizacion coincide con la busqueda.",
+          "noOrgs": "Aun no existen organizaciones."
+        },
+        "pagination": {
+          "label": "{from}-{to} de {total}",
+          "previous": "Anterior",
+          "next": "Siguiente",
+          "page": "Pagina {page} de {total}"
+        }
       }
     },
     "automations": {
