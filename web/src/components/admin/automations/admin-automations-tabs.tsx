@@ -18,6 +18,7 @@ interface AdminAutomationsTabsProps {
     paused: string; // raw "Paused ({count})"
     failed: string; // raw "Failed ({count})"
     archived: string; // raw "Archived ({count})"
+    other: string; // raw "Other ({count})" — only rendered when counts.other > 0
   };
 }
 
@@ -64,6 +65,11 @@ export function AdminAutomationsTabs({
       className="flex gap-1 border-b border-gray-200 dark:border-gray-700 overflow-x-auto"
     >
       {ADMIN_AUTOMATION_TABS.map((tab) => {
+        // The "other" tab is a catch-all for draft + pending_review and is rendered
+        // ONLY when there is at least one row in either of those two states. When
+        // counts.other === 0 the tab strip cleanly shows the original 5 tabs.
+        if (tab === "other" && counts.other === 0) return null;
+
         const isActive = tab === active;
         return (
           <button
