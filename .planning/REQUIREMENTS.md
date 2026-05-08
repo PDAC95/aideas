@@ -50,11 +50,11 @@ Requirements for v1.2 release. Each maps to roadmap phases.
 
 > Global cross-org view. Read-only fields + status transitions only.
 
-- [ ] **AUTM-01**: Staff sees global list of all `automations` across all orgs, filterable by status (`draft|pending_review|in_setup|active|paused|failed|archived`), by org, and by template
-- [ ] **AUTM-02**: Staff transitions an automation from `in_setup` → `active` (marks it ready for customer use)
-- [ ] **AUTM-03**: Staff manually pauses (`active` → `paused`) or resumes (`paused` → `active`) an automation from admin
-- [ ] **AUTM-04**: Staff archives an automation (`active|paused` → `archived`) from admin
-- [ ] **AUTM-05**: Staff opens automation detail page (read-only) showing KPIs (execution count, hours saved), recent execution timeline, owning org, and template info; no field editing — only status transitions via the buttons from AUTM-02/03/04
+- [x] **AUTM-01**: Staff sees global list of all `automations` across all orgs, filterable by status (`draft|pending_review|in_setup|active|paused|failed|archived`), by org, and by template
+- [x] **AUTM-02**: Staff transitions an automation from `in_setup` → `active` (marks it ready for customer use)
+- [x] **AUTM-03**: Staff manually pauses (`active` → `paused`) or resumes (`paused` → `active`) an automation from admin
+- [x] **AUTM-04**: Staff archives an automation (`active|paused` → `archived`) from admin
+- [x] **AUTM-05**: Staff opens automation detail page (read-only) showing KPIs (execution count, hours saved), recent execution timeline, owning org, and template info; no field editing — only status transitions via the buttons from AUTM-02/03/04
 
 ### Clients (CLNT)
 
@@ -145,11 +145,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | REQS-02 | Phase 19 | Complete |
 | REQS-03 | Phase 19 | Complete |
 | REQS-04 | Phase 19 | Complete |
-| AUTM-01 | Phase 20 | Pending |
-| AUTM-02 | Phase 20 | Pending |
-| AUTM-03 | Phase 20 | Pending |
-| AUTM-04 | Phase 20 | Pending |
-| AUTM-05 | Phase 20 | Pending |
+| AUTM-01 | Phase 20 | Complete |
+| AUTM-02 | Phase 20 | Complete |
+| AUTM-03 | Phase 20 | Complete |
+| AUTM-04 | Phase 20 | Complete |
+| AUTM-05 | Phase 20 | Complete |
 | CLNT-01 | Phase 21 | Pending |
 | CLNT-02 | Phase 21 | Pending |
 | CLNT-03 | Phase 21 | Pending |

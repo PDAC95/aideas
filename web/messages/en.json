@@ -906,13 +906,124 @@
         "title": "Catalog Admin",
         "body": "Template CRUD lands in Phase 18."
       },
-      "automations": {
-        "title": "Automations Admin",
-        "body": "Global cross-org list and status transitions ship in Phase 20."
-      },
       "clients": {
         "title": "Clients Admin",
         "body": "Client list, 360-degree detail, and internal notes ship in Phase 21."
+      }
+    },
+    "automations": {
+      "list": {
+        "title": "Automations",
+        "subtitle": "Every customer automation across all organizations.",
+        "tabs": {
+          "active": "Active ({count})",
+          "in_setup": "In setup ({count})",
+          "paused": "Paused ({count})",
+          "failed": "Failed ({count})",
+          "archived": "Archived ({count})",
+          "other": "Other ({count})"
+        },
+        "filters": {
+          "orgLabel": "Organization",
+          "orgAll": "All organizations",
+          "templateLabel": "Template",
+          "templateAll": "All templates",
+          "searchLabel": "Search by name",
+          "searchPlaceholder": "Filter by automation name..."
+        },
+        "columns": {
+          "name": "Name",
+          "customer": "Customer",
+          "template": "Template",
+          "status": "Status",
+          "executions": "Executions",
+          "createdAt": "Created"
+        },
+        "statusBadges": {
+          "active": "Active",
+          "in_setup": "In setup",
+          "paused": "Paused",
+          "failed": "Failed",
+          "archived": "Archived",
+          "draft": "Draft",
+          "pending_review": "Pending review"
+        },
+        "empty": {
+          "active": "No active automations match the current filters.",
+          "in_setup": "No automations are currently in setup.",
+          "paused": "No paused automations.",
+          "failed": "No failed automations. (That's a good thing.)",
+          "archived": "No archived automations.",
+          "other": "No draft or pre-review automations match the current filters."
+        },
+        "noTemplate": "Custom"
+      },
+      "detail": {
+        "backLink": "Back to automations",
+        "statusBadges": {
+          "active": "Active",
+          "in_setup": "In setup",
+          "paused": "Paused",
+          "failed": "Failed",
+          "archived": "Archived",
+          "draft": "Draft",
+          "pending_review": "Pending review"
+        },
+        "kpis": {
+          "totalExecutions": "Total executions",
+          "hoursSaved": "Hours saved",
+          "successRate": "Success rate",
+          "lastExecution": "Last execution",
+          "never": "Never",
+          "notAvailable": "—"
+        },
+        "timeline": {
+          "title": "Recent executions",
+          "empty": "No executions yet.",
+          "duration": "{seconds}s",
+          "statusLabels": {
+            "running": "Running",
+            "success": "Success",
+            "error": "Error",
+            "cancelled": "Cancelled"
+          }
+        },
+        "org": {
+          "sectionTitle": "Organization",
+          "slugLabel": "Slug",
+          "viewClient": "View client profile"
+        },
+        "template": {
+          "sectionTitle": "Template",
+          "categoryLabel": "Category",
+          "monthlyPriceLabel": "Monthly price",
+          "noPrice": "—",
+          "noTemplate": "Custom automation",
+          "noTemplateBody": "This automation was set up without a catalog template."
+        },
+        "setupNotes": {
+          "sectionTitle": "Setup notes"
+        },
+        "actions": {
+          "activate": "Activate",
+          "activating": "Activating...",
+          "pause": "Pause",
+          "pausing": "Pausing...",
+          "resume": "Resume",
+          "resuming": "Resuming...",
+          "archive": "Archive",
+          "errorStateChanged": "This automation was already updated by another staff member. Reloading.",
+          "errorGeneric": "Something went wrong. Please try again."
+        },
+        "archiveModal": {
+          "title": "Archive this automation?",
+          "body": "Archived automations stop running and disappear from the customer's active list. This is irreversible from the customer side; staff can still see archived rows in the admin list.",
+          "cancel": "Cancel",
+          "confirm": "Archive",
+          "confirming": "Archiving...",
+          "errorStateChanged": "This automation was already updated by another staff member. Reloading.",
+          "errorGeneric": "Something went wrong. Please try again."
+        }
       }
     },
     "requests": {

@@ -906,13 +906,124 @@
         "title": "Admin de catalogo",
         "body": "El CRUD de plantillas llega en la Fase 18."
       },
-      "automations": {
-        "title": "Admin de automatizaciones",
-        "body": "Lista global entre organizaciones y transiciones de estado en la Fase 20."
-      },
       "clients": {
         "title": "Admin de clientes",
         "body": "Lista de clientes, vista 360 y notas internas en la Fase 21."
+      }
+    },
+    "automations": {
+      "list": {
+        "title": "Automatizaciones",
+        "subtitle": "Todas las automatizaciones de clientes en todas las organizaciones.",
+        "tabs": {
+          "active": "Activas ({count})",
+          "in_setup": "En configuracion ({count})",
+          "paused": "Pausadas ({count})",
+          "failed": "Con errores ({count})",
+          "archived": "Archivadas ({count})",
+          "other": "Otros ({count})"
+        },
+        "filters": {
+          "orgLabel": "Organizacion",
+          "orgAll": "Todas las organizaciones",
+          "templateLabel": "Plantilla",
+          "templateAll": "Todas las plantillas",
+          "searchLabel": "Buscar por nombre",
+          "searchPlaceholder": "Filtrar por nombre de automatizacion..."
+        },
+        "columns": {
+          "name": "Nombre",
+          "customer": "Cliente",
+          "template": "Plantilla",
+          "status": "Estado",
+          "executions": "Ejecuciones",
+          "createdAt": "Creada"
+        },
+        "statusBadges": {
+          "active": "Activa",
+          "in_setup": "En configuracion",
+          "paused": "Pausada",
+          "failed": "Con errores",
+          "archived": "Archivada",
+          "draft": "Borrador",
+          "pending_review": "En revision"
+        },
+        "empty": {
+          "active": "Ninguna automatizacion activa coincide con los filtros actuales.",
+          "in_setup": "No hay automatizaciones en configuracion.",
+          "paused": "No hay automatizaciones pausadas.",
+          "failed": "No hay automatizaciones con errores. (Eso es bueno.)",
+          "archived": "No hay automatizaciones archivadas.",
+          "other": "Ninguna automatizacion en borrador o en revision coincide con los filtros actuales."
+        },
+        "noTemplate": "Personalizada"
+      },
+      "detail": {
+        "backLink": "Volver a automatizaciones",
+        "statusBadges": {
+          "active": "Activa",
+          "in_setup": "En configuracion",
+          "paused": "Pausada",
+          "failed": "Con errores",
+          "archived": "Archivada",
+          "draft": "Borrador",
+          "pending_review": "En revision"
+        },
+        "kpis": {
+          "totalExecutions": "Ejecuciones totales",
+          "hoursSaved": "Horas ahorradas",
+          "successRate": "Tasa de exito",
+          "lastExecution": "Ultima ejecucion",
+          "never": "Nunca",
+          "notAvailable": "—"
+        },
+        "timeline": {
+          "title": "Ejecuciones recientes",
+          "empty": "Sin ejecuciones todavia.",
+          "duration": "{seconds}s",
+          "statusLabels": {
+            "running": "En curso",
+            "success": "Exito",
+            "error": "Error",
+            "cancelled": "Cancelada"
+          }
+        },
+        "org": {
+          "sectionTitle": "Organizacion",
+          "slugLabel": "Slug",
+          "viewClient": "Ver perfil del cliente"
+        },
+        "template": {
+          "sectionTitle": "Plantilla",
+          "categoryLabel": "Categoria",
+          "monthlyPriceLabel": "Precio mensual",
+          "noPrice": "—",
+          "noTemplate": "Automatizacion personalizada",
+          "noTemplateBody": "Esta automatizacion se configuro sin una plantilla del catalogo."
+        },
+        "setupNotes": {
+          "sectionTitle": "Notas de configuracion"
+        },
+        "actions": {
+          "activate": "Activar",
+          "activating": "Activando...",
+          "pause": "Pausar",
+          "pausing": "Pausando...",
+          "resume": "Reanudar",
+          "resuming": "Reanudando...",
+          "archive": "Archivar",
+          "errorStateChanged": "Esta automatizacion ya fue actualizada por otro miembro del equipo. Recargando.",
+          "errorGeneric": "Algo salio mal. Intentalo de nuevo."
+        },
+        "archiveModal": {
+          "title": "Archivar esta automatizacion?",
+          "body": "Las automatizaciones archivadas dejan de ejecutarse y desaparecen de la lista activa del cliente. Esto es irreversible desde el lado del cliente; el equipo aun puede ver las filas archivadas en la lista de admin.",
+          "cancel": "Cancelar",
+          "confirm": "Archivar",
+          "confirming": "Archivando...",
+          "errorStateChanged": "Esta automatizacion ya fue actualizada por otro miembro del equipo. Recargando.",
+          "errorGeneric": "Algo salio mal. Intentalo de nuevo."
+        }
       }
     },
     "requests": {
