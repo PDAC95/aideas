@@ -66,6 +66,7 @@ export default async function AdminAutomationsPage({
     paused: t.raw("tabs.paused") as string,
     failed: t.raw("tabs.failed") as string,
     archived: t.raw("tabs.archived") as string,
+    other: t.raw("tabs.other") as string,
   };
 
   const filterTranslations = {
@@ -102,6 +103,7 @@ export default async function AdminAutomationsPage({
         | "empty.paused"
         | "empty.failed"
         | "empty.archived"
+        | "empty.other"
     ),
     noTemplate: t("noTemplate"),
   };
