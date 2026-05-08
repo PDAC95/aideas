@@ -57,7 +57,7 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 - [x] **Phase 18: Catalog Admin** — CRUD UI for `automation_templates` with active/featured toggles (3 plans) (completed 2026-05-06)
 - [x] **Phase 19: Requests Inbox** — List + detail + single-step approve (creates automation) + reject-with-reason (3 plans) (completed 2026-05-07)
 - [x] **Phase 20: Automations Admin** — Global cross-org list + read-only detail + status transitions (4 plans) (completed 2026-05-08)
-- [ ] **Phase 21: Clients Admin** — Orgs list + search + 360° detail + cross-links + free-form internal notes (3 plans)
+- [x] **Phase 21: Clients Admin** — Orgs list + search + 360° detail + cross-links + free-form internal notes (3 plans) (completed 2026-05-08)
 - [ ] **Phase 22: Admin Home** — Operational KPIs + activity feed + quick-link cards (2 plans)
 
 ## Phase Details
@@ -151,10 +151,10 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
   4. From client detail, staff clicks any automation row to navigate to its admin detail page (Phase 20) and any request row to navigate to its admin detail page (Phase 19)
   5. Staff adds and edits free-form internal notes per client (e.g., "VIP", "churn risk"); notes persist via a new `organization_notes` column or related table and are visible only on the admin client detail page (never to the customer)
   6. All clients admin UI strings (table headers, search placeholder, detail section labels, notes editor) have EN/ES parity
-**Plans:** 2/3 plans executed
-- [ ] 21-01-PLAN.md — Migration for organization_notes table + RLS + admin clients list at /admin/clients with search (300ms debounce ILIKE on name+slug) + 25/page pagination + 5-column table
-- [ ] 21-02-PLAN.md — fetchAdminClientDetail + RPC for auth.users.last_sign_in_at + /admin/clients/[id] with persistent header + 4 tabs (Automations, Requests, Members, Notes-readonly) + cross-links to /admin/automations/[id] and /admin/requests/[id]
-- [ ] 21-03-PLAN.md — Zod schemas + createNote/updateNote/deleteNote server actions gated by assertPlatformStaff + inline note creator/editor/delete-confirm replacing the read-only Notes tab body
+**Plans:** 3/3 plans complete
+- [x] 21-01-PLAN.md — Migration for organization_notes table + RLS + admin clients list at /admin/clients with search (300ms debounce ILIKE on name+slug) + 25/page pagination + 5-column table
+- [x] 21-02-PLAN.md — fetchAdminClientDetail + RPC for auth.users.last_sign_in_at + /admin/clients/[id] with persistent header + 4 tabs (Automations, Requests, Members, Notes-readonly) + cross-links to /admin/automations/[id] and /admin/requests/[id]
+- [x] 21-03-PLAN.md — Zod schemas + createNote/updateNote/deleteNote server actions gated by assertPlatformStaff + inline note creator/editor/delete-confirm replacing the read-only Notes tab body
 
 ### Phase 22: Admin Home
 **Goal:** Operations land on `/admin` and immediately see what needs attention — pending requests, in-setup automations, active clients, and weekly signups — plus an activity feed and quick-link cards.
@@ -192,5 +192,5 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 | 18. Catalog Admin | 3/3 | Complete   | 2026-05-06 | — |
 | 19. Requests Inbox | 3/3 | Complete    | 2026-05-07 | — |
 | 20. Automations Admin | 4/4 | Complete    | 2026-05-08 | — |
-| 21. Clients Admin | 2/3 | In Progress|  | — |
+| 21. Clients Admin | 3/3 | Complete   | 2026-05-08 | — |
 | 22. Admin Home | v1.2 | 0/2 | Not started | — |

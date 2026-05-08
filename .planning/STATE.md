@@ -3,6 +3,20 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Admin Dashboard
 status: unknown
+stopped_at: "Completed 21-03-PLAN.md (Phase 21 complete: 3/3 plans, all 6 v1.2 reqs satisfied)"
+last_updated: "2026-05-08T16:44:16.399Z"
+progress:
+  total_phases: 15
+  completed_phases: 15
+  total_plans: 47
+  completed_plans: 47
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: Admin Dashboard
+status: unknown
 stopped_at: Completed 21-02-PLAN.md
 last_updated: "2026-05-08T16:31:53.764Z"
 progress:
@@ -85,12 +99,12 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Admin Dashboard
 status: in_progress
-last_updated: "2026-05-08T14:06:54Z"
+last_updated: "2026-05-08T16:41:00Z"
 progress:
   total_phases: 7
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 21
-  completed_plans: 13
+  completed_plans: 16
 ---
 
 # Project State
@@ -100,14 +114,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-04 after v1.2 milestone start)
 
 **Core value:** Customers can monitor automations, request new ones, and see their ROI from a single bilingual dashboard — paired with an operations team who can fulfill what they request.
-**Current focus:** v1.2 Admin Dashboard — Phase 17/18/19/20 complete (Phase 19 + 20 awaiting human UAT). Phase 21 (Clients Admin) is next.
+**Current focus:** v1.2 Admin Dashboard — Phase 17/18/19/20/21 complete (Phase 19 + 20 + 21 awaiting human UAT). Phase 22 (Admin Home) is next.
 
 ## Current Position
 
-Phase: Phase 21 — Clients Admin — IN PROGRESS (2/3 plans complete).
-Plan: 21-02 complete. /admin/clients/[id] 360 detail page live: persistent header (back link, org name H1, 5-cell stat grid: Slug mono / Created / Members count / Active automations count / Pending requests count) + 4 read-only tabs (Automations -> Requests -> Members -> Notes). Synthetic ?tab= URL state, default tab = automations (drops the param), other tabs set ?tab=requests|members|notes. Automations tab links rows to /admin/automations/[id]; Requests tab links to /admin/requests/[id]; Members tab is read-only with 5 cols (Email / Full name / Role / Last login / Joined) including translated owner role; Notes tab read-only with whitespace-pre-wrap body + (edited) chip + Plan-21-03 comingSoon footer. New SECURITY-DEFINER RPC get_admin_org_members(p_organization_id UUID) ships in 20260509000002_admin_org_members_view.sql to surface auth.users.last_sign_in_at across schemas (inline is_platform_staff gate, non-staff gets empty result). fetchAdminClientDetail(id, locale) issues 8 parallel queries (1 org + 4 list datasets + 3 HEAD counts) gated by assertPlatformStaff; returns null for missing/soft-deleted orgs. 47 new admin.clients.detail.* leaf keys per locale, full EN/ES parity, members.roles.owner explicitly required (defense against handle_new_user trigger). CLNT-03 + CLNT-04 + I18N-01 (this slice) satisfied.
-Status: Plan 21-02 ships CLNT-03 + CLNT-04. tsc --noEmit exits 0; scoped ESLint exits 0 across src/app/(admin)/admin/clients/, src/components/admin/clients/, and src/lib/admin/client-queries.ts; i18n parity script confirms EN/ES match and members.roles.owner exists in both locales. `npm run build` still blocked by pre-existing Google Fonts TLS issue (deferred-items.md from 21-01, not introduced by 21-02). 8 files created, 4 modified, 6 atomic commits, 15 minutes.
-Last activity: 2026-05-08 — Plan 21-02 executed (4 tasks: types+RPC migration, fetchAdminClientDetail, i18n+tabs strip+4 tab body components, detail layout+page wrapping). Plan 21-03 (notes CRUD editor) is next; should add admin.clients.detail.notes.editor.* peer keys and REMOVE notes.comingSoon when the editor body lands.
+Phase: Phase 21 — Clients Admin — COMPLETE (3/3 plans shipped).
+Plan: 21-03 complete. AdminClientNotesTab swapped from read-only to full create/edit/delete editor: AdminClientNoteCreate (collapsed "Add note" button -> textarea + Save/Cancel + live char counter) and AdminClientNoteEntry (per-existing-note three-state machine: view / edit / confirm-delete). 3 server actions (createNote / updateNote / deleteNote) gated by assertPlatformStaff with revalidatePath('/admin/clients/[id]'). 3 Zod schemas (createNoteSchema / updateNoteSchema / deleteNoteSchema) with NOTE_MIN=1 + NOTE_MAX=5000 transform-then-pipe shape that catches whitespace-only input. Inline confirm-delete panel (NOT a portal Dialog — project's shadcn/ui set ships only button/card/form/input/label primitives). 24 new admin.clients.detail.notes.editor.* leaf keys per locale; comingSoon dead key removed from both locales (full EN/ES parity, accent-free Spanish). CLNT-05 + I18N-01 (this slice) satisfied. Phase 21 closes all 6 v1.2 requirements (CLNT-01..05 + I18N-01).
+Status: Plan 21-03 ships CLNT-05 + I18N-01. tsc --noEmit exits 0; scoped ESLint exits 0 across src/components/admin/clients/, src/app/(admin)/admin/clients/[id]/page.tsx, src/lib/actions/admin-clients.ts, src/lib/validations/admin-client-note.ts; i18n parity script confirms editor.* matches EN/ES + comingSoon removed from both. `npm run build` still blocked by pre-existing Google Fonts TLS issue (deferred-items.md from 21-01, NOT introduced by 21-03). 4 files created, 4 modified, 3 atomic commits, 5 minutes.
+Last activity: 2026-05-08 — Plan 21-03 executed (3 tasks: Zod schemas + 3 server actions, 2 client components, notes-tab wiring + i18n + comingSoon removal). Phase 21 verifier is next; once VERIFICATION.md status is `passed` the branch `feature/phase-21-clients-admin` should be merged to `main`. Phase 22 (Admin Home) is the next phase.
 
 ## Performance Metrics
 
@@ -118,6 +132,7 @@ Last activity: 2026-05-08 — Plan 21-02 executed (4 tasks: types+RPC migration,
 | Requirements | 54/54 | 38/38 | 31 (planned) |
 | Timeline | 70 days | 21 days | TBD |
 | Phase 21 P02 | 15 min | 4 tasks | 12 files |
+| Phase 21 P03 | 5 min  | 3 tasks | 8 files  |
 
 ### Per-plan execution metrics (v1.2)
 
@@ -137,8 +152,27 @@ Last activity: 2026-05-08 — Plan 21-02 executed (4 tasks: types+RPC migration,
 | 20-03      | 5              | 3     | 7             |
 | 20-04      | 6              | 6     | 7             |
 | 21-01      | 5              | 3     | 10            |
+| 21-02      | 15             | 4     | 12            |
+| 21-03      | 5              | 3     | 8             |
 
 ## Accumulated Context
+
+### Decisions (Phase 21-03 execution, 2026-05-08)
+
+- **Inline confirm-delete state, NOT a portal Dialog primitive.** The project's shadcn/ui set currently ships only button/card/form/input/label — adding @radix-ui/react-dialog for a single-purpose confirmation panel adds a dependency, mounts a portal, and complicates SSR. The inline three-state component (view -> confirm-delete -> view) is simpler, accessible (red border + role=alert error surface), keyboard-traversable, and trivially testable. Pattern reusable for any future admin destructive-action confirmation that doesn't warrant a full Dialog (Phase 22 admin home action items, future per-row destructive actions on /admin/clients).
+- **NOTE_MIN=1 / NOTE_MAX=5000 with `transform(s=>s.trim()).pipe(min/max)` Zod shape.** MIN=1 because CONTEXT.md positions notes as a "running log" with short tags like "VIP" or "churn risk" explicitly supported. The Phase 19 reject-reason MIN=10 is intentional friction (operator must justify a customer-facing rejection); notes are admin-internal and can be one word. transform-then-pipe ordering catches whitespace-only input before length validation; custom message codes (body_too_short / body_too_long) flow through to typed client-side error mapping.
+- **createNote does NOT call notifyOrgMembers.** Phase 19 approve/reject and Phase 20 transitions all fan out customer-facing notifications because those state changes affect the customer experience; internal notes are admin-only and CONTEXT.md is explicit they are "NEVER visible to customer users." Sending a notification on note save would leak the existence of internal notes to customers via /dashboard/notifications.
+- **deleteNote performs HARD delete, not soft delete.** organization_notes has no deleted_at column (Plan 21-01 migration); CONTEXT.md positions notes as "running log" not audit log. If regulator/legal team ever needs forensic recovery, the path is DB backups, not soft-delete pollution of the running list.
+- **updateNote / deleteNote do NOT enforce author-id ownership.** CONTEXT.md is explicit: "any platform staff member can create/edit/delete any note ... small team, high trust." Building author-id checks would be premature constraint — the team would route around them via direct DB access anyway. If staff count grows past trust threshold in v2.x, add the check at that time.
+- **No optimistic concurrency control on updateNote.** Two staff clicking Save within milliseconds simply produce a last-writer-wins outcome; the body is short and conflicts are recoverable by reading + retyping. An ETag/version-id approach would add a column + a roundtrip + a surfaced-conflict UX path for a vanishingly rare scenario.
+- **Save button blocks when body.trim() === note.body.trim() in edit mode.** Avoids a needless DB write that bumps updated_at, fires the trigger, and adds a bogus "(edited)" marker. Mirrors form-dirty checks but at the value-comparison level rather than via React Hook Form (this surface is too small for RHF).
+- **Each action runs a pre-flight SELECT before mutating.** createNote: org-existence + soft-delete check (defense in depth — RLS would let an org-id-pointer-mismatch insert succeed). update/delete: load row to extract organization_id so revalidatePath targets the correct page after the mutation removes the row. Two round trips per action; correctness over micro-perf.
+- **No revalidatePath('/admin/clients') in any action.** The list page does not surface note counts or any per-org note metric; revalidating it on every save would cause needless cache churn. If Phase 22 surfaces "X new notes this week", it will revalidate its own home path independently.
+- **Single charCounter key duplicated across editor.create.charCounter AND editor.entry.charCounter, NOT promoted.** The dict shape stays per-component-self-contained: AdminClientNoteCreate.translations and AdminClientNoteEntry.translations are independent prop types, both with their own charCounter field. Avoids a "where does this key live?" lookup at component-edit time. Cost: one duplicated value '{n} / {max}' in en.json + es.json — acceptable.
+- **entry.writtenBy + entry.edited re-use parent notes.writtenBy + notes.edited (NOT cloned into editor.entry.*).** View-mode metadata is identical between Plan 21-02's read-only entry and Plan 21-03's view state of the editable entry — duplicating those keys would invite drift over time. Page assembles notesTabTranslations.entry.writtenBy from t.raw('notes.writtenBy') and entry.edited from t('notes.edited').
+- **errorTooShort / errorTooLong are fixed-translation strings, NOT MIN/MAX-substituted.** Error keys are clean prose ("Note cannot be empty." / "Note exceeds 5000 characters.") instead of templated "Note must be between {min} and {max} characters". If MIN or MAX changes, both schema constants AND en.json/es.json strings update — explicit coupling beats a substitution layer for a tiny key surface.
+- **bodyFieldErrorFromZod helper signature uses ReadonlyArray<{path: ReadonlyArray<PropertyKey>; message: string}>.** Zod v4 issue paths are PropertyKey[] (which includes symbol). The plan-prescribed (string|number)[] signature failed type-check; the wider PropertyKey shape correctly accepts Zod's emitted issues — caught + auto-fixed during Task 1 verify (Rule 1 — Bug). Runtime check `i.path[0] === "body"` still works correctly because string equality short-circuits on non-string PropertyKeys.
+- **Read-only-then-editor split across two plans is now a battle-tested pattern.** 21-02 ships read-only Notes tab + flagged comingSoon i18n key; 21-03 swaps the body for the editor and removes the comingSoon key. Useful for any future feature where the read surface naturally precedes the write surface (a future audit-log read tab whose entries gain actions in a later plan, etc.).
 
 ### Decisions (Phase 21-02 execution, 2026-05-08)
 
@@ -358,19 +392,23 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 
 ### Pending Todos
 
-- **Phase 21 in progress** on `feature/phase-21-clients-admin` branch. 2/3 plans complete (21-01 + 21-02 shipped). 21-03 (notes CRUD editor) is last; should add `admin.clients.detail.notes.editor.*` peer keys and REMOVE `notes.comingSoon` from both locales when the editor body lands.
-- **Migrations `20260509000001_organization_notes.sql` (21-01) and `20260509000002_admin_org_members_view.sql` (21-02) must be applied to the dev DB** before testing the detail page — without 21-02's `get_admin_org_members` RPC the Members tab will throw at runtime ("function does not exist"). `supabase db push` from the project root applies all unapplied migrations.
+- **Phase 21 COMPLETE** on `feature/phase-21-clients-admin` branch. 3/3 plans shipped (21-01 + 21-02 + 21-03). All 6 v1.2 Phase 21 requirements satisfied (CLNT-01..05 + I18N-01). Phase 21 verifier is the next runner; once VERIFICATION.md status is `passed` the branch should be merged to `main`.
+- **Phase 22 (Admin Home) is the next phase.** Likely surfaces "X new notes this week" as an activity-feed item — that work should add an `admin.home.*` namespace with its own keys, NOT extend `admin.clients.detail.notes.*`.
+- **Migrations `20260509000001_organization_notes.sql` (21-01) and `20260509000002_admin_org_members_view.sql` (21-02) must be applied to the dev DB** before testing the detail page — without 21-02's `get_admin_org_members` RPC the Members tab throws at runtime. Notes CRUD (21-03) writes against `organization_notes` (21-01); both migrations are required for full smoke testing. `supabase db push` from the project root applies all unapplied migrations.
 - **Phase 19 still awaiting human UAT** (separate from Phase 21 work). Migration `20260508000001_automations_setup_notes.sql` from 19-01 must be applied on the dev DB before approve/reject UAT.
 - **Phase 20 awaits human UAT** (5 transitions × EN + ES locale; race-condition smoke; customer-side notification appears under /dashboard/notifications; archived row disappears from customer's /dashboard/automations active filter). Recommended UAT items captured in 20-03-SUMMARY.md.
-- **Phase 20 ready to merge to main** once human UAT passes.
-- **Cross-phase dead links accepted per CONTEXT.md:** "Open automation →" from Phase 19 approved-status detail resolves to a live page (20-02). "View client profile →" goes to /admin/clients/[orgId] — list page is now live (21-01) but the detail link still 404s until 21-02 ships.
+- **Phase 21 awaits human UAT** (notes create/edit/cancel/delete-confirm/delete cycle in EN + ES; empty-body Save disabled; 5000+ char counter turns red; non-staff RLS rejection). Recommended UAT items captured in 21-03-SUMMARY.md "User Setup Required" section.
+- **Phases 19, 20, 21 ready to merge to main** once human UAT passes (each individually).
+- **Cross-phase dead links accepted per CONTEXT.md:** "Open automation →" from Phase 19 approved-status detail resolves to a live page (20-02). "View client profile →" goes to /admin/clients/[orgId] — list AND detail pages now live (21-01 + 21-02 + 21-03 close the chain).
 - **Pre-existing build environment issue:** `npm run build` fails locally due to Google Fonts TLS error (unrelated to any phase code). Logged in `.planning/phases/21-clients-admin/deferred-items.md`. Recommended fix: `experimental.turbopackUseSystemTlsCerts: true` in `next.config.ts` or self-host font assets.
 
 ## Session Continuity
 
-**Last session:** 2026-05-08T16:31:53.761Z
-**Stopped at:** Completed 21-02-PLAN.md
-**Next action:** Plan 21-03 (notes CRUD editor) is the final plan of Phase 21. The editor wraps `AdminClientNotesTab` with create/edit/delete functionality without touching the detail page or the other 3 tabs. Add `admin.clients.detail.notes.editor.*` peer keys (placeholder, save button, delete confirm modal title/body/buttons, character counter, error messages) and REMOVE `notes.comingSoon` from both locale files when the editor body lands. Run `/gsd:execute-phase 21-clients-admin` to spawn 21-03. Branch: `feature/phase-21-clients-admin`. Apply migrations 20260509000001 (organization_notes) + 20260509000002 (admin_org_members_view RPC) on the dev DB before live testing the detail page.
+**Last session:** 2026-05-08T16:44:16.396Z
+**Stopped at:** Completed 21-03-PLAN.md (Phase 21 complete: 3/3 plans, all 6 v1.2 reqs satisfied)
+**Next action:** Phase 21 verifier is the next runner. Once VERIFICATION.md status is `passed` the branch `feature/phase-21-clients-admin` should be merged to `main`. Phase 22 (Admin Home) is the next planning + execution phase — run `/gsd:discuss-phase` -> `/gsd:plan-phase` -> `/gsd:execute-phase` for 22-admin-home. Apply migrations 20260509000001 (organization_notes) + 20260509000002 (admin_org_members_view RPC) on the dev DB before any live UAT.
+
+2026-05-08 — Phase 21 plan 21-03 shipped: AdminClientNotesTab swapped from read-only to full create/edit/delete editor. AdminClientNoteCreate (collapsed "Add note" button -> textarea + Save/Cancel + live char counter); AdminClientNoteEntry (per-existing-note three-state machine: view / edit / confirm-delete with inline red panel, NOT a portal Dialog). 3 server actions (createNote / updateNote / deleteNote) gated by assertPlatformStaff with revalidatePath('/admin/clients/[id]'). 3 Zod schemas with NOTE_MIN=1 + NOTE_MAX=5000 transform-then-pipe shape catches whitespace-only input. 24 new admin.clients.detail.notes.editor.* leaf keys per locale + comingSoon dead key removed (full EN/ES parity, accent-free Spanish). CLNT-05 + I18N-01 (this slice) satisfied. Phase 21 closes all 6 v1.2 requirements (CLNT-01..05 + I18N-01). tsc + scoped lint + i18n parity exit 0. 4 files created, 4 modified, 3 atomic commits, 5 minutes.
 
 2026-05-08 — Phase 21 plan 21-02 shipped: /admin/clients/[id] 360 detail page live with persistent header (org name + 5-cell stat grid: Slug / Created / Members / Active automations / Pending requests) + 4 read-only tabs (Automations -> Requests -> Members -> Notes). Synthetic ?tab= URL state, default tab drops the param. Automations/Requests rows link to /admin/automations/[id] and /admin/requests/[id] respectively; Members tab read-only with translated owner role; Notes tab read-only with whitespace-pre-wrap body + (edited) chip + Plan-21-03 comingSoon footer. New SECURITY-DEFINER RPC get_admin_org_members surfaces auth.users.last_sign_in_at across schemas with inline is_platform_staff gate. fetchAdminClientDetail issues 8 parallel queries (1 org + 4 listings + 3 HEAD counts). 47 new admin.clients.detail.* leaf keys per locale (full EN/ES parity, members.roles.owner explicitly required). CLNT-03 + CLNT-04 + I18N-01 (this slice) satisfied. tsc + scoped lint exit 0; i18n parity confirmed. 8 files created, 4 modified, 6 atomic commits, 15 minutes.
 
