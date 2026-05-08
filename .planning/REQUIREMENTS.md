@@ -62,8 +62,8 @@ Requirements for v1.2 release. Each maps to roadmap phases.
 
 - [x] **CLNT-01**: Staff sees list of all `organizations` with columns: name, slug, # active automations, # members, created date
 - [x] **CLNT-02**: Staff can filter/search clients by name or slug
-- [ ] **CLNT-03**: Staff opens client detail page showing org info, list of members (email, role, last login), list of automations (with status), and list of automation_requests
-- [ ] **CLNT-04**: From client detail, staff can navigate (link/button) to the detail page of any associated automation or request
+- [x] **CLNT-03**: Staff opens client detail page showing org info, list of members (email, role, last login), list of automations (with status), and list of automation_requests
+- [x] **CLNT-04**: From client detail, staff can navigate (link/button) to the detail page of any associated automation or request
 - [ ] **CLNT-05**: Staff can add and edit free-form internal notes per client (e.g., "VIP", "churn risk"), persisted in a new `organization_notes` field or related table; visible only on admin client detail page
 
 ### Admin Home (HOME)
@@ -152,8 +152,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTM-05 | Phase 20 | Complete |
 | CLNT-01 | Phase 21 | Complete |
 | CLNT-02 | Phase 21 | Complete |
-| CLNT-03 | Phase 21 | Pending |
-| CLNT-04 | Phase 21 | Pending |
+| CLNT-03 | Phase 21 | Complete |
+| CLNT-04 | Phase 21 | Complete |
 | CLNT-05 | Phase 21 | Pending |
 | HOME-01 | Phase 22 | Pending |
 | HOME-02 | Phase 22 | Pending |

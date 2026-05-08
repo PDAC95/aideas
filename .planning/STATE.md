@@ -3,6 +3,20 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Admin Dashboard
 status: unknown
+stopped_at: Completed 21-02-PLAN.md
+last_updated: "2026-05-08T16:31:53.764Z"
+progress:
+  total_phases: 15
+  completed_phases: 14
+  total_plans: 47
+  completed_plans: 46
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: Admin Dashboard
+status: unknown
 stopped_at: Phase 21 context gathered
 last_updated: "2026-05-08T16:05:42.953Z"
 progress:
@@ -90,10 +104,10 @@ See: .planning/PROJECT.md (updated 2026-05-04 after v1.2 milestone start)
 
 ## Current Position
 
-Phase: Phase 21 — Clients Admin — IN PROGRESS (1/3 plans complete).
-Plan: 21-01 complete. /admin/clients placeholder replaced with real cross-org list (5 columns: Name link, Slug mono, # Active automations right-aligned, # Members right-aligned, Created date) + 300ms ILIKE-debounced ?q= search on (name OR slug) + ?page= pager (25/page, "Page X of Y" + "{from}-{to} of {total}", hidden when totalPages <= 1). organization_notes table shipped with 4 admin-only RLS policies + 2 indexes + updated_at trigger — foundation for Plan 21-03 notes CRUD. fetchAdminClients(filters) gated by assertPlatformStaff, two-round-trip strategy (paginated orgs + count: exact + parallel pair of .in() queries against automations/organization_members bucketed in JS). 15 new admin.clients.list.* leaf keys per locale, full EN/ES parity, admin.placeholders.clients removed. CLNT-01 + CLNT-02 + I18N-01 (this slice) satisfied. 6 files created, 4 modified, 3 atomic commits, 5 minutes.
-Status: Plan 21-01 ships CLNT-01 + CLNT-02. tsc --noEmit exits 0; scoped ESLint exits 0; i18n parity script confirms EN/ES match and old placeholder keys removed. `npm run build` blocked by pre-existing Google Fonts TLS issue affecting every Next.js 16 build on this host (logged in deferred-items.md, not introduced by 21-01).
-Last activity: 2026-05-08 — Plan 21-01 executed (3 tasks, 10 files; migration + types/query + page/components/i18n). Plan 21-02 (detail page with all tabs incl. notes read view) is next; can clone 21-01 patterns verbatim.
+Phase: Phase 21 — Clients Admin — IN PROGRESS (2/3 plans complete).
+Plan: 21-02 complete. /admin/clients/[id] 360 detail page live: persistent header (back link, org name H1, 5-cell stat grid: Slug mono / Created / Members count / Active automations count / Pending requests count) + 4 read-only tabs (Automations -> Requests -> Members -> Notes). Synthetic ?tab= URL state, default tab = automations (drops the param), other tabs set ?tab=requests|members|notes. Automations tab links rows to /admin/automations/[id]; Requests tab links to /admin/requests/[id]; Members tab is read-only with 5 cols (Email / Full name / Role / Last login / Joined) including translated owner role; Notes tab read-only with whitespace-pre-wrap body + (edited) chip + Plan-21-03 comingSoon footer. New SECURITY-DEFINER RPC get_admin_org_members(p_organization_id UUID) ships in 20260509000002_admin_org_members_view.sql to surface auth.users.last_sign_in_at across schemas (inline is_platform_staff gate, non-staff gets empty result). fetchAdminClientDetail(id, locale) issues 8 parallel queries (1 org + 4 list datasets + 3 HEAD counts) gated by assertPlatformStaff; returns null for missing/soft-deleted orgs. 47 new admin.clients.detail.* leaf keys per locale, full EN/ES parity, members.roles.owner explicitly required (defense against handle_new_user trigger). CLNT-03 + CLNT-04 + I18N-01 (this slice) satisfied.
+Status: Plan 21-02 ships CLNT-03 + CLNT-04. tsc --noEmit exits 0; scoped ESLint exits 0 across src/app/(admin)/admin/clients/, src/components/admin/clients/, and src/lib/admin/client-queries.ts; i18n parity script confirms EN/ES match and members.roles.owner exists in both locales. `npm run build` still blocked by pre-existing Google Fonts TLS issue (deferred-items.md from 21-01, not introduced by 21-02). 8 files created, 4 modified, 6 atomic commits, 15 minutes.
+Last activity: 2026-05-08 — Plan 21-02 executed (4 tasks: types+RPC migration, fetchAdminClientDetail, i18n+tabs strip+4 tab body components, detail layout+page wrapping). Plan 21-03 (notes CRUD editor) is next; should add admin.clients.detail.notes.editor.* peer keys and REMOVE notes.comingSoon when the editor body lands.
 
 ## Performance Metrics
 
@@ -103,6 +117,7 @@ Last activity: 2026-05-08 — Plan 21-01 executed (3 tasks, 10 files; migration 
 | Plans | 16 | 28 | ~20 |
 | Requirements | 54/54 | 38/38 | 31 (planned) |
 | Timeline | 70 days | 21 days | TBD |
+| Phase 21 P02 | 15 min | 4 tasks | 12 files |
 
 ### Per-plan execution metrics (v1.2)
 
@@ -124,6 +139,22 @@ Last activity: 2026-05-08 — Plan 21-01 executed (3 tasks, 10 files; migration 
 | 21-01      | 5              | 3     | 10            |
 
 ## Accumulated Context
+
+### Decisions (Phase 21-02 execution, 2026-05-08)
+
+- **SECURITY-DEFINER RPC, not a JOIN or a view, for cross-schema auth.users.last_sign_in_at access.** Supabase JS PostgREST cannot embed across schemas in one query. Function (vs view) wins because (1) the inline `WHERE ... AND public.is_platform_staff((SELECT auth.uid()))` gate is per-call — no caching, no stale grant exposure window; (2) matches Phase 17 helper-function convention exactly; (3) takes input parameters cleanly (`p_organization_id UUID`) without a doubled WHERE-clause RLS surface; (4) `GRANT EXECUTE` is a cleaner permission gate than table-level GRANT. Non-staff caller receives empty result set, not error — defense-in-depth posture (no `403` noise leaking RPC existence to leaked admin tokens).
+- **8 parallel round trips for the detail fetcher (1 org + 4 list queries + 3 HEAD counts), not 5.** Counting from `array.length` of LIMIT-25 listings would underreport whenever any header counter crosses 25; HEAD `count: exact` is a single round trip per counter, no row payload, parallelized by `Promise.all`. Members RPC has no `count: exact` so members count uses a separate `organization_members` HEAD query — symmetry across the 3 header counters keeps the code readable.
+- **Per-tab translation dicts as concrete TypeScript object literals, NOT prose comments.** Each of 5 dicts (header / tabs / automations / requests / members / notes) is built from `t(...)` and `t.raw(...)` calls in `page.tsx`. Tab components accept resolved-string dicts as props with no `useTranslations` import — server-rendered, framework-agnostic, easy to test with literal-string fixtures. Pattern reusable for any future detail page with N tab bodies.
+- **`members.roles.owner` is required, not optional in the i18n parity script.** The `handle_new_user()` trigger creates `role='owner'` for the first `organization_members` row per org — every customer org has at least one owner. The role union is forward-compat string union and the renderer falls back to raw role for unknown values, but missing `owner` would render the most common role untranslated as a lowercase "owner". Verification script explicitly checks `en.admin.clients.detail.members.roles.owner` and `es.admin.clients.detail.members.roles.owner`.
+- **`notes.comingSoon` flagged for removal in 21-03.** Plan 21-03 will replace `AdminClientNotesTab`'s body with the create/edit/delete editor; the `comingSoon` footer + the i18n key in both locales must be removed at that time. Logged in 21-02 SUMMARY's `key-decisions` so 21-03 doesn't ship a dead key.
+- **Note body rendering — XSS posture: plain JSX text inside `<p className="whitespace-pre-wrap">{note.body}</p>`.** React's default escaping is the entire defense. No HTML-injection prop, no markdown render, no link auto-detection in 21-02. CONTEXT.md explicit: "Plain text ... escape HTML on render." If 21-03 reviewer wants markdown support, separate plan.
+- **(edited) chip uses 1-second tolerance against `updated_at vs created_at`.** Strict `>` comparison flags every freshly-inserted row as edited because the `update_updated_at_column()` trigger fires `BEFORE UPDATE` (not on INSERT — column DEFAULTs to NOW()). 1s is wider than any single-host clock-precision noise but tighter than any human-typed edit. Reusable for any "edited?" surface.
+- **Defensive embed-shape normalization on `automations.template`, `requests.requester`, `notes.author`.** Phase 19/20 SUMMARYs documented the gotcha that Supabase JS PostgREST sometimes returns single-row !inner / !left embeds as T, sometimes T[]. All three mappers use the `Array.isArray(x) ? x[0] ?? null : x ?? null` normalizer.
+- **Cross-link "View all" footer targets accept degradation.** `/admin/automations?org=<slug>` and `/admin/requests?org=<slug>` link to global lists that don't yet honor `?org=` filtering. CONTEXT.md accepts this — user lands on unfiltered list, same UX as direct nav. Phase 22 or a future polish plan can wire the filter without rewriting the link target. Logged so no executor wastes a deviation.
+- **`?tab=` URL state owns ONE query param only.** Page reads only `?tab=` from `searchParams` (typed as `Promise<{ tab?: string }>`). No `?page=` (per-tab listings capped at 25 — anything bigger lives on global list page), no other params. Keeps mental model simple: one search param, four tab values, deterministic default.
+- **Synthetic `?tab=` UI state with default-canonicalization.** Default tab = "automations" drops the param so refresh on default stays bare and shareable URLs are minimal; other tabs set `?tab=requests|members|notes`. Three-way duplication of tab literals (Type union + ADMIN_CLIENT_TABS array + VALID_TABS in page.tsx) is acceptable at this size; collapsing to a single `as const` source would couple type to runtime data and lose forward-compat on the includes() guard.
+- **Read-only-then-editor split: 21-02 ships read-only Notes; 21-03 swaps the body for the editor and removes notes.comingSoon.** Pattern reusable for any future plan that ships UI before behavior — establishes a "scaffold-then-wire" cadence at the plan level.
+- **Supabase JS RPC return shape gotcha.** `supabase.rpc(...)` returns `{ data, error }` where `data` is a flat array of plain row objects (same shape as a SELECT result), NOT a `{ rows: [...] }` wrapper. The mapper code treats `membersRes.data ?? []` as `RawMember[]` directly. Worth flagging because a developer used to `.from(...)` returning `data` AND a developer used to a SQL function returning a single SETOF can both land here with the wrong assumption.
 
 ### Decisions (Phase 21-01 execution, 2026-05-08)
 
@@ -327,8 +358,8 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 
 ### Pending Todos
 
-- **Phase 21 in progress** on `feature/phase-21-clients-admin` branch. 1/3 plans complete (21-01 shipped). 21-02 (detail page with all tabs incl. notes read view) is next; 21-03 (notes CRUD) is last.
-- **Migration `20260509000001_organization_notes.sql` from 21-01 must be applied to the dev DB before 21-02 detail page can render the Notes tab against real data** (empty state will work on a fresh DB without the migration, but reads obviously won't return anything).
+- **Phase 21 in progress** on `feature/phase-21-clients-admin` branch. 2/3 plans complete (21-01 + 21-02 shipped). 21-03 (notes CRUD editor) is last; should add `admin.clients.detail.notes.editor.*` peer keys and REMOVE `notes.comingSoon` from both locales when the editor body lands.
+- **Migrations `20260509000001_organization_notes.sql` (21-01) and `20260509000002_admin_org_members_view.sql` (21-02) must be applied to the dev DB** before testing the detail page — without 21-02's `get_admin_org_members` RPC the Members tab will throw at runtime ("function does not exist"). `supabase db push` from the project root applies all unapplied migrations.
 - **Phase 19 still awaiting human UAT** (separate from Phase 21 work). Migration `20260508000001_automations_setup_notes.sql` from 19-01 must be applied on the dev DB before approve/reject UAT.
 - **Phase 20 awaits human UAT** (5 transitions × EN + ES locale; race-condition smoke; customer-side notification appears under /dashboard/notifications; archived row disappears from customer's /dashboard/automations active filter). Recommended UAT items captured in 20-03-SUMMARY.md.
 - **Phase 20 ready to merge to main** once human UAT passes.
@@ -337,9 +368,11 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 
 ## Session Continuity
 
-**Last session:** 2026-05-08T16:03:59Z
-**Stopped at:** Completed 21-01-PLAN.md
-**Next action:** Plan 21-02 (Clients detail page with tabs incl. notes read view) is next. The detail page can clone 21-01's two-round-trip + bucket-in-JS query shape, render-time setState URL sync, and `admin.clients.*` i18n namespace verbatim. Run `/gsd:execute-phase 21-clients-admin` to spawn 21-02. Branch: `feature/phase-21-clients-admin`. Apply the migration `20260509000001_organization_notes.sql` on the dev DB before testing the detail page's Notes tab (or accept the empty state).
+**Last session:** 2026-05-08T16:31:53.761Z
+**Stopped at:** Completed 21-02-PLAN.md
+**Next action:** Plan 21-03 (notes CRUD editor) is the final plan of Phase 21. The editor wraps `AdminClientNotesTab` with create/edit/delete functionality without touching the detail page or the other 3 tabs. Add `admin.clients.detail.notes.editor.*` peer keys (placeholder, save button, delete confirm modal title/body/buttons, character counter, error messages) and REMOVE `notes.comingSoon` from both locale files when the editor body lands. Run `/gsd:execute-phase 21-clients-admin` to spawn 21-03. Branch: `feature/phase-21-clients-admin`. Apply migrations 20260509000001 (organization_notes) + 20260509000002 (admin_org_members_view RPC) on the dev DB before live testing the detail page.
+
+2026-05-08 — Phase 21 plan 21-02 shipped: /admin/clients/[id] 360 detail page live with persistent header (org name + 5-cell stat grid: Slug / Created / Members / Active automations / Pending requests) + 4 read-only tabs (Automations -> Requests -> Members -> Notes). Synthetic ?tab= URL state, default tab drops the param. Automations/Requests rows link to /admin/automations/[id] and /admin/requests/[id] respectively; Members tab read-only with translated owner role; Notes tab read-only with whitespace-pre-wrap body + (edited) chip + Plan-21-03 comingSoon footer. New SECURITY-DEFINER RPC get_admin_org_members surfaces auth.users.last_sign_in_at across schemas with inline is_platform_staff gate. fetchAdminClientDetail issues 8 parallel queries (1 org + 4 listings + 3 HEAD counts). 47 new admin.clients.detail.* leaf keys per locale (full EN/ES parity, members.roles.owner explicitly required). CLNT-03 + CLNT-04 + I18N-01 (this slice) satisfied. tsc + scoped lint exit 0; i18n parity confirmed. 8 files created, 4 modified, 6 atomic commits, 15 minutes.
 
 2026-05-08 — Phase 21 plan 21-01 shipped: /admin/clients placeholder replaced with real cross-org list (5 columns: Name link, Slug mono, # Active automations right-aligned, # Members right-aligned, Created date) + 300ms ILIKE-debounced ?q= search on (name OR slug) + ?page= pager (25/page, hidden when totalPages <= 1). organization_notes table shipped with 4 admin-only RLS policies + 2 indexes + updated_at trigger — foundation for Plan 21-03 notes CRUD. fetchAdminClients(filters) gated by assertPlatformStaff, two-round-trip strategy. 15 new admin.clients.list.* leaf keys per locale (EN/ES parity). admin.placeholders.clients removed. CLNT-01 + CLNT-02 + I18N-01 (this slice) satisfied. tsc + scoped lint exit 0. 6 files created, 4 modified, 3 atomic commits, 5 minutes.
 
