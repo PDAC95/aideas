@@ -381,3 +381,34 @@ export interface AdminHomeKpis {
   activeClients: number;
   signupsThisWeek: number;
 }
+
+/**
+ * Admin home activity feed — supported event types.
+ *
+ * CONTEXT.md prescribes 3 event types only (deferred: generic status
+ * transitions like approved/rejected/paused/archived). The 3 here are
+ * the highest-signal "something changed in the world" events.
+ */
+export type AdminHomeActivityEventType =
+  | "request_created"
+  | "automation_activated"
+  | "new_signup";
+
+/**
+ * One row in the admin home activity feed. Server pre-computes the link
+ * target so the render component is pure (no routing logic in the UI).
+ *
+ * Field shape:
+ *   - request_created      : requestTitle populated, automationName null
+ *   - automation_activated : automationName populated, requestTitle null
+ *   - new_signup           : both null; orgName is the descriptive label
+ */
+export interface AdminHomeActivityEntry {
+  type: AdminHomeActivityEventType;
+  entityId: string;
+  href: string;
+  occurredAt: string; // ISO 8601
+  orgName: string;
+  requestTitle: string | null;
+  automationName: string | null;
+}
