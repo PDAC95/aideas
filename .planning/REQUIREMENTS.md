@@ -70,7 +70,7 @@ Requirements for v1.2 release. Each maps to roadmap phases.
 
 > Operational landing dashboard for the team.
 
-- [ ] **HOME-01**: Staff lands on `/admin` and sees 4 KPI cards: pending requests count, in-setup automations count, total active clients, signups this week
+- [x] **HOME-01**: Staff lands on `/admin` and sees 4 KPI cards: pending requests count, in-setup automations count, total active clients, signups this week
 - [ ] **HOME-02**: Staff sees an activity feed of the last 15-20 system events (request created, automation activated, signups, status transitions)
 - [ ] **HOME-03**: Staff sees quick-link cards to the most-used screens (Requests inbox with pending count badge, Automations in setup)
 
@@ -155,7 +155,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CLNT-03 | Phase 21 | Complete |
 | CLNT-04 | Phase 21 | Complete |
 | CLNT-05 | Phase 21 | Complete |
-| HOME-01 | Phase 22 | Pending |
+| HOME-01 | Phase 22 | Complete |
 | HOME-02 | Phase 22 | Pending |
 | HOME-03 | Phase 22 | Pending |
 | I18N-01 | Phases 17, 18, 19, 20, 21, 22 (cross-cutting) | Phase 17 surface complete; cross-cuts 18-22 |
