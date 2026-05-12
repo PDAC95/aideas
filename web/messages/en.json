@@ -892,6 +892,25 @@
         "inSetupAutomations": "Automations in setup",
         "activeClients": "Active clients",
         "signupsThisWeek": "Signups this week"
+      },
+      "quickLinks": {
+        "requests": {
+          "title": "Requests inbox",
+          "body": "Review and triage incoming customer requests."
+        },
+        "automations": {
+          "title": "Automations in setup",
+          "body": "Build and activate automations awaiting deployment."
+        }
+      },
+      "feed": {
+        "title": "Recent activity",
+        "empty": "No recent activity.",
+        "events": {
+          "request_created": "{orgName} requested {requestTitle}",
+          "automation_activated": "{orgName} activated {automationName}",
+          "new_signup": "{orgName} signed up"
+        }
       }
     },
     "login": {

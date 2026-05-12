@@ -1,20 +1,32 @@
 import { getTranslations } from "next-intl/server";
-import { fetchAdminHomeKpis } from "@/lib/admin/home-queries";
+import {
+  fetchAdminHomeKpis,
+  fetchAdminHomeActivity,
+} from "@/lib/admin/home-queries";
 import { AdminHomeKpiCards } from "@/components/admin/home/admin-home-kpi-cards";
+import { AdminHomeQuickLinks } from "@/components/admin/home/admin-home-quick-links";
+import { AdminHomeActivityFeed } from "@/components/admin/home/admin-home-activity-feed";
 
 /**
  * Admin Home — operational landing page.
  *
- * Phase 22 Plan 22-01: 4 KPI cards.
- * Phase 22 Plan 22-02 will add: activity feed + quick-link cards.
+ * Sections, top-down:
+ *   1. KPI grid (2x2)               — Plan 22-01
+ *   2. Quick-link banner cards (2)  — Plan 22-02
+ *   3. Activity feed (last 15-20)   — Plan 22-02
  *
- * Layout gates auth via assertPlatformStaff (defense-in-depth) so this page
- * does NOT re-gate. Data is freshly fetched on every request (no cache, no
- * realtime — per CONTEXT.md "SSR snapshot on each page load").
+ * Layout already gates auth via assertPlatformStaff (defense-in-depth) so
+ * this page does NOT re-gate. SSR snapshot — no cache, no realtime
+ * (CONTEXT.md). Both fetchers run in parallel via Promise.all.
  */
 export default async function AdminHomePage() {
   const t = await getTranslations("admin.home");
-  const kpis = await fetchAdminHomeKpis();
+  const tCommon = await getTranslations("common");
+
+  const [kpis, activity] = await Promise.all([
+    fetchAdminHomeKpis(),
+    fetchAdminHomeActivity(),
+  ]);
 
   return (
     <div className="space-y-6">
@@ -35,6 +47,35 @@ export default async function AdminHomePage() {
           activeClients: t("kpis.activeClients"),
           signupsThisWeek: t("kpis.signupsThisWeek"),
         }}
+      />
+
+      <AdminHomeQuickLinks
+        pendingRequestsBadge={kpis.pendingRequests}
+        inSetupAutomationsBadge={kpis.inSetupAutomations}
+        labels={{
+          requestsTitle: t("quickLinks.requests.title"),
+          requestsBody: t("quickLinks.requests.body"),
+          automationsTitle: t("quickLinks.automations.title"),
+          automationsBody: t("quickLinks.automations.body"),
+        }}
+      />
+
+      <AdminHomeActivityFeed
+        entries={activity}
+        translations={{
+          title: t("feed.title"),
+          empty: t("feed.empty"),
+          events: {
+            request_created: t.raw(
+              "feed.events.request_created"
+            ) as string,
+            automation_activated: t.raw(
+              "feed.events.automation_activated"
+            ) as string,
+            new_signup: t.raw("feed.events.new_signup") as string,
+          },
+        }}
+        time={(k) => tCommon(k)}
       />
     </div>
   );
