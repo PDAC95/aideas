@@ -905,10 +905,144 @@
       "catalog": {
         "title": "Catalog Admin",
         "body": "Template CRUD lands in Phase 18."
+      }
+    },
+    "clients": {
+      "list": {
+        "title": "Clients",
+        "subtitle": "Every customer organization across all tenants.",
+        "search": {
+          "label": "Search",
+          "placeholder": "Search by name or slug",
+          "clear": "Clear search"
+        },
+        "columns": {
+          "name": "Name",
+          "slug": "Slug",
+          "activeAutomations": "Active automations",
+          "members": "Members",
+          "createdAt": "Created"
+        },
+        "empty": {
+          "noResults": "No organizations match your search.",
+          "noOrgs": "No organizations exist yet."
+        },
+        "pagination": {
+          "label": "{from}-{to} of {total}",
+          "previous": "Previous",
+          "next": "Next",
+          "page": "Page {page} of {total}"
+        }
       },
-      "clients": {
-        "title": "Clients Admin",
-        "body": "Client list, 360-degree detail, and internal notes ship in Phase 21."
+      "detail": {
+        "backLink": "← All clients",
+        "header": {
+          "slugLabel": "Slug",
+          "createdLabel": "Created",
+          "membersLabel": "Members",
+          "activeAutomationsLabel": "Active automations",
+          "pendingRequestsLabel": "Pending requests"
+        },
+        "tabs": {
+          "automations": "Automations ({count})",
+          "requests": "Requests ({count})",
+          "members": "Members ({count})",
+          "notes": "Notes ({count})"
+        },
+        "automations": {
+          "columns": {
+            "name": "Name",
+            "status": "Status",
+            "template": "Template",
+            "createdAt": "Created",
+            "lastRun": "Last execution"
+          },
+          "noTemplate": "Custom",
+          "neverRun": "Never",
+          "empty": "This client has no automations yet.",
+          "viewAll": "View all in /admin/automations →"
+        },
+        "requests": {
+          "columns": {
+            "title": "Title",
+            "status": "Status",
+            "submittedBy": "Submitted by",
+            "createdAt": "Created"
+          },
+          "empty": "This client has no requests yet.",
+          "viewAll": "View all in /admin/requests →"
+        },
+        "members": {
+          "columns": {
+            "email": "Email",
+            "fullName": "Full name",
+            "role": "Role",
+            "lastLogin": "Last login",
+            "joined": "Joined"
+          },
+          "roles": {
+            "owner": "Owner",
+            "admin": "Admin",
+            "operator": "Operator",
+            "viewer": "Viewer"
+          },
+          "noFullName": "—",
+          "neverLoggedIn": "Never",
+          "inactive": "Inactive",
+          "empty": "This client has no members yet."
+        },
+        "notes": {
+          "empty": "No internal notes yet.",
+          "writtenBy": "{name} on {date}",
+          "edited": "(edited)",
+          "editor": {
+            "create": {
+              "addLabel": "Add note",
+              "placeholder": "Internal note (VIP, churn risk, context, etc.)",
+              "save": "Save",
+              "saving": "Saving…",
+              "cancel": "Cancel",
+              "errorTooShort": "Note cannot be empty.",
+              "errorTooLong": "Note exceeds 5000 characters.",
+              "errorGeneric": "Could not save note. Try again.",
+              "charCounter": "{n} / {max}"
+            },
+            "entry": {
+              "edit": "Edit",
+              "delete": "Delete",
+              "save": "Save",
+              "saving": "Saving…",
+              "cancel": "Cancel",
+              "confirmDelete": "Delete this note?",
+              "confirmDeleteBody": "This cannot be undone.",
+              "deleting": "Deleting…",
+              "errorTooShort": "Note cannot be empty.",
+              "errorTooLong": "Note exceeds 5000 characters.",
+              "errorGeneric": "Could not save changes. Try again.",
+              "charCounter": "{n} / {max}"
+            }
+          }
+        },
+        "statusBadges": {
+          "automation": {
+            "draft": "Draft",
+            "pending_review": "Pending review",
+            "in_setup": "In setup",
+            "active": "Active",
+            "paused": "Paused",
+            "failed": "Failed",
+            "archived": "Archived"
+          },
+          "request": {
+            "pending": "Pending",
+            "in_review": "In review",
+            "approved": "Approved",
+            "completed": "Completed",
+            "rejected": "Rejected",
+            "payment_pending": "Payment pending",
+            "payment_failed": "Payment failed"
+          }
+        }
       }
     },
     "automations": {

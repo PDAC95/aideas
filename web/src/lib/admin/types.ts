@@ -236,3 +236,131 @@ export interface AdminAutomationDetail {
   // Last-20 execution timeline
   recentExecutions: AdminAutomationExecutionEntry[];
 }
+
+/**
+ * Single row in the admin clients list table. The 5 columns the table renders
+ * map 1:1 to fields below; `id` is carried for the row link to /admin/clients/[id].
+ *
+ * `activeAutomationsCount` mirrors Phase 19's ACTIVE_LIKE_STATUSES set
+ * ("active" | "in_setup" | "paused" | "pending_review") so the same definition
+ * of "active" is used across the admin surface.
+ */
+export interface AdminClientRow {
+  id: string;
+  name: string;
+  slug: string;
+  activeAutomationsCount: number;
+  membersCount: number;
+  createdAt: string; // ISO 8601
+}
+
+/**
+ * Filter shape for fetchAdminClients. The list page parses searchParams into
+ * this shape and passes it through.
+ *
+ * - q: ILIKE substring against (name OR slug). Empty string / null = no filter.
+ * - page: 1-indexed page number. <= 0 coerces to 1 in the query.
+ * - pageSize: rows per page. The list page passes 25 (CONTEXT.md). Cap at 100
+ *   to defend against hostile URL ?pageSize=10000.
+ */
+export interface AdminClientListFilters {
+  q: string | null;
+  page: number;
+  pageSize: number;
+}
+
+export interface AdminClientsListResult {
+  rows: AdminClientRow[];
+  totalCount: number; // total matching the q filter (across all pages)
+  page: number; // echoed back, after coercion
+  pageSize: number; // echoed back, after coercion
+  totalPages: number; // Math.max(1, Math.ceil(totalCount / pageSize))
+}
+
+/**
+ * One row in the Members tab of /admin/clients/[id].
+ * `lastSignInAt` is null for users who have never logged in OR if the
+ * SECURITY-DEFINER function fails (rare; treated as missing rather than
+ * errored).
+ *
+ * Role union includes "owner" because handle_new_user() trigger
+ * (supabase/migrations/20260401000001_user_registration.sql) creates the first
+ * organization_members row per org with role='owner'. Every customer org has
+ * at least one owner; rendering "owner" untranslated would be the most common
+ * bug.
+ */
+export interface AdminClientMember {
+  userId: string;
+  email: string;
+  fullName: string | null;
+  role: "owner" | "admin" | "operator" | "viewer" | string; // forward-compat
+  isActive: boolean;
+  joinedAt: string; // ISO 8601 (organization_members.joined_at)
+  lastSignInAt: string | null;
+}
+
+/**
+ * One row in the Automations tab of /admin/clients/[id].
+ * Re-uses Phase 20 statuses; templateDisplayName falls back to slug if no
+ * translation row exists for the requested locale.
+ */
+export interface AdminClientAutomationRow {
+  id: string;
+  name: string;
+  status: AdminAutomationStatus | string; // forward-compat
+  templateDisplayName: string | null;
+  createdAt: string;
+  lastRunAt: string | null;
+}
+
+/**
+ * One row in the Requests tab of /admin/clients/[id].
+ * Re-uses Phase 19 statuses.
+ */
+export interface AdminClientRequestRow {
+  id: string;
+  title: string;
+  status: AdminRequestStatus | string; // forward-compat
+  submittedByEmail: string;
+  submittedByFullName: string | null;
+  createdAt: string;
+}
+
+/**
+ * One entry in the Notes tab. Authored by a platform_staff member (author_id
+ * FK to profiles, but in practice always a staff profile). authorFullName /
+ * authorEmail resolved server-side from a profiles JOIN.
+ */
+export interface AdminClientNoteEntry {
+  id: string;
+  body: string;
+  createdAt: string;
+  updatedAt: string;
+  authorId: string;
+  authorEmail: string;
+  authorFullName: string | null;
+}
+
+/**
+ * Full payload backing /admin/clients/[id]. Composed in one
+ * fetchAdminClientDetail call; all four tab datasets are pre-fetched
+ * server-side so the client tabs component is a pure render.
+ */
+export interface AdminClientDetail {
+  id: string;
+  name: string;
+  slug: string;
+  createdAt: string;
+
+  // Header counters
+  membersCount: number;
+  activeAutomationsCount: number;
+  pendingRequestsCount: number;
+
+  // Tab datasets (each capped at 25 rows; "View all" link in footer goes to
+  // the corresponding global admin list filtered by ?org=<slug>)
+  automations: AdminClientAutomationRow[];
+  requests: AdminClientRequestRow[];
+  members: AdminClientMember[];
+  notes: AdminClientNoteEntry[];
+}
