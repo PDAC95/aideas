@@ -364,3 +364,20 @@ export interface AdminClientDetail {
   members: AdminClientMember[];
   notes: AdminClientNoteEntry[];
 }
+
+/**
+ * Live KPI counters for the admin home page.
+ *
+ * - pendingRequests:    automation_requests where status ∈ TAB_TO_STATUSES["pending"]
+ *                       (matches the "Pending" tab counter on /admin/requests).
+ * - inSetupAutomations: automations where status='in_setup' AND deleted_at IS NULL.
+ * - activeClients:      organizations with deleted_at IS NULL.
+ * - signupsThisWeek:    organizations created in the rolling 7-day window
+ *                       (now() - INTERVAL '7 days', inclusive of `now`).
+ */
+export interface AdminHomeKpis {
+  pendingRequests: number;
+  inSetupAutomations: number;
+  activeClients: number;
+  signupsThisWeek: number;
+}
