@@ -3,6 +3,26 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Admin Dashboard
 status: unknown
+stopped_at: "Completed 22-02-PLAN.md (Phase 22 complete: 2/2 plans — admin home KPIs + quick links + activity feed)"
+last_updated: "2026-05-12T20:11:27Z"
+progress:
+  total_phases: 16
+  completed_phases: 16
+  total_plans: 49
+  completed_plans: 49
+decisions:
+  - "22-02: automation_activated event approximated as status='active' ORDER BY updated_at DESC (no audit log in Phase 22)"
+  - "22-02: 20-per-source pull + JS merge/sort/slice preserves global top-20 even when one source dominates"
+  - "22-02: t.raw + manual string-replace substitution for feed event templates (avoids next-intl ICU formatter interfering with named placeholders)"
+  - "22-02: Quick-link badge values reuse kpis object — no duplicate query, single source of truth"
+  - "22-02: Hide badge entirely when count is 0 (avoids '0' looking like a loading state)"
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: Admin Dashboard
+status: unknown
 stopped_at: Completed 22-01-PLAN.md
 last_updated: "2026-05-12T20:03:51.978Z"
 progress:

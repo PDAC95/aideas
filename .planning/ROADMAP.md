@@ -58,7 +58,7 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 - [x] **Phase 19: Requests Inbox** — List + detail + single-step approve (creates automation) + reject-with-reason (3 plans) (completed 2026-05-07)
 - [x] **Phase 20: Automations Admin** — Global cross-org list + read-only detail + status transitions (4 plans) (completed 2026-05-08)
 - [x] **Phase 21: Clients Admin** — Orgs list + search + 360° detail + cross-links + free-form internal notes (3 plans) (completed 2026-05-08)
-- [ ] **Phase 22: Admin Home** — Operational KPIs + activity feed + quick-link cards (2 plans)
+- [x] **Phase 22: Admin Home** — Operational KPIs + activity feed + quick-link cards (2 plans) (completed 2026-05-12)
 
 ## Phase Details
 
@@ -166,7 +166,7 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
   3. Staff sees quick-link cards to the most-used screens — Requests inbox (with pending count badge) and Automations in setup — each clickable to the corresponding admin screen
   4. KPI counts and activity feed reflect actual database state at request time (no stale or hardcoded values)
   5. All admin home UI strings (KPI labels, activity feed event types, quick-link card titles) have EN/ES parity
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 - [ ] 22-01-PLAN.md — `fetchAdminHomeKpis` + `AdminHomeKpiCards` 2x2 grid + admin.home.kpis.* EN/ES keys; replaces /admin placeholder
 - [ ] 22-02-PLAN.md — `fetchAdminHomeActivity` + `AdminHomeQuickLinks` (2 banner cards w/ badges) + `AdminHomeActivityFeed` (15-20 rows, 3 event types) + admin.home.quickLinks.* + admin.home.feed.* EN/ES keys
 
@@ -195,4 +195,4 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 | 19. Requests Inbox | 3/3 | Complete    | 2026-05-07 | — |
 | 20. Automations Admin | 4/4 | Complete    | 2026-05-08 | — |
 | 21. Clients Admin | 3/3 | Complete   | 2026-05-08 | — |
-| 22. Admin Home | 1/2 | In Progress|  | — |
+| 22. Admin Home | 2/2 | Complete   | 2026-05-12 | — |
