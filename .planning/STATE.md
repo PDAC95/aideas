@@ -3,6 +3,20 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Admin Dashboard
 status: unknown
+stopped_at: Phase 22 context gathered
+last_updated: "2026-05-12T19:48:11.144Z"
+progress:
+  total_phases: 16
+  completed_phases: 15
+  total_plans: 47
+  completed_plans: 47
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: Admin Dashboard
+status: unknown
 stopped_at: "Completed 21-03-PLAN.md (Phase 21 complete: 3/3 plans, all 6 v1.2 reqs satisfied)"
 last_updated: "2026-05-08T16:44:16.399Z"
 progress:
@@ -404,8 +418,8 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 
 ## Session Continuity
 
-**Last session:** 2026-05-08T16:44:16.396Z
-**Stopped at:** Completed 21-03-PLAN.md (Phase 21 complete: 3/3 plans, all 6 v1.2 reqs satisfied)
+**Last session:** 2026-05-12T19:48:11.140Z
+**Stopped at:** Phase 22 context gathered
 **Next action:** Phase 21 verifier is the next runner. Once VERIFICATION.md status is `passed` the branch `feature/phase-21-clients-admin` should be merged to `main`. Phase 22 (Admin Home) is the next planning + execution phase — run `/gsd:discuss-phase` -> `/gsd:plan-phase` -> `/gsd:execute-phase` for 22-admin-home. Apply migrations 20260509000001 (organization_notes) + 20260509000002 (admin_org_members_view RPC) on the dev DB before any live UAT.
 
 2026-05-08 — Phase 21 plan 21-03 shipped: AdminClientNotesTab swapped from read-only to full create/edit/delete editor. AdminClientNoteCreate (collapsed "Add note" button -> textarea + Save/Cancel + live char counter); AdminClientNoteEntry (per-existing-note three-state machine: view / edit / confirm-delete with inline red panel, NOT a portal Dialog). 3 server actions (createNote / updateNote / deleteNote) gated by assertPlatformStaff with revalidatePath('/admin/clients/[id]'). 3 Zod schemas with NOTE_MIN=1 + NOTE_MAX=5000 transform-then-pipe shape catches whitespace-only input. 24 new admin.clients.detail.notes.editor.* leaf keys per locale + comingSoon dead key removed (full EN/ES parity, accent-free Spanish). CLNT-05 + I18N-01 (this slice) satisfied. Phase 21 closes all 6 v1.2 requirements (CLNT-01..05 + I18N-01). tsc + scoped lint + i18n parity exit 0. 4 files created, 4 modified, 3 atomic commits, 5 minutes.
