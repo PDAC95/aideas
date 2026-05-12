@@ -24,18 +24,28 @@ const bodySchema = z
     z.string().min(NOTE_MIN, "body_too_short").max(NOTE_MAX, "body_too_long")
   );
 
+/**
+ * Permissive UUID matcher: Postgres accepts any 8-4-4-4-12 hex string regardless
+ * of RFC 4122 version field. Zod v4's `.uuid()` enforces `[1-8]` in the version
+ * position, which rejects seed-style identifiers like
+ * `bbbbbbbb-0000-0000-0000-000000000001`. We mirror Postgres semantics instead.
+ */
+const uuidLike = z
+  .string()
+  .regex(/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/, "invalid_uuid");
+
 export const createNoteSchema = z.object({
-  organizationId: z.string().uuid(),
+  organizationId: uuidLike,
   body: bodySchema,
 });
 
 export const updateNoteSchema = z.object({
-  noteId: z.string().uuid(),
+  noteId: uuidLike,
   body: bodySchema,
 });
 
 export const deleteNoteSchema = z.object({
-  noteId: z.string().uuid(),
+  noteId: uuidLike,
 });
 
 export type CreateNoteInput = z.infer<typeof createNoteSchema>;
