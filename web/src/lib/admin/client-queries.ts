@@ -267,15 +267,12 @@ export async function fetchAdminClientDetail(
     .eq("organization_id", organizationId)
     .eq("is_active", true);
 
-  // 8. Notes tab listing. Top 25 by created_at DESC, joined to author profile.
+  // 8. Notes tab listing. Top 25 by created_at DESC. Author identity is
+  //    hydrated in a second round-trip (RPC) because author_id references
+  //    auth.users — staff users do not necessarily have a public.profiles row.
   const notesPromise = supabase
     .from("organization_notes")
-    .select(
-      `
-      id, body, created_at, updated_at, author_id,
-      author:profiles!inner(id, email, full_name)
-      `
-    )
+    .select("id, body, created_at, updated_at, author_id")
     .eq("organization_id", organizationId)
     .order("created_at", { ascending: false })
     .limit(TAB_LIMIT);
@@ -398,25 +395,39 @@ export async function fetchAdminClientDetail(
       lastSignInAt: m.last_sign_in_at,
     }));
 
-  // Map Notes rows. Same defensive embed-shape normalization on author.
-  type RawAuthor = {
-    id: string;
-    email: string;
-    full_name: string | null;
-  };
+  // Map Notes rows. Author identity is resolved via a second round-trip (RPC)
+  // because author_id references auth.users (staff may have no profile row).
   type RawNote = {
     id: string;
     body: string;
     created_at: string;
     updated_at: string;
     author_id: string;
-    author: RawAuthor | RawAuthor[] | null;
   };
-  const rawNotes = (notesRes.data ?? []) as unknown as RawNote[];
+  const rawNotes = (notesRes.data ?? []) as RawNote[];
+
+  type RawNoteAuthor = {
+    user_id: string;
+    email: string;
+    full_name: string | null;
+  };
+  const authorMap = new Map<string, RawNoteAuthor>();
+  if (rawNotes.length > 0) {
+    const uniqueAuthorIds = Array.from(
+      new Set(rawNotes.map((n) => n.author_id))
+    );
+    const { data: authors, error: authorsError } = await supabase.rpc(
+      "get_admin_note_authors",
+      { p_user_ids: uniqueAuthorIds }
+    );
+    if (authorsError) throw authorsError;
+    for (const a of (authors ?? []) as RawNoteAuthor[]) {
+      authorMap.set(a.user_id, a);
+    }
+  }
+
   const notes: AdminClientNoteEntry[] = rawNotes.map((n) => {
-    const author = Array.isArray(n.author)
-      ? n.author[0] ?? null
-      : n.author ?? null;
+    const author = authorMap.get(n.author_id) ?? null;
     return {
       id: n.id,
       body: n.body,
