@@ -884,6 +884,16 @@
       "clients": "Clientes",
       "logout": "Cerrar sesion"
     },
+    "home": {
+      "title": "Inicio Admin",
+      "subtitle": "Vista general operativa de pendientes y actividad reciente.",
+      "kpis": {
+        "pendingRequests": "Solicitudes pendientes",
+        "inSetupAutomations": "Automatizaciones en configuracion",
+        "activeClients": "Clientes activos",
+        "signupsThisWeek": "Altas esta semana"
+      }
+    },
     "login": {
       "title": "Acceso de equipo",
       "subtitle": "Solo para miembros del equipo AIDEAS.",
@@ -898,10 +908,6 @@
       }
     },
     "placeholders": {
-      "home": {
-        "title": "Inicio admin",
-        "body": "El tablero operativo llega en la Fase 22 con KPIs, actividad y accesos rapidos."
-      },
       "catalog": {
         "title": "Admin de catalogo",
         "body": "El CRUD de plantillas llega en la Fase 18."
