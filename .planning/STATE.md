@@ -3,13 +3,47 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Admin Dashboard
 status: unknown
-stopped_at: Phase 22 context gathered
-last_updated: "2026-05-12T19:48:11.144Z"
+stopped_at: Completed 22-01-PLAN.md
+last_updated: "2026-05-13T14:15:53.297Z"
+progress:
+  total_phases: 16
+  completed_phases: 16
+  total_plans: 49
+  completed_plans: 49
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: Admin Dashboard
+status: unknown
+stopped_at: "Completed 22-02-PLAN.md (Phase 22 complete: 2/2 plans — admin home KPIs + quick links + activity feed)"
+last_updated: "2026-05-12T20:11:27Z"
+progress:
+  total_phases: 16
+  completed_phases: 16
+  total_plans: 49
+  completed_plans: 49
+decisions:
+  - "22-02: automation_activated event approximated as status='active' ORDER BY updated_at DESC (no audit log in Phase 22)"
+  - "22-02: 20-per-source pull + JS merge/sort/slice preserves global top-20 even when one source dominates"
+  - "22-02: t.raw + manual string-replace substitution for feed event templates (avoids next-intl ICU formatter interfering with named placeholders)"
+  - "22-02: Quick-link badge values reuse kpis object — no duplicate query, single source of truth"
+  - "22-02: Hide badge entirely when count is 0 (avoids '0' looking like a loading state)"
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: Admin Dashboard
+status: unknown
+stopped_at: Completed 22-01-PLAN.md
+last_updated: "2026-05-12T20:03:51.978Z"
 progress:
   total_phases: 16
   completed_phases: 15
-  total_plans: 47
-  completed_plans: 47
+  total_plans: 49
+  completed_plans: 48
 ---
 
 ---
@@ -147,6 +181,7 @@ Last activity: 2026-05-08 — Plan 21-03 executed (3 tasks: Zod schemas + 3 serv
 | Timeline | 70 days | 21 days | TBD |
 | Phase 21 P02 | 15 min | 4 tasks | 12 files |
 | Phase 21 P03 | 5 min  | 3 tasks | 8 files  |
+| Phase 22 P01 | 3 min | 2 tasks | 6 files |
 
 ### Per-plan execution metrics (v1.2)
 
@@ -418,9 +453,11 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 
 ## Session Continuity
 
-**Last session:** 2026-05-12T19:48:11.140Z
-**Stopped at:** Phase 22 context gathered
-**Next action:** Phase 21 verifier is the next runner. Once VERIFICATION.md status is `passed` the branch `feature/phase-21-clients-admin` should be merged to `main`. Phase 22 (Admin Home) is the next planning + execution phase — run `/gsd:discuss-phase` -> `/gsd:plan-phase` -> `/gsd:execute-phase` for 22-admin-home. Apply migrations 20260509000001 (organization_notes) + 20260509000002 (admin_org_members_view RPC) on the dev DB before any live UAT.
+**Last session:** 2026-05-12T20:03:51.974Z
+**Stopped at:** Completed 22-01-PLAN.md
+**Next action:** Phase 22 plan 22-01 shipped on branch `feature/phase-22-admin-home`. Next runner is `/gsd:execute-phase 22-admin-home` to ship plan 22-02 (activity feed + quick-link cards) on top of the new KPI grid. Phase 21 verifier still pending — once Phase 21 VERIFICATION.md status is `passed` the branch `feature/phase-21-clients-admin` should be merged to `main`.
+
+2026-05-12 — Phase 22 plan 22-01 shipped: /admin placeholder replaced with real 2x2 KPI grid (Pending requests / Automations in setup / Active clients / Signups this week). fetchAdminHomeKpis() runs 4 parallel HEAD-only count: 'exact' queries via Promise.all; gated by assertPlatformStaff (defense-in-depth on top of layout guard). pendingRequests reuses TAB_TO_STATUSES.pending so the home counter matches /admin/requests Pending tab exactly. signupsThisWeek uses a rolling 7-day window (JS-computed ISO cutoff, DB-agnostic). Both client-related cards (activeClients + signupsThisWeek) link to /admin/clients with no extra params; the list page default `created_at DESC` surfaces recent signups at the top naturally. AdminHomeKpiCards is server-friendly (no use client) — receives a labels prop object so the parent page owns getTranslations. Neutral gray icon backgrounds (no urgency colors). 6 new admin.home.* leaf keys per locale (title + subtitle + 4 KPI labels). admin.placeholders.home block removed from both en.json and es.json. HOME-01 (KPI section) + I18N-01 (this slice) satisfied. tsc + scoped lint exit 0. 2 files created, 4 modified, 2 atomic commits, 3 minutes.
 
 2026-05-08 — Phase 21 plan 21-03 shipped: AdminClientNotesTab swapped from read-only to full create/edit/delete editor. AdminClientNoteCreate (collapsed "Add note" button -> textarea + Save/Cancel + live char counter); AdminClientNoteEntry (per-existing-note three-state machine: view / edit / confirm-delete with inline red panel, NOT a portal Dialog). 3 server actions (createNote / updateNote / deleteNote) gated by assertPlatformStaff with revalidatePath('/admin/clients/[id]'). 3 Zod schemas with NOTE_MIN=1 + NOTE_MAX=5000 transform-then-pipe shape catches whitespace-only input. 24 new admin.clients.detail.notes.editor.* leaf keys per locale + comingSoon dead key removed (full EN/ES parity, accent-free Spanish). CLNT-05 + I18N-01 (this slice) satisfied. Phase 21 closes all 6 v1.2 requirements (CLNT-01..05 + I18N-01). tsc + scoped lint + i18n parity exit 0. 4 files created, 4 modified, 3 atomic commits, 5 minutes.
 

@@ -884,6 +884,35 @@
       "clients": "Clients",
       "logout": "Sign out"
     },
+    "home": {
+      "title": "Admin Home",
+      "subtitle": "Operational overview of pending work and recent activity.",
+      "kpis": {
+        "pendingRequests": "Pending requests",
+        "inSetupAutomations": "Automations in setup",
+        "activeClients": "Active clients",
+        "signupsThisWeek": "Signups this week"
+      },
+      "quickLinks": {
+        "requests": {
+          "title": "Requests inbox",
+          "body": "Review and triage incoming customer requests."
+        },
+        "automations": {
+          "title": "Automations in setup",
+          "body": "Build and activate automations awaiting deployment."
+        }
+      },
+      "feed": {
+        "title": "Recent activity",
+        "empty": "No recent activity.",
+        "events": {
+          "request_created": "{orgName} requested {requestTitle}",
+          "automation_activated": "{orgName} activated {automationName}",
+          "new_signup": "{orgName} signed up"
+        }
+      }
+    },
     "login": {
       "title": "Staff sign-in",
       "subtitle": "For AIDEAS team members only.",
@@ -898,10 +927,6 @@
       }
     },
     "placeholders": {
-      "home": {
-        "title": "Admin Home",
-        "body": "Operational dashboard arrives in Phase 22 with KPIs, activity feed, and quick links."
-      },
       "catalog": {
         "title": "Catalog Admin",
         "body": "Template CRUD lands in Phase 18."

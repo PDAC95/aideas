@@ -364,3 +364,51 @@ export interface AdminClientDetail {
   members: AdminClientMember[];
   notes: AdminClientNoteEntry[];
 }
+
+/**
+ * Live KPI counters for the admin home page.
+ *
+ * - pendingRequests:    automation_requests where status ∈ TAB_TO_STATUSES["pending"]
+ *                       (matches the "Pending" tab counter on /admin/requests).
+ * - inSetupAutomations: automations where status='in_setup' AND deleted_at IS NULL.
+ * - activeClients:      organizations with deleted_at IS NULL.
+ * - signupsThisWeek:    organizations created in the rolling 7-day window
+ *                       (now() - INTERVAL '7 days', inclusive of `now`).
+ */
+export interface AdminHomeKpis {
+  pendingRequests: number;
+  inSetupAutomations: number;
+  activeClients: number;
+  signupsThisWeek: number;
+}
+
+/**
+ * Admin home activity feed — supported event types.
+ *
+ * CONTEXT.md prescribes 3 event types only (deferred: generic status
+ * transitions like approved/rejected/paused/archived). The 3 here are
+ * the highest-signal "something changed in the world" events.
+ */
+export type AdminHomeActivityEventType =
+  | "request_created"
+  | "automation_activated"
+  | "new_signup";
+
+/**
+ * One row in the admin home activity feed. Server pre-computes the link
+ * target so the render component is pure (no routing logic in the UI).
+ *
+ * Field shape:
+ *   - request_created      : requestTitle populated, automationName null
+ *   - automation_activated : automationName populated, requestTitle null
+ *   - new_signup           : both null; orgName is the descriptive label
+ */
+export interface AdminHomeActivityEntry {
+  type: AdminHomeActivityEventType;
+  entityId: string;
+  href: string;
+  occurredAt: string; // ISO 8601
+  orgName: string;
+  requestTitle: string | null;
+  automationName: string | null;
+}
