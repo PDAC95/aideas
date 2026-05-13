@@ -226,5 +226,5 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 | 20. Automations Admin | 4/4 | Complete    | 2026-05-08 | — |
 | 21. Clients Admin | 3/3 | Complete   | 2026-05-08 | — |
 | 22. Admin Home | 2/2 | Complete    | 2026-05-13 | — |
-| 23. Client 360 Cross-Link Fix | v1.2 | 1/3 | In Progress | — |
+| 23. Client 360 Cross-Link Fix | v1.2 | 2/3 | In Progress | — |
 | 24. Phase 16 Retroactive Verification | v1.2 | 0/1 | Not started | — |
