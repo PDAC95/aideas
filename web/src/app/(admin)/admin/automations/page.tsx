@@ -9,6 +9,7 @@ import type { AdminAutomationTab } from "@/lib/admin/types";
 import { AdminAutomationsTabs } from "@/components/admin/automations/admin-automations-tabs";
 import { AdminAutomationsFilters } from "@/components/admin/automations/admin-automations-filters";
 import { AdminAutomationsTable } from "@/components/admin/automations/admin-automations-table";
+import { AdminOrgFilterChip } from "@/components/admin/admin-org-filter-chip";
 
 interface AdminAutomationsPageProps {
   searchParams: Promise<{
@@ -36,6 +37,17 @@ function nullify(raw: string | undefined): string | null {
  * Admin Automations — global cross-org list view (AUTM-01).
  * Default tab = active; ordering = created_at DESC for every tab.
  * Tabs + filters URL-synced via ?status=, ?org=, ?template=, ?q=.
+ *
+ * Org filter (Phase 23, AUTM-02): `?org=` is now interpreted as slug-OR-uuid
+ * by `fetchAdminAutomations` via the Plan 01 resolver. The query returns the
+ * envelope `{ rows, orgFilter }` so this page can render <AdminOrgFilterChip>
+ * (active or "Organization not found") without a second org-lookup query.
+ *
+ * Edge case (cosmetic, deferred): when ?org= carries a slug, the existing
+ * <AdminAutomationsFilters> dropdown's "selected" state will not visually
+ * match because its options list still uses UUIDs from filterOptions.orgs.
+ * The new chip is the primary affordance for showing/clearing the org
+ * filter; aligning the dropdown to slug-or-uuid is a follow-up.
  */
 export default async function AdminAutomationsPage({
   searchParams,
@@ -47,7 +59,7 @@ export default async function AdminAutomationsPage({
   const templateId = nullify(sp.template);
   const nameQuery = nullify(sp.q);
 
-  const [rows, counts, filterOptions, t] = await Promise.all([
+  const [automationsResult, counts, filterOptions, t] = await Promise.all([
     fetchAdminAutomations({
       tab,
       organizationId,
@@ -59,6 +71,7 @@ export default async function AdminAutomationsPage({
     fetchAdminAutomationFilterOptions({ locale }),
     getTranslations("admin.automations.list"),
   ]);
+  const { rows, orgFilter } = automationsResult;
 
   const tabsTranslations = {
     active: t.raw("tabs.active") as string,
@@ -76,6 +89,14 @@ export default async function AdminAutomationsPage({
     templateAll: t("filters.templateAll"),
     searchLabel: t("filters.searchLabel"),
     searchPlaceholder: t("filters.searchPlaceholder"),
+  };
+
+  const orgFilterTranslations = {
+    label: t("orgFilter.label"),
+    clear: t("orgFilter.clear"),
+    notFound: t("orgFilter.notFound", {
+      value: orgFilter.orgIdentifierProvided ?? "",
+    }),
   };
 
   const tableTranslations = {
@@ -134,6 +155,13 @@ export default async function AdminAutomationsPage({
           q: nameQuery,
         }}
         translations={filterTranslations}
+      />
+
+      <AdminOrgFilterChip
+        orgFilter={orgFilter}
+        currentSearchParams={sp}
+        basePath="/admin/automations"
+        translations={orgFilterTranslations}
       />
 
       <AdminAutomationsTable
