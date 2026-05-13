@@ -6,10 +6,12 @@ import type {
   AdminAutomationOrgOption,
   AdminAutomationTemplateOption,
   AdminAutomationListFilters,
+  AdminAutomationListResult,
   AdminAutomationDetail,
   AdminAutomationExecutionEntry,
 } from "./types";
 import { ADMIN_AUTOMATION_TABS } from "./types";
+import { resolveOrgIdentifier } from "./org-identifier";
 
 /**
  * List automations for the admin global view. The list returns rows for the
@@ -28,14 +30,37 @@ import { ADMIN_AUTOMATION_TABS } from "./types";
  * Default order: created_at DESC (per CONTEXT.md). All tabs use this ordering.
  *
  * Filters combine with logical AND. Empty/null filter values are no-ops.
+ *
+ * Org filter (Phase 23): `filters.organizationId` is interpreted as
+ * slug-OR-uuid via `resolveOrgIdentifier`. Pre-Phase-23 the field was
+ * treated as a raw UUID, which silently produced empty results whenever a
+ * caller passed a slug (the format the Client 360 tabs emit). The field
+ * name is unchanged for callsite compatibility; the meaning is widened.
+ * Unresolved identifiers short-circuit to an empty result with the user's
+ * raw input echoed back via `orgFilter.orgIdentifierProvided`.
  */
 export async function fetchAdminAutomations(
   filters: AdminAutomationListFilters
-): Promise<AdminAutomationRow[]> {
+): Promise<AdminAutomationListResult> {
   const supabase = await createAdminServerClient();
   const auth = await assertPlatformStaff(supabase);
   if (!auth.ok) {
     throw new Error(`fetchAdminAutomations: not authorized (${auth.error})`);
+  }
+
+  const { orgId, resolvedOrg, orgIdentifierProvided } = await resolveOrgIdentifier(
+    supabase,
+    filters.organizationId
+  );
+
+  // Short-circuit: caller asked for an org filter, but the slug/uuid didn't
+  // resolve. Skip the list query — pointless full-table scan — and let the
+  // page render an explicit "Org not found" state.
+  if (orgIdentifierProvided !== null && orgId === null) {
+    return {
+      rows: [],
+      orgFilter: { resolvedOrg: null, orgIdentifierProvided },
+    };
   }
 
   // Filter chain order MUST match request-queries.ts verbatim:
@@ -72,8 +97,8 @@ export async function fetchAdminAutomations(
     .eq("template.translations.field", "name");
 
   // Optional filters AFTER the translation .eq calls (matches request-queries.ts).
-  if (filters.organizationId) {
-    query = query.eq("organization_id", filters.organizationId);
+  if (orgId) {
+    query = query.eq("organization_id", orgId);
   }
   if (filters.templateId) {
     query = query.eq("template_id", filters.templateId);
@@ -120,21 +145,24 @@ export async function fetchAdminAutomations(
     }
   }
 
-  return rows.map((row) => {
-    const tmplName = row.template?.translations?.[0]?.value ?? null;
-    const fallback = row.template?.slug ?? null;
-    return {
-      id: row.id,
-      name: row.name,
-      organizationId: row.organization_id,
-      organizationName: row.organizations.name,
-      templateId: row.template_id,
-      templateDisplayName: row.template_id ? tmplName ?? fallback : null,
-      status: row.status,
-      executionsCount: counts.get(row.id) ?? 0,
-      createdAt: row.created_at,
-    };
-  });
+  return {
+    rows: rows.map((row) => {
+      const tmplName = row.template?.translations?.[0]?.value ?? null;
+      const fallback = row.template?.slug ?? null;
+      return {
+        id: row.id,
+        name: row.name,
+        organizationId: row.organization_id,
+        organizationName: row.organizations.name,
+        templateId: row.template_id,
+        templateDisplayName: row.template_id ? tmplName ?? fallback : null,
+        status: row.status,
+        executionsCount: counts.get(row.id) ?? 0,
+        createdAt: row.created_at,
+      };
+    }),
+    orgFilter: { resolvedOrg, orgIdentifierProvided },
+  };
 }
 
 /**
