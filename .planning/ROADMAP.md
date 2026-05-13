@@ -195,4 +195,4 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 | 19. Requests Inbox | 3/3 | Complete    | 2026-05-07 | — |
 | 20. Automations Admin | 4/4 | Complete    | 2026-05-08 | — |
 | 21. Clients Admin | 3/3 | Complete   | 2026-05-08 | — |
-| 22. Admin Home | 2/2 | Complete   | 2026-05-12 | — |
+| 22. Admin Home | 2/2 | Complete    | 2026-05-13 | — |
