@@ -3,13 +3,19 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Admin Dashboard
 status: unknown
-stopped_at: Phase 23 context gathered
-last_updated: "2026-05-13T19:03:02.097Z"
+stopped_at: Completed 23-01-PLAN.md
+last_updated: "2026-05-13T19:17:16.936Z"
 progress:
   total_phases: 18
   completed_phases: 16
-  total_plans: 49
-  completed_plans: 49
+  total_plans: 52
+  completed_plans: 50
+decisions:
+  - "23-01: Keep AdminAutomationListFilters.organizationId field name; widen meaning to slug-or-uuid via JSDoc (avoids phase-22-wide callsite rename)"
+  - "23-01: Envelope return shape {rows, orgFilter} so the page renders the filter chip without a second org-lookup query"
+  - "23-01: Unresolved-identifier short-circuit returns empty rows + echoes raw input via orgIdentifierProvided so the page can render 'Org not found' instead of an indistinguishable empty list"
+  - "23-01: 100-char input cap inside resolveOrgIdentifier defends against hostile ?org=... payloads while preserving user intent for the not-found state"
+  - "23-01: Generic SupabaseClient type (no Database generic) in resolveOrgIdentifier keeps the helper portable across admin/customer clients"
 ---
 
 ---
@@ -196,6 +202,7 @@ Last activity: 2026-05-08 — Plan 21-03 executed (3 tasks: Zod schemas + 3 serv
 | Phase 21 P02 | 15 min | 4 tasks | 12 files |
 | Phase 21 P03 | 5 min  | 3 tasks | 8 files  |
 | Phase 22 P01 | 3 min | 2 tasks | 6 files |
+| Phase 23-client-360-crosslink-fix P01 | 3 min | 2 tasks | 4 files |
 
 ### Per-plan execution metrics (v1.2)
 
@@ -467,8 +474,8 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 
 ## Session Continuity
 
-**Last session:** 2026-05-13T19:03:02.094Z
-**Stopped at:** Phase 23 context gathered
+**Last session:** 2026-05-13T19:17:16.931Z
+**Stopped at:** Completed 23-01-PLAN.md
 **Next action:** Phase 22 plan 22-01 shipped on branch `feature/phase-22-admin-home`. Next runner is `/gsd:execute-phase 22-admin-home` to ship plan 22-02 (activity feed + quick-link cards) on top of the new KPI grid. Phase 21 verifier still pending — once Phase 21 VERIFICATION.md status is `passed` the branch `feature/phase-21-clients-admin` should be merged to `main`.
 
 2026-05-12 — Phase 22 plan 22-01 shipped: /admin placeholder replaced with real 2x2 KPI grid (Pending requests / Automations in setup / Active clients / Signups this week). fetchAdminHomeKpis() runs 4 parallel HEAD-only count: 'exact' queries via Promise.all; gated by assertPlatformStaff (defense-in-depth on top of layout guard). pendingRequests reuses TAB_TO_STATUSES.pending so the home counter matches /admin/requests Pending tab exactly. signupsThisWeek uses a rolling 7-day window (JS-computed ISO cutoff, DB-agnostic). Both client-related cards (activeClients + signupsThisWeek) link to /admin/clients with no extra params; the list page default `created_at DESC` surfaces recent signups at the top naturally. AdminHomeKpiCards is server-friendly (no use client) — receives a labels prop object so the parent page owns getTranslations. Neutral gray icon backgrounds (no urgency colors). 6 new admin.home.* leaf keys per locale (title + subtitle + 4 KPI labels). admin.placeholders.home block removed from both en.json and es.json. HOME-01 (KPI section) + I18N-01 (this slice) satisfied. tsc + scoped lint exit 0. 2 files created, 4 modified, 2 atomic commits, 3 minutes.
