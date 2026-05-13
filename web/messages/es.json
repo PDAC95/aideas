@@ -1090,6 +1090,11 @@
           "searchLabel": "Buscar por nombre",
           "searchPlaceholder": "Filtrar por nombre de automatizacion..."
         },
+        "orgFilter": {
+          "label": "Organizacion:",
+          "clear": "Quitar filtro de organizacion",
+          "notFound": "Organizacion no encontrada: '{value}'"
+        },
         "columns": {
           "name": "Nombre",
           "customer": "Cliente",
@@ -1193,6 +1198,11 @@
           "pending": "Pendientes ({count})",
           "approved": "Aprobadas ({count})",
           "rejected": "Rechazadas ({count})"
+        },
+        "orgFilter": {
+          "label": "Organizacion:",
+          "clear": "Quitar filtro de organizacion",
+          "notFound": "Organizacion no encontrada: '{value}'"
         },
         "columns": {
           "customer": "Cliente",
