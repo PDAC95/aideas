@@ -59,6 +59,8 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 - [x] **Phase 20: Automations Admin** — Global cross-org list + read-only detail + status transitions (4 plans) (completed 2026-05-08)
 - [x] **Phase 21: Clients Admin** — Orgs list + search + 360° detail + cross-links + free-form internal notes (3 plans) (completed 2026-05-08)
 - [x] **Phase 22: Admin Home** — Operational KPIs + activity feed + quick-link cards (2 plans) (completed 2026-05-12)
+- [ ] **Phase 23: Client 360 Cross-Link Fix** — Gap closure: ?org= filter works from /admin/clients/[id] tabs to /admin/requests and /admin/automations (3 plans, blocker)
+- [ ] **Phase 24: Phase 16 Retroactive Verification** — Gap closure: write 16-VERIFICATION.md to flip CARRY-01..04 from partial to satisfied (1 plan, process)
 
 ## Phase Details
 
@@ -170,6 +172,34 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 - [ ] 22-01-PLAN.md — `fetchAdminHomeKpis` + `AdminHomeKpiCards` 2x2 grid + admin.home.kpis.* EN/ES keys; replaces /admin placeholder
 - [ ] 22-02-PLAN.md — `fetchAdminHomeActivity` + `AdminHomeQuickLinks` (2 banner cards w/ badges) + `AdminHomeActivityFeed` (15-20 rows, 3 event types) + admin.home.quickLinks.* + admin.home.feed.* EN/ES keys
 
+### Phase 23: Client 360 Cross-Link Fix
+**Goal:** Make ?org= deep-links from /admin/clients/[id] tabs functionally filter /admin/requests and /admin/automations (currently silently no-op or empty).
+**Depends on:** Phases 19, 20, 21 (already shipped)
+**Requirements:** CLNT-04 (reset), AUTM-02 (reset)
+**Gap Closure:** Closes blocker integration gaps from v1.2 audit
+**Success Criteria** (what must be TRUE):
+  1. Click “View all requests” from /admin/clients/[id] lands on /admin/requests filtered to that org
+  2. Click “View all automations” from /admin/clients/[id] lands on /admin/automations filtered to that org
+  3. ?org= accepts the chosen identifier convention (slug-or-uuid, decided in plan) and both list pages parse + apply it
+  4. EN/ES parity preserved for any new UI string (e.g., filter chip showing the active org)
+**Plans:** 3 plans
+- [ ] 23-01-PLAN.md — Decide identifier convention (UUID vs slug-or-uuid) and update fetchAdminRequests + fetchAdminAutomations to accept it
+- [ ] 23-02-PLAN.md — Wire /admin/requests/page.tsx + /admin/automations/page.tsx to parse ?org= and pass it into the query
+- [ ] 23-03-PLAN.md — Update admin-client-requests-tab.tsx + admin-client-automations-tab.tsx cross-link emitters to match the chosen convention (if needed) + EN/ES filter-chip strings
+
+### Phase 24: Phase 16 Retroactive Verification
+**Goal:** Backfill the missing 16-VERIFICATION.md so CARRY-01..04 flip from `partial` to `satisfied` per the workflow status matrix.
+**Depends on:** Phase 16 (already implemented; commits on main)
+**Requirements:** CARRY-01 (reset), CARRY-02 (reset), CARRY-03 (reset), CARRY-04 (reset)
+**Gap Closure:** Closes process gap from v1.2 audit
+**Success Criteria** (what must be TRUE):
+  1. .planning/phases/16-carry-over-cleanup/16-VERIFICATION.md exists with status: passed
+  2. Document cross-references the 4 SUMMARY.md files and their commits (332bbc7, 94002ab, 47757f9, f9cec9e, 6058de6)
+  3. Document asserts npm run build + npm run lint pass on main as of 2026-05-13
+  4. REQUIREMENTS.md traceability reflects CARRY-01..04 as `Complete` again
+**Plans:** 1 plan
+- [ ] 24-01-PLAN.md — Write 16-VERIFICATION.md (retroactive) consolidating evidence from 16-01/02/03-SUMMARY.md and post-fact build/lint check on main
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -196,3 +226,5 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 | 20. Automations Admin | 4/4 | Complete    | 2026-05-08 | — |
 | 21. Clients Admin | 3/3 | Complete   | 2026-05-08 | — |
 | 22. Admin Home | 2/2 | Complete    | 2026-05-13 | — |
+| 23. Client 360 Cross-Link Fix | v1.2 | 0/3 | Not started | — |
+| 24. Phase 16 Retroactive Verification | v1.2 | 0/1 | Not started | — |

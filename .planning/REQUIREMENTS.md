@@ -12,10 +12,10 @@ Requirements for v1.2 release. Each maps to roadmap phases.
 
 > Closes v1.1 audit tech-debt before admin work begins. Ideally lands as the first phase to keep CI green during admin development.
 
-- [x] **CARRY-01**: `npm run build` passes cleanly under Next.js 16 + Turbopack — resolves the `next/dynamic({ ssr: false })` rejection in `web/src/app/(dashboard)/dashboard/automations/[id]/page.tsx:16`
-- [x] **CARRY-02**: `<AutomationSuccessRate trend="+5%" />` placeholder in `dashboard/page.tsx:212` is replaced with a computed value or removed (along with its UI surface)
-- [x] **CARRY-03**: `saveCompanyName` and `saveHourlyCost` server actions consolidate org-membership checks via the `assertOrgMembership` helper introduced in Phase 14-01 (no inline duplicated checks)
-- [x] **CARRY-04**: Client-side reCAPTCHA gracefully bypasses when `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` is missing (symmetric with server-side `verifyRecaptcha` behavior), unblocking local dev without keys
+- [ ] **CARRY-01**: `npm run build` passes cleanly under Next.js 16 + Turbopack — resolves the `next/dynamic({ ssr: false })` rejection in `web/src/app/(dashboard)/dashboard/automations/[id]/page.tsx:16`
+- [ ] **CARRY-02**: `<AutomationSuccessRate trend="+5%" />` placeholder in `dashboard/page.tsx:212` is replaced with a computed value or removed (along with its UI surface)
+- [ ] **CARRY-03**: `saveCompanyName` and `saveHourlyCost` server actions consolidate org-membership checks via the `assertOrgMembership` helper introduced in Phase 14-01 (no inline duplicated checks)
+- [ ] **CARRY-04**: Client-side reCAPTCHA gracefully bypasses when `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` is missing (symmetric with server-side `verifyRecaptcha` behavior), unblocking local dev without keys
 
 ### Foundation (FOUND)
 
@@ -51,7 +51,7 @@ Requirements for v1.2 release. Each maps to roadmap phases.
 > Global cross-org view. Read-only fields + status transitions only.
 
 - [x] **AUTM-01**: Staff sees global list of all `automations` across all orgs, filterable by status (`draft|pending_review|in_setup|active|paused|failed|archived`), by org, and by template
-- [x] **AUTM-02**: Staff transitions an automation from `in_setup` → `active` (marks it ready for customer use)
+- [ ] **AUTM-02**: Staff transitions an automation from `in_setup` → `active` (marks it ready for customer use)
 - [x] **AUTM-03**: Staff manually pauses (`active` → `paused`) or resumes (`paused` → `active`) an automation from admin
 - [x] **AUTM-04**: Staff archives an automation (`active|paused` → `archived`) from admin
 - [x] **AUTM-05**: Staff opens automation detail page (read-only) showing KPIs (execution count, hours saved), recent execution timeline, owning org, and template info; no field editing — only status transitions via the buttons from AUTM-02/03/04
@@ -63,7 +63,7 @@ Requirements for v1.2 release. Each maps to roadmap phases.
 - [x] **CLNT-01**: Staff sees list of all `organizations` with columns: name, slug, # active automations, # members, created date
 - [x] **CLNT-02**: Staff can filter/search clients by name or slug
 - [x] **CLNT-03**: Staff opens client detail page showing org info, list of members (email, role, last login), list of automations (with status), and list of automation_requests
-- [x] **CLNT-04**: From client detail, staff can navigate (link/button) to the detail page of any associated automation or request
+- [ ] **CLNT-04**: From client detail, staff can navigate (link/button) to the detail page of any associated automation or request
 - [x] **CLNT-05**: Staff can add and edit free-form internal notes per client (e.g., "VIP", "churn risk"), persisted in a new `organization_notes` field or related table; visible only on admin client detail page
 
 ### Admin Home (HOME)
@@ -127,10 +127,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CARRY-01 | Phase 16 | Complete |
-| CARRY-02 | Phase 16 | Complete |
-| CARRY-03 | Phase 16 | Complete |
-| CARRY-04 | Phase 16 | Complete |
+| CARRY-01 | Phase 16 → Phase 24 (gap closure: missing VERIFICATION.md) | Pending |
+| CARRY-02 | Phase 16 → Phase 24 (gap closure: missing VERIFICATION.md) | Pending |
+| CARRY-03 | Phase 16 → Phase 24 (gap closure: missing VERIFICATION.md) | Pending |
+| CARRY-04 | Phase 16 → Phase 24 (gap closure: missing VERIFICATION.md) | Pending |
 | FOUND-01 | Phase 17 | Complete |
 | FOUND-02 | Phase 17 | Complete |
 | FOUND-03 | Phase 17 | Complete |
@@ -146,14 +146,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | REQS-03 | Phase 19 | Complete |
 | REQS-04 | Phase 19 | Complete |
 | AUTM-01 | Phase 20 | Complete |
-| AUTM-02 | Phase 20 | Complete |
+| AUTM-02 | Phase 20 → Phase 23 (gap closure: ?org= filter accepts slug) | Pending |
 | AUTM-03 | Phase 20 | Complete |
 | AUTM-04 | Phase 20 | Complete |
 | AUTM-05 | Phase 20 | Complete |
 | CLNT-01 | Phase 21 | Complete |
 | CLNT-02 | Phase 21 | Complete |
 | CLNT-03 | Phase 21 | Complete |
-| CLNT-04 | Phase 21 | Complete |
+| CLNT-04 | Phase 21 → Phase 23 (gap closure: cross-links honored) | Pending |
 | CLNT-05 | Phase 21 | Complete |
 | HOME-01 | Phase 22 | Complete |
 | HOME-02 | Phase 22 | Complete |
@@ -164,7 +164,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 - v1.2 requirements: 31 total
 - Mapped to phases: 31 ✓
 - Unmapped: 0
+- Satisfied: 25 ✓
+- Pending (gap closure): 6 (CARRY-01..04 → Phase 24, AUTM-02 + CLNT-04 → Phase 23)
 
 ---
 *Requirements defined: 2026-05-04*
-*Last updated: 2026-05-04 — roadmap created, traceability populated*
+*Last updated: 2026-05-13 — gap closure phases 23 (cross-link fix) + 24 (Phase 16 verification) added per audit*
