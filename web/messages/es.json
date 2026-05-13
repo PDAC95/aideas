@@ -1093,7 +1093,7 @@
         "orgFilter": {
           "label": "Organizacion:",
           "clear": "Quitar filtro de organizacion",
-          "notFound": "Organizacion no encontrada: '{value}'"
+          "notFound": "Organizacion no encontrada: \"{value}\""
         },
         "columns": {
           "name": "Nombre",
@@ -1202,7 +1202,7 @@
         "orgFilter": {
           "label": "Organizacion:",
           "clear": "Quitar filtro de organizacion",
-          "notFound": "Organizacion no encontrada: '{value}'"
+          "notFound": "Organizacion no encontrada: \"{value}\""
         },
         "columns": {
           "customer": "Cliente",

@@ -1,17 +1,19 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 /**
- * Strict RFC 4122 v1-5 UUID detector. Returns false for empty / null inputs.
+ * Lenient UUID-shape detector. Returns false for empty / null inputs.
  *
  * Used by `resolveOrgIdentifier` to decide whether to lookup an org by id
- * (UUID path) or by slug (text path). The regex matches the
- * canonical 8-4-4-4-12 hex layout with version nibble in 1..5 and
- * variant nibble in 8..b (RFC 4122 v1-5; covers all UUIDs Supabase
- * `gen_random_uuid()` produces, which are v4).
+ * (UUID path) or by slug (text path). Matches the canonical 8-4-4-4-12 hex
+ * layout but does NOT enforce the RFC 4122 version/variant nibbles, because
+ * Postgres accepts any 128-bit hex as a UUID (e.g. seed UUIDs like
+ * `bbbbbbbb-0000-0000-0000-000000000001` and the nil UUID
+ * `00000000-0000-0000-0000-000000000000` are valid pg uuids but fail strict
+ * v1-5 validation). The DB lookup is the source of truth.
  */
 export function isUuid(value: string): boolean {
   if (!value) return false;
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
     value
   );
 }
