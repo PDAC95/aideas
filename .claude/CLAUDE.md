@@ -55,6 +55,7 @@
 **Phase 19:**
 - Race-condition error toast disappears too fast — when Tab B hits `state_changed`, `router.refresh()` replaces the toast almost immediately. UX polish: persist toast ~3-5s before refresh. Surface: `web/src/components/admin/requests/approve-request-button.tsx`, `reject-request-modal.tsx`.
 - Language switcher missing in admin layout — Phase 17 cross-cutting gap blocking I18N runtime UAT for all admin surfaces (17-22). Surface: `web/src/app/(admin)/admin/layout.tsx` or admin header component.
+- Dark mode toggle missing in admin layout — admin components already have `dark:` Tailwind classes wired (Phase 22 verified), but no UI control exists to activate dark mode. Cross-cutting gap, same surface as the language switcher above.
 
 ### Known Integration Issues
 
