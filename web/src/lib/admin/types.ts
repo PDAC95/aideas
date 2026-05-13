@@ -173,6 +173,11 @@ export interface AdminAutomationTemplateOption {
 /**
  * Combined input shape for fetchAdminAutomations. The list page parses
  * searchParams into this shape and passes it through.
+ *
+ * NOTE: `organizationId` is interpreted as slug-OR-uuid by
+ * `fetchAdminAutomations` via `resolveOrgIdentifier` (Phase 23). The field
+ * name is kept for now to avoid a wider callsite rename; conceptually it is
+ * an org identifier, not a strict UUID.
  */
 export interface AdminAutomationListFilters {
   tab: AdminAutomationTab;
@@ -180,6 +185,53 @@ export interface AdminAutomationListFilters {
   templateId: string | null;
   nameQuery: string | null;
   locale: string;
+}
+
+/**
+ * Concrete org row returned alongside list results when an org filter was
+ * supplied and successfully resolved. Lets the page render the filter chip
+ * (e.g., "Acme Co · Clear") without issuing a second org-lookup query.
+ *
+ * Phase 23: added so the Client 360 → admin list crosslink can display the
+ * resolved org name regardless of whether the URL carried a slug or a UUID.
+ */
+export interface ResolvedOrg {
+  id: string;
+  name: string;
+  slug: string;
+}
+
+/**
+ * Envelope metadata attached to admin list results that accept an org filter.
+ *
+ * - `resolvedOrg` is populated when the identifier resolved to a live org.
+ * - `orgIdentifierProvided` is the trimmed raw input the user passed (or null
+ *   when no `?org=` was provided). It stays populated even when resolution
+ *   fails so the page can render an explicit "Org not found: <slug>" state.
+ */
+export interface AdminOrgFilterMeta {
+  resolvedOrg: ResolvedOrg | null;
+  orgIdentifierProvided: string | null;
+}
+
+/**
+ * Envelope returned by `fetchAdminRequests` (Phase 23). Wraps the existing
+ * row array with org-filter metadata so the page can render the filter chip
+ * without a second query.
+ */
+export interface AdminRequestListResult {
+  rows: AdminRequestRow[];
+  orgFilter: AdminOrgFilterMeta;
+}
+
+/**
+ * Envelope returned by `fetchAdminAutomations` (Phase 23). Wraps the existing
+ * row array with org-filter metadata so the page can render the filter chip
+ * without a second query.
+ */
+export interface AdminAutomationListResult {
+  rows: AdminAutomationRow[];
+  orgFilter: AdminOrgFilterMeta;
 }
 
 /**
