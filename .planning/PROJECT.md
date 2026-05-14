@@ -55,12 +55,37 @@ Customers can monitor their automations' performance, request new ones, and see 
 
 ### Active
 
-<!-- v1.3 — TBD via /gsd:new-milestone (likely Stripe) -->
-- [ ] Stripe Checkout for catalog "Solicitar esta automatizacion" requests
-- [ ] Stripe Customer Portal wired to Billing "Manage payment" button
-- [ ] Stripe webhooks (subscription created/updated/canceled, invoice paid/failed)
-- [ ] FastAPI endpoints: automation request, pause/resume/cancel, billing portal/history, admin activation
-- [ ] Cleanup phase (or absorb into v1.3): language switcher + dark mode toggle UI in admin shell, pre-existing lint debt (103 errors in vendor/non-CARRY files), Phase 16-03 partial RLS hardening gaps
+<!-- v1.3 — Public Funnel & Factory Reskin -->
+- [ ] Design system migration (OKLCH → Factory.ai tokens: light theme, Code Orange #ef6f2e, no shadows, Geist Sans/Mono, 4px/6px radii)
+- [ ] Catalog data model rework (functional_areas + scenarios + scenario_templates pivot; replaces industry-led classification)
+- [ ] Scenario content seed (50 client-language scenarios mapped to ~135 n8n templates, pain copy, 7 functional areas)
+- [ ] Public landing page at `/` (SSR, no login, Hero/Working Process/Services/Pricing/FAQ/CTA)
+- [ ] Public catalog navigation at `/catalog` (SSR, anonymous browsing, no login gate)
+- [ ] Scenario selector + ROI calculator (multi-select scenarios → personalized plan with employee-cost equivalent)
+- [ ] Lead capture flow (email gate at peak intent → pre-call context form, 4-5 structured questions, NOT chat)
+- [ ] Lead enrichment into existing admin dashboard (leads surface in admin)
+- [ ] Reskin customer dashboard (7 sections) with Factory tokens
+- [ ] Reskin admin dashboard (5 sections) with Factory tokens
+- [ ] Resolve v1.2 carry-over: language switcher + dark mode toggle in admin shell
+
+## Current Milestone: v1.3 Public Funnel & Factory Reskin
+
+**Goal:** Convert the login-gated catalog into a public lead-generation funnel — anonymous browsing of client-language scenarios, ROI calculation, email + pre-call form capture — and reskin both dashboards with the Factory.ai design system.
+
+**Target features:**
+- Public surfaces (landing + catalog) with SEO + SSR — no login required
+- Scenario-based catalog (50 scenarios in 7 functional areas, mapped to 135 n8n templates) replaces industry-led catalog
+- ROI calculator that frames automation savings as employee-cost equivalents
+- Email + pre-call context form (form, not chat) as lead capture
+- Factory.ai design system applied across public + customer + admin surfaces
+- Resolve admin shell carry-over (language switcher + dark mode toggle)
+
+**Explicit deferrals (NOT in v1.3):**
+- Stripe integration — manual invoicing / e-Transfer until customer 5+
+- AI conversational chat — replaced with structured pre-call form
+- DIY automation builder — still out of scope per managed service model
+
+**Why this scope:** 0 paying customers. The current portal is locked behind login, killing SEO, organic traffic, and pre-signup interest validation. v1.3 inverts this to capture leads at peak intent.
 
 ### Out of Scope
 
@@ -123,21 +148,9 @@ Tech stack: **Next.js 16** (App Router, Turbopack) + **React 19** + **FastAPI** 
 | Avatar upload via Supabase Storage (Phase 12-01) | Consistent storage with rest of stack, RLS-aware | ✓ Good — bucket policies scope per-user, public URLs cached on CDN |
 | Decimal phase numbering for audit gap closures (Phases 13-15) | Clear insertion semantics — "fixes after milestone" vs renumbering | ✓ Good — phases 13/14/15 cleanly close 5 audit findings without disturbing 7-12 history |
 
-## Next Milestone: v1.3 (TBD via /gsd:new-milestone)
+## Next Milestone: v1.4 (TBD)
 
-**Likely scope:** Stripe Checkout + Customer Portal + webhooks, originally deferred from v1.2 with operations-first sequencing. Now that both halves of the product are operational (customer portal in v1.1, admin dashboard in v1.2), Stripe makes sense — there's a team that can fulfill what customers buy.
-
-**Candidate goals to validate with `/gsd:new-milestone`:**
-- Stripe Checkout wired to catalog "Solicitar esta automatización" requests (customer-side INSERT path for `automation_requests` also currently missing — upstream v1.1 gap that materializes here)
-- Stripe Customer Portal as the Billing "Manage payment" button
-- Stripe webhooks for subscription lifecycle (created/updated/canceled, invoice paid/failed)
-- FastAPI endpoints for business writes (automation request, pause/resume/cancel, billing portal/history, admin activation)
-- Possible cleanup absorption: language switcher + dark mode UI in admin shell, pre-existing lint debt triage, Phase 16-03 RLS gap closure
-
-**Decisions to revisit at v1.3 questioning gate:**
-- FastAPI vs Next.js Route Handlers for Stripe webhooks (FastAPI was originally chosen but v1.1 + v1.2 shipped entirely via Next.js Server Actions + Supabase SSR — reassess if FastAPI surface is still warranted)
-- Audit log table for admin actions (deferred from v1.2, may be required for Stripe operations)
-- Manual notifications/messages to clients (deferred from v1.2, may surface as a Stripe customer-comm need)
+**Likely scope (deferred from v1.3):** Stripe Checkout + Customer Portal + webhooks, once the public funnel proves traction and customer 5 is reached.
 
 ---
-*Last updated: 2026-05-14 — v1.2 shipped, ready for v1.3 questioning*
+*Last updated: 2026-05-14 — v1.3 milestone started (Public Funnel & Factory Reskin)*

@@ -1,5 +1,37 @@
 ---
 gsd_state_version: 1.0
+milestone: v1.3
+milestone_name: Public Funnel & Factory Reskin
+status: in_progress
+stopped_at: "Milestone v1.3 started — defining requirements"
+last_updated: "2026-05-14T16:30:00.000Z"
+progress:
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+---
+
+## Current Position
+
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-05-14 — Milestone v1.3 (Public Funnel & Factory Reskin) started
+
+## Project Reference
+
+See: .planning/PROJECT.md (updated 2026-05-14)
+
+**Core value:** Customers can monitor their automations' performance, request new ones, and see the ROI of their subscription — all from a single bilingual dashboard.
+**Current focus:** v1.3 — Public Funnel & Factory Reskin (invert catalog to public lead-gen funnel + reskin both dashboards with Factory.ai tokens)
+
+---
+
+## Accumulated Context (from prior milestones)
+
+---
+gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Admin Dashboard
 status: unknown
