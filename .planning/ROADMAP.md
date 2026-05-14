@@ -60,7 +60,7 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 - [x] **Phase 21: Clients Admin** — Orgs list + search + 360° detail + cross-links + free-form internal notes (3 plans) (completed 2026-05-08)
 - [x] **Phase 22: Admin Home** — Operational KPIs + activity feed + quick-link cards (2 plans) (completed 2026-05-12)
 - [x] **Phase 23: Client 360 Cross-Link Fix** — Gap closure: ?org= filter works from /admin/clients/[id] tabs to /admin/requests and /admin/automations (3 plans, blocker) (completed 2026-05-14)
-- [ ] **Phase 24: Phase 16 Retroactive Verification** — Gap closure: write 16-VERIFICATION.md to flip CARRY-01..04 from partial to satisfied (1 plan, process)
+- [x] **Phase 24: Phase 16 Retroactive Verification** — Gap closure: write 16-VERIFICATION.md to flip CARRY-01..04 from partial to satisfied (1 plan, process) (completed 2026-05-14)
 
 ## Phase Details
 
@@ -197,7 +197,7 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
   2. Document cross-references the 4 SUMMARY.md files and their commits (332bbc7, 94002ab, 47757f9, f9cec9e, 6058de6)
   3. Document asserts npm run build + npm run lint pass on main as of 2026-05-13
   4. REQUIREMENTS.md traceability reflects CARRY-01..04 as `Complete` again
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 - [ ] 24-01-PLAN.md — Write 16-VERIFICATION.md (retroactive) consolidating evidence from 16-01/02/03-SUMMARY.md and post-fact build/lint check on main
 
 ## Progress
@@ -227,4 +227,4 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 | 21. Clients Admin | 3/3 | Complete   | 2026-05-08 | — |
 | 22. Admin Home | 2/2 | Complete    | 2026-05-13 | — |
 | 23. Client 360 Cross-Link Fix | v1.2 | Complete    | 2026-05-14 | — |
-| 24. Phase 16 Retroactive Verification | v1.2 | 0/1 | Not started | — |
+| 24. Phase 16 Retroactive Verification | 1/1 | Complete   | 2026-05-14 | — |
