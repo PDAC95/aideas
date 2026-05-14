@@ -227,4 +227,4 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 | 21. Clients Admin | 3/3 | Complete   | 2026-05-08 | — |
 | 22. Admin Home | 2/2 | Complete    | 2026-05-13 | — |
 | 23. Client 360 Cross-Link Fix | v1.2 | Complete    | 2026-05-14 | — |
-| 24. Phase 16 Retroactive Verification | 1/1 | Complete   | 2026-05-14 | — |
+| 24. Phase 16 Retroactive Verification | 1/1 | Complete    | 2026-05-14 | — |
