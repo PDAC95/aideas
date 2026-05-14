@@ -164,9 +164,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 - v1.2 requirements: 31 total
 - Mapped to phases: 31 ✓
 - Unmapped: 0
-- Satisfied: 25 ✓
-- Pending (gap closure): 6 (CARRY-01..04 → Phase 24, AUTM-02 + CLNT-04 → Phase 23)
+- Satisfied: 31 ✓
+- Pending (gap closure): 0
 
 ---
 *Requirements defined: 2026-05-04*
-*Last updated: 2026-05-13 — gap closure phases 23 (cross-link fix) + 24 (Phase 16 verification) added per audit*
+*Last updated: 2026-05-14 — Phase 24 retroactive verification confirms CARRY-01..04 satisfied; all 31 v1.2 requirements now Complete*
