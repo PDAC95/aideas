@@ -3,6 +3,25 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Admin Dashboard
 status: unknown
+stopped_at: "Completed 23-03-PLAN.md (Phase 23 plans 3/3 — awaiting verifier to flip phase to Complete)"
+last_updated: "2026-05-14T00:30:00.000Z"
+progress:
+  total_phases: 18
+  completed_phases: 16
+  total_plans: 52
+  completed_plans: 52
+decisions:
+  - "23-03: Relaxed isUuid regex to layout-only (no RFC 4122 v1-5 version/variant enforcement) — Postgres accepts any 128-bit hex as UUID; seed UUIDs (bbbbbbbb-0000-...) and nil UUID were being rejected by the strict regex and falling through to the slug path"
+  - "23-03: ICU notFound placeholder must use double quotes around {value}, not single quotes — ICU MessageFormat treats single quotes as literal-escape syntax, rendering literal '{value}' text"
+  - "23-03: Emitter contract verified zero-code-changes — orgSlug prop traced to organization.slug at (admin)/admin/clients/[id]/page.tsx:191,200; both Client 360 tabs already emit /admin/{requests|automations}?org=${encodeURIComponent(orgSlug)}"
+  - "23-03: UAT 5/5 passed in EN and ES on dev server localhost:4000 (super_admin pdmckinster@gmail.com); admin-layout language switcher gap worked around via document.cookie console set — pre-existing Phase 17 tech debt"
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: Admin Dashboard
+status: unknown
 stopped_at: Completed 23-02-PLAN.md
 last_updated: "2026-05-13T19:27:23.810Z"
 progress:

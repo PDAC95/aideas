@@ -182,10 +182,10 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
   2. Click “View all automations” from /admin/clients/[id] lands on /admin/automations filtered to that org
   3. ?org= accepts the chosen identifier convention (slug-or-uuid, decided in plan) and both list pages parse + apply it
   4. EN/ES parity preserved for any new UI string (e.g., filter chip showing the active org)
-**Plans:** 3 plans
-- [ ] 23-01-PLAN.md — Decide identifier convention (UUID vs slug-or-uuid) and update fetchAdminRequests + fetchAdminAutomations to accept it
-- [ ] 23-02-PLAN.md — Wire /admin/requests/page.tsx + /admin/automations/page.tsx to parse ?org= and pass it into the query
-- [ ] 23-03-PLAN.md — Update admin-client-requests-tab.tsx + admin-client-automations-tab.tsx cross-link emitters to match the chosen convention (if needed) + EN/ES filter-chip strings
+**Plans:** 3/3 plans complete (awaiting verifier to close phase)
+- [x] 23-01-PLAN.md — Slug-or-uuid resolver helper + envelope return shapes on fetchAdminRequests / fetchAdminAutomations (completed 2026-05-13)
+- [x] 23-02-PLAN.md — Wire ?org= into /admin/requests + /admin/automations pages + AdminOrgFilterChip + orgFilter i18n (completed 2026-05-13)
+- [x] 23-03-PLAN.md — Verify Client 360 emitters (zero-code Task 1) + human UAT 5/5 passed in EN and ES; mid-UAT hotfix 9053e3b relaxed isUuid regex + fixed ICU notFound interpolation (completed 2026-05-14)
 
 ### Phase 24: Phase 16 Retroactive Verification
 **Goal:** Backfill the missing 16-VERIFICATION.md so CARRY-01..04 flip from `partial` to `satisfied` per the workflow status matrix.
@@ -226,5 +226,5 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 | 20. Automations Admin | 4/4 | Complete    | 2026-05-08 | — |
 | 21. Clients Admin | 3/3 | Complete   | 2026-05-08 | — |
 | 22. Admin Home | 2/2 | Complete    | 2026-05-13 | — |
-| 23. Client 360 Cross-Link Fix | v1.2 | 2/3 | In Progress | — |
+| 23. Client 360 Cross-Link Fix | v1.2 | 3/3 | In Progress | — |
 | 24. Phase 16 Retroactive Verification | v1.2 | 0/1 | Not started | — |
