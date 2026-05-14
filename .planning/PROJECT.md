@@ -39,17 +39,28 @@ Customers can monitor their automations' performance, request new ones, and see 
 - ✓ Full EN/ES i18n parity (477+ translation keys, 0 only-in-EN, 0 only-in-ES) — v1.1
 - ✓ Defense-in-depth: `assertOrgMembership` helper on lifecycle write actions — v1.1
 
+<!-- v1.2 — Admin Dashboard -->
+- ✓ Carry-over cleanup: Next.js 16 build blocker fixed, KPI placeholder stripped, `assertOrgMembership` consolidated in settings.ts, symmetric reCAPTCHA dev bypass — v1.2
+- ✓ `platform_staff` schema with `super_admin | operator` roles + RLS extensions on 11 business tables + SECURITY DEFINER helpers (`is_platform_staff`, `is_super_admin`) — v1.2
+- ✓ Two-cookie session scheme (sb-* customer + sb-admin-* staff coexisting), `/admin/*` middleware gate, `assertPlatformStaff` typed helper — v1.2
+- ✓ Admin shell: AdminLayout + AdminSidebar + AdminHeader (orange ADMIN badge), 5 admin surfaces (home/catalog/requests/automations/clients) — v1.2
+- ✓ Catalog admin: full CRUD UI for `automation_templates` with active/featured toggles, soft-delete via is_active, per-template EN/ES translations — v1.2
+- ✓ Requests inbox: `/admin/requests` list with status tabs + FIFO ordering, detail page with single-step approve (provisions automation), reject-with-reason — v1.2
+- ✓ Automations admin: global cross-org list with filters, read-only detail with timeline/chart, status transitions with notification fan-out — v1.2
+- ✓ Clients admin: orgs list with text search, 360° detail with members/automations/requests tabs + internal notes, cross-link affordances — v1.2
+- ✓ Admin home: operational KPI cards + activity feed (last 25 events) + quick-link cards — v1.2
+- ✓ Client 360 cross-link fix (gap closure): slug-or-uuid `resolveOrgIdentifier` + `?org=` URL filter wired into /admin/requests + /admin/automations — v1.2
+- ✓ Phase 16 retroactive verification (process gap closure): 16-VERIFICATION.md backfilled, REQUIREMENTS.md reconciled to 31/31 — v1.2
+- ✓ admin.* i18n namespace grew to 875+ keys with full EN/ES parity (programmatic diff: zero key mismatches) — v1.2
+
 ### Active
 
-<!-- v1.2 — Stripe + Production-Ready (TBD via /gsd:new-milestone) -->
+<!-- v1.3 — TBD via /gsd:new-milestone (likely Stripe) -->
 - [ ] Stripe Checkout for catalog "Solicitar esta automatizacion" requests
 - [ ] Stripe Customer Portal wired to Billing "Manage payment" button
 - [ ] Stripe webhooks (subscription created/updated/canceled, invoice paid/failed)
 - [ ] FastAPI endpoints: automation request, pause/resume/cancel, billing portal/history, admin activation
-- [ ] Carry-over: fix Next.js 16 + Turbopack build blocker on `automations/[id]/page.tsx` (`next/dynamic ssr:false`)
-- [ ] Carry-over: replace `<AutomationSuccessRate trend="+5%" />` placeholder with computed value or remove
-- [ ] Carry-over: refactor `saveCompanyName` + `saveHourlyCost` to use `assertOrgMembership` helper
-- [ ] Carry-over: symmetric reCAPTCHA dev bypass on client (currently only server bypasses)
+- [ ] Cleanup phase (or absorb into v1.3): language switcher + dark mode toggle UI in admin shell, pre-existing lint debt (103 errors in vendor/non-CARRY files), Phase 16-03 partial RLS hardening gaps
 
 ### Out of Scope
 
@@ -67,17 +78,18 @@ Customers can monitor their automations' performance, request new ones, and see 
 
 ## Context
 
-Shipped v1.0 + v1.1 with ~140K LOC (TypeScript + Python + SQL).
+Shipped v1.0 + v1.1 + v1.2 with ~230K LOC (TypeScript + Python + SQL).
 Tech stack: **Next.js 16** (App Router, Turbopack) + **React 19** + **FastAPI** + **Supabase** (PostgreSQL + Auth + Realtime + Storage). UI: **shadcn/ui** + **Tailwind CSS v4** + **Recharts**. i18n: **next-intl** (cookie-based, EN/ES). Hosting: **Vercel** (frontend), **Railway** (backend), **Supabase** (database).
 
-**Current state (post-v1.1):** Complete customer dashboard operational. All 7 sections (Home, Automations, Catalog, Reports, Billing, Settings, Notifications) consume real Supabase data with org-scoped RLS. Stripe schema fields exist on `automations` and `subscriptions` tables but no Stripe API integration yet — all payment UI uses mock/seed data per intentional v1.1 scope.
+**Current state (post-v1.2):** Both halves of the product operational — customer portal (v1.1) + admin dashboard (v1.2). Customer side: 7 sections (Home, Automations, Catalog, Reports, Billing, Settings, Notifications) on real Supabase data. Admin side at `app.aideas.com/admin/*`: 5 surfaces (Home, Catalog, Requests, Automations, Clients) with platform_staff RLS, two-cookie session scheme, single-step request approval that provisions automations, cross-org visibility with `?org=` filter. Stripe schema fields exist but NO Stripe API integration — payment UI uses mock/seed data, deferred to v1.3.
 
-**Audit results (v1.1):** 38/38 requirements satisfied, 9/9 phases verified, 9/9 cross-phase integrations wired, 8/8 E2E flows complete. Status: `tech_debt` (4 carry-over items, see Active above).
+**Audit results (v1.2):** 31/31 requirements satisfied, 9/9 phases verified, 12/12 cross-phase wirings, 13/13 E2E flows. Status: `passed`. Two gap-closure phases (23 + 24) brought milestone to clean pass.
 
-**Known tech debt (v1.0 + v1.1, non-blocking unless flagged):**
-- v1.0: middleware rename warning, summary inaccuracy in 06-01, brittle error substring match, missing server-side auth guard on /complete-registration, email_confirmed_at not checked in dashboard layout (middleware handles it)
-- v1.1 BLOCKER: `next/dynamic ssr:false` build error in `automations/[id]/page.tsx:16` (Next.js 16 + Turbopack)
-- v1.1: `<AutomationSuccessRate trend="+5%" />` placeholder, `assertOrgMembership` consolidation opportunity, asymmetric reCAPTCHA bypass
+**Known tech debt (v1.0 + v1.1 + v1.2, non-blocking):**
+- v1.0: middleware rename warning, summary inaccuracy in 06-01, brittle error substring match, missing server-side auth guard on /complete-registration
+- v1.2: language switcher missing in admin shell (blocks I18N runtime UAT on admin surfaces); dark mode toggle missing in admin shell (`dark:` classes wired but no UI control)
+- v1.2: pre-existing lint debt (103 errors / 1589 warnings) — ~95 in `web/public/landing/js/*.js` minified vendor, ~8 in non-CARRY app source files (queries.ts any types, React 19 strict-render warnings). Verified pre-existing via clean-tree reproduction.
+- v1.2: Phase 16-03 partial RLS hardening gaps — out of CARRY-04 scope, tracked separately
 
 ## Constraints
 
@@ -111,38 +123,21 @@ Tech stack: **Next.js 16** (App Router, Turbopack) + **React 19** + **FastAPI** 
 | Avatar upload via Supabase Storage (Phase 12-01) | Consistent storage with rest of stack, RLS-aware | ✓ Good — bucket policies scope per-user, public URLs cached on CDN |
 | Decimal phase numbering for audit gap closures (Phases 13-15) | Clear insertion semantics — "fixes after milestone" vs renumbering | ✓ Good — phases 13/14/15 cleanly close 5 audit findings without disturbing 7-12 history |
 
-## Current Milestone: v1.2 Admin Dashboard
+## Next Milestone: v1.3 (TBD via /gsd:new-milestone)
 
-**Goal:** Build the AIDEAS team admin dashboard so the operations team can manage templates, attend customer requests, track in-flight automations, and oversee clients — closing the operational loop that v1.1 left open on the customer-facing side. Stripe (originally projected for v1.2) deferred to v1.3, since charging without an admin to fulfill orders would be operationally broken.
+**Likely scope:** Stripe Checkout + Customer Portal + webhooks, originally deferred from v1.2 with operations-first sequencing. Now that both halves of the product are operational (customer portal in v1.1, admin dashboard in v1.2), Stripe makes sense — there's a team that can fulfill what customers buy.
 
-**Sequencing rationale:** Operations-first, not product-first. v1.1 shipped half the product (customer side); v1.2 ships the other half (team side). Only with both halves operational does Stripe (v1.3) make sense — otherwise we'd cobrar dinero sin equipo que pueda atender los pedidos.
+**Candidate goals to validate with `/gsd:new-milestone`:**
+- Stripe Checkout wired to catalog "Solicitar esta automatización" requests (customer-side INSERT path for `automation_requests` also currently missing — upstream v1.1 gap that materializes here)
+- Stripe Customer Portal as the Billing "Manage payment" button
+- Stripe webhooks for subscription lifecycle (created/updated/canceled, invoice paid/failed)
+- FastAPI endpoints for business writes (automation request, pause/resume/cancel, billing portal/history, admin activation)
+- Possible cleanup absorption: language switcher + dark mode UI in admin shell, pre-existing lint debt triage, Phase 16-03 RLS gap closure
 
-**Target capabilities:**
-- Foundation: `/admin/*` routes with staff-role gate, admin-tinted layout, `platform_staff` schema with `super_admin | operator` roles (UI for staff invitation deferred)
-- Catalog CRUD — list, create, edit, activate/deactivate `automation_templates` (replaces SQL-direct workflow)
-- Requests inbox — list `automation_requests`, transition status (`pending` → `approved` → `in_setup` → `active` or `rejected`)
-- Automations admin view — global list of all `automations` across all orgs, filterable, manual status changes
-- Clients (orgs) list — list `organizations` with stats (# automations, signup date, last login); detail page with members + automations
-- Admin home — operational metrics dashboard (pending requests, in-setup automations, active clients, weekly signups)
-- Carry-over fixes from v1.1 (own phase): Next.js 16 build blocker, `<AutomationSuccessRate trend="+5%" />` placeholder, `assertOrgMembership` consolidation in settings.ts, symmetric reCAPTCHA dev bypass
-
-**Decisions locked during questioning (2026-05-04):**
-- Access: `app.aideas.com/admin/*` (same app, protected route, no subdomain)
-- Staff identity: new table `platform_staff` (FK to `auth.users`); no flag on profiles, no special org
-- Roles: schema with `role` from day one (`super_admin | operator`); staff-management UI deferred until invitation needed
-- Visual: customer layout reused + "AIDEAS Admin" banner/title for context separation (NO redesign)
-- i18n: strict bilingual EN/ES (project rule, 100% parity)
-- Seed-vs-prod cleanup: deferred to v1.3 production deploy (not a v1.2 concern)
-
-**Out of scope for v1.2 (defer to v1.3+):**
-- Stripe Checkout / Customer Portal / webhooks → v1.3
-- FastAPI endpoints for business writes → revisit alongside Stripe (v1.3)
-- Audit log → post-v1.2
-- Manual notifications / messages to clients → post-v1.2
-- Revenue metrics → naturally arrive with Stripe (v1.3)
-- Request assignment among staff → when there are multiple operators
-- Staff management UI (invite, change role) → when it hurts
-- Bulk actions on requests/automations → when it hurts
+**Decisions to revisit at v1.3 questioning gate:**
+- FastAPI vs Next.js Route Handlers for Stripe webhooks (FastAPI was originally chosen but v1.1 + v1.2 shipped entirely via Next.js Server Actions + Supabase SSR — reassess if FastAPI surface is still warranted)
+- Audit log table for admin actions (deferred from v1.2, may be required for Stripe operations)
+- Manual notifications/messages to clients (deferred from v1.2, may surface as a Stripe customer-comm need)
 
 ---
-*Last updated: 2026-05-04 — milestone v1.2 started after questioning gate*
+*Last updated: 2026-05-14 — v1.2 shipped, ready for v1.3 questioning*

@@ -59,3 +59,37 @@
 ---
 
 
+
+## v1.2 Admin Dashboard (Shipped: 2026-05-14)
+
+**Phases:** 9 (Phases 16-24) | **Plans:** 25 | **Requirements:** 31/31
+**Timeline:** 11 days (2026-05-04 → 2026-05-14)
+**LOC:** +91,966 / -1,114 across 453 files (TypeScript + SQL + docs)
+**Git range:** `fix(16-01)` → `merge: v1.2 Admin Dashboard milestone` (112 feat commits)
+
+**Delivered:** Complete AIDEAS team admin dashboard at `app.aideas.com/admin/*` — operations can manage the template catalog with CRUD UI, triage and approve/reject customer automation requests with single-step provisioning, monitor every automation across all orgs with status transitions, get a 360° view of every client organization with cross-linked tabs, and oversee the platform from a home page with operational KPIs and activity feed. Stripe remains deferred to v1.3 (operations-first sequencing — fulfillment before billing).
+
+**Key accomplishments:**
+1. Carry-over cleanup (Phase 16) — unblocked Next.js 16 + Turbopack build by removing `next/dynamic ssr:false`, stripped `+5%` trend placeholder, consolidated `assertOrgMembership` helper across server actions, added dev-friendly reCAPTCHA bypass
+2. Admin foundation (Phase 17) — `platform_staff` table + `is_platform_staff`/`is_super_admin` SECURITY DEFINER helpers + RLS extensions across 11 business tables, two-cookie session scheme (sb-* customer + sb-admin-* staff coexisting), `/admin/*` middleware gate, fresh AdminLayout/Sidebar/Header with orange ADMIN badge, `assertPlatformStaff` typed helper, 27-key `admin.*` i18n namespace EN/ES parity
+3. Catalog admin (Phase 18) — full CRUD UI for `automation_templates` with active/featured toggles, soft-delete via `is_active`, per-template translations (EN/ES) for name/description/typical_impact/activity_metric, slug-immutable edit, list filters by category/industry
+4. Requests inbox (Phase 19) — `/admin/requests` list with status tabs (Pending/Approved/Rejected + counters), FIFO ordering, detail page with single-step approve (INSERT `automations` with `status=in_setup`), reject-with-reason modal (Zod 10-500 char), race-guarded UPDATE, customer notification fan-out via revalidatePath
+5. Automations admin (Phase 20) — global cross-org `/admin/automations` list with filters (status/org/text), read-only detail with execution timeline + weekly chart + setup notes, status transitions (in_setup → active → paused → archived) with notifyOrgMembers fan-out
+6. Clients admin (Phase 21) — `/admin/clients` orgs list with text search + 360° detail per org showing members/automations/requests tabs + free-form internal notes, cross-link affordances to /admin/requests and /admin/automations
+7. Admin home (Phase 22) — operational KPI cards (pending requests, in-setup automations, active orgs, new signups 7d), activity feed (last 25 events across requests/automations/clients), quick-link cards to each admin surface
+8. Gap closure — Client 360 cross-links fix (Phase 23): slug-or-uuid `resolveOrgIdentifier` helper, `?org=` URL filter wired into /admin/requests + /admin/automations, AdminOrgFilterChip with notFound state; Phase 16 retroactive verification (Phase 24): backfilled 16-VERIFICATION.md citing 5 commits + live build/lint, REQUIREMENTS.md coverage reconciled to 31/31
+9. I18N-01 cross-cutting verified — `admin.*` namespace grew from 27 keys (Phase 17) to 875+ keys (Phase 22) with full EN/ES parity, programmatic diff returns zero key mismatches
+
+**Tech debt carried forward (4 items, see milestones/v1.2-MILESTONE-AUDIT.md):**
+- Language switcher missing in admin shell — blocks I18N runtime UAT across all admin surfaces (cross-cutting tech debt, tracked in CLAUDE.md)
+- Dark mode toggle missing in admin shell — `dark:` Tailwind classes wired across components but no UI control exists (same surface as language switcher)
+- Pre-existing lint debt: 103 errors / 1589 warnings (~95 in `web/public/landing/js/*.js` vendor minified, ~8 in non-CARRY app source). Verified pre-existing via clean-tree reproduction. CARRY-01 `npm run build` exit 0 — lint surface deferred to a future cleanup phase
+- Phase 16-03 partial RLS hardening gaps — out of CARRY-04 scope, tracked separately for a future RLS phase
+
+**Archives:**
+- [v1.2-ROADMAP.md](milestones/v1.2-ROADMAP.md)
+- [v1.2-REQUIREMENTS.md](milestones/v1.2-REQUIREMENTS.md)
+- [v1.2-MILESTONE-AUDIT.md](milestones/v1.2-MILESTONE-AUDIT.md)
+
+---
+
