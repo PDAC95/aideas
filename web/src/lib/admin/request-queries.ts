@@ -6,8 +6,10 @@ import type {
   AdminRequestStatus,
   AdminRequestTab,
   AdminRequestStatusCounts,
+  AdminRequestListResult,
 } from "./types";
 import { TAB_TO_STATUSES } from "./types";
+import { resolveOrgIdentifier } from "./org-identifier";
 
 const ACTIVE_LIKE_STATUSES = [
   "active",
@@ -38,21 +40,48 @@ function preview(text: string | null | undefined): string {
  *     (to render the human template name in the row)
  *   - When template_id is NULL the templateDisplayName falls back to the
  *     request title.
+ *
+ * Org filter (Phase 23):
+ *   - Accepts an optional `orgIdentifier` (slug OR UUID) coming from `?org=`
+ *     on the page. The identifier is resolved internally via
+ *     `resolveOrgIdentifier` so callers never have to know which it was.
+ *   - If the caller provided an identifier that did NOT resolve, we
+ *     short-circuit to empty rows BEFORE the main query so the page can
+ *     render a distinct "Org not found" empty state without scanning the
+ *     whole table.
+ *   - Returns an `AdminRequestListResult` envelope containing the resolved
+ *     org (for filter-chip rendering) and the raw input the user passed.
  */
 export async function fetchAdminRequests(input: {
   tab: AdminRequestTab;
   locale: string;
-}): Promise<AdminRequestRow[]> {
+  orgIdentifier?: string | null;
+}): Promise<AdminRequestListResult> {
   const supabase = await createAdminServerClient();
   const auth = await assertPlatformStaff(supabase);
   if (!auth.ok) {
     throw new Error(`fetchAdminRequests: not authorized (${auth.error})`);
   }
 
+  const { orgId, resolvedOrg, orgIdentifierProvided } = await resolveOrgIdentifier(
+    supabase,
+    input.orgIdentifier ?? null
+  );
+
+  // Short-circuit: caller asked for an org filter, but the slug/uuid didn't
+  // resolve. Skip the list query — pointless full-table scan — and let the
+  // page render an explicit "Org not found" state.
+  if (orgIdentifierProvided !== null && orgId === null) {
+    return {
+      rows: [],
+      orgFilter: { resolvedOrg: null, orgIdentifierProvided },
+    };
+  }
+
   const ascending = input.tab === "pending";
   const statuses = TAB_TO_STATUSES[input.tab];
 
-  const { data, error } = await supabase
+  let query = supabase
     .from("automation_requests")
     .select(
       `
@@ -67,8 +96,16 @@ export async function fetchAdminRequests(input: {
     .in("status", statuses as unknown as string[])
     .is("deleted_at", null)
     .eq("template.translations.locale", input.locale)
-    .eq("template.translations.field", "name")
-    .order("created_at", { ascending });
+    .eq("template.translations.field", "name");
+
+  // Optional org filter AFTER the translation .eq calls and BEFORE .order(...)
+  // to match the filter-chain order documented in automation-queries.ts:41-48.
+  // Mixing this order has caused embedded-filter bugs in older postgrest-js.
+  if (orgId) {
+    query = query.eq("organization_id", orgId);
+  }
+
+  const { data, error } = await query.order("created_at", { ascending });
 
   if (error) throw error;
 
@@ -90,20 +127,23 @@ export async function fetchAdminRequests(input: {
 
   const rows = (data ?? []) as unknown as RawRow[];
 
-  return rows.map((row) => {
-    const tmplName = row.template?.translations?.[0]?.value;
-    const fallback = row.template?.slug ?? row.title;
-    return {
-      id: row.id,
-      organizationId: row.organization_id,
-      organizationName: row.organizations.name,
-      templateId: row.template_id,
-      templateDisplayName: tmplName ?? fallback,
-      status: row.status as AdminRequestStatus,
-      customRequirementsPreview: preview(row.description),
-      createdAt: row.created_at,
-    };
-  });
+  return {
+    rows: rows.map((row) => {
+      const tmplName = row.template?.translations?.[0]?.value;
+      const fallback = row.template?.slug ?? row.title;
+      return {
+        id: row.id,
+        organizationId: row.organization_id,
+        organizationName: row.organizations.name,
+        templateId: row.template_id,
+        templateDisplayName: tmplName ?? fallback,
+        status: row.status as AdminRequestStatus,
+        customRequirementsPreview: preview(row.description),
+        createdAt: row.created_at,
+      };
+    }),
+    orgFilter: { resolvedOrg, orgIdentifierProvided },
+  };
 }
 
 /**

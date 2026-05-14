@@ -1090,6 +1090,11 @@
           "searchLabel": "Search by name",
           "searchPlaceholder": "Filter by automation name..."
         },
+        "orgFilter": {
+          "label": "Organization:",
+          "clear": "Clear organization filter",
+          "notFound": "Organization not found: \"{value}\""
+        },
         "columns": {
           "name": "Name",
           "customer": "Customer",
@@ -1193,6 +1198,11 @@
           "pending": "Pending ({count})",
           "approved": "Approved ({count})",
           "rejected": "Rejected ({count})"
+        },
+        "orgFilter": {
+          "label": "Organization:",
+          "clear": "Clear organization filter",
+          "notFound": "Organization not found: \"{value}\""
         },
         "columns": {
           "customer": "Customer",

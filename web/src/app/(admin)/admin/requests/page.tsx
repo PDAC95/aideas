@@ -6,9 +6,10 @@ import {
 import type { AdminRequestTab } from "@/lib/admin/types";
 import { AdminRequestsTabs } from "@/components/admin/requests/admin-requests-tabs";
 import { AdminRequestsTable } from "@/components/admin/requests/admin-requests-table";
+import { AdminOrgFilterChip } from "@/components/admin/admin-org-filter-chip";
 
 interface AdminRequestsPageProps {
-  searchParams: Promise<{ status?: string }>;
+  searchParams: Promise<{ status?: string; org?: string }>;
 }
 
 const VALID_TABS: AdminRequestTab[] = ["pending", "approved", "rejected"];
@@ -18,6 +19,12 @@ function coerceTab(raw: string | undefined): AdminRequestTab {
     return raw as AdminRequestTab;
   }
   return "pending";
+}
+
+function nullify(raw: string | undefined): string | null {
+  if (!raw) return null;
+  const t = raw.trim();
+  return t.length === 0 ? null : t;
 }
 
 /**
@@ -31,19 +38,26 @@ function coerceTab(raw: string | undefined): AdminRequestTab {
  * that the client tabs component substitutes at render time using the live
  * counts; reading them via t() here would burn a translation call per render
  * with values we discard.
+ *
+ * Org filter (Phase 23, CLNT-04): `?org=<slug-or-uuid>` flows through
+ * `fetchAdminRequests` via `orgIdentifier`. The query layer resolves the
+ * identifier and returns an envelope `{ rows, orgFilter }` so this page can
+ * render the filter chip without a second org-lookup query.
  */
 export default async function AdminRequestsPage({
   searchParams,
 }: AdminRequestsPageProps) {
   const locale = await getLocale();
-  const { status: rawStatus } = await searchParams;
-  const tab = coerceTab(rawStatus);
+  const sp = await searchParams;
+  const tab = coerceTab(sp.status);
+  const orgIdentifier = nullify(sp.org);
 
-  const [rows, counts, t] = await Promise.all([
-    fetchAdminRequests({ tab, locale }),
+  const [requestsResult, counts, t] = await Promise.all([
+    fetchAdminRequests({ tab, locale, orgIdentifier }),
     fetchAdminRequestStatusCounts(),
     getTranslations("admin.requests.list"),
   ]);
+  const { rows, orgFilter } = requestsResult;
 
   const translations = {
     tabs: {
@@ -74,6 +88,14 @@ export default async function AdminRequestsPage({
     noRequirements: t("noRequirements"),
   };
 
+  const orgFilterTranslations = {
+    label: t("orgFilter.label"),
+    clear: t("orgFilter.clear"),
+    notFound: t("orgFilter.notFound", {
+      value: orgFilter.orgIdentifierProvided ?? "",
+    }),
+  };
+
   return (
     <div className="space-y-6">
       <div className="space-y-1">
@@ -89,6 +111,13 @@ export default async function AdminRequestsPage({
         active={tab}
         counts={counts}
         translations={translations.tabs}
+      />
+
+      <AdminOrgFilterChip
+        orgFilter={orgFilter}
+        currentSearchParams={sp}
+        basePath="/admin/requests"
+        translations={orgFilterTranslations}
       />
 
       <AdminRequestsTable

@@ -1,15 +1,92 @@
 ---
 gsd_state_version: 1.0
+milestone: v1.2
+milestone_name: Admin Dashboard
+status: unknown
+stopped_at: "Completed 24-01-PLAN.md (Phase 24 retroactive verification: CARRY-01..04 satisfied, REQUIREMENTS.md reconciled to 31/31)"
+last_updated: "2026-05-14T15:18:44.562Z"
+progress:
+  total_phases: 18
+  completed_phases: 18
+  total_plans: 53
+  completed_plans: 53
+---
+
+---
+gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Admin Dashboard
 status: unknown
-stopped_at: Phase 23 context gathered
-last_updated: "2026-05-13T19:03:02.097Z"
+stopped_at: "Completed 24-01-PLAN.md (Phase 24 retroactive verification: CARRY-01..04 satisfied, REQUIREMENTS.md reconciled to 31/31)"
+last_updated: "2026-05-14T15:07:32.427Z"
+progress:
+  total_phases: 18
+  completed_phases: 18
+  total_plans: 53
+  completed_plans: 53
+decisions:
+  - "24-01: Build exit 0 + lint exit 1 documented honestly per user-approved Option A — status: passed because CARRY-01..04 are satisfied in their touch surfaces; 103 pre-existing lint errors enumerated under Known Open Items (Out of Scope) rather than papered over"
+  - "24-01: verified_retroactively: true frontmatter field added to 16-VERIFICATION.md as backfill marker that does not break the workflow status enum"
+  - "24-01: Phase 16-03 partial RLS hardening gaps remain explicitly out of scope and tracked separately — this verification record closes the four CARRY requirements, not Phase 16 the workstream as a whole"
+  - "24-01: REQUIREMENTS.md coverage reconciled to Satisfied 31 / Pending 0 — all v1.2 requirements now Complete (25 prior + 6 closed by Phases 23 and 24)"
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: Admin Dashboard
+status: unknown
+stopped_at: "Completed 23-03-PLAN.md (Phase 23 plans 3/3 — awaiting verifier to flip phase to Complete)"
+last_updated: "2026-05-14T00:30:00.000Z"
 progress:
   total_phases: 18
   completed_phases: 16
-  total_plans: 49
-  completed_plans: 49
+  total_plans: 52
+  completed_plans: 52
+decisions:
+  - "23-03: Relaxed isUuid regex to layout-only (no RFC 4122 v1-5 version/variant enforcement) — Postgres accepts any 128-bit hex as UUID; seed UUIDs (bbbbbbbb-0000-...) and nil UUID were being rejected by the strict regex and falling through to the slug path"
+  - "23-03: ICU notFound placeholder must use double quotes around {value}, not single quotes — ICU MessageFormat treats single quotes as literal-escape syntax, rendering literal '{value}' text"
+  - "23-03: Emitter contract verified zero-code-changes — orgSlug prop traced to organization.slug at (admin)/admin/clients/[id]/page.tsx:191,200; both Client 360 tabs already emit /admin/{requests|automations}?org=${encodeURIComponent(orgSlug)}"
+  - "23-03: UAT 5/5 passed in EN and ES on dev server localhost:4000 (super_admin pdmckinster@gmail.com); admin-layout language switcher gap worked around via document.cookie console set — pre-existing Phase 17 tech debt"
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: Admin Dashboard
+status: unknown
+stopped_at: Completed 23-02-PLAN.md
+last_updated: "2026-05-13T19:27:23.810Z"
+progress:
+  total_phases: 18
+  completed_phases: 16
+  total_plans: 52
+  completed_plans: 51
+decisions:
+  - "23-02: Pre-interpolate orgFilter.notFound at the page (parent t() call with {value}) so the chip stays decoupled from next-intl and reusable across both surfaces"
+  - "23-02: Chip placement differs by page — requests page between tabs/table (no filter row), automations page after the existing filters bar (closest to the rows it filters)"
+  - "23-02: Use Link (not button) for the clear affordance — preserves URL-as-state, browser back-button restores the filtered view"
+  - "23-02: Accept cosmetic dropdown mismatch on /admin/automations (slug-form ?org= shows 'All organizations' selected) — chip is the primary affordance; dropdown realignment logged in deferred-items.md"
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: Admin Dashboard
+status: unknown
+stopped_at: Completed 23-01-PLAN.md
+last_updated: "2026-05-13T19:17:16.936Z"
+progress:
+  total_phases: 18
+  completed_phases: 16
+  total_plans: 52
+  completed_plans: 50
+decisions:
+  - "23-01: Keep AdminAutomationListFilters.organizationId field name; widen meaning to slug-or-uuid via JSDoc (avoids phase-22-wide callsite rename)"
+  - "23-01: Envelope return shape {rows, orgFilter} so the page renders the filter chip without a second org-lookup query"
+  - "23-01: Unresolved-identifier short-circuit returns empty rows + echoes raw input via orgIdentifierProvided so the page can render 'Org not found' instead of an indistinguishable empty list"
+  - "23-01: 100-char input cap inside resolveOrgIdentifier defends against hostile ?org=... payloads while preserving user intent for the not-found state"
+  - "23-01: Generic SupabaseClient type (no Database generic) in resolveOrgIdentifier keeps the helper portable across admin/customer clients"
 ---
 
 ---
@@ -196,6 +273,8 @@ Last activity: 2026-05-08 — Plan 21-03 executed (3 tasks: Zod schemas + 3 serv
 | Phase 21 P02 | 15 min | 4 tasks | 12 files |
 | Phase 21 P03 | 5 min  | 3 tasks | 8 files  |
 | Phase 22 P01 | 3 min | 2 tasks | 6 files |
+| Phase 23-client-360-crosslink-fix P01 | 3 min | 2 tasks | 4 files |
+| Phase 23-client-360-crosslink-fix P02 | 5 min | 3 tasks | 6 files |
 
 ### Per-plan execution metrics (v1.2)
 
@@ -467,8 +546,8 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 
 ## Session Continuity
 
-**Last session:** 2026-05-13T19:03:02.094Z
-**Stopped at:** Phase 23 context gathered
+**Last session:** 2026-05-14T15:07:32.422Z
+**Stopped at:** Completed 24-01-PLAN.md (Phase 24 retroactive verification: CARRY-01..04 satisfied, REQUIREMENTS.md reconciled to 31/31)
 **Next action:** Phase 22 plan 22-01 shipped on branch `feature/phase-22-admin-home`. Next runner is `/gsd:execute-phase 22-admin-home` to ship plan 22-02 (activity feed + quick-link cards) on top of the new KPI grid. Phase 21 verifier still pending — once Phase 21 VERIFICATION.md status is `passed` the branch `feature/phase-21-clients-admin` should be merged to `main`.
 
 2026-05-12 — Phase 22 plan 22-01 shipped: /admin placeholder replaced with real 2x2 KPI grid (Pending requests / Automations in setup / Active clients / Signups this week). fetchAdminHomeKpis() runs 4 parallel HEAD-only count: 'exact' queries via Promise.all; gated by assertPlatformStaff (defense-in-depth on top of layout guard). pendingRequests reuses TAB_TO_STATUSES.pending so the home counter matches /admin/requests Pending tab exactly. signupsThisWeek uses a rolling 7-day window (JS-computed ISO cutoff, DB-agnostic). Both client-related cards (activeClients + signupsThisWeek) link to /admin/clients with no extra params; the list page default `created_at DESC` surfaces recent signups at the top naturally. AdminHomeKpiCards is server-friendly (no use client) — receives a labels prop object so the parent page owns getTranslations. Neutral gray icon backgrounds (no urgency colors). 6 new admin.home.* leaf keys per locale (title + subtitle + 4 KPI labels). admin.placeholders.home block removed from both en.json and es.json. HOME-01 (KPI section) + I18N-01 (this slice) satisfied. tsc + scoped lint exit 0. 2 files created, 4 modified, 2 atomic commits, 3 minutes.

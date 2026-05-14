@@ -52,15 +52,15 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 
 #### Summary Checklist
 
-- [ ] **Phase 16: Carry-over Cleanup** — Resolve 4 v1.1 audit tech-debt items so CI is green for v1.2 (3 plans)
+- [x] **Phase 16: Carry-over Cleanup** — Resolve 4 v1.1 audit tech-debt items so CI is green for v1.2 (3 plans) (completed 2026-05-04, retroactively verified by Phase 24 on 2026-05-14)
 - [x] **Phase 17: Admin Foundation** — `platform_staff` schema + RLS + `/admin/*` gate + admin layout + `assertPlatformStaff` helper (3 plans) — completed 2026-05-05
 - [x] **Phase 18: Catalog Admin** — CRUD UI for `automation_templates` with active/featured toggles (3 plans) (completed 2026-05-06)
 - [x] **Phase 19: Requests Inbox** — List + detail + single-step approve (creates automation) + reject-with-reason (3 plans) (completed 2026-05-07)
 - [x] **Phase 20: Automations Admin** — Global cross-org list + read-only detail + status transitions (4 plans) (completed 2026-05-08)
 - [x] **Phase 21: Clients Admin** — Orgs list + search + 360° detail + cross-links + free-form internal notes (3 plans) (completed 2026-05-08)
 - [x] **Phase 22: Admin Home** — Operational KPIs + activity feed + quick-link cards (2 plans) (completed 2026-05-12)
-- [ ] **Phase 23: Client 360 Cross-Link Fix** — Gap closure: ?org= filter works from /admin/clients/[id] tabs to /admin/requests and /admin/automations (3 plans, blocker)
-- [ ] **Phase 24: Phase 16 Retroactive Verification** — Gap closure: write 16-VERIFICATION.md to flip CARRY-01..04 from partial to satisfied (1 plan, process)
+- [x] **Phase 23: Client 360 Cross-Link Fix** — Gap closure: ?org= filter works from /admin/clients/[id] tabs to /admin/requests and /admin/automations (3 plans, blocker) (completed 2026-05-14)
+- [x] **Phase 24: Phase 16 Retroactive Verification** — Gap closure: write 16-VERIFICATION.md to flip CARRY-01..04 from partial to satisfied (1 plan, process) (completed 2026-05-14)
 
 ## Phase Details
 
@@ -182,10 +182,10 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
   2. Click “View all automations” from /admin/clients/[id] lands on /admin/automations filtered to that org
   3. ?org= accepts the chosen identifier convention (slug-or-uuid, decided in plan) and both list pages parse + apply it
   4. EN/ES parity preserved for any new UI string (e.g., filter chip showing the active org)
-**Plans:** 3 plans
-- [ ] 23-01-PLAN.md — Decide identifier convention (UUID vs slug-or-uuid) and update fetchAdminRequests + fetchAdminAutomations to accept it
-- [ ] 23-02-PLAN.md — Wire /admin/requests/page.tsx + /admin/automations/page.tsx to parse ?org= and pass it into the query
-- [ ] 23-03-PLAN.md — Update admin-client-requests-tab.tsx + admin-client-automations-tab.tsx cross-link emitters to match the chosen convention (if needed) + EN/ES filter-chip strings
+**Plans:** 3/3 plans complete
+- [x] 23-01-PLAN.md — Slug-or-uuid resolver helper + envelope return shapes on fetchAdminRequests / fetchAdminAutomations (completed 2026-05-13)
+- [x] 23-02-PLAN.md — Wire ?org= into /admin/requests + /admin/automations pages + AdminOrgFilterChip + orgFilter i18n (completed 2026-05-13)
+- [x] 23-03-PLAN.md — Verify Client 360 emitters (zero-code Task 1) + human UAT 5/5 passed in EN and ES; mid-UAT hotfix 9053e3b relaxed isUuid regex + fixed ICU notFound interpolation (completed 2026-05-14)
 
 ### Phase 24: Phase 16 Retroactive Verification
 **Goal:** Backfill the missing 16-VERIFICATION.md so CARRY-01..04 flip from `partial` to `satisfied` per the workflow status matrix.
@@ -197,7 +197,7 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
   2. Document cross-references the 4 SUMMARY.md files and their commits (332bbc7, 94002ab, 47757f9, f9cec9e, 6058de6)
   3. Document asserts npm run build + npm run lint pass on main as of 2026-05-13
   4. REQUIREMENTS.md traceability reflects CARRY-01..04 as `Complete` again
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 - [ ] 24-01-PLAN.md — Write 16-VERIFICATION.md (retroactive) consolidating evidence from 16-01/02/03-SUMMARY.md and post-fact build/lint check on main
 
 ## Progress
@@ -219,12 +219,12 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 | 13. Catalog Coverage Fix | v1.1 | 1/1 | Complete | 2026-04-30 |
 | 14. i18n & Security Hygiene | v1.1 | 2/2 | Complete | 2026-04-30 |
 | 15. Dashboard Home Polish | v1.1 | 2/2 | Complete | 2026-04-30 |
-| 16. Carry-over Cleanup | v1.2 | 0/3 | Not started | — |
-| 17. Admin Foundation | v1.2 | Complete    | 2026-05-05 | 2026-05-05 |
-| 18. Catalog Admin | 3/3 | Complete   | 2026-05-06 | — |
-| 19. Requests Inbox | 3/3 | Complete    | 2026-05-07 | — |
-| 20. Automations Admin | 4/4 | Complete    | 2026-05-08 | — |
-| 21. Clients Admin | 3/3 | Complete   | 2026-05-08 | — |
-| 22. Admin Home | 2/2 | Complete    | 2026-05-13 | — |
-| 23. Client 360 Cross-Link Fix | v1.2 | 0/3 | Not started | — |
-| 24. Phase 16 Retroactive Verification | v1.2 | 0/1 | Not started | — |
+| 16. Carry-over Cleanup | v1.2 | 3/3 | Complete | 2026-05-04 |
+| 17. Admin Foundation | v1.2 | 3/3 | Complete | 2026-05-05 |
+| 18. Catalog Admin | v1.2 | 3/3 | Complete | 2026-05-06 |
+| 19. Requests Inbox | v1.2 | 3/3 | Complete | 2026-05-07 |
+| 20. Automations Admin | v1.2 | 4/4 | Complete | 2026-05-08 |
+| 21. Clients Admin | v1.2 | 3/3 | Complete | 2026-05-08 |
+| 22. Admin Home | v1.2 | 2/2 | Complete | 2026-05-13 |
+| 23. Client 360 Cross-Link Fix | v1.2 | 3/3 | Complete | 2026-05-14 |
+| 24. Phase 16 Retroactive Verification | v1.2 | 1/1 | Complete | 2026-05-14 |
