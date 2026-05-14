@@ -1,6 +1,6 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
+milestone: v1.2
 milestone_name: Admin Dashboard
 status: unknown
 stopped_at: "Completed 24-01-PLAN.md (Phase 24 retroactive verification: CARRY-01..04 satisfied, REQUIREMENTS.md reconciled to 31/31)"

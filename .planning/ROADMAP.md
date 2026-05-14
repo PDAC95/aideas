@@ -52,7 +52,7 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 
 #### Summary Checklist
 
-- [ ] **Phase 16: Carry-over Cleanup** — Resolve 4 v1.1 audit tech-debt items so CI is green for v1.2 (3 plans)
+- [x] **Phase 16: Carry-over Cleanup** — Resolve 4 v1.1 audit tech-debt items so CI is green for v1.2 (3 plans) (completed 2026-05-04, retroactively verified by Phase 24 on 2026-05-14)
 - [x] **Phase 17: Admin Foundation** — `platform_staff` schema + RLS + `/admin/*` gate + admin layout + `assertPlatformStaff` helper (3 plans) — completed 2026-05-05
 - [x] **Phase 18: Catalog Admin** — CRUD UI for `automation_templates` with active/featured toggles (3 plans) (completed 2026-05-06)
 - [x] **Phase 19: Requests Inbox** — List + detail + single-step approve (creates automation) + reject-with-reason (3 plans) (completed 2026-05-07)
@@ -219,12 +219,12 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 | 13. Catalog Coverage Fix | v1.1 | 1/1 | Complete | 2026-04-30 |
 | 14. i18n & Security Hygiene | v1.1 | 2/2 | Complete | 2026-04-30 |
 | 15. Dashboard Home Polish | v1.1 | 2/2 | Complete | 2026-04-30 |
-| 16. Carry-over Cleanup | v1.2 | 0/3 | Not started | — |
-| 17. Admin Foundation | v1.2 | Complete    | 2026-05-05 | 2026-05-05 |
-| 18. Catalog Admin | 3/3 | Complete   | 2026-05-06 | — |
-| 19. Requests Inbox | 3/3 | Complete    | 2026-05-07 | — |
-| 20. Automations Admin | 4/4 | Complete    | 2026-05-08 | — |
-| 21. Clients Admin | 3/3 | Complete   | 2026-05-08 | — |
-| 22. Admin Home | 2/2 | Complete    | 2026-05-13 | — |
-| 23. Client 360 Cross-Link Fix | v1.2 | Complete    | 2026-05-14 | — |
-| 24. Phase 16 Retroactive Verification | 1/1 | Complete    | 2026-05-14 | — |
+| 16. Carry-over Cleanup | v1.2 | 3/3 | Complete | 2026-05-04 |
+| 17. Admin Foundation | v1.2 | 3/3 | Complete | 2026-05-05 |
+| 18. Catalog Admin | v1.2 | 3/3 | Complete | 2026-05-06 |
+| 19. Requests Inbox | v1.2 | 3/3 | Complete | 2026-05-07 |
+| 20. Automations Admin | v1.2 | 4/4 | Complete | 2026-05-08 |
+| 21. Clients Admin | v1.2 | 3/3 | Complete | 2026-05-08 |
+| 22. Admin Home | v1.2 | 2/2 | Complete | 2026-05-13 |
+| 23. Client 360 Cross-Link Fix | v1.2 | 3/3 | Complete | 2026-05-14 |
+| 24. Phase 16 Retroactive Verification | v1.2 | 1/1 | Complete | 2026-05-14 |
