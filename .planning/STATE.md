@@ -3,10 +3,10 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Public Funnel & Factory Reskin
 status: in_progress
-stopped_at: "Milestone v1.3 started — defining requirements"
-last_updated: "2026-05-14T16:30:00.000Z"
+stopped_at: "Roadmap approved — 10 phases (25-34), 58/58 requirements mapped, ready for /gsd:plan-phase 25"
+last_updated: "2026-05-14T18:00:00.000Z"
 progress:
-  total_phases: 0
+  total_phases: 10
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -14,10 +14,24 @@ progress:
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: Phase 25 — Design System Migration (Not started)
 Plan: —
-Status: Defining requirements
-Last activity: 2026-05-14 — Milestone v1.3 (Public Funnel & Factory Reskin) started
+Status: Roadmap finalized — awaiting `/gsd:plan-phase 25`
+Last activity: 2026-05-14 — Roadmapper wrote ROADMAP.md (Phases 25-34), populated REQUIREMENTS.md traceability (58/58 mapped), milestone v1.3 ready to execute
+
+**Phase pipeline (10 phases):**
+- Phase 25 — Design System Migration (DESIGN-01..05)
+- Phase 26 — Catalog Data Model (CAT-01..05)
+- Phase 27 — Scenario Content Seed (SCEN-01..04)
+- Phase 28 — Public Landing Page (LAND-01..09)
+- Phase 29 — Public Catalog Navigation (PUBCAT-01..06)
+- Phase 30 — Scenario Selector + ROI Calculator (ROI-01..06)
+- Phase 31 — Lead Capture Flow (LEAD-01..07)
+- Phase 32 — Reskin Customer Dashboard (RESKIN-01..04)
+- Phase 33 — Reskin Admin Dashboard (RESKIN-05..09, closes v1.2 carry-over)
+- Phase 34 — Launch Polish (OPS-01..05)
+
+**Critical path:** 25 → 26 → 27 → 29 → 30 → 31 → 34 (sequential); Phase 28 parallel to 26+27; Phase 32 parallel to 26-31; Phase 33 waits on 32.
 
 ## Project Reference
 
@@ -25,6 +39,7 @@ See: .planning/PROJECT.md (updated 2026-05-14)
 
 **Core value:** Customers can monitor their automations' performance, request new ones, and see the ROI of their subscription — all from a single bilingual dashboard.
 **Current focus:** v1.3 — Public Funnel & Factory Reskin (invert catalog to public lead-gen funnel + reskin both dashboards with Factory.ai tokens)
+**Milestone deferrals:** Stripe (manual invoicing until customer 5+), AI chat (replaced by structured pre-call form), DIY builder (permanently out per managed-service model).
 
 ---
 

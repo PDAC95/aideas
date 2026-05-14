@@ -137,19 +137,91 @@ Deferred — tracked but not in v1.3 roadmap.
 
 ## Traceability
 
-Empty until roadmapper writes phase-to-requirement mapping.
+Every v1.3 requirement maps to exactly one phase. Verified 100% coverage.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (populated by roadmapper) | | |
+| DESIGN-01 | Phase 25 — Design System Migration | Pending |
+| DESIGN-02 | Phase 25 — Design System Migration | Pending |
+| DESIGN-03 | Phase 25 — Design System Migration | Pending |
+| DESIGN-04 | Phase 25 — Design System Migration | Pending |
+| DESIGN-05 | Phase 25 — Design System Migration | Pending |
+| CAT-01 | Phase 26 — Catalog Data Model | Pending |
+| CAT-02 | Phase 26 — Catalog Data Model | Pending |
+| CAT-03 | Phase 26 — Catalog Data Model | Pending |
+| CAT-04 | Phase 26 — Catalog Data Model | Pending |
+| CAT-05 | Phase 26 — Catalog Data Model | Pending |
+| SCEN-01 | Phase 27 — Scenario Content Seed | Pending |
+| SCEN-02 | Phase 27 — Scenario Content Seed | Pending |
+| SCEN-03 | Phase 27 — Scenario Content Seed | Pending |
+| SCEN-04 | Phase 27 — Scenario Content Seed | Pending |
+| LAND-01 | Phase 28 — Public Landing Page | Pending |
+| LAND-02 | Phase 28 — Public Landing Page | Pending |
+| LAND-03 | Phase 28 — Public Landing Page | Pending |
+| LAND-04 | Phase 28 — Public Landing Page | Pending |
+| LAND-05 | Phase 28 — Public Landing Page | Pending |
+| LAND-06 | Phase 28 — Public Landing Page | Pending |
+| LAND-07 | Phase 28 — Public Landing Page | Pending |
+| LAND-08 | Phase 28 — Public Landing Page | Pending |
+| LAND-09 | Phase 28 — Public Landing Page | Pending |
+| PUBCAT-01 | Phase 29 — Public Catalog Navigation | Pending |
+| PUBCAT-02 | Phase 29 — Public Catalog Navigation | Pending |
+| PUBCAT-03 | Phase 29 — Public Catalog Navigation | Pending |
+| PUBCAT-04 | Phase 29 — Public Catalog Navigation | Pending |
+| PUBCAT-05 | Phase 29 — Public Catalog Navigation | Pending |
+| PUBCAT-06 | Phase 29 — Public Catalog Navigation | Pending |
+| ROI-01 | Phase 30 — Scenario Selector + ROI Calculator | Pending |
+| ROI-02 | Phase 30 — Scenario Selector + ROI Calculator | Pending |
+| ROI-03 | Phase 30 — Scenario Selector + ROI Calculator | Pending |
+| ROI-04 | Phase 30 — Scenario Selector + ROI Calculator | Pending |
+| ROI-05 | Phase 30 — Scenario Selector + ROI Calculator | Pending |
+| ROI-06 | Phase 30 — Scenario Selector + ROI Calculator | Pending |
+| LEAD-01 | Phase 31 — Lead Capture Flow | Pending |
+| LEAD-02 | Phase 31 — Lead Capture Flow | Pending |
+| LEAD-03 | Phase 31 — Lead Capture Flow | Pending |
+| LEAD-04 | Phase 31 — Lead Capture Flow | Pending |
+| LEAD-05 | Phase 31 — Lead Capture Flow | Pending |
+| LEAD-06 | Phase 31 — Lead Capture Flow | Pending |
+| LEAD-07 | Phase 31 — Lead Capture Flow | Pending |
+| RESKIN-01 | Phase 32 — Reskin Customer Dashboard | Pending |
+| RESKIN-02 | Phase 32 — Reskin Customer Dashboard | Pending |
+| RESKIN-03 | Phase 32 — Reskin Customer Dashboard | Pending |
+| RESKIN-04 | Phase 32 — Reskin Customer Dashboard | Pending |
+| RESKIN-05 | Phase 33 — Reskin Admin Dashboard | Pending |
+| RESKIN-06 | Phase 33 — Reskin Admin Dashboard | Pending |
+| RESKIN-07 | Phase 33 — Reskin Admin Dashboard | Pending |
+| RESKIN-08 | Phase 33 — Reskin Admin Dashboard | Pending |
+| RESKIN-09 | Phase 33 — Reskin Admin Dashboard | Pending |
+| OPS-01 | Phase 34 — Launch Polish | Pending |
+| OPS-02 | Phase 34 — Launch Polish | Pending |
+| OPS-03 | Phase 34 — Launch Polish | Pending |
+| OPS-04 | Phase 34 — Launch Polish | Pending |
+| OPS-05 | Phase 34 — Launch Polish | Pending |
 
 **Coverage:**
 - v1.3 requirements: 58 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 58 ⚠️
+- Mapped to phases: 58 (100%) ✓
+- Unmapped: 0 ✓
+- Duplicate mappings: 0 ✓
+
+**By phase:**
+| Phase | Requirements | Count |
+|-------|--------------|-------|
+| Phase 25 — Design System Migration | DESIGN-01..05 | 5 |
+| Phase 26 — Catalog Data Model | CAT-01..05 | 5 |
+| Phase 27 — Scenario Content Seed | SCEN-01..04 | 4 |
+| Phase 28 — Public Landing Page | LAND-01..09 | 9 |
+| Phase 29 — Public Catalog Navigation | PUBCAT-01..06 | 6 |
+| Phase 30 — Scenario Selector + ROI Calculator | ROI-01..06 | 6 |
+| Phase 31 — Lead Capture Flow | LEAD-01..07 | 7 |
+| Phase 32 — Reskin Customer Dashboard | RESKIN-01..04 | 4 |
+| Phase 33 — Reskin Admin Dashboard | RESKIN-05..09 | 5 |
+| Phase 34 — Launch Polish | OPS-01..05 | 5 |
+| **Total** | | **58** |
 
 ---
 
 *Requirements defined: 2026-05-14*
 *Source: .planning/milestones/v1.3-INTENT-archive.md (strategy conversation 2026-05-14)*
-*Last updated: 2026-05-14 after initial definition*
+*Traceability populated: 2026-05-14 by /gsd:new-project roadmapper*
+*Last updated: 2026-05-14 — phase mapping complete*
