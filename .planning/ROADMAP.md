@@ -85,7 +85,14 @@ Full details: [milestones/v1.2-ROADMAP.md](milestones/v1.2-ROADMAP.md)
   2. Text on every page renders in Geist Sans (body) and Geist Mono (code/numbers) following the Factory spacing/sizing scale.
   3. Buttons, cards, and headers respect the new radius scale (4px / 6px / 0px), and no component carries shadows or gradients.
   4. Existing `.dark` class continues to produce a usable dark variant for every shadcn primitive (Button, Card, Input, Badge, Tabs).
-**Plans**: TBD
+**Plans**: 7 plans
+- [ ] 25-01-PLAN.md — Rewrite globals.css with Factory tokens (light + dark, Geist character variants)
+- [ ] 25-02-PLAN.md — Reskin existing primitives: button (rounded-sm), card (border + no shadow), input/form/label
+- [ ] 25-03-PLAN.md — Scaffold new shadcn primitives: Badge + Tabs + Chart with Factory variants
+- [ ] 25-04-PLAN.md — Brand-color sweep: purple/pink literals → --primary token across ~56 files; gradient + Recharts HEX cleanup
+- [ ] 25-05-PLAN.md — Auth + legal pages reskin; admin login keeps intentional dark look via Factory dark-base HEX
+- [ ] 25-06-PLAN.md — Cross-cutting layout shells (customer + admin sidebar/header) reskinned to sidebar tokens
+- [ ] 25-07-PLAN.md — Manual UAT pass across ~26 routes × EN/ES × light/dark; UAT-blocking fix loop
 
 ### Phase 26: Catalog Data Model
 **Goal**: Introduce the scenario-first catalog schema so the database can power both the public funnel and the admin tooling without losing existing template back-compat.
@@ -190,7 +197,7 @@ Full details: [milestones/v1.2-ROADMAP.md](milestones/v1.2-ROADMAP.md)
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 25. Design System Migration | 0/? | Not started | - |
+| 25. Design System Migration | 0/7 | Not started | - |
 | 26. Catalog Data Model | 0/? | Not started | - |
 | 27. Scenario Content Seed | 0/? | Not started | - |
 | 28. Public Landing Page | 0/? | Not started | - |
