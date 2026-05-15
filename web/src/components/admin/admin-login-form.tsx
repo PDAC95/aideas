@@ -56,10 +56,13 @@ export function AdminLoginForm({ labels }: AdminLoginFormProps) {
     // On success the server action redirects (throws NEXT_REDIRECT).
   }
 
+  // Admin login form is intentionally dark — see admin/login/page.tsx header
+  // for the Phase 25 RESEARCH Open Question 1 rationale. Inputs use Factory
+  // dark-base HEX inline (not semantic tokens) to match the page's dark surface.
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-1">
-        <label htmlFor="email" className="text-sm text-white/80">
+        <label htmlFor="email" className="text-sm text-[#d6d3d2]/80">
           {labels.emailLabel}
         </label>
         <input
@@ -68,11 +71,11 @@ export function AdminLoginForm({ labels }: AdminLoginFormProps) {
           type="email"
           required
           autoComplete="email"
-          className="w-full px-3 py-2 rounded-md bg-gray-800 border border-gray-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+          className="w-full px-3 py-2 rounded-sm bg-[#101010] border border-[#3d3a39] text-[#d6d3d2] text-sm focus:outline-none focus:ring-2 focus:ring-primary"
         />
       </div>
       <div className="space-y-1">
-        <label htmlFor="password" className="text-sm text-white/80">
+        <label htmlFor="password" className="text-sm text-[#d6d3d2]/80">
           {labels.passwordLabel}
         </label>
         <input
@@ -81,14 +84,14 @@ export function AdminLoginForm({ labels }: AdminLoginFormProps) {
           type="password"
           required
           autoComplete="current-password"
-          className="w-full px-3 py-2 rounded-md bg-gray-800 border border-gray-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+          className="w-full px-3 py-2 rounded-sm bg-[#101010] border border-[#3d3a39] text-[#d6d3d2] text-sm focus:outline-none focus:ring-2 focus:ring-primary"
         />
       </div>
-      {error && <p className="text-sm text-red-400">{error}</p>}
+      {error && <p className="text-sm text-destructive">{error}</p>}
       <button
         type="submit"
         disabled={pending}
-        className="w-full py-2.5 rounded-md bg-orange-500 hover:bg-orange-600 disabled:bg-orange-500/50 text-white text-sm font-semibold transition-colors"
+        className="w-full py-2.5 rounded-sm bg-primary hover:bg-primary/90 disabled:bg-primary/50 text-primary-foreground text-sm font-semibold transition-colors"
       >
         {pending ? labels.submitting : labels.submit}
       </button>
