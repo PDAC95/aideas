@@ -68,10 +68,10 @@ export function DashboardNav({ user, notifications = [] }: DashboardNavProps) {
   return (
     <>
       {/* Mobile header bar */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 flex items-center justify-between p-4 bg-white dark:bg-gray-800 border-b">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 flex items-center justify-between p-4 bg-card border-b border-border">
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+          className="p-2 rounded-sm hover:bg-muted"
         >
           <span className="text-xl">☰</span>
         </button>
@@ -82,12 +82,12 @@ export function DashboardNav({ user, notifications = [] }: DashboardNavProps) {
         <div className="relative">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+            className="p-2 rounded-sm hover:bg-muted"
           >
             {mobileMenuOpen ? (
-              <X className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+              <X className="h-5 w-5 text-muted-foreground" />
             ) : (
-              <EllipsisVertical className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+              <EllipsisVertical className="h-5 w-5 text-muted-foreground" />
             )}
           </button>
 
@@ -98,15 +98,15 @@ export function DashboardNav({ user, notifications = [] }: DashboardNavProps) {
                 className="fixed inset-0 z-40"
                 onClick={() => setMobileMenuOpen(false)}
               />
-              <div className="absolute right-0 mt-2 w-72 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg z-50 overflow-hidden">
+              <div className="absolute right-0 mt-2 w-72 rounded-md bg-card border border-border z-50 overflow-hidden">
                 {/* Search */}
-                <div className="p-3 border-b border-gray-100 dark:border-gray-700">
+                <div className="p-3 border-b border-border">
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <input
                       type="text"
                       placeholder={t("header.search")}
-                      className="w-full pl-9 pr-4 py-2.5 rounded-lg bg-gray-100 dark:bg-gray-700 border-0 text-sm text-gray-900 dark:text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/25"
+                      className="w-full pl-9 pr-4 py-2.5 rounded-sm bg-muted border-0 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
                     />
                   </div>
                 </div>
@@ -115,24 +115,24 @@ export function DashboardNav({ user, notifications = [] }: DashboardNavProps) {
                 <Link
                   href="/dashboard/catalog"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-primary dark:text-primary hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors"
+                  className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-primary hover:bg-primary/10 transition-colors"
                 >
                   <Plus className="h-4 w-4" />
                   {t("header.createAgent")}
                 </Link>
 
-                <div className="border-t border-gray-100 dark:border-gray-700" />
+                <div className="border-t border-border" />
 
                 {/* Notifications — full page on mobile */}
                 <Link
                   href="/dashboard/notifications"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  className="flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors"
                 >
                   <div className="relative">
                     <Bell className="h-4 w-4" />
                     {unreadCount > 0 && (
-                      <span className="absolute -top-1.5 -right-1.5 h-4 min-w-[1rem] px-1 flex items-center justify-center rounded-full bg-red-500 text-white text-[10px] font-bold leading-none">
+                      <span className="absolute -top-1.5 -right-1.5 h-4 min-w-[1rem] px-1 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold leading-none">
                         {unreadCount > 99 ? "99+" : unreadCount}
                       </span>
                     )}
@@ -144,21 +144,21 @@ export function DashboardNav({ user, notifications = [] }: DashboardNavProps) {
                 <Link
                   href="/dashboard/chat"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                  className="flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors"
                 >
-                  <Inbox className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                  <Inbox className="h-4 w-4 text-muted-foreground" />
                   {t("header.inbox")}
                 </Link>
 
-                <div className="border-t border-gray-100 dark:border-gray-700" />
+                <div className="border-t border-border" />
 
                 {/* Profile */}
                 <Link
                   href="/dashboard/settings"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                  className="flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors"
                 >
-                  <UserIcon className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                  <UserIcon className="h-4 w-4 text-muted-foreground" />
                   {t("header.profile")}
                 </Link>
 
@@ -168,7 +168,7 @@ export function DashboardNav({ user, notifications = [] }: DashboardNavProps) {
                     setMobileMenuOpen(false);
                     handleSignOut();
                   }}
-                  className="flex items-center gap-3 px-4 py-3 w-full text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                  className="flex items-center gap-3 px-4 py-3 w-full text-sm text-destructive hover:bg-destructive/10 transition-colors"
                 >
                   <LogOut className="h-4 w-4" />
                   {t("signOut")}
@@ -189,12 +189,12 @@ export function DashboardNav({ user, notifications = [] }: DashboardNavProps) {
 
       {/* Mobile sidebar — full height slide-in */}
       <aside
-        className={`lg:hidden fixed top-0 left-0 z-50 h-full w-64 bg-white dark:bg-gray-800 border-r transform transition-transform duration-200 ease-in-out ${
+        className={`lg:hidden fixed top-0 left-0 z-50 h-full w-64 bg-sidebar text-sidebar-foreground border-r border-sidebar-border transform transition-transform duration-200 ease-in-out ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full">
-          <div className="flex items-center justify-center gap-2 h-16 border-b">
+          <div className="flex items-center justify-center gap-2 h-16 border-b border-sidebar-border">
             <Image src="/logo-color.png" alt="AIDEAS" width={28} height={28} />
             <Link href="/dashboard" className="font-bold text-2xl">
               AIDEAS
@@ -210,10 +210,10 @@ export function DashboardNav({ user, notifications = [] }: DashboardNavProps) {
                   href={item.href}
                   onClick={() => setSidebarOpen(false)}
                   className={cn(
-                    "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors",
+                    "flex items-center gap-3 px-3 py-2 rounded-sm transition-colors",
                     active
-                      ? "bg-primary/5 text-primary dark:bg-primary/10 dark:text-primary"
-                      : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      ? "bg-primary/10 text-primary"
+                      : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                   )}
                 >
                   <Icon className="h-5 w-5" />
@@ -222,10 +222,10 @@ export function DashboardNav({ user, notifications = [] }: DashboardNavProps) {
               );
             })}
           </nav>
-          <div className="p-4 border-t">
+          <div className="p-4 border-t border-sidebar-border">
             <button
               onClick={handleSignOut}
-              className="flex items-center gap-3 px-3 py-2 w-full rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              className="flex items-center gap-3 px-3 py-2 w-full rounded-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors"
             >
               <LogOut className="h-5 w-5" />
               <span className="text-sm font-medium">{t("signOut")}</span>
@@ -235,11 +235,11 @@ export function DashboardNav({ user, notifications = [] }: DashboardNavProps) {
       </aside>
 
       {/* Desktop floating sidebar */}
-      <aside className="hidden lg:flex fixed top-8 left-4 z-50 w-56 flex-col bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+      <aside className="hidden lg:flex fixed top-8 left-4 z-50 w-56 flex-col bg-sidebar text-sidebar-foreground rounded-md border border-sidebar-border">
         {/* Logo */}
         <div className="flex items-center gap-2.5 px-5 pt-5 pb-4">
           <Image src="/logo-color.png" alt="AIDEAS" width={32} height={32} className="shrink-0" />
-          <Link href="/dashboard" className="font-bold text-lg text-gray-900 dark:text-white">
+          <Link href="/dashboard" className="font-bold text-lg text-foreground">
             AIDEAS
           </Link>
         </div>
@@ -254,13 +254,13 @@ export function DashboardNav({ user, notifications = [] }: DashboardNavProps) {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors",
+                  "flex items-center gap-3 px-3 py-2.5 rounded-sm text-sm font-medium transition-colors",
                   active
-                    ? "bg-primary/5 text-primary dark:bg-primary/10 dark:text-primary"
-                    : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white"
+                    ? "bg-primary/10 text-primary"
+                    : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                 )}
               >
-                <Icon className={cn("h-[18px] w-[18px]", active && "text-primary dark:text-primary")} />
+                <Icon className={cn("h-[18px] w-[18px]", active && "text-primary")} />
                 {item.name}
               </Link>
             );
@@ -270,31 +270,31 @@ export function DashboardNav({ user, notifications = [] }: DashboardNavProps) {
       </aside>
 
       {/* Desktop floating utility bar — bottom left, same width as sidebar (w-56) */}
-      <div className="hidden lg:flex fixed bottom-4 left-4 z-50 w-56 items-center justify-between bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 px-3 py-2">
+      <div className="hidden lg:flex fixed bottom-4 left-4 z-50 w-56 items-center justify-between bg-sidebar text-sidebar-foreground rounded-md border border-sidebar-border px-3 py-2">
         <Link
           href="/dashboard/faq"
-          className="p-2.5 rounded-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors"
+          className="p-2.5 rounded-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors"
           title={t("nav.faq")}
         >
           <MessageCircleQuestion className="h-[18px] w-[18px]" />
         </Link>
         <Link
           href="/dashboard/help"
-          className="p-2.5 rounded-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors"
+          className="p-2.5 rounded-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors"
           title={t("nav.help")}
         >
           <LifeBuoy className="h-[18px] w-[18px]" />
         </Link>
         <Link
           href="/dashboard/contact"
-          className="p-2.5 rounded-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors"
+          className="p-2.5 rounded-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors"
           title={t("nav.contact")}
         >
           <Mail className="h-[18px] w-[18px]" />
         </Link>
         <button
           onClick={handleSignOut}
-          className="p-2.5 rounded-xl text-gray-500 dark:text-gray-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+          className="p-2.5 rounded-sm text-sidebar-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
           title={t("signOut")}
         >
           <LogOut className="h-[18px] w-[18px]" />
