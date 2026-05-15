@@ -55,10 +55,10 @@ export function AdminSidebar({ labels }: AdminSidebarProps) {
   return (
     <>
       {/* Mobile top bar */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 flex items-center justify-between p-4 bg-gray-900 border-b border-gray-800 text-white">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 flex items-center justify-between p-4 bg-sidebar text-sidebar-foreground border-b border-sidebar-border">
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="p-2 rounded-md hover:bg-gray-800"
+          className="p-2 rounded-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
           aria-label="Toggle navigation"
         >
           <span className="text-xl">☰</span>
@@ -69,9 +69,8 @@ export function AdminSidebar({ labels }: AdminSidebarProps) {
             alt="AIDEAS"
             width={24}
             height={24}
-            className="brightness-0 invert"
           />
-          <span className="px-1.5 py-0.5 rounded bg-orange-500 text-[10px] font-bold tracking-wider text-white">
+          <span className="px-1.5 py-0.5 rounded-sm bg-primary text-primary-foreground text-[10px] font-bold tracking-wider">
             ADMIN
           </span>
         </div>
@@ -85,7 +84,7 @@ export function AdminSidebar({ labels }: AdminSidebarProps) {
             className="absolute inset-0 bg-black/60"
             onClick={() => setMobileOpen(false)}
           />
-          <aside className="relative w-64 h-full bg-gray-900 border-r border-gray-800 text-white flex flex-col">
+          <aside className="relative w-64 h-full bg-sidebar text-sidebar-foreground border-r border-sidebar-border flex flex-col">
             <SidebarContent
               items={items}
               isActive={isActive}
@@ -97,7 +96,7 @@ export function AdminSidebar({ labels }: AdminSidebarProps) {
       )}
 
       {/* Desktop fixed sidebar */}
-      <aside className="hidden lg:flex fixed top-0 left-0 z-40 h-full w-60 flex-col bg-gray-900 border-r border-gray-800 text-white">
+      <aside className="hidden lg:flex fixed top-0 left-0 z-40 h-full w-60 flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border">
         <SidebarContent
           items={items}
           isActive={isActive}
@@ -124,18 +123,17 @@ function SidebarContent({
 }) {
   return (
     <>
-      <div className="flex items-center gap-2 px-5 h-16 border-b border-gray-800">
+      <div className="flex items-center gap-2 px-5 h-16 border-b border-sidebar-border">
         <Image
           src="/logo.png"
           alt="AIDEAS"
           width={28}
           height={28}
-          className="brightness-0 invert"
         />
         <Link href="/admin" className="font-bold text-lg" onClick={onNav}>
           AIDEAS
         </Link>
-        <span className="ml-auto px-1.5 py-0.5 rounded bg-orange-500 text-[10px] font-bold tracking-wider text-white">
+        <span className="ml-auto px-1.5 py-0.5 rounded-sm bg-primary text-primary-foreground text-[10px] font-bold tracking-wider">
           ADMIN
         </span>
       </div>
@@ -148,10 +146,10 @@ function SidebarContent({
               href={href}
               onClick={onNav}
               className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                "flex items-center gap-3 px-3 py-2.5 rounded-sm text-sm font-medium transition-colors",
                 active
-                  ? "bg-orange-500/15 text-orange-300"
-                  : "text-gray-300 hover:bg-gray-800 hover:text-white"
+                  ? "bg-primary/10 text-primary"
+                  : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               )}
             >
               <Icon className="h-[18px] w-[18px]" />
@@ -160,7 +158,7 @@ function SidebarContent({
           );
         })}
       </nav>
-      <div className="p-3 border-t border-gray-800">
+      <div className="p-3 border-t border-sidebar-border">
         <AdminSignOut label={logoutLabel} />
       </div>
     </>

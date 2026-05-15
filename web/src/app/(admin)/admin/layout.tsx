@@ -31,7 +31,7 @@ export default async function AdminLayout({
   const t = await getTranslations("admin");
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-950">
+    <div className="min-h-screen bg-background">
       <AdminSidebar
         labels={{
           home: t("nav.home"),
