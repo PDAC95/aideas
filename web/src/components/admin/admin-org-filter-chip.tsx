@@ -60,7 +60,7 @@ export function AdminOrgFilterChip({
       className={cn(
         "inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium",
         isResolved
-          ? "bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300"
+          ? "bg-primary/10 text-primary dark:bg-primary/15 dark:text-primary"
           : "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300"
       )}
     >
@@ -80,7 +80,7 @@ export function AdminOrgFilterChip({
         className={cn(
           "inline-flex h-4 w-4 items-center justify-center rounded-full transition-colors",
           isResolved
-            ? "hover:bg-purple-200 dark:hover:bg-purple-800/60"
+            ? "hover:bg-primary/15 dark:hover:bg-primary/25"
             : "hover:bg-red-200 dark:hover:bg-red-800/60"
         )}
       >

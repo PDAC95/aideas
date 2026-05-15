@@ -63,7 +63,7 @@ export function CatalogCard({
           {displayName}
         </h3>
         {isFeatured && (
-          <span className="shrink-0 inline-flex items-center rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700 dark:bg-purple-900/40 dark:text-purple-300">
+          <span className="shrink-0 inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary dark:bg-primary/15 dark:text-primary">
             {popularBadgeLabel}
           </span>
         )}

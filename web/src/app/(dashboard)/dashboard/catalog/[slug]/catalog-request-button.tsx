@@ -30,7 +30,7 @@ export function CatalogRequestButton({ label, toastMessage }: CatalogRequestButt
       <button
         onClick={handleClick}
         disabled={isRequested}
-        className="inline-flex items-center justify-center rounded-lg bg-purple-600 hover:bg-purple-700 disabled:opacity-60 disabled:cursor-not-allowed px-5 py-2.5 text-sm font-semibold text-white transition-colors"
+        className="inline-flex items-center justify-center rounded-lg bg-primary hover:bg-primary/90 disabled:opacity-60 disabled:cursor-not-allowed px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors"
       >
         {label}
       </button>

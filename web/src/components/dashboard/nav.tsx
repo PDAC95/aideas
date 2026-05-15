@@ -106,7 +106,7 @@ export function DashboardNav({ user, notifications = [] }: DashboardNavProps) {
                     <input
                       type="text"
                       placeholder={t("header.search")}
-                      className="w-full pl-9 pr-4 py-2.5 rounded-lg bg-gray-100 dark:bg-gray-700 border-0 text-sm text-gray-900 dark:text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-300/20"
+                      className="w-full pl-9 pr-4 py-2.5 rounded-lg bg-gray-100 dark:bg-gray-700 border-0 text-sm text-gray-900 dark:text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/25"
                     />
                   </div>
                 </div>
@@ -115,7 +115,7 @@ export function DashboardNav({ user, notifications = [] }: DashboardNavProps) {
                 <Link
                   href="/dashboard/catalog"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-purple-400 dark:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors"
+                  className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-primary dark:text-primary hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors"
                 >
                   <Plus className="h-4 w-4" />
                   {t("header.createAgent")}
@@ -212,7 +212,7 @@ export function DashboardNav({ user, notifications = [] }: DashboardNavProps) {
                   className={cn(
                     "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors",
                     active
-                      ? "bg-purple-50 text-purple-500 dark:bg-purple-800/20 dark:text-purple-300"
+                      ? "bg-primary/5 text-primary dark:bg-primary/10 dark:text-primary"
                       : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
                   )}
                 >
@@ -256,11 +256,11 @@ export function DashboardNav({ user, notifications = [] }: DashboardNavProps) {
                 className={cn(
                   "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors",
                   active
-                    ? "bg-purple-50 text-purple-500 dark:bg-purple-800/20 dark:text-purple-300"
+                    ? "bg-primary/5 text-primary dark:bg-primary/10 dark:text-primary"
                     : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white"
                 )}
               >
-                <Icon className={cn("h-[18px] w-[18px]", active && "text-purple-400 dark:text-purple-300")} />
+                <Icon className={cn("h-[18px] w-[18px]", active && "text-primary dark:text-primary")} />
                 {item.name}
               </Link>
             );

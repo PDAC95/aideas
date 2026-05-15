@@ -174,7 +174,7 @@ export function AdminCatalogClient({
             className={cn(
               "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
               view === "table"
-                ? "bg-purple-600 text-white"
+                ? "bg-primary text-primary-foreground"
                 : "text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
             )}
           >
@@ -189,7 +189,7 @@ export function AdminCatalogClient({
             className={cn(
               "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
               view === "grid"
-                ? "bg-purple-600 text-white"
+                ? "bg-primary text-primary-foreground"
                 : "text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
             )}
           >
@@ -210,7 +210,7 @@ export function AdminCatalogClient({
             placeholder={translations.searchPlaceholder}
             className={cn(
               "w-full rounded-lg border border-gray-200 bg-white py-2 pl-9 pr-4 text-sm text-gray-900 placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white",
-              "focus:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-500"
+              "focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary"
             )}
           />
         </div>
@@ -220,7 +220,7 @@ export function AdminCatalogClient({
           onChange={(e) => handleCategoryChange(e.target.value)}
           className={cn(
             "rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-gray-900 dark:text-white",
-            "focus:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-500"
+            "focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary"
           )}
         >
           <option value="all">{translations.filters.categoryAll}</option>
@@ -236,7 +236,7 @@ export function AdminCatalogClient({
           onChange={(e) => handleIndustryChange(e.target.value)}
           className={cn(
             "rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-gray-900 dark:text-white",
-            "focus:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-500"
+            "focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary"
           )}
         >
           <option value="all">{translations.filters.industryAll}</option>
@@ -260,7 +260,7 @@ export function AdminCatalogClient({
           <button
             type="button"
             onClick={resetFilters}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
           >
             {translations.empty.cta}
           </button>

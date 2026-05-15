@@ -60,7 +60,7 @@ export function AdminCatalogGrid({
             <div className="flex items-start justify-between gap-2">
               <Link
                 href={`/admin/catalog/${tpl.slug}/edit`}
-                className="font-medium text-gray-900 hover:text-purple-700 hover:underline dark:text-white dark:hover:text-purple-300"
+                className="font-medium text-gray-900 hover:text-primary hover:underline dark:text-white dark:hover:text-primary"
               >
                 {tpl.displayName}
               </Link>
@@ -68,9 +68,9 @@ export function AdminCatalogGrid({
                 className={cn(
                   "shrink-0 rounded-md px-2 py-0.5 text-xs font-medium capitalize",
                   tpl.pricing_tier === "business"
-                    ? "bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-200"
+                    ? "bg-primary/10 text-primary dark:bg-primary/15 dark:text-primary"
                     : tpl.pricing_tier === "pro"
-                      ? "bg-purple-50 text-purple-700 dark:bg-purple-900/20 dark:text-purple-300"
+                      ? "bg-primary/5 text-primary dark:bg-primary/10 dark:text-primary"
                       : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
                 )}
               >

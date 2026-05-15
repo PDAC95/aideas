@@ -66,7 +66,7 @@ const STATUS_BADGE_CLASS: Record<string, string> = {
   archived: "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
   draft: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300",
   pending_review:
-    "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-200",
+    "bg-primary/10 text-primary dark:bg-primary/15 dark:text-primary",
 };
 
 function formatPriceCents(cents: number | null, locale: string): string | null {
@@ -101,7 +101,7 @@ export function AdminAutomationDetail({
       <div>
         <Link
           href="/admin/automations"
-          className="inline-flex items-center gap-1 text-sm text-purple-700 hover:text-purple-900 dark:text-purple-300 dark:hover:text-purple-200"
+          className="inline-flex items-center gap-1 text-sm text-primary hover:text-primary/90 dark:text-primary dark:hover:text-primary/90"
         >
           {"← "}
           {translations.backLink}
@@ -176,7 +176,7 @@ export function AdminAutomationDetail({
             </dl>
             <Link
               href={`/admin/clients/${detail.organizationId}`}
-              className="mt-3 inline-block text-xs text-purple-700 hover:text-purple-900 dark:text-purple-300 dark:hover:text-purple-200"
+              className="mt-3 inline-block text-xs text-primary hover:text-primary/90 dark:text-primary dark:hover:text-primary/90"
             >
               {translations.org.viewClient}
               {" →"}
@@ -231,8 +231,8 @@ export function AdminAutomationDetail({
 
           {/* Setup notes (only if non-empty after trim) */}
           {detail.setupNotes && detail.setupNotes.trim().length > 0 && (
-            <section className="rounded-lg border border-purple-200 bg-purple-50 p-5 dark:border-purple-900/50 dark:bg-purple-950/20">
-              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-purple-700 dark:text-purple-300">
+            <section className="rounded-lg border border-primary/40 bg-primary/5 p-5 dark:border-primary/40 dark:bg-primary/10">
+              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-primary dark:text-primary">
                 {translations.setupNotes.sectionTitle}
               </h2>
               <p className="text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap">

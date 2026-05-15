@@ -69,7 +69,7 @@ export function BillingSummaryCard({
 
         <button
           onClick={() => setToastVisible(true)}
-          className="mt-5 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium w-full transition-colors"
+          className="mt-5 bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium w-full transition-colors"
         >
           {translations.managePayment}
         </button>

@@ -71,7 +71,7 @@ export function AdminClientsTable({
               <td className="px-4 py-3 text-sm">
                 <Link
                   href={`/admin/clients/${row.id}`}
-                  className="font-medium text-purple-700 hover:underline dark:text-purple-300"
+                  className="font-medium text-primary hover:underline dark:text-primary"
                 >
                   {row.name}
                 </Link>

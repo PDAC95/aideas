@@ -233,8 +233,8 @@ export function SettingsProfileCard({
                     className="h-16 w-16 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="h-16 w-16 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
-                    <span className="text-xl font-semibold text-purple-600 dark:text-purple-300">
+                  <div className="h-16 w-16 rounded-full bg-primary/10 dark:bg-primary/15 flex items-center justify-center">
+                    <span className="text-xl font-semibold text-primary dark:text-primary">
                       {initials}
                     </span>
                   </div>
@@ -285,7 +285,7 @@ export function SettingsProfileCard({
             <input
               {...register("firstName")}
               type="text"
-              className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
             />
             {errors.firstName && (
               <p className="mt-1 text-xs text-red-500">{errors.firstName.message}</p>
@@ -300,7 +300,7 @@ export function SettingsProfileCard({
             <input
               {...register("lastName")}
               type="text"
-              className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 
@@ -330,7 +330,7 @@ export function SettingsProfileCard({
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
               disabled={!isAdminOrOwner}
-              className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:bg-gray-50 disabled:dark:bg-gray-800 disabled:text-gray-400 disabled:cursor-not-allowed"
+              className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-gray-50 disabled:dark:bg-gray-800 disabled:text-gray-400 disabled:cursor-not-allowed"
             />
             {!isAdminOrOwner && (
               <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
@@ -349,7 +349,7 @@ export function SettingsProfileCard({
             <button
               type="submit"
               disabled={isSaving}
-              className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {isSaving ? translations.saving : translations.save}
             </button>

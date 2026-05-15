@@ -122,7 +122,7 @@ export function AdminRequestsTable({
                 <td className="px-4 py-3">
                   <Link
                     href={`/admin/requests/${row.id}`}
-                    className="font-medium text-purple-700 hover:text-purple-900 dark:text-purple-300 dark:hover:text-purple-200"
+                    className="font-medium text-primary hover:text-primary/90 dark:text-primary dark:hover:text-primary/90"
                   >
                     {row.organizationName}
                   </Link>

@@ -71,8 +71,8 @@ export function KpiCards({ kpis, labels }: KpiCardsProps) {
       />
       <KpiCard
         href="/dashboard/automations"
-        icon={<Clock className="h-6 w-6 text-purple-400 dark:text-purple-300" />}
-        iconBg="bg-purple-50 dark:bg-purple-800/20"
+        icon={<Clock className="h-6 w-6 text-primary dark:text-primary" />}
+        iconBg="bg-primary/5 dark:bg-primary/10"
         value={formatNumber(kpis.hoursSavedThisMonth, 1)}
         label={labels.hoursSavedThisMonth}
       />

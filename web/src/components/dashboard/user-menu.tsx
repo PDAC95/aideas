@@ -53,7 +53,7 @@ export function UserMenu({
           "shadow-sm hover:shadow transition-shadow"
         )}
       >
-        <div className="w-10 h-10 rounded-full bg-purple-400 flex items-center justify-center text-white text-sm font-semibold select-none overflow-hidden relative">
+        <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-sm font-semibold select-none overflow-hidden relative">
           {avatarUrl ? (
             <Image
               src={avatarUrl}

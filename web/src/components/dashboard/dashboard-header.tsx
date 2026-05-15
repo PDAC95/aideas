@@ -48,7 +48,7 @@ export async function DashboardHeader({
         <input
           type="text"
           placeholder={t("header.search")}
-          className="w-full pl-12 pr-5 py-4.5 rounded-full bg-gray-300/70 dark:bg-gray-700 border-0 text-sm text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-300/30 transition-shadow"
+          className="w-full pl-12 pr-5 py-4.5 rounded-full bg-gray-300/70 dark:bg-gray-700 border-0 text-sm text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/25 transition-shadow"
         />
       </div>
 

@@ -34,7 +34,7 @@ export function ReportsPeriodSelector({
             onClick={() => handlePeriodClick(period)}
             className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
               isActive
-                ? "bg-white dark:bg-gray-700 shadow-sm text-purple-600 dark:text-purple-400"
+                ? "bg-white dark:bg-gray-700 shadow-sm text-primary dark:text-primary"
                 : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
             }`}
           >

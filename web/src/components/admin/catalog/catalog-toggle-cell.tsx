@@ -106,8 +106,8 @@ export function CatalogToggleCell({
           onClick={handleClick}
           className={cn(
             "relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full transition-colors",
-            "focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-1",
-            checked ? "bg-purple-600" : "bg-gray-300 dark:bg-gray-600"
+            "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1",
+            checked ? "bg-primary" : "bg-gray-300 dark:bg-gray-600"
           )}
         >
           <span
