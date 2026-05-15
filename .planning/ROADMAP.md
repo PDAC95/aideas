@@ -106,7 +106,7 @@ Full details: [milestones/v1.2-ROADMAP.md](milestones/v1.2-ROADMAP.md)
 **Plans**: 3 plans
 - [ ] 26-01-PLAN.md — `functional_areas` migration (DDL + RLS + indexes + trigger; anon SELECT filtered to active rows)
 - [ ] 26-02-PLAN.md — `scenarios` + `scenario_templates` pivot migration (DDL + RLS gated by parent active-ness + CASCADE FKs + smoke test)
-- [ ] 26-03-PLAN.md — Anon SELECT policy on `automation_templates` + Phase 26 holistic verification (db reset, 4-table join, build check)
+- [x] 26-03-PLAN.md — Anon SELECT policy on `automation_templates` + Phase 26 holistic verification (db reset, 4-table join, build check) (completed 2026-05-15)
 
 ### Phase 27: Scenario Content Seed
 **Goal**: Populate the new schema with 50 client-language scenarios across 7 functional areas, mapped to ~135 n8n templates, ready for the public funnel to consume.
@@ -201,7 +201,7 @@ Full details: [milestones/v1.2-ROADMAP.md](milestones/v1.2-ROADMAP.md)
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 25. Design System Migration | 7/7 | Complete    | 2026-05-15 |
-| 26. Catalog Data Model | 3/3 | Complete   | 2026-05-15 |
+| 26. Catalog Data Model | 3/3 | Complete    | 2026-05-15 |
 | 27. Scenario Content Seed | 0/? | Not started | - |
 | 28. Public Landing Page | 0/? | Not started | - |
 | 29. Public Catalog Navigation | 0/? | Not started | - |
