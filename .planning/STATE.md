@@ -4,6 +4,41 @@ milestone: v1.0
 milestone_name: Public Funnel & Factory Reskin
 current_plan: Not started
 status: completed
+stopped_at: Completed 27-01-PLAN.md (8 functional_areas seeded with idempotent ON CONFLICT migration; full-reset + in-place re-apply both proven; SCEN-04 demonstrated at functional_areas layer; web build exit 0)
+last_updated: "2026-05-15T20:01:56.126Z"
+last_activity: 2026-05-15
+progress:
+  total_phases: 21
+  completed_phases: 20
+  total_plans: 67
+  completed_plans: 64
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.3
+milestone_name: Public Funnel & Factory Reskin
+phase: 27
+phase_name: Scenario Content Seed
+current_plan: 2
+total_plans_in_phase: 4
+status: executing
+stopped_at: "Completed 27-01-PLAN.md (8 functional_areas seeded with idempotent ON CONFLICT migration; full-reset + in-place re-apply both proven idempotent; SCEN-04 demonstrated at functional_areas layer; web build exit 0)"
+last_updated: "2026-05-15T19:59:52Z"
+last_activity: 2026-05-15
+progress:
+  total_phases: 21
+  completed_phases: 20
+  total_plans: 64
+  completed_plans: 64
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: Public Funnel & Factory Reskin
+current_plan: Not started
+status: completed
 stopped_at: Phase 27 context gathered
 last_updated: "2026-05-15T18:52:43.845Z"
 last_activity: 2026-05-15
@@ -550,10 +585,10 @@ See: .planning/PROJECT.md (updated 2026-05-04 after v1.2 milestone start)
 
 ## Current Position
 
-Phase: Phase 21 — Clients Admin — COMPLETE (3/3 plans shipped).
-Plan: 21-03 complete. AdminClientNotesTab swapped from read-only to full create/edit/delete editor: AdminClientNoteCreate (collapsed "Add note" button -> textarea + Save/Cancel + live char counter) and AdminClientNoteEntry (per-existing-note three-state machine: view / edit / confirm-delete). 3 server actions (createNote / updateNote / deleteNote) gated by assertPlatformStaff with revalidatePath('/admin/clients/[id]'). 3 Zod schemas (createNoteSchema / updateNoteSchema / deleteNoteSchema) with NOTE_MIN=1 + NOTE_MAX=5000 transform-then-pipe shape that catches whitespace-only input. Inline confirm-delete panel (NOT a portal Dialog — project's shadcn/ui set ships only button/card/form/input/label primitives). 24 new admin.clients.detail.notes.editor.* leaf keys per locale; comingSoon dead key removed from both locales (full EN/ES parity, accent-free Spanish). CLNT-05 + I18N-01 (this slice) satisfied. Phase 21 closes all 6 v1.2 requirements (CLNT-01..05 + I18N-01).
-Status: Plan 21-03 ships CLNT-05 + I18N-01. tsc --noEmit exits 0; scoped ESLint exits 0 across src/components/admin/clients/, src/app/(admin)/admin/clients/[id]/page.tsx, src/lib/actions/admin-clients.ts, src/lib/validations/admin-client-note.ts; i18n parity script confirms editor.* matches EN/ES + comingSoon removed from both. `npm run build` still blocked by pre-existing Google Fonts TLS issue (deferred-items.md from 21-01, NOT introduced by 21-03). 4 files created, 4 modified, 3 atomic commits, 5 minutes.
-Last activity: 2026-05-08 — Plan 21-03 executed (3 tasks: Zod schemas + 3 server actions, 2 client components, notes-tab wiring + i18n + comingSoon removal). Phase 21 verifier is next; once VERIFICATION.md status is `passed` the branch `feature/phase-21-clients-admin` should be merged to `main`. Phase 22 (Admin Home) is the next phase.
+Phase: Phase 27 — Scenario Content Seed — IN PROGRESS (1/4 plans complete).
+Plan: 27-01 complete. 8 functional_areas rows seeded via NEW migration `20260517000001_functional_areas_seed.sql` — single multi-row INSERT keyed by slug UNIQUE with `ON CONFLICT (slug) DO UPDATE SET ... is_active = true, updated_at = NOW()`. Bilingual EN/ES labels (Sales/Ventas, Marketing, Customer Service/Atencion al Cliente, Documents/Documentos, Productivity/Productividad, Reports/Reportes, AI Agents/Agentes IA, Integrations & Security/Integraciones y Seguridad) with one-sentence customer-pain descriptions. sort_order 10..80. Idempotency proven across BOTH SCEN-04 contracts: full `supabase db reset --local` produces 8 rows with zero duplicate-key errors; in-place re-apply via `docker exec -i ... psql < migration.sql` returns `INSERT 0 8` (zero new rows, zero errors) and advances `updated_at` on all 8 rows confirming DO UPDATE fired. Web build still exits 0.
+Status: Plan 27-01 ships SCEN-04 at the functional_areas layer (re-demonstrated at the scenarios layer in Plan 27-03). 1 file created, 0 modified, 1 atomic commit (efbcfd0), ~8 minutes. Next: Plan 27-02 (industries seed — parallel-similar pattern) or Plan 27-03 (scenarios + scenario_templates seed in supabase/seed.sql).
+Last activity: 2026-05-15 — Plan 27-01 executed (2 tasks: migration creation + dual-path idempotency verification). Plan 27-02 is the next plan.
 
 ## Performance Metrics
 
@@ -578,6 +613,7 @@ Last activity: 2026-05-08 — Plan 21-03 executed (3 tasks: Zod schemas + 3 serv
 | Phase 26-catalog-data-model P01 | 4min | 2 tasks | 1 files |
 | Phase 26 P02 | 6 min | 3 tasks | 1 files |
 | Phase 26 P03 | 4min | 2 tasks | 1 files |
+| Phase 27 P01 | 8 min | 2 tasks | 1 files |
 
 ### Per-plan execution metrics (v1.2)
 
@@ -601,6 +637,14 @@ Last activity: 2026-05-08 — Plan 21-03 executed (3 tasks: Zod schemas + 3 serv
 | 21-03      | 5              | 3     | 8             |
 
 ## Accumulated Context
+
+### Decisions (Phase 27-01 execution, 2026-05-15)
+
+- **ON CONFLICT (slug) DO UPDATE, NOT DO NOTHING, for the functional_areas seed.** Re-running the migration after a label or description edit must push the new copy through. DO NOTHING would silently drop edits, defeating the point of treating the seed as the source of truth. The clause sets `is_active = true` on conflict so a soft-deleted row is also re-activated on re-run (operational safety). `updated_at = NOW()` is set explicitly so the BEFORE-UPDATE trigger fires and downstream `updated_at` watchers see real timestamps.
+- **Slug as the natural join key, no hardcoded UUIDs.** Plan 27-03 scenarios will resolve `functional_area_id` via `(SELECT id FROM public.functional_areas WHERE slug = '...')`. 8 literal UUIDs in the seed would add maintenance noise and provide zero value because slug is already UNIQUE and is the cross-phase contract. Pattern reusable for any future stable-taxonomy seed (industries in 27-02 is a near-clone).
+- **Seed-as-migration when there is no FK dependency on rows seeded later in seed.sql.** functional_areas has no FK to automation_templates, so it can safely run before seed.sql in the apply order. Scenarios (Plan 27-03) DO FK automation_templates via scenario_templates and so must live in seed.sql to honor the apply order. The "where does the seed live?" decision now has a clean rule: migration if no FK on later seed-only tables; seed.sql otherwise.
+- **In-place re-apply contract proven via `docker exec -i ... psql < migration.sql`, NOT a `psql -f /docker-entrypoint-initdb.d/...` mount path.** The mount path is not guaranteed across Supabase CLI versions. The stdin-pipe form is CLI-version-agnostic and now the standard idempotency-verification pattern for Plans 27-02 + 27-03.
+- **Customer-pain voice for taxonomy descriptions.** First-person SMB owner ("Stop copy-pasting between forms..."), not vendor pitch. Matches Phase 27 CONTEXT's scenario tone decision and primes the same voice across catalog area landing pages in Phase 29.
 
 ### Decisions (Phase 21-03 execution, 2026-05-08)
 
@@ -849,8 +893,8 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 
 ## Session Continuity
 
-**Last session:** 2026-05-15T18:52:43.841Z
-**Stopped at:** Phase 27 context gathered
+**Last session:** 2026-05-15T20:01:56.122Z
+**Stopped at:** Completed 27-01-PLAN.md (8 functional_areas seeded with idempotent ON CONFLICT migration; full-reset + in-place re-apply both proven; SCEN-04 demonstrated at functional_areas layer; web build exit 0)
 **Next action:** Phase 22 plan 22-01 shipped on branch `feature/phase-22-admin-home`. Next runner is `/gsd:execute-phase 22-admin-home` to ship plan 22-02 (activity feed + quick-link cards) on top of the new KPI grid. Phase 21 verifier still pending — once Phase 21 VERIFICATION.md status is `passed` the branch `feature/phase-21-clients-admin` should be merged to `main`.
 
 2026-05-12 — Phase 22 plan 22-01 shipped: /admin placeholder replaced with real 2x2 KPI grid (Pending requests / Automations in setup / Active clients / Signups this week). fetchAdminHomeKpis() runs 4 parallel HEAD-only count: 'exact' queries via Promise.all; gated by assertPlatformStaff (defense-in-depth on top of layout guard). pendingRequests reuses TAB_TO_STATUSES.pending so the home counter matches /admin/requests Pending tab exactly. signupsThisWeek uses a rolling 7-day window (JS-computed ISO cutoff, DB-agnostic). Both client-related cards (activeClients + signupsThisWeek) link to /admin/clients with no extra params; the list page default `created_at DESC` surfaces recent signups at the top naturally. AdminHomeKpiCards is server-friendly (no use client) — receives a labels prop object so the parent page owns getTranslations. Neutral gray icon backgrounds (no urgency colors). 6 new admin.home.* leaf keys per locale (title + subtitle + 4 KPI labels). admin.placeholders.home block removed from both en.json and es.json. HOME-01 (KPI section) + I18N-01 (this slice) satisfied. tsc + scoped lint exit 0. 2 files created, 4 modified, 2 atomic commits, 3 minutes.
