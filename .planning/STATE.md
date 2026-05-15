@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Public Funnel & Factory Reskin
-current_plan: 2
+current_plan: 3
 status: executing
-stopped_at: Completed 26-02-PLAN.md (scenarios + scenario_templates pivot shipped; anon SELECT policy added to automation_templates to fix pivot RLS chain; smoke-test A-E passed; build exit 0)
-last_updated: "2026-05-15T18:24:11.943Z"
+stopped_at: Completed 26-03-PLAN.md (idempotent anon SELECT migration shipped; 4-table anon JOIN verified; web build exit 0; seed.sql unchanged; Phase 26 schema work complete 3/3 plans, CAT-04 + CAT-05 closed)
+last_updated: "2026-05-15T18:32:18.262Z"
 last_activity: 2026-05-15
 progress:
   total_phases: 20
-  completed_phases: 19
+  completed_phases: 20
   total_plans: 63
-  completed_plans: 62
+  completed_plans: 63
 ---
 
 ---
@@ -164,7 +164,7 @@ progress:
 ## Current Position
 
 **Phase:** Phase 26 — Catalog Data Model (In Progress)
-**Current Plan:** 2
+**Current Plan:** 3
 **Total Plans in Phase:** 3
 **Status:** Ready to execute
 **Last Activity:** 2026-05-15
@@ -230,6 +230,24 @@ progress:
 - [Phase 26]: Slug VARCHAR(60) tightens the existing automation_templates VARCHAR(100) precedent — 8 short URL-safe area slugs (ventas, agentes-ia, …) need far less and a shorter cap prevents accidental long-slug regressions when admin CRUD ships
 - [Phase 26]: Partial index on is_active WHERE is_active = true — every RLS-visible read filters on this predicate; partial keeps the index small and matches planner expectations
 - [Phase 26]: Migration timestamp 20260516000001 chosen as +1 day after the latest existing migration (20260509000003); reserves 20260516000002 / 20260516000003 for the adjacent 26-02 / 26-03 plans — deterministic and non-conflicting with any future date-based migration
+
+### Decisions (Phase 26-02 execution, 2026-05-15)
+
+- [Phase 26]: Both scenarios + scenario_templates ship in a single migration file — pivot cannot exist without parent; atomic ship matches the existing 20260305000002 pattern (multiple related tables together)
+- [Phase 26]: Slug globally unique on scenarios (VARCHAR(80) UNIQUE) — powers /catalog/<area>/<scenario> routes in Phase 29; admin rename collision-check is single-table
+- [Phase 26]: scenarios.functional_area_id ON DELETE RESTRICT (not CASCADE) — prevents accidental mass-deletion if a future admin UI exposes area deletion; admin must explicitly clear scenarios first
+- [Phase 26]: scenario_templates both FKs ON DELETE CASCADE — pivot is a derivative join; if either parent dies, the pivot row is meaningless
+- [Phase 26]: DOUBLE PRECISION for typical_hours_per_week — half-hour estimates (2.5, 4.5) need fractional precision for Phase 30 ROI math
+- [Phase 26]: Added anon SELECT policy on automation_templates as in-scope deviation (Section 8 of 20260516000002) — REQUIRED for pivot RLS EXISTS subquery to resolve under anon; pre-authorized by 26-CONTEXT.md line 39
+- [Phase 26]: Pivot RLS recipe codified — ENABLE RLS + 2 SELECT policies (anon + authenticated) using AND-joined EXISTS subqueries against EACH parent's is_active flag; zero write policies; service_role handles seed/admin writes
+
+### Decisions (Phase 26-03 execution, 2026-05-15)
+
+- [Phase 26]: Chose Option B (idempotent migration re-statement) over Option A (skip the file) — Plan 26-03 must_haves.artifacts (lines 23-25) literally requires the supabase/migrations/20260516000003_automation_templates_anon_select.sql artifact, and must_haves.key_links requires DDL matching `TO anon[\s\S]*USING \(is_active = true\)` traceable to a dedicated file; skipping would violate the must_haves contract even though 26-02 commit 11d5ddc already shipped the same DDL
+- [Phase 26]: DROP POLICY IF EXISTS + CREATE POLICY makes 26-03 a true no-op on top of 26-02 — on a fresh `supabase db reset --local` the 26-02 migration creates the policy first, then 26-03 drops and re-creates it with identical DDL; net result is one policy traceable to the file the plan intended
+- [Phase 26]: Did NOT modify or revert 26-02 Section 8 — would have rewritten committed history (commit 11d5ddc) and broken 26-02-SUMMARY claims; both migrations now ship the same policy with full lineage documented in the 26-03 migration header
+- [Phase 26]: Pattern codified — when a predecessor in the same phase pre-ships a successor's artifact, the successor still gets its dedicated file via idempotent re-statement; preserves each plan's must_haves contract without rewriting history
+- [Phase 26]: 4-table anon JOIN verified (functional_areas -> scenarios -> scenario_templates -> automation_templates) returns 1 row under SET ROLE anon against the unmodified seed — proves Phase 28/29 SSR has full anon read coverage end-to-end
 
 ## Project Reference
 
@@ -543,6 +561,7 @@ Last activity: 2026-05-08 — Plan 21-03 executed (3 tasks: Zod schemas + 3 serv
 | Phase 25-design-system-migration P07 | 8m | 3 tasks | 3 files |
 | Phase 26-catalog-data-model P01 | 4min | 2 tasks | 1 files |
 | Phase 26 P02 | 6 min | 3 tasks | 1 files |
+| Phase 26 P03 | 4min | 2 tasks | 1 files |
 
 ### Per-plan execution metrics (v1.2)
 
@@ -814,8 +833,8 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 
 ## Session Continuity
 
-**Last session:** 2026-05-15T18:24:11.939Z
-**Stopped at:** Completed 26-02-PLAN.md (scenarios + scenario_templates pivot shipped; anon SELECT policy added to automation_templates to fix pivot RLS chain; smoke-test A-E passed; build exit 0)
+**Last session:** 2026-05-15T18:32:18.256Z
+**Stopped at:** Completed 26-03-PLAN.md (idempotent anon SELECT migration shipped; 4-table anon JOIN verified; web build exit 0; seed.sql unchanged; Phase 26 schema work complete 3/3 plans, CAT-04 + CAT-05 closed)
 **Next action:** Phase 22 plan 22-01 shipped on branch `feature/phase-22-admin-home`. Next runner is `/gsd:execute-phase 22-admin-home` to ship plan 22-02 (activity feed + quick-link cards) on top of the new KPI grid. Phase 21 verifier still pending — once Phase 21 VERIFICATION.md status is `passed` the branch `feature/phase-21-clients-admin` should be merged to `main`.
 
 2026-05-12 — Phase 22 plan 22-01 shipped: /admin placeholder replaced with real 2x2 KPI grid (Pending requests / Automations in setup / Active clients / Signups this week). fetchAdminHomeKpis() runs 4 parallel HEAD-only count: 'exact' queries via Promise.all; gated by assertPlatformStaff (defense-in-depth on top of layout guard). pendingRequests reuses TAB_TO_STATUSES.pending so the home counter matches /admin/requests Pending tab exactly. signupsThisWeek uses a rolling 7-day window (JS-computed ISO cutoff, DB-agnostic). Both client-related cards (activeClients + signupsThisWeek) link to /admin/clients with no extra params; the list page default `created_at DESC` surfaces recent signups at the top naturally. AdminHomeKpiCards is server-friendly (no use client) — receives a labels prop object so the parent page owns getTranslations. Neutral gray icon backgrounds (no urgency colors). 6 new admin.home.* leaf keys per locale (title + subtitle + 4 KPI labels). admin.placeholders.home block removed from both en.json and es.json. HOME-01 (KPI section) + I18N-01 (this slice) satisfied. tsc + scoped lint exit 0. 2 files created, 4 modified, 2 atomic commits, 3 minutes.
