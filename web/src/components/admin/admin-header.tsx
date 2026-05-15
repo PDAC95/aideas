@@ -13,12 +13,12 @@ interface AdminHeaderProps {
  */
 export function AdminHeader({ badgeLabel, subtitle }: AdminHeaderProps) {
   return (
-    <header className="hidden lg:flex items-center gap-4 px-10 pt-8 pb-4">
+    <header className="hidden lg:flex items-center gap-4 px-10 pt-8 pb-4 border-b border-border bg-card">
       <div className="flex items-center gap-3">
-        <span className="px-2 py-0.5 rounded-md bg-orange-500 text-white text-xs font-bold tracking-wider">
+        <span className="px-2 py-0.5 rounded-sm bg-primary text-primary-foreground text-xs font-bold tracking-wider">
           {badgeLabel}
         </span>
-        <p className="text-sm text-gray-500 dark:text-gray-400">{subtitle}</p>
+        <p className="text-sm text-muted-foreground">{subtitle}</p>
       </div>
     </header>
   );

@@ -71,8 +71,8 @@ export function ReportsKpiCards({
       {/* Tasks Completed */}
       <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
         <div className="flex items-start gap-4">
-          <div className="rounded-full bg-purple-100 dark:bg-purple-900/30 p-2.5 shrink-0">
-            <CheckCircle2 className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+          <div className="rounded-full bg-primary/10 dark:bg-primary/15 p-2.5 shrink-0">
+            <CheckCircle2 className="h-5 w-5 text-primary dark:text-primary" />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-3xl font-bold text-gray-900 dark:text-white">
@@ -134,7 +134,7 @@ export function ReportsKpiCards({
                 </p>
                 <Link
                   href="/dashboard/settings"
-                  className="text-xs text-purple-600 dark:text-purple-400 hover:underline"
+                  className="text-xs text-primary dark:text-primary hover:underline"
                 >
                   {translations.settingsLink}
                 </Link>

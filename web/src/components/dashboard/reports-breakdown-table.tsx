@@ -180,7 +180,7 @@ export function ReportsBreakdownTable({
         <div className="mt-4 flex justify-center">
           <button
             onClick={() => setShowAll((v) => !v)}
-            className="text-sm text-purple-600 dark:text-purple-400 hover:underline font-medium"
+            className="text-sm text-primary dark:text-primary hover:underline font-medium"
           >
             {showAll
               ? translations.showLess

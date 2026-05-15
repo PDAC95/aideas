@@ -75,7 +75,7 @@ export function AdminClientsSearch({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={translations.placeholder}
-          className="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+          className="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-gray-700 dark:bg-gray-900 dark:text-white"
         />
         {value.length > 0 && (
           <button

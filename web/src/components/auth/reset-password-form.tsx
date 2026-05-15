@@ -55,10 +55,10 @@ export function ResetPasswordForm() {
   if (submitted) {
     return (
       <div className="space-y-6">
-        {/* Check icon */}
+        {/* Check icon — Phase 25: --primary (Code Orange) replaces green-success; no green token in v1.3 */}
         <div className="flex justify-center">
-          <div className="flex items-center justify-center w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/20">
-            <CheckCircle2 className="size-8 text-green-600 dark:text-green-400" />
+          <div className="flex items-center justify-center w-16 h-16 rounded-full bg-primary/10">
+            <CheckCircle2 className="size-8 text-primary" />
           </div>
         </div>
 

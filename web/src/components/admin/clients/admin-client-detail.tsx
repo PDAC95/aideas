@@ -45,7 +45,7 @@ export function AdminClientDetail({
     <div className="space-y-6">
       <Link
         href="/admin/clients"
-        className="text-sm text-purple-700 hover:underline dark:text-purple-300"
+        className="text-sm text-primary hover:underline dark:text-primary"
       >
         {translations.backLink}
       </Link>

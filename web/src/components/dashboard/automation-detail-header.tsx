@@ -35,11 +35,11 @@ function AppBadge({ name }: { name: string }) {
   const abbr = name.slice(0, 2).toUpperCase();
   // Simple hash for color selection
   const colors = [
-    "bg-purple-100 text-purple-700",
+    "bg-primary/10 text-primary",
     "bg-blue-100 text-blue-700",
     "bg-emerald-100 text-emerald-700",
     "bg-amber-100 text-amber-700",
-    "bg-pink-100 text-pink-700",
+    "bg-primary/10 text-primary",
     "bg-sky-100 text-sky-700",
   ];
   const colorIndex =
@@ -197,7 +197,7 @@ export function AutomationDetailHeader({
             <button
               onClick={handleResume}
               disabled={isPending}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-purple-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {translations.resume}
             </button>

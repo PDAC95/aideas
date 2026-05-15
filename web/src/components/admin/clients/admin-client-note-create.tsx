@@ -73,7 +73,7 @@ export function AdminClientNoteCreate({
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="rounded-md border border-purple-300 bg-purple-50 px-4 py-2 text-sm font-medium text-purple-700 hover:bg-purple-100 dark:border-purple-700 dark:bg-purple-950 dark:text-purple-300 dark:hover:bg-purple-900"
+        className="rounded-md border border-primary/40 bg-primary/5 px-4 py-2 text-sm font-medium text-primary hover:bg-primary/10 dark:border-primary/40 dark:bg-primary/15 dark:text-primary dark:hover:bg-primary/25"
       >
         {translations.addLabel}
       </button>
@@ -92,7 +92,7 @@ export function AdminClientNoteCreate({
         placeholder={translations.placeholder}
         rows={5}
         autoFocus
-        className="block w-full resize-y rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 dark:border-gray-700 dark:bg-gray-950 dark:text-white"
+        className="block w-full resize-y rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-gray-700 dark:bg-gray-950 dark:text-white"
       />
       <div className="flex items-center justify-between">
         <span
@@ -121,8 +121,8 @@ export function AdminClientNoteCreate({
             className={cn(
               "rounded-md px-3 py-1.5 text-sm font-medium text-white",
               canSave
-                ? "bg-purple-600 hover:bg-purple-700"
-                : "cursor-not-allowed bg-purple-300 dark:bg-purple-900"
+                ? "bg-primary hover:bg-primary/90"
+                : "cursor-not-allowed bg-primary/40 dark:bg-primary/25"
             )}
           >
             {isPending ? translations.saving : translations.save}

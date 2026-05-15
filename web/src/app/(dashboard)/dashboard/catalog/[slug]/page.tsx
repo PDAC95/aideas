@@ -109,7 +109,7 @@ export default async function CatalogDetailPage({
         <div className="flex items-center gap-2 flex-wrap mb-3">
           <span className="text-sm text-muted-foreground">{categoryLabel}</span>
           {template.is_featured && (
-            <span className="inline-flex items-center rounded-full bg-purple-100 dark:bg-purple-900/30 px-2 py-0.5 text-xs font-semibold text-purple-700 dark:text-purple-300">
+            <span className="inline-flex items-center rounded-full bg-primary/10 dark:bg-primary/15 px-2 py-0.5 text-xs font-semibold text-primary dark:text-primary">
               {t("popularBadge")}
             </span>
           )}

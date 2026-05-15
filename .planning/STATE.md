@@ -2,22 +2,105 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Public Funnel & Factory Reskin
-status: unknown
-stopped_at: Phase 25 context gathered
-last_updated: "2026-05-14T21:05:15.647Z"
+current_plan: Not started
+status: completed
+stopped_at: "Completed 25-07-PLAN.md (Phase 25 complete — 26/26 routes PASSED with deferrals scoped to Phases 28/32/33; 2 in-phase shell fixes 34e3f32 + b40d0fa; awaiting /gsd:verify-work 25)"
+last_updated: "2026-05-15T16:07:35.423Z"
+last_activity: 2026-05-15
+progress:
+  total_phases: 19
+  completed_phases: 19
+  total_plans: 60
+  completed_plans: 60
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: Public Funnel & Factory Reskin
+current_plan: 7
+status: verifying
+stopped_at: Completed 25-06-PLAN.md (5 layout shell files migrated to Factory sidebar tokens; ADMIN badge preserved as bg-primary Code Orange; build exit 0, lint baseline 103 errors unchanged)
+last_updated: "2026-05-15T13:56:28.824Z"
+last_activity: 2026-05-15
 progress:
   total_phases: 19
   completed_phases: 18
-  total_plans: 53
-  completed_plans: 53
+  total_plans: 60
+  completed_plans: 59
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: Public Funnel & Factory Reskin
+current_plan: 6
+status: executing
+stopped_at: Completed 25-05-PLAN.md (auth pages + legal pages + admin-login reskinned to Factory tokens; admin context preserved via dark-base HEX)
+last_updated: "2026-05-15T13:32:05.370Z"
+last_activity: 2026-05-15
+progress:
+  total_phases: 19
+  completed_phases: 18
+  total_plans: 60
+  completed_plans: 57
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: Public Funnel & Factory Reskin
+current_plan: 4
+status: executing
+stopped_at: Completed 25-02-PLAN.md (button.tsx + card.tsx + input.tsx reskinned to Factory tokens; form.tsx + label.tsx verified clean; build exit 0)
+last_updated: "2026-05-15T13:16:22.663Z"
+last_activity: 2026-05-15
+progress:
+  total_phases: 19
+  completed_phases: 18
+  total_plans: 60
+  completed_plans: 56
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.3
+milestone_name: Public Funnel & Factory Reskin
+current_plan: 3
+status: in_progress
+stopped_at: "Completed 25-02-PLAN.md (button.tsx + card.tsx + input.tsx reskinned to Factory tokens; form.tsx + label.tsx verified clean; build exit 0)"
+last_updated: "2026-05-15T13:13:06.076Z"
+last_activity: 2026-05-15
+progress:
+  total_phases: 19
+  completed_phases: 18
+  total_plans: 60
+  completed_plans: 55
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.3
+milestone_name: Public Funnel & Factory Reskin
+current_plan: 2
+status: in_progress
+stopped_at: "Completed 25-01-PLAN.md (Factory token migration shipped to web/src/app/globals.css)"
+last_updated: "2026-05-15T13:02:29.359Z"
+last_activity: 2026-05-15
+progress:
+  total_phases: 19
+  completed_phases: 18
+  total_plans: 60
+  completed_plans: 54
 ---
 
 ## Current Position
 
-Phase: Phase 25 — Design System Migration (Not started)
-Plan: —
-Status: Roadmap finalized — awaiting `/gsd:plan-phase 25`
-Last activity: 2026-05-14 — Roadmapper wrote ROADMAP.md (Phases 25-34), populated REQUIREMENTS.md traceability (58/58 mapped), milestone v1.3 ready to execute
+**Phase:** Phase 25 — Design System Migration (In Progress)
+**Current Plan:** Not started
+**Total Plans in Phase:** 7
+**Status:** Milestone complete
+**Last Activity:** 2026-05-15
 
 **Phase pipeline (10 phases):**
 - Phase 25 — Design System Migration (DESIGN-01..05)
@@ -32,6 +115,46 @@ Last activity: 2026-05-14 — Roadmapper wrote ROADMAP.md (Phases 25-34), popula
 - Phase 34 — Launch Polish (OPS-01..05)
 
 **Critical path:** 25 → 26 → 27 → 29 → 30 → 31 → 34 (sequential); Phase 28 parallel to 26+27; Phase 32 parallel to 26-31; Phase 33 waits on 32.
+
+### Decisions (Phase 25-01 execution, 2026-05-15)
+
+- [Phase 25]: OKLCH big-bang swap to Factory HEX palette — token names preserved so shadcn consumers (bg-primary, bg-card, border-border) continue compiling; warm-gray neutrals + #ef6f2e Code Orange across both light + dark modes
+- [Phase 25]: Light-first default (no prefers-color-scheme honor) per research Open Question 5 — public funnel pages need stable light surfaces for marketing/lead gen; dark mode opt-in via .dark class only
+- [Phase 25]: Geist character variants cv02/03/04/11 applied via font-feature-settings on body — zero-cost typography upgrade matching Factory exactly (single-story 'a', tabular figures, alternate glyphs)
+- [Phase 25]: Radius scale moved from calc(var(--radius) ± Npx) chain to absolute rem values (--radius-sm 0.25rem buttons, --radius-md 0.375rem cards, --radius-lg 0.5rem modals) matching Factory's intentional split
+- [Phase 25]: layout.tsx Geist wiring verified intact — geistSans.variable + geistMono.variable already on body className, no modification needed
+
+### Decisions (Phase 25-02 execution, 2026-05-15)
+
+- [Phase 25]: Primitive reskin via CVA class swap only — preserved Button/Card/Input/buttonVariants exported API so 60+ consumers compile unchanged across the codebase
+- [Phase 25]: Card root ships border border-border by default — mitigates Pitfall 1 (white card on white bg, #fafafa on #eeeeee) at the primitive level so consumers cannot regress by omitting border
+- [Phase 25]: Kept focus-visible ring (box-shadow) over Factory's outline-2px rule on button + input — documented in button.tsx code comment as deliberate Pitfall 5 divergence (accessibility shortcut justified)
+- [Phase 25]: Button + input share rounded-sm (4px); cards use rounded-md (6px) — Factory radius scale split locked at the primitive level; size variants (button xs/sm/lg/icon-xs) bumped from rounded-md to rounded-sm for cross-size consistency
+- [Phase 25]: form.tsx + label.tsx left untouched — defensive review confirmed they already consume --destructive/--foreground via tokens (FormMessage text-destructive, FormLabel data-[error=true]:text-destructive, Label inherits text-foreground), no hardcoded literals to swap
+
+### Decisions (Phase 25-03 execution, 2026-05-15)
+
+- [Phase 25]: Skipped npx shadcn init — used pre-existing hand-written web/components.json to prevent CLI from overwriting globals.css (Pitfall 3); CLI add command did not touch globals.css, Factory tokens intact
+- [Phase 25]: Reverted CLI side-effects on input.tsx and package.json (recharts version downgrade) — those edits belong to in-progress Plan 25-02's input reskin scope, not 25-03
+- [Phase 25]: Removed shadow-xl from ChartTooltipContent — Factory "no decorative shadow" rule overrides shadcn scaffold defaults; chart primitive matches button/card discipline established in 25-02
+- [Phase 25]: Tabs primitive ships single-variant line style (underline-on-active via data-[state=active]:border-primary) — Factory uses underline-on-active consistently; consumers needing pills can override per-call
+
+### Decisions (Phase 25-05 execution, 2026-05-15)
+
+- [Phase 25]: Admin login intentionally uses inline Factory dark-base HEX (#020202 page, #101010 card, #d6d3d2 body, #3d3a39 border, #a49d9a muted) instead of semantic tokens — preserves admin/customer visual distinction in BOTH light and dark mode per research Open Question 1; documented in JSDoc on page and inline comment on form
+- [Phase 25]: Success states reuse --primary (Code Orange) — no green-success token in v1.3; applies to verified-email banner, reset-password success check icon, password-strength "strong" state. Deferred to v1.4 if UAT flags ambiguity
+- [Phase 25]: Session-expired banner swapped to bg-muted + text-muted-foreground (neutral info) — differentiates from error (destructive) and success (primary) without introducing a new info token
+- [Phase 25]: admin-login-form.tsx pulled into Plan 25-05 scope as Rule 2 auto-fix — page wrapper and form must share dark-base tokens, otherwise the form's gray-800 inputs would clash with the new #101010 card bg
+- [Phase 25]: login.tsx + signup.tsx left-branding-panel (bg-[#111] text-white) preserved — that surface is an intentional dark marketing-hero panel; bg-white/10 and text-white accents are deliberate, NOT stale gray literals
+
+### Decisions (Phase 25-06 execution, 2026-05-15)
+
+- [Phase 25]: Admin sidebar reskinned to light bg-sidebar surface (same as customer dashboard) instead of preserving the dark gray-900 distinct surface — ADMIN badge bg-primary now carries the visual distinction per CONTEXT.md unified-token goal; admin-login retains dark-base HEX (Plan 25-05) as the deliberate admin-auth/admin-shell boundary
+- [Phase 25]: ADMIN badge swapped from bg-orange-500 Tailwind literal to bg-primary text-primary-foreground in both admin-sidebar.tsx (mobile bar + desktop header) and admin-header.tsx — Code Orange visual locked to the token; refactor to <Badge variant="default"> deferred to Phase 33
+- [Phase 25]: Radius normalized to rounded-sm (4px) for pills/hover targets and rounded-md (6px) for floating sidebar container — abandoned pre-Factory rounded-lg/xl/2xl defaults; matches Plan 25-02 button/card primitive radius split
+- [Phase 25]: dashboard-header.tsx gained border-b border-border + bg-card shell — was previously transparent floating header with no separator; structural border now replaces the dropped shadow-sm crutch (matches Factory no-decorative-shadow rule)
+- [Phase 25]: No language switcher or dark-mode toggle added to admin-header.tsx — explicitly deferred to Phase 33 per CONTEXT.md Deferred Ideas; scope-locked even though gap is visible (UAT in 25-07 will surface it)
+- [Phase 25]: 'brightness-0 invert' utility removed from admin-sidebar logo — hack was needed against gray-900 dark sidebar; against the new bg-sidebar (light #fafafa / dark #101010) the colored logo renders correctly without inversion
 
 ## Project Reference
 
@@ -336,6 +459,13 @@ Last activity: 2026-05-08 — Plan 21-03 executed (3 tasks: Zod schemas + 3 serv
 | Phase 22 P01 | 3 min | 2 tasks | 6 files |
 | Phase 23-client-360-crosslink-fix P01 | 3 min | 2 tasks | 4 files |
 | Phase 23-client-360-crosslink-fix P02 | 5 min | 3 tasks | 6 files |
+| Phase 25 P01 | 2 min | 2 tasks | 1 files |
+| Phase 25-design-system-migration P02 | 4 min | 3 tasks | 3 files |
+| Phase 25 P03 | 7 min | 2 tasks | 3 files |
+| Phase 25-design-system-migration P05 | 5 min | 2 tasks | 10 files |
+| Phase 25 P04 | 28m | 2 tasks | 48 files |
+| Phase 25-design-system-migration P06 | 6m 14s | 2 tasks | 5 files |
+| Phase 25-design-system-migration P07 | 8m | 3 tasks | 3 files |
 
 ### Per-plan execution metrics (v1.2)
 
@@ -607,8 +737,8 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 
 ## Session Continuity
 
-**Last session:** 2026-05-14T21:05:15.642Z
-**Stopped at:** Phase 25 context gathered
+**Last session:** 2026-05-15T15:58:18.511Z
+**Stopped at:** Completed 25-07-PLAN.md (Phase 25 complete — 26/26 routes PASSED with deferrals scoped to Phases 28/32/33; 2 in-phase shell fixes 34e3f32 + b40d0fa; awaiting /gsd:verify-work 25)
 **Next action:** Phase 22 plan 22-01 shipped on branch `feature/phase-22-admin-home`. Next runner is `/gsd:execute-phase 22-admin-home` to ship plan 22-02 (activity feed + quick-link cards) on top of the new KPI grid. Phase 21 verifier still pending — once Phase 21 VERIFICATION.md status is `passed` the branch `feature/phase-21-clients-admin` should be merged to `main`.
 
 2026-05-12 — Phase 22 plan 22-01 shipped: /admin placeholder replaced with real 2x2 KPI grid (Pending requests / Automations in setup / Active clients / Signups this week). fetchAdminHomeKpis() runs 4 parallel HEAD-only count: 'exact' queries via Promise.all; gated by assertPlatformStaff (defense-in-depth on top of layout guard). pendingRequests reuses TAB_TO_STATUSES.pending so the home counter matches /admin/requests Pending tab exactly. signupsThisWeek uses a rolling 7-day window (JS-computed ISO cutoff, DB-agnostic). Both client-related cards (activeClients + signupsThisWeek) link to /admin/clients with no extra params; the list page default `created_at DESC` surfaces recent signups at the top naturally. AdminHomeKpiCards is server-friendly (no use client) — receives a labels prop object so the parent page owns getTranslations. Neutral gray icon backgrounds (no urgency colors). 6 new admin.home.* leaf keys per locale (title + subtitle + 4 KPI labels). admin.placeholders.home block removed from both en.json and es.json. HOME-01 (KPI section) + I18N-01 (this slice) satisfied. tsc + scoped lint exit 0. 2 files created, 4 modified, 2 atomic commits, 3 minutes.

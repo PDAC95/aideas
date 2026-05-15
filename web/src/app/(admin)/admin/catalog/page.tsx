@@ -103,7 +103,7 @@ export default async function AdminCatalogPage({ searchParams }: AdminCatalogPag
         </div>
         <Link
           href="/admin/catalog/new"
-          className="inline-flex items-center gap-1.5 rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700 transition-colors"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
         >
           {t("newButton")}
         </Link>

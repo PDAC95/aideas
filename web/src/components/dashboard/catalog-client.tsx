@@ -177,7 +177,7 @@ export function CatalogClient({
           className={cn(
             "w-full rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700",
             "pl-9 pr-4 py-2 text-sm text-gray-900 dark:text-white placeholder:text-gray-400",
-            "focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent",
+            "focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent",
             "transition-colors duration-150"
           )}
         />
@@ -197,7 +197,7 @@ export function CatalogClient({
               className={cn(
                 "shrink-0 inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors duration-150",
                 isActive
-                  ? "bg-purple-600 text-white"
+                  ? "bg-primary text-primary-foreground"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
               )}
             >
@@ -230,7 +230,7 @@ export function CatalogClient({
               className={cn(
                 "inline-flex items-center rounded-full px-3 py-1 text-xs font-medium transition-colors duration-150",
                 isActive
-                  ? "border-2 border-purple-600 text-purple-700 bg-purple-50 dark:bg-purple-900/20 dark:text-purple-300 dark:border-purple-400"
+                  ? "border-2 border-primary text-primary bg-primary/5 dark:bg-primary/10 dark:text-primary dark:border-primary"
                   : "border border-gray-200 text-gray-600 bg-white hover:border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:border-gray-600"
               )}
             >
@@ -256,7 +256,7 @@ export function CatalogClient({
           </h2>
           <button
             onClick={resetFilters}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700 transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
           >
             {translations.emptyCta}
           </button>

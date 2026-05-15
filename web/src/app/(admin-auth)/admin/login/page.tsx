@@ -15,6 +15,13 @@ interface AdminLoginPageProps {
  *
  * Strings come from the `admin.*` next-intl namespace (added in 17-03)
  * so EN/ES parity is enforced repository-wide.
+ *
+ * Admin login is intentionally dark in BOTH light- and dark-mode to signal
+ * admin context. Uses inline Factory dark-base HEX (#020202 page,
+ * #101010 card, #d6d3d2 body, #3d3a39 border) — NOT semantic tokens —
+ * because semantic tokens (bg-background/bg-card) would force light-mode
+ * rendering and erase the admin/customer visual distinction.
+ * See Phase 25 RESEARCH Open Question 1.
  */
 export default async function AdminLoginPage({
   searchParams,
@@ -26,8 +33,8 @@ export default async function AdminLoginPage({
     error === "not_staff" ? t("login.errors.notStaff") : null;
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-[#111] text-white">
-      <div className="w-full max-w-md space-y-6 bg-gray-900 rounded-2xl p-8 border border-gray-800">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-[#020202] text-[#d6d3d2]">
+      <div className="w-full max-w-md space-y-6 bg-[#101010] rounded-md p-8 border border-[#3d3a39]">
         <div className="flex items-center gap-3">
           <Image
             src="/logo.png"
@@ -37,7 +44,7 @@ export default async function AdminLoginPage({
             className="brightness-0 invert"
             priority
           />
-          <span className="px-2 py-0.5 rounded-md bg-orange-500 text-white text-xs font-bold tracking-wider">
+          <span className="px-2 py-0.5 rounded-sm bg-primary text-primary-foreground text-xs font-bold tracking-wider">
             {t("badge")}
           </span>
         </div>
@@ -46,11 +53,11 @@ export default async function AdminLoginPage({
           <h1 className="text-2xl font-bold tracking-tight">
             {t("login.title")}
           </h1>
-          <p className="text-white/60 text-sm">{t("login.subtitle")}</p>
+          <p className="text-[#a49d9a] text-sm">{t("login.subtitle")}</p>
         </div>
 
         {errorMessage && (
-          <div className="rounded-md bg-red-500/10 border border-red-500/30 p-3 text-sm text-red-300">
+          <div className="rounded-md bg-destructive/10 border border-destructive/30 p-3 text-sm text-destructive">
             {errorMessage}
           </div>
         )}

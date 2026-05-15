@@ -127,7 +127,7 @@ export function AdminRequestDetail({
       <div>
         <Link
           href="/admin/requests"
-          className="inline-flex items-center gap-1 text-sm text-purple-700 hover:text-purple-900 dark:text-purple-300 dark:hover:text-purple-200"
+          className="inline-flex items-center gap-1 text-sm text-primary hover:text-primary/90 dark:text-primary dark:hover:text-primary/90"
         >
           ← {translations.backLink}
         </Link>
@@ -217,7 +217,7 @@ export function AdminRequestDetail({
           </dl>
           <Link
             href={`/admin/clients/${detail.organizationId}`}
-            className="inline-block text-xs text-purple-700 hover:text-purple-900 dark:text-purple-300 dark:hover:text-purple-200"
+            className="inline-block text-xs text-primary hover:text-primary/90 dark:text-primary dark:hover:text-primary/90"
           >
             {translations.customer.viewClient} →
           </Link>

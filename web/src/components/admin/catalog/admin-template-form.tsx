@@ -518,7 +518,7 @@ export function AdminTemplateForm({
               id="is_active"
               type="checkbox"
               {...register("is_active")}
-              className="mt-1 h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+              className="mt-1 h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
             />
             <div className="flex-1">
               <Label htmlFor="is_active" className="cursor-pointer">
@@ -535,7 +535,7 @@ export function AdminTemplateForm({
               id="is_featured"
               type="checkbox"
               {...register("is_featured")}
-              className="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+              className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
             />
             <Label htmlFor="is_featured" className="cursor-pointer">
               {translations.fields.isFeatured}
@@ -581,7 +581,7 @@ export function AdminTemplateForm({
               id="category"
               {...register("category")}
               className={cn(
-                "mt-1 h-9 w-full rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm text-gray-900 shadow-xs transition-colors focus:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-700 dark:bg-input/30 dark:text-white"
+                "mt-1 h-9 w-full rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm text-gray-900 shadow-xs transition-colors focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary dark:border-gray-700 dark:bg-input/30 dark:text-white"
               )}
             >
               {ADMIN_CATALOG_CATEGORIES.map((c) => (
@@ -609,7 +609,7 @@ export function AdminTemplateForm({
                     className={cn(
                       "inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium transition-colors",
                       selected
-                        ? "border-purple-500 bg-purple-50 text-purple-700 dark:border-purple-400 dark:bg-purple-900/30 dark:text-purple-200"
+                        ? "border-primary bg-primary/5 text-primary dark:border-primary dark:bg-primary/15 dark:text-primary"
                         : "border-gray-200 bg-white text-gray-600 hover:border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-gray-600"
                     )}
                   >
@@ -688,7 +688,7 @@ export function AdminTemplateForm({
               id="pricing_tier"
               {...register("pricing_tier")}
               className={cn(
-                "mt-1 h-9 w-full rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm text-gray-900 shadow-xs transition-colors focus:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-700 dark:bg-input/30 dark:text-white"
+                "mt-1 h-9 w-full rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm text-gray-900 shadow-xs transition-colors focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary dark:border-gray-700 dark:bg-input/30 dark:text-white"
               )}
             >
               {ADMIN_CATALOG_PRICING_TIERS.map((tier) => (
@@ -838,7 +838,7 @@ export function AdminTemplateForm({
                 {...register("description_en")}
                 rows={3}
                 className={cn(
-                  "mt-1 block w-full rounded-md border border-gray-200 bg-transparent px-3 py-2 text-sm text-gray-900 shadow-xs transition-colors focus:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-700 dark:bg-input/30 dark:text-white"
+                  "mt-1 block w-full rounded-md border border-gray-200 bg-transparent px-3 py-2 text-sm text-gray-900 shadow-xs transition-colors focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary dark:border-gray-700 dark:bg-input/30 dark:text-white"
                 )}
               />
               {errors.description_en?.message && (
@@ -857,7 +857,7 @@ export function AdminTemplateForm({
                 {...register("description_es")}
                 rows={3}
                 className={cn(
-                  "mt-1 block w-full rounded-md border border-gray-200 bg-transparent px-3 py-2 text-sm text-gray-900 shadow-xs transition-colors focus:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-700 dark:bg-input/30 dark:text-white"
+                  "mt-1 block w-full rounded-md border border-gray-200 bg-transparent px-3 py-2 text-sm text-gray-900 shadow-xs transition-colors focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary dark:border-gray-700 dark:bg-input/30 dark:text-white"
                 )}
               />
               {errors.description_es?.message && (
@@ -881,7 +881,7 @@ export function AdminTemplateForm({
                 {...register("typical_impact_text_en")}
                 rows={2}
                 className={cn(
-                  "mt-1 block w-full rounded-md border border-gray-200 bg-transparent px-3 py-2 text-sm text-gray-900 shadow-xs transition-colors focus:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-700 dark:bg-input/30 dark:text-white"
+                  "mt-1 block w-full rounded-md border border-gray-200 bg-transparent px-3 py-2 text-sm text-gray-900 shadow-xs transition-colors focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary dark:border-gray-700 dark:bg-input/30 dark:text-white"
                 )}
               />
               {errors.typical_impact_text_en?.message && (
@@ -902,7 +902,7 @@ export function AdminTemplateForm({
                 {...register("typical_impact_text_es")}
                 rows={2}
                 className={cn(
-                  "mt-1 block w-full rounded-md border border-gray-200 bg-transparent px-3 py-2 text-sm text-gray-900 shadow-xs transition-colors focus:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-700 dark:bg-input/30 dark:text-white"
+                  "mt-1 block w-full rounded-md border border-gray-200 bg-transparent px-3 py-2 text-sm text-gray-900 shadow-xs transition-colors focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary dark:border-gray-700 dark:bg-input/30 dark:text-white"
                 )}
               />
               {errors.typical_impact_text_es?.message && (

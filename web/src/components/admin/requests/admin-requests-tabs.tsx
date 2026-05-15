@@ -76,7 +76,7 @@ export function AdminRequestsTabs({
               "relative -mb-px px-4 py-2 text-sm font-medium transition-colors",
               "border-b-2",
               isActive
-                ? "border-purple-600 text-purple-700 dark:border-purple-400 dark:text-purple-300"
+                ? "border-primary text-primary dark:border-primary dark:text-primary"
                 : "border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white",
               isPending && "opacity-60 cursor-wait"
             )}

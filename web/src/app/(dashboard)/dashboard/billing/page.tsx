@@ -33,8 +33,8 @@ export default async function BillingPage() {
   if (!data) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] text-center px-4">
-        <div className="w-16 h-16 rounded-full bg-purple-50 flex items-center justify-center mb-4">
-          <CreditCard className="w-8 h-8 text-purple-400" />
+        <div className="w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center mb-4">
+          <CreditCard className="w-8 h-8 text-primary" />
         </div>
         <h2 className="text-xl font-semibold text-gray-900 mb-2">
           {t("empty.title")}
@@ -44,7 +44,7 @@ export default async function BillingPage() {
         </p>
         <Link
           href="/dashboard/automations"
-          className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+          className="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium transition-colors"
         >
           {t("empty.cta")}
         </Link>

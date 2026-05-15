@@ -79,7 +79,7 @@ export function LanguageSwitcher({
             onClick={() => selectLocale("en")}
             className={cn(
               "flex items-center justify-between w-full px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors",
-              locale === "en" && "font-semibold text-purple-600 dark:text-purple-400"
+              locale === "en" && "font-semibold text-primary dark:text-primary"
             )}
           >
             <span>{labels.english}</span>
@@ -89,7 +89,7 @@ export function LanguageSwitcher({
             onClick={() => selectLocale("es")}
             className={cn(
               "flex items-center justify-between w-full px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors",
-              locale === "es" && "font-semibold text-purple-600 dark:text-purple-400"
+              locale === "es" && "font-semibold text-primary dark:text-primary"
             )}
           >
             <span>{labels.spanish}</span>

@@ -116,7 +116,7 @@ export function SettingsPreferencesCard({
             value={currentLocale}
             onChange={handleLocaleChange}
             disabled={isSwitchingLocale}
-            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-60 disabled:cursor-not-allowed"
           >
             <option value="en">{translations.languageOptions.english}</option>
             <option value="es">{translations.languageOptions.spanish}</option>
@@ -150,7 +150,7 @@ export function SettingsPreferencesCard({
                 max="10000"
                 disabled={!isAdminOrOwner}
                 {...register("hourlyCost", { valueAsNumber: true })}
-                className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 pl-7 pr-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:bg-gray-50 disabled:dark:bg-gray-800 disabled:text-gray-400 disabled:cursor-not-allowed"
+                className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 pl-7 pr-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-gray-50 disabled:dark:bg-gray-800 disabled:text-gray-400 disabled:cursor-not-allowed"
               />
             </div>
             {errors.hourlyCost && (
@@ -172,7 +172,7 @@ export function SettingsPreferencesCard({
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? translations.saving : translations.save}
               </button>

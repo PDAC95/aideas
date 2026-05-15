@@ -118,13 +118,13 @@ export function AdminClientNoteEntry({
       .replace("{n}", String(body.length))
       .replace("{max}", String(NOTE_MAX));
     return (
-      <div className="space-y-2 rounded-md border border-purple-300 bg-white p-4 dark:border-purple-700 dark:bg-gray-900">
+      <div className="space-y-2 rounded-md border border-primary/40 bg-white p-4 dark:border-primary/40 dark:bg-gray-900">
         <textarea
           value={body}
           onChange={(e) => setBody(e.target.value)}
           rows={5}
           autoFocus
-          className="block w-full resize-y rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 dark:border-gray-700 dark:bg-gray-950 dark:text-white"
+          className="block w-full resize-y rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-gray-700 dark:bg-gray-950 dark:text-white"
         />
         <div className="flex items-center justify-between">
           <span
@@ -153,8 +153,8 @@ export function AdminClientNoteEntry({
               className={cn(
                 "rounded-md px-3 py-1.5 text-sm font-medium text-white",
                 canSave
-                  ? "bg-purple-600 hover:bg-purple-700"
-                  : "cursor-not-allowed bg-purple-300 dark:bg-purple-900"
+                  ? "bg-primary hover:bg-primary/90"
+                  : "cursor-not-allowed bg-primary/40 dark:bg-primary/25"
               )}
             >
               {isPending ? translations.saving : translations.save}
@@ -229,7 +229,7 @@ export function AdminClientNoteEntry({
           <button
             type="button"
             onClick={() => setMode("edit")}
-            className="text-purple-700 hover:underline dark:text-purple-300"
+            className="text-primary hover:underline dark:text-primary"
           >
             {translations.edit}
           </button>

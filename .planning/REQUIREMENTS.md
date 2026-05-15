@@ -12,11 +12,11 @@ Requirements for the Public Funnel & Factory Reskin milestone. Each maps to exac
 
 ### Design System Migration (Factory.ai tokens)
 
-- [ ] **DESIGN-01**: Replace OKLCH theme with Factory.ai token set in `globals.css` (light-mode default: #eeeeee bg, #fafafa cards, #ef6f2e Code Orange accent)
-- [ ] **DESIGN-02**: Typography system uses Geist Sans + Geist Mono with Factory spacing/sizing scale
-- [ ] **DESIGN-03**: Border-radius normalization (4px buttons, 6px cards, 0px headers); no shadows, no gradients across components
-- [ ] **DESIGN-04**: Update shadcn primitives (Button, Card, Input, Badge, Tabs) to consume new tokens with zero regressions on existing screens
-- [ ] **DESIGN-05**: Optional dark-mode tokens defined for the new palette so the existing `.dark` class continues to work without visual breakage
+- [x] **DESIGN-01**: Replace OKLCH theme with Factory.ai token set in `globals.css` (light-mode default: #eeeeee bg, #fafafa cards, #ef6f2e Code Orange accent)
+- [x] **DESIGN-02**: Typography system uses Geist Sans + Geist Mono with Factory spacing/sizing scale
+- [x] **DESIGN-03**: Border-radius normalization (4px buttons, 6px cards, 0px headers); no shadows, no gradients across components
+- [x] **DESIGN-04**: Update shadcn primitives (Button, Card, Input, Badge, Tabs) to consume new tokens with zero regressions on existing screens
+- [x] **DESIGN-05**: Optional dark-mode tokens defined for the new palette so the existing `.dark` class continues to work without visual breakage
 
 ### Catalog Data Model (Functional areas + Scenarios)
 
@@ -141,11 +141,11 @@ Every v1.3 requirement maps to exactly one phase. Verified 100% coverage.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DESIGN-01 | Phase 25 — Design System Migration | Pending |
-| DESIGN-02 | Phase 25 — Design System Migration | Pending |
-| DESIGN-03 | Phase 25 — Design System Migration | Pending |
-| DESIGN-04 | Phase 25 — Design System Migration | Pending |
-| DESIGN-05 | Phase 25 — Design System Migration | Pending |
+| DESIGN-01 | Phase 25 — Design System Migration | Complete |
+| DESIGN-02 | Phase 25 — Design System Migration | Complete |
+| DESIGN-03 | Phase 25 — Design System Migration | Complete |
+| DESIGN-04 | Phase 25 — Design System Migration | Complete |
+| DESIGN-05 | Phase 25 — Design System Migration | Complete |
 | CAT-01 | Phase 26 — Catalog Data Model | Pending |
 | CAT-02 | Phase 26 — Catalog Data Model | Pending |
 | CAT-03 | Phase 26 — Catalog Data Model | Pending |

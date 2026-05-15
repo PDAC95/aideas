@@ -153,7 +153,7 @@ export default async function DashboardPage() {
         </div>
         <Link
           href="/dashboard/catalog"
-          className="shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-purple-600 px-3 py-2 text-sm font-medium text-white hover:bg-purple-700 transition-colors"
+          className="shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
         >
           <Plus className="h-4 w-4" />
           <span className="hidden sm:inline">{t("newAutomation")}</span>

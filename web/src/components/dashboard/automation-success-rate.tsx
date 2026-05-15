@@ -16,7 +16,7 @@ export function AutomationSuccessRate({
       </p>
 
       <div className="flex flex-col items-center justify-center flex-1 py-4">
-        <p className="text-4xl font-bold text-purple-400 dark:text-purple-300">
+        <p className="text-4xl font-bold text-primary dark:text-primary">
           {rate === 0 ? "—" : `${rate}%`}
         </p>
       </div>

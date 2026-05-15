@@ -104,7 +104,7 @@ export function AdminClientAutomationsTab({
                   <td className="px-4 py-3 text-sm">
                     <Link
                       href={`/admin/automations/${row.id}`}
-                      className="font-medium text-purple-700 hover:underline dark:text-purple-300"
+                      className="font-medium text-primary hover:underline dark:text-primary"
                     >
                       {row.name}
                     </Link>
@@ -138,7 +138,7 @@ export function AdminClientAutomationsTab({
       </div>
       <Link
         href={`/admin/automations?org=${encodeURIComponent(orgSlug)}`}
-        className="inline-block text-sm text-purple-700 hover:underline dark:text-purple-300"
+        className="inline-block text-sm text-primary hover:underline dark:text-primary"
       >
         {translations.viewAll}
       </Link>

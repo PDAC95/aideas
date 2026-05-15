@@ -31,25 +31,27 @@ export function PasswordStrengthBar({ password }: PasswordStrengthBarProps) {
 
   if (strength === "empty") return null;
 
+  // Phase 25: weak → --destructive, medium → --muted-foreground (neutral),
+  // strong → --primary (Code Orange). No green-success token in v1.3 — deliberate.
   const segments = [
-    { active: true, color: "bg-red-500" },
-    { active: strength === "medium" || strength === "strong", color: "bg-yellow-500" },
-    { active: strength === "strong", color: "bg-green-500" },
+    { active: true },
+    { active: strength === "medium" || strength === "strong" },
+    { active: strength === "strong" },
   ];
 
   const activeColor =
     strength === "weak"
-      ? "bg-red-500"
+      ? "bg-destructive"
       : strength === "medium"
-        ? "bg-yellow-500"
-        : "bg-green-500";
+        ? "bg-muted-foreground"
+        : "bg-primary";
 
   const labelColor =
     strength === "weak"
-      ? "text-red-500"
+      ? "text-destructive"
       : strength === "medium"
-        ? "text-yellow-600"
-        : "text-green-600";
+        ? "text-muted-foreground"
+        : "text-primary";
 
   const label =
     strength === "weak"

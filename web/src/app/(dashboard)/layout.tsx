@@ -30,7 +30,7 @@ export default async function DashboardLayout({
   const notifications = (notificationsRaw ?? []) as DashboardNotification[];
 
   return (
-    <div className="min-h-screen bg-gray-200 dark:bg-gray-900">
+    <div className="min-h-screen bg-background">
       <AuthSync />
       <DashboardNav user={user} notifications={notifications} />
       <main className="lg:pl-64">
