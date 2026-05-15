@@ -183,14 +183,14 @@ export function LoginForm({ sessionExpired, authError, verified }: LoginFormProp
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} noValidate>
       <div className="space-y-4">
-        {/* Email verified success banner */}
+        {/* Email verified success banner — uses --primary (Code Orange) per Phase 25 plan: no green-success token yet */}
         {showVerified && (
-          <div className="rounded-md bg-green-50 dark:bg-green-900/20 px-3 py-2 text-sm text-green-700 dark:text-green-300 flex items-center justify-between">
+          <div className="rounded-md bg-primary/10 px-3 py-2 text-sm text-primary flex items-center justify-between">
             <span>{t("verified")}</span>
             <button
               type="button"
               onClick={() => setShowVerified(false)}
-              className="ml-2 text-green-500 hover:text-green-700 font-medium"
+              className="ml-2 text-primary/70 hover:text-primary font-medium"
               aria-label="Dismiss"
             >
               ×
@@ -198,14 +198,14 @@ export function LoginForm({ sessionExpired, authError, verified }: LoginFormProp
           </div>
         )}
 
-        {/* Session expired banner */}
+        {/* Session expired banner — uses --muted (neutral info) to differentiate from success/error */}
         {showSessionExpired && (
-          <div className="rounded-md bg-blue-50 border border-blue-200 px-3 py-2 text-sm text-blue-700 flex items-center justify-between">
+          <div className="rounded-md bg-muted border border-border px-3 py-2 text-sm text-muted-foreground flex items-center justify-between">
             <span>{t("sessionExpired")}</span>
             <button
               type="button"
               onClick={() => setShowSessionExpired(false)}
-              className="ml-2 text-blue-500 hover:text-blue-700 font-medium"
+              className="ml-2 text-muted-foreground/70 hover:text-foreground font-medium"
               aria-label="Dismiss"
             >
               ×

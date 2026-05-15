@@ -23,7 +23,7 @@ export default async function ForgotPasswordPage({
 
       <div className="w-full max-w-md space-y-6">
         {/* Card */}
-        <div className="rounded-xl border bg-card text-card-foreground shadow-sm p-8 space-y-6">
+        <div className="rounded-md border border-border bg-card text-card-foreground p-8 space-y-6">
           {/* Icon */}
           <div className="flex justify-center">
             <div className="flex items-center justify-center w-16 h-16 rounded-full bg-primary/10">

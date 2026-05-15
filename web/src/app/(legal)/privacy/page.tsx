@@ -8,7 +8,7 @@ export default async function PrivacyPage() {
   return (
     <div className="min-h-screen flex items-center justify-center p-6">
       <div className="w-full max-w-2xl space-y-6">
-        <div className="rounded-xl border bg-card text-card-foreground shadow-sm p-8 space-y-6">
+        <div className="rounded-md border border-border bg-card text-card-foreground p-8 space-y-6">
           <div className="space-y-2">
             <h1 className="text-2xl font-bold tracking-tight">{t('privacy.title')}</h1>
             <p className="text-xs text-muted-foreground">{t('privacy.updated')}</p>

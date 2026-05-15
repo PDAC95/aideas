@@ -30,7 +30,7 @@ export default async function VerifyEmailPage({
 
       <div className="w-full max-w-md space-y-6">
         {/* Card */}
-        <div className="rounded-xl border bg-card text-card-foreground shadow-sm p-8 space-y-6">
+        <div className="rounded-md border border-border bg-card text-card-foreground p-8 space-y-6">
           {/* Invalid link error banner */}
           {error === 'invalid' && (
             <div className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
