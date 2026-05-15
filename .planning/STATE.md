@@ -1,23 +1,26 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
+milestone: v1.3
 milestone_name: Public Funnel & Factory Reskin
-status: unknown
-stopped_at: Phase 25 context gathered
-last_updated: "2026-05-14T21:05:15.647Z"
+current_plan: 2
+status: in_progress
+stopped_at: "Completed 25-01-PLAN.md (Factory token migration shipped to web/src/app/globals.css)"
+last_updated: "2026-05-15T13:02:29.359Z"
+last_activity: 2026-05-15
 progress:
   total_phases: 19
   completed_phases: 18
-  total_plans: 53
-  completed_plans: 53
+  total_plans: 60
+  completed_plans: 54
 ---
 
 ## Current Position
 
-Phase: Phase 25 — Design System Migration (Not started)
-Plan: —
-Status: Roadmap finalized — awaiting `/gsd:plan-phase 25`
-Last activity: 2026-05-14 — Roadmapper wrote ROADMAP.md (Phases 25-34), populated REQUIREMENTS.md traceability (58/58 mapped), milestone v1.3 ready to execute
+**Phase:** Phase 25 — Design System Migration (In Progress)
+**Current Plan:** 2
+**Total Plans in Phase:** 7
+**Status:** 25-01 complete (Factory tokens live in globals.css). Ready for 25-02 (primitives reskin).
+**Last Activity:** 2026-05-15 — Executor completed 25-01-PLAN.md: rewrote globals.css with Factory HEX palette, added Geist cv02/03/04/11 character variants, npm run build exits 0
 
 **Phase pipeline (10 phases):**
 - Phase 25 — Design System Migration (DESIGN-01..05)
@@ -32,6 +35,14 @@ Last activity: 2026-05-14 — Roadmapper wrote ROADMAP.md (Phases 25-34), popula
 - Phase 34 — Launch Polish (OPS-01..05)
 
 **Critical path:** 25 → 26 → 27 → 29 → 30 → 31 → 34 (sequential); Phase 28 parallel to 26+27; Phase 32 parallel to 26-31; Phase 33 waits on 32.
+
+### Decisions (Phase 25-01 execution, 2026-05-15)
+
+- [Phase 25]: OKLCH big-bang swap to Factory HEX palette — token names preserved so shadcn consumers (bg-primary, bg-card, border-border) continue compiling; warm-gray neutrals + #ef6f2e Code Orange across both light + dark modes
+- [Phase 25]: Light-first default (no prefers-color-scheme honor) per research Open Question 5 — public funnel pages need stable light surfaces for marketing/lead gen; dark mode opt-in via .dark class only
+- [Phase 25]: Geist character variants cv02/03/04/11 applied via font-feature-settings on body — zero-cost typography upgrade matching Factory exactly (single-story 'a', tabular figures, alternate glyphs)
+- [Phase 25]: Radius scale moved from calc(var(--radius) ± Npx) chain to absolute rem values (--radius-sm 0.25rem buttons, --radius-md 0.375rem cards, --radius-lg 0.5rem modals) matching Factory's intentional split
+- [Phase 25]: layout.tsx Geist wiring verified intact — geistSans.variable + geistMono.variable already on body className, no modification needed
 
 ## Project Reference
 
@@ -336,6 +347,7 @@ Last activity: 2026-05-08 — Plan 21-03 executed (3 tasks: Zod schemas + 3 serv
 | Phase 22 P01 | 3 min | 2 tasks | 6 files |
 | Phase 23-client-360-crosslink-fix P01 | 3 min | 2 tasks | 4 files |
 | Phase 23-client-360-crosslink-fix P02 | 5 min | 3 tasks | 6 files |
+| Phase 25 P01 | 2 min | 2 tasks | 1 files |
 
 ### Per-plan execution metrics (v1.2)
 
@@ -607,8 +619,8 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 
 ## Session Continuity
 
-**Last session:** 2026-05-14T21:05:15.642Z
-**Stopped at:** Phase 25 context gathered
+**Last session:** 2026-05-15T13:00:03.903Z
+**Stopped at:** Completed 25-01-PLAN.md
 **Next action:** Phase 22 plan 22-01 shipped on branch `feature/phase-22-admin-home`. Next runner is `/gsd:execute-phase 22-admin-home` to ship plan 22-02 (activity feed + quick-link cards) on top of the new KPI grid. Phase 21 verifier still pending — once Phase 21 VERIFICATION.md status is `passed` the branch `feature/phase-21-clients-admin` should be merged to `main`.
 
 2026-05-12 — Phase 22 plan 22-01 shipped: /admin placeholder replaced with real 2x2 KPI grid (Pending requests / Automations in setup / Active clients / Signups this week). fetchAdminHomeKpis() runs 4 parallel HEAD-only count: 'exact' queries via Promise.all; gated by assertPlatformStaff (defense-in-depth on top of layout guard). pendingRequests reuses TAB_TO_STATUSES.pending so the home counter matches /admin/requests Pending tab exactly. signupsThisWeek uses a rolling 7-day window (JS-computed ISO cutoff, DB-agnostic). Both client-related cards (activeClients + signupsThisWeek) link to /admin/clients with no extra params; the list page default `created_at DESC` surfaces recent signups at the top naturally. AdminHomeKpiCards is server-friendly (no use client) — receives a labels prop object so the parent page owns getTranslations. Neutral gray icon backgrounds (no urgency colors). 6 new admin.home.* leaf keys per locale (title + subtitle + 4 KPI labels). admin.placeholders.home block removed from both en.json and es.json. HOME-01 (KPI section) + I18N-01 (this slice) satisfied. tsc + scoped lint exit 0. 2 files created, 4 modified, 2 atomic commits, 3 minutes.
