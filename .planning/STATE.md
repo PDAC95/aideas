@@ -2,6 +2,57 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Public Funnel & Factory Reskin
+current_plan: "1 of 3 complete (next: 26-02 industries)"
+status: executing
+stopped_at: Completed 26-01-PLAN.md (functional_areas table shipped — bilingual labels, anon-read RLS, partial index on is_active; supabase db reset --local idempotent; smoke-test A-D passed)
+last_updated: "2026-05-15T18:13:49.048Z"
+last_activity: 2026-05-15
+progress:
+  total_phases: 20
+  completed_phases: 19
+  total_plans: 63
+  completed_plans: 61
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: Public Funnel & Factory Reskin
+current_plan: "1 of 3 complete (next: 26-02 industries)"
+status: executing
+stopped_at: Phase 26 context gathered
+last_updated: "2026-05-15T18:13:12.046Z"
+last_activity: 2026-05-15
+progress:
+  total_phases: 20
+  completed_phases: 19
+  total_plans: 63
+  completed_plans: 61
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.3
+milestone_name: Public Funnel & Factory Reskin
+phase: 26
+phase_name: Catalog Data Model
+current_plan: 1
+total_plans_in_phase: 3
+status: executing
+stopped_at: "Completed 26-01-PLAN.md (functional_areas table shipped with bilingual labels, anon-read RLS, partial index on is_active; supabase db reset --local idempotent; smoke-test assertions A-D passed)"
+last_updated: "2026-05-15T18:11:02Z"
+last_activity: 2026-05-15
+progress:
+  total_phases: 20
+  completed_phases: 19
+  total_plans: 63
+  completed_plans: 61
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: Public Funnel & Factory Reskin
 current_plan: Not started
 status: completed
 stopped_at: Phase 26 context gathered
@@ -112,10 +163,10 @@ progress:
 
 ## Current Position
 
-**Phase:** Phase 25 — Design System Migration (In Progress)
-**Current Plan:** Not started
-**Total Plans in Phase:** 7
-**Status:** Milestone complete
+**Phase:** Phase 26 — Catalog Data Model (In Progress)
+**Current Plan:** 1 of 3 complete (next: 26-02 industries)
+**Total Plans in Phase:** 3
+**Status:** Executing
 **Last Activity:** 2026-05-15
 
 **Phase pipeline (10 phases):**
@@ -171,6 +222,14 @@ progress:
 - [Phase 25]: dashboard-header.tsx gained border-b border-border + bg-card shell — was previously transparent floating header with no separator; structural border now replaces the dropped shadow-sm crutch (matches Factory no-decorative-shadow rule)
 - [Phase 25]: No language switcher or dark-mode toggle added to admin-header.tsx — explicitly deferred to Phase 33 per CONTEXT.md Deferred Ideas; scope-locked even though gap is visible (UAT in 25-07 will surface it)
 - [Phase 25]: 'brightness-0 invert' utility removed from admin-sidebar logo — hack was needed against gray-900 dark sidebar; against the new bg-sidebar (light #fafafa / dark #101010) the colored logo renders correctly without inversion
+
+### Decisions (Phase 26-01 execution, 2026-05-15)
+
+- [Phase 26]: Bilingual storage via separate label_en/label_es + description_en/description_es columns (not JSONB) — matches existing next-intl en/es split in web/messages/{en,es}.json, indexable, simplest server-side queries; LOCKED for industries (26-02) and scenarios (26-03)
+- [Phase 26]: Public-catalog RLS recipe — ENABLE RLS + two SELECT policies (anon + authenticated) gated on is_active = true; zero write policies; service_role handles seed/admin writes. Reusable verbatim in 26-02 / 26-03
+- [Phase 26]: Slug VARCHAR(60) tightens the existing automation_templates VARCHAR(100) precedent — 8 short URL-safe area slugs (ventas, agentes-ia, …) need far less and a shorter cap prevents accidental long-slug regressions when admin CRUD ships
+- [Phase 26]: Partial index on is_active WHERE is_active = true — every RLS-visible read filters on this predicate; partial keeps the index small and matches planner expectations
+- [Phase 26]: Migration timestamp 20260516000001 chosen as +1 day after the latest existing migration (20260509000003); reserves 20260516000002 / 20260516000003 for the adjacent 26-02 / 26-03 plans — deterministic and non-conflicting with any future date-based migration
 
 ## Project Reference
 
@@ -482,6 +541,7 @@ Last activity: 2026-05-08 — Plan 21-03 executed (3 tasks: Zod schemas + 3 serv
 | Phase 25 P04 | 28m | 2 tasks | 48 files |
 | Phase 25-design-system-migration P06 | 6m 14s | 2 tasks | 5 files |
 | Phase 25-design-system-migration P07 | 8m | 3 tasks | 3 files |
+| Phase 26-catalog-data-model P01 | 4min | 2 tasks | 1 files |
 
 ### Per-plan execution metrics (v1.2)
 
@@ -753,8 +813,8 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 
 ## Session Continuity
 
-**Last session:** 2026-05-15T16:29:00.241Z
-**Stopped at:** Phase 26 context gathered
+**Last session:** 2026-05-15T18:13:49.044Z
+**Stopped at:** Completed 26-01-PLAN.md (functional_areas table shipped — bilingual labels, anon-read RLS, partial index on is_active; supabase db reset --local idempotent; smoke-test A-D passed)
 **Next action:** Phase 22 plan 22-01 shipped on branch `feature/phase-22-admin-home`. Next runner is `/gsd:execute-phase 22-admin-home` to ship plan 22-02 (activity feed + quick-link cards) on top of the new KPI grid. Phase 21 verifier still pending — once Phase 21 VERIFICATION.md status is `passed` the branch `feature/phase-21-clients-admin` should be merged to `main`.
 
 2026-05-12 — Phase 22 plan 22-01 shipped: /admin placeholder replaced with real 2x2 KPI grid (Pending requests / Automations in setup / Active clients / Signups this week). fetchAdminHomeKpis() runs 4 parallel HEAD-only count: 'exact' queries via Promise.all; gated by assertPlatformStaff (defense-in-depth on top of layout guard). pendingRequests reuses TAB_TO_STATUSES.pending so the home counter matches /admin/requests Pending tab exactly. signupsThisWeek uses a rolling 7-day window (JS-computed ISO cutoff, DB-agnostic). Both client-related cards (activeClients + signupsThisWeek) link to /admin/clients with no extra params; the list page default `created_at DESC` surfaces recent signups at the top naturally. AdminHomeKpiCards is server-friendly (no use client) — receives a labels prop object so the parent page owns getTranslations. Neutral gray icon backgrounds (no urgency colors). 6 new admin.home.* leaf keys per locale (title + subtitle + 4 KPI labels). admin.placeholders.home block removed from both en.json and es.json. HOME-01 (KPI section) + I18N-01 (this slice) satisfied. tsc + scoped lint exit 0. 2 files created, 4 modified, 2 atomic commits, 3 minutes.
