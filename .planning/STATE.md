@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Public Funnel & Factory Reskin
-current_plan: "1 of 3 complete (next: 26-02 industries)"
+current_plan: 2
 status: executing
-stopped_at: Completed 26-01-PLAN.md (functional_areas table shipped — bilingual labels, anon-read RLS, partial index on is_active; supabase db reset --local idempotent; smoke-test A-D passed)
-last_updated: "2026-05-15T18:13:49.048Z"
+stopped_at: Completed 26-02-PLAN.md (scenarios + scenario_templates pivot shipped; anon SELECT policy added to automation_templates to fix pivot RLS chain; smoke-test A-E passed; build exit 0)
+last_updated: "2026-05-15T18:24:11.943Z"
 last_activity: 2026-05-15
 progress:
   total_phases: 20
   completed_phases: 19
   total_plans: 63
-  completed_plans: 61
+  completed_plans: 62
 ---
 
 ---
@@ -164,9 +164,9 @@ progress:
 ## Current Position
 
 **Phase:** Phase 26 — Catalog Data Model (In Progress)
-**Current Plan:** 1 of 3 complete (next: 26-02 industries)
+**Current Plan:** 2
 **Total Plans in Phase:** 3
-**Status:** Executing
+**Status:** Ready to execute
 **Last Activity:** 2026-05-15
 
 **Phase pipeline (10 phases):**
@@ -542,6 +542,7 @@ Last activity: 2026-05-08 — Plan 21-03 executed (3 tasks: Zod schemas + 3 serv
 | Phase 25-design-system-migration P06 | 6m 14s | 2 tasks | 5 files |
 | Phase 25-design-system-migration P07 | 8m | 3 tasks | 3 files |
 | Phase 26-catalog-data-model P01 | 4min | 2 tasks | 1 files |
+| Phase 26 P02 | 6 min | 3 tasks | 1 files |
 
 ### Per-plan execution metrics (v1.2)
 
@@ -813,8 +814,8 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 
 ## Session Continuity
 
-**Last session:** 2026-05-15T18:13:49.044Z
-**Stopped at:** Completed 26-01-PLAN.md (functional_areas table shipped — bilingual labels, anon-read RLS, partial index on is_active; supabase db reset --local idempotent; smoke-test A-D passed)
+**Last session:** 2026-05-15T18:24:11.939Z
+**Stopped at:** Completed 26-02-PLAN.md (scenarios + scenario_templates pivot shipped; anon SELECT policy added to automation_templates to fix pivot RLS chain; smoke-test A-E passed; build exit 0)
 **Next action:** Phase 22 plan 22-01 shipped on branch `feature/phase-22-admin-home`. Next runner is `/gsd:execute-phase 22-admin-home` to ship plan 22-02 (activity feed + quick-link cards) on top of the new KPI grid. Phase 21 verifier still pending — once Phase 21 VERIFICATION.md status is `passed` the branch `feature/phase-21-clients-admin` should be merged to `main`.
 
 2026-05-12 — Phase 22 plan 22-01 shipped: /admin placeholder replaced with real 2x2 KPI grid (Pending requests / Automations in setup / Active clients / Signups this week). fetchAdminHomeKpis() runs 4 parallel HEAD-only count: 'exact' queries via Promise.all; gated by assertPlatformStaff (defense-in-depth on top of layout guard). pendingRequests reuses TAB_TO_STATUSES.pending so the home counter matches /admin/requests Pending tab exactly. signupsThisWeek uses a rolling 7-day window (JS-computed ISO cutoff, DB-agnostic). Both client-related cards (activeClients + signupsThisWeek) link to /admin/clients with no extra params; the list page default `created_at DESC` surfaces recent signups at the top naturally. AdminHomeKpiCards is server-friendly (no use client) — receives a labels prop object so the parent page owns getTranslations. Neutral gray icon backgrounds (no urgency colors). 6 new admin.home.* leaf keys per locale (title + subtitle + 4 KPI labels). admin.placeholders.home block removed from both en.json and es.json. HOME-01 (KPI section) + I18N-01 (this slice) satisfied. tsc + scoped lint exit 0. 2 files created, 4 modified, 2 atomic commits, 3 minutes.

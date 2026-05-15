@@ -21,8 +21,8 @@ Requirements for the Public Funnel & Factory Reskin milestone. Each maps to exac
 ### Catalog Data Model (Functional areas + Scenarios)
 
 - [x] **CAT-01**: Migration adds `functional_areas` table (8 areas: Ventas, Marketing, Atención al Cliente, Documentos, Productividad, Reportes, Agentes IA, Integraciones & Seguridad) with EN/ES labels and ordering
-- [ ] **CAT-02**: Migration adds `scenarios` table with pain-language EN/ES copy, functional_area_id FK, slug, ordering, and `is_active` flag
-- [ ] **CAT-03**: Migration adds `scenario_templates` pivot table linking scenarios to existing `automation_templates`
+- [x] **CAT-02**: Migration adds `scenarios` table with pain-language EN/ES copy, functional_area_id FK, slug, ordering, and `is_active` flag
+- [x] **CAT-03**: Migration adds `scenario_templates` pivot table linking scenarios to existing `automation_templates`
 - [ ] **CAT-04**: RLS policies allow anonymous read on functional_areas, scenarios, and scenario_templates (public surfaces)
 - [ ] **CAT-05**: Existing 66+ `automation_templates` keep their industry/category fields for back-compat (dashboards still render), no destructive migration
 
@@ -147,8 +147,8 @@ Every v1.3 requirement maps to exactly one phase. Verified 100% coverage.
 | DESIGN-04 | Phase 25 — Design System Migration | Complete |
 | DESIGN-05 | Phase 25 — Design System Migration | Complete |
 | CAT-01 | Phase 26 — Catalog Data Model | Complete |
-| CAT-02 | Phase 26 — Catalog Data Model | Pending |
-| CAT-03 | Phase 26 — Catalog Data Model | Pending |
+| CAT-02 | Phase 26 — Catalog Data Model | Complete |
+| CAT-03 | Phase 26 — Catalog Data Model | Complete |
 | CAT-04 | Phase 26 — Catalog Data Model | Pending |
 | CAT-05 | Phase 26 — Catalog Data Model | Pending |
 | SCEN-01 | Phase 27 — Scenario Content Seed | Pending |
