@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Public Funnel & Factory Reskin
-current_plan: 7
-status: verifying
+current_plan: Not started
+status: completed
 stopped_at: "Completed 25-07-PLAN.md (Phase 25 complete — 26/26 routes PASSED with deferrals scoped to Phases 28/32/33; 2 in-phase shell fixes 34e3f32 + b40d0fa; awaiting /gsd:verify-work 25)"
-last_updated: "2026-05-15T15:58:18.516Z"
+last_updated: "2026-05-15T16:07:35.423Z"
 last_activity: 2026-05-15
 progress:
   total_phases: 19
@@ -97,9 +97,9 @@ progress:
 ## Current Position
 
 **Phase:** Phase 25 — Design System Migration (In Progress)
-**Current Plan:** 7
+**Current Plan:** Not started
 **Total Plans in Phase:** 7
-**Status:** Phase complete — ready for verification
+**Status:** Milestone complete
 **Last Activity:** 2026-05-15
 
 **Phase pipeline (10 phases):**
