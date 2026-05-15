@@ -1,5 +1,37 @@
 ---
 gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: Public Funnel & Factory Reskin
+current_plan: 4
+status: executing
+stopped_at: Completed 25-03-PLAN.md (Badge + Tabs + Chart primitives scaffolded with Factory tokens)
+last_updated: "2026-05-15T13:17:22.974Z"
+last_activity: 2026-05-15
+progress:
+  total_phases: 19
+  completed_phases: 18
+  total_plans: 60
+  completed_plans: 56
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: Public Funnel & Factory Reskin
+current_plan: 4
+status: executing
+stopped_at: Completed 25-02-PLAN.md (button.tsx + card.tsx + input.tsx reskinned to Factory tokens; form.tsx + label.tsx verified clean; build exit 0)
+last_updated: "2026-05-15T13:16:22.663Z"
+last_activity: 2026-05-15
+progress:
+  total_phases: 19
+  completed_phases: 18
+  total_plans: 60
+  completed_plans: 56
+---
+
+---
+gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Public Funnel & Factory Reskin
 current_plan: 3
@@ -33,10 +65,10 @@ progress:
 ## Current Position
 
 **Phase:** Phase 25 — Design System Migration (In Progress)
-**Current Plan:** 3
+**Current Plan:** 4
 **Total Plans in Phase:** 7
-**Status:** 25-02 complete (shadcn button/card/input reskinned to Factory tokens; form/label verified clean). Ready for 25-03 (brand-color literals swap).
-**Last Activity:** 2026-05-15 — Executor completed 25-02-PLAN.md: rounded-sm buttons + inputs (4px), rounded-md cards (6px) with mandatory border-border, zero shadow utilities across the 5 primitives, focus rings on --ring (Code Orange), build exit 0
+**Status:** Ready to execute
+**Last Activity:** 2026-05-15
 
 **Phase pipeline (10 phases):**
 - Phase 25 — Design System Migration (DESIGN-01..05)
@@ -67,6 +99,13 @@ progress:
 - [Phase 25]: Kept focus-visible ring (box-shadow) over Factory's outline-2px rule on button + input — documented in button.tsx code comment as deliberate Pitfall 5 divergence (accessibility shortcut justified)
 - [Phase 25]: Button + input share rounded-sm (4px); cards use rounded-md (6px) — Factory radius scale split locked at the primitive level; size variants (button xs/sm/lg/icon-xs) bumped from rounded-md to rounded-sm for cross-size consistency
 - [Phase 25]: form.tsx + label.tsx left untouched — defensive review confirmed they already consume --destructive/--foreground via tokens (FormMessage text-destructive, FormLabel data-[error=true]:text-destructive, Label inherits text-foreground), no hardcoded literals to swap
+
+### Decisions (Phase 25-03 execution, 2026-05-15)
+
+- [Phase 25]: Skipped npx shadcn init — used pre-existing hand-written web/components.json to prevent CLI from overwriting globals.css (Pitfall 3); CLI add command did not touch globals.css, Factory tokens intact
+- [Phase 25]: Reverted CLI side-effects on input.tsx and package.json (recharts version downgrade) — those edits belong to in-progress Plan 25-02's input reskin scope, not 25-03
+- [Phase 25]: Removed shadow-xl from ChartTooltipContent — Factory "no decorative shadow" rule overrides shadcn scaffold defaults; chart primitive matches button/card discipline established in 25-02
+- [Phase 25]: Tabs primitive ships single-variant line style (underline-on-active via data-[state=active]:border-primary) — Factory uses underline-on-active consistently; consumers needing pills can override per-call
 
 ## Project Reference
 
@@ -373,6 +412,7 @@ Last activity: 2026-05-08 — Plan 21-03 executed (3 tasks: Zod schemas + 3 serv
 | Phase 23-client-360-crosslink-fix P02 | 5 min | 3 tasks | 6 files |
 | Phase 25 P01 | 2 min | 2 tasks | 1 files |
 | Phase 25-design-system-migration P02 | 4 min | 3 tasks | 3 files |
+| Phase 25 P03 | 7 min | 2 tasks | 3 files |
 
 ### Per-plan execution metrics (v1.2)
 
@@ -644,8 +684,8 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 
 ## Session Continuity
 
-**Last session:** 2026-05-15T13:13:06.069Z
-**Stopped at:** Completed 25-02-PLAN.md (button.tsx + card.tsx + input.tsx reskinned to Factory tokens; form.tsx + label.tsx verified clean; build exit 0)
+**Last session:** 2026-05-15T13:17:22.969Z
+**Stopped at:** Completed 25-03-PLAN.md (Badge + Tabs + Chart primitives scaffolded with Factory tokens)
 **Next action:** Phase 22 plan 22-01 shipped on branch `feature/phase-22-admin-home`. Next runner is `/gsd:execute-phase 22-admin-home` to ship plan 22-02 (activity feed + quick-link cards) on top of the new KPI grid. Phase 21 verifier still pending — once Phase 21 VERIFICATION.md status is `passed` the branch `feature/phase-21-clients-admin` should be merged to `main`.
 
 2026-05-12 — Phase 22 plan 22-01 shipped: /admin placeholder replaced with real 2x2 KPI grid (Pending requests / Automations in setup / Active clients / Signups this week). fetchAdminHomeKpis() runs 4 parallel HEAD-only count: 'exact' queries via Promise.all; gated by assertPlatformStaff (defense-in-depth on top of layout guard). pendingRequests reuses TAB_TO_STATUSES.pending so the home counter matches /admin/requests Pending tab exactly. signupsThisWeek uses a rolling 7-day window (JS-computed ISO cutoff, DB-agnostic). Both client-related cards (activeClients + signupsThisWeek) link to /admin/clients with no extra params; the list page default `created_at DESC` surfaces recent signups at the top naturally. AdminHomeKpiCards is server-friendly (no use client) — receives a labels prop object so the parent page owns getTranslations. Neutral gray icon backgrounds (no urgency colors). 6 new admin.home.* leaf keys per locale (title + subtitle + 4 KPI labels). admin.placeholders.home block removed from both en.json and es.json. HOME-01 (KPI section) + I18N-01 (this slice) satisfied. tsc + scoped lint exit 0. 2 files created, 4 modified, 2 atomic commits, 3 minutes.

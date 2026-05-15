@@ -197,7 +197,7 @@ Full details: [milestones/v1.2-ROADMAP.md](milestones/v1.2-ROADMAP.md)
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 25. Design System Migration | 1/7 | In Progress|  |
+| 25. Design System Migration | 3/7 | In Progress|  |
 | 26. Catalog Data Model | 0/? | Not started | - |
 | 27. Scenario Content Seed | 0/? | Not started | - |
 | 28. Public Landing Page | 0/? | Not started | - |
