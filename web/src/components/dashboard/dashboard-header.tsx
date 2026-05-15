@@ -41,7 +41,7 @@ export async function DashboardHeader({
   const avatarUrl = profile?.avatar_url ?? null;
 
   return (
-    <header className="hidden lg:flex items-center gap-4 px-8 pt-8 pb-4 border-b border-border bg-card">
+    <header className="hidden lg:flex items-center gap-4 px-8 pt-8 pb-4 border-b border-border bg-background">
       {/* Search bar */}
       <div className="flex-1 max-w-md relative">
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
