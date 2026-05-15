@@ -112,6 +112,78 @@ CREATE TRIGGER scenarios_updated_at
     BEFORE UPDATE ON public.scenarios
     FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
 
+-- ---------------------------------------------------------------------------
+-- Section 5: scenario_templates pivot table
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS public.scenario_templates (
+    scenario_id    UUID NOT NULL REFERENCES public.scenarios(id) ON DELETE CASCADE,
+    template_id    UUID NOT NULL REFERENCES public.automation_templates(id) ON DELETE CASCADE,
+    display_order  INTEGER NOT NULL DEFAULT 0,
+    created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    PRIMARY KEY (scenario_id, template_id)
+);
+
+COMMENT ON TABLE public.scenario_templates IS
+    'Many-to-many pivot linking scenarios to existing automation_templates. display_order controls per-scenario template ordering. ON DELETE CASCADE from both parents so the pivot stays clean.';
+
+-- ---------------------------------------------------------------------------
+-- Section 6: scenario_templates RLS (gated by BOTH parents being active)
+-- ---------------------------------------------------------------------------
+ALTER TABLE public.scenario_templates ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "scenario_templates_select_active_anon" ON public.scenario_templates;
+CREATE POLICY "scenario_templates_select_active_anon"
+    ON public.scenario_templates
+    FOR SELECT
+    TO anon
+    USING (
+        EXISTS (
+            SELECT 1 FROM public.scenarios s
+            JOIN public.functional_areas fa ON fa.id = s.functional_area_id
+            WHERE s.id = scenario_templates.scenario_id
+              AND s.is_active = true
+              AND fa.is_active = true
+        )
+        AND EXISTS (
+            SELECT 1 FROM public.automation_templates t
+            WHERE t.id = scenario_templates.template_id
+              AND t.is_active = true
+        )
+    );
+
+DROP POLICY IF EXISTS "scenario_templates_select_active_authenticated" ON public.scenario_templates;
+CREATE POLICY "scenario_templates_select_active_authenticated"
+    ON public.scenario_templates
+    FOR SELECT
+    TO authenticated
+    USING (
+        EXISTS (
+            SELECT 1 FROM public.scenarios s
+            JOIN public.functional_areas fa ON fa.id = s.functional_area_id
+            WHERE s.id = scenario_templates.scenario_id
+              AND s.is_active = true
+              AND fa.is_active = true
+        )
+        AND EXISTS (
+            SELECT 1 FROM public.automation_templates t
+            WHERE t.id = scenario_templates.template_id
+              AND t.is_active = true
+        )
+    );
+
+-- INTENTIONAL: no INSERT/UPDATE/DELETE policies — service_role bypasses RLS.
+
+-- ---------------------------------------------------------------------------
+-- Section 7: scenario_templates indexes
+-- ---------------------------------------------------------------------------
+-- Per-scenario lookups in display order (Phase 29 scenario detail page)
+CREATE INDEX IF NOT EXISTS idx_scenario_templates_scenario
+    ON public.scenario_templates (scenario_id, display_order, template_id);
+
+-- Reverse lookup: which scenarios reference this template (admin tooling)
+CREATE INDEX IF NOT EXISTS idx_scenario_templates_template
+    ON public.scenario_templates (template_id);
+
 -- =============================================================================
 -- End of scenarios + scenario_templates migration
 -- =============================================================================
