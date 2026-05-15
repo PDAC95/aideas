@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Public Funnel & Factory Reskin
-current_plan: 4
+current_plan: 6
 status: executing
-stopped_at: Completed 25-03-PLAN.md (Badge + Tabs + Chart primitives scaffolded with Factory tokens)
-last_updated: "2026-05-15T13:17:22.974Z"
+stopped_at: Completed 25-05-PLAN.md (auth pages + legal pages + admin-login reskinned to Factory tokens; admin context preserved via dark-base HEX)
+last_updated: "2026-05-15T13:32:05.370Z"
 last_activity: 2026-05-15
 progress:
   total_phases: 19
   completed_phases: 18
   total_plans: 60
-  completed_plans: 56
+  completed_plans: 57
 ---
 
 ---
@@ -65,7 +65,7 @@ progress:
 ## Current Position
 
 **Phase:** Phase 25 — Design System Migration (In Progress)
-**Current Plan:** 4
+**Current Plan:** 6 (25-05 just completed; 25-04 brand-color-literals still pending — has uncommitted dashboard/admin changes from prior session)
 **Total Plans in Phase:** 7
 **Status:** Ready to execute
 **Last Activity:** 2026-05-15
@@ -106,6 +106,14 @@ progress:
 - [Phase 25]: Reverted CLI side-effects on input.tsx and package.json (recharts version downgrade) — those edits belong to in-progress Plan 25-02's input reskin scope, not 25-03
 - [Phase 25]: Removed shadow-xl from ChartTooltipContent — Factory "no decorative shadow" rule overrides shadcn scaffold defaults; chart primitive matches button/card discipline established in 25-02
 - [Phase 25]: Tabs primitive ships single-variant line style (underline-on-active via data-[state=active]:border-primary) — Factory uses underline-on-active consistently; consumers needing pills can override per-call
+
+### Decisions (Phase 25-05 execution, 2026-05-15)
+
+- [Phase 25]: Admin login intentionally uses inline Factory dark-base HEX (#020202 page, #101010 card, #d6d3d2 body, #3d3a39 border, #a49d9a muted) instead of semantic tokens — preserves admin/customer visual distinction in BOTH light and dark mode per research Open Question 1; documented in JSDoc on page and inline comment on form
+- [Phase 25]: Success states reuse --primary (Code Orange) — no green-success token in v1.3; applies to verified-email banner, reset-password success check icon, password-strength "strong" state. Deferred to v1.4 if UAT flags ambiguity
+- [Phase 25]: Session-expired banner swapped to bg-muted + text-muted-foreground (neutral info) — differentiates from error (destructive) and success (primary) without introducing a new info token
+- [Phase 25]: admin-login-form.tsx pulled into Plan 25-05 scope as Rule 2 auto-fix — page wrapper and form must share dark-base tokens, otherwise the form's gray-800 inputs would clash with the new #101010 card bg
+- [Phase 25]: login.tsx + signup.tsx left-branding-panel (bg-[#111] text-white) preserved — that surface is an intentional dark marketing-hero panel; bg-white/10 and text-white accents are deliberate, NOT stale gray literals
 
 ## Project Reference
 
@@ -413,6 +421,7 @@ Last activity: 2026-05-08 — Plan 21-03 executed (3 tasks: Zod schemas + 3 serv
 | Phase 25 P01 | 2 min | 2 tasks | 1 files |
 | Phase 25-design-system-migration P02 | 4 min | 3 tasks | 3 files |
 | Phase 25 P03 | 7 min | 2 tasks | 3 files |
+| Phase 25-design-system-migration P05 | 5 min | 2 tasks | 10 files |
 
 ### Per-plan execution metrics (v1.2)
 
@@ -684,8 +693,8 @@ Coverage: 31/31 v1.2 requirements mapped. I18N-01 cross-cuts every UI-bearing ph
 
 ## Session Continuity
 
-**Last session:** 2026-05-15T13:17:22.969Z
-**Stopped at:** Completed 25-03-PLAN.md (Badge + Tabs + Chart primitives scaffolded with Factory tokens)
+**Last session:** 2026-05-15T13:32:05.363Z
+**Stopped at:** Completed 25-05-PLAN.md (auth pages + legal pages + admin-login reskinned to Factory tokens; admin context preserved via dark-base HEX)
 **Next action:** Phase 22 plan 22-01 shipped on branch `feature/phase-22-admin-home`. Next runner is `/gsd:execute-phase 22-admin-home` to ship plan 22-02 (activity feed + quick-link cards) on top of the new KPI grid. Phase 21 verifier still pending — once Phase 21 VERIFICATION.md status is `passed` the branch `feature/phase-21-clients-admin` should be merged to `main`.
 
 2026-05-12 — Phase 22 plan 22-01 shipped: /admin placeholder replaced with real 2x2 KPI grid (Pending requests / Automations in setup / Active clients / Signups this week). fetchAdminHomeKpis() runs 4 parallel HEAD-only count: 'exact' queries via Promise.all; gated by assertPlatformStaff (defense-in-depth on top of layout guard). pendingRequests reuses TAB_TO_STATUSES.pending so the home counter matches /admin/requests Pending tab exactly. signupsThisWeek uses a rolling 7-day window (JS-computed ISO cutoff, DB-agnostic). Both client-related cards (activeClients + signupsThisWeek) link to /admin/clients with no extra params; the list page default `created_at DESC` surfaces recent signups at the top naturally. AdminHomeKpiCards is server-friendly (no use client) — receives a labels prop object so the parent page owns getTranslations. Neutral gray icon backgrounds (no urgency colors). 6 new admin.home.* leaf keys per locale (title + subtitle + 4 KPI labels). admin.placeholders.home block removed from both en.json and es.json. HOME-01 (KPI section) + I18N-01 (this slice) satisfied. tsc + scoped lint exit 0. 2 files created, 4 modified, 2 atomic commits, 3 minutes.
