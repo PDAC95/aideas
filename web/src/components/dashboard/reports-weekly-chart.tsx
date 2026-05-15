@@ -58,11 +58,11 @@ export function ReportsWeeklyChart({
             <Tooltip
               contentStyle={{
                 borderRadius: 8,
-                border: "1px solid #e5e7eb",
+                border: "1px solid #d6d3d2",
                 fontSize: 13,
               }}
             />
-            <Bar dataKey="count" fill="#a855f7" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="count" fill="#ef6f2e" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       )}
