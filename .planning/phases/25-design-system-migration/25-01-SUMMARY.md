@@ -78,7 +78,7 @@ Each task was committed atomically:
 1. **Task 1: Rewrite globals.css with Factory tokens** — `c995ec8` (feat)
 2. **Task 2: Verify Geist font wiring in layout.tsx** — no commit (read-only verification, file unchanged per plan instruction)
 
-**Plan metadata:** `8bda1b6` (docs: complete factory token migration plan)
+**Plan metadata:** `7136e6a` (docs: complete factory token migration plan)
 
 ## Files Created/Modified
 
