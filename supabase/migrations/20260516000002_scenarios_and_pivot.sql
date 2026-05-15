@@ -184,6 +184,26 @@ CREATE INDEX IF NOT EXISTS idx_scenario_templates_scenario
 CREATE INDEX IF NOT EXISTS idx_scenario_templates_template
     ON public.scenario_templates (template_id);
 
+-- ---------------------------------------------------------------------------
+-- Section 8: anon SELECT policy on automation_templates (additive)
+-- ---------------------------------------------------------------------------
+-- REQUIRED by CONTEXT.md (line 39): the pivot's RLS predicate runs
+--   EXISTS (SELECT 1 FROM automation_templates t WHERE t.id = ... AND t.is_active)
+-- as the calling role. Without an anon SELECT policy on automation_templates,
+-- anonymous clients get 0 pivot rows even when all parents are active —
+-- breaks Phase 29's public catalog SSR.
+--
+-- This policy is intentionally additive: existing authenticated policies on
+-- automation_templates (automation_templates_select_active,
+-- automation_templates_admin_*) are NOT modified. Only adds anon read access
+-- to active templates. Service_role still bypasses RLS for writes.
+DROP POLICY IF EXISTS "automation_templates_select_active_anon" ON public.automation_templates;
+CREATE POLICY "automation_templates_select_active_anon"
+    ON public.automation_templates
+    FOR SELECT
+    TO anon
+    USING (is_active = true);
+
 -- =============================================================================
 -- End of scenarios + scenario_templates migration
 -- =============================================================================
