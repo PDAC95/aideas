@@ -380,15 +380,17 @@
 - pain_headline_en: "I segment my customer list in Excel because my email tool can't do it."
 - pain_headline_es: "Segmento mi lista de clientes en Excel porque mi herramienta de correo no puede."
 - pain_body_en: |
-    To send a targeted campaign — say, customers who bought twice in the last 90 days but
-    haven't opened our last three emails — I export the customer list, run VLOOKUPs against
-    purchase history, filter on engagement, and upload the result back into Mailchimp.
-    Half a day every campaign, and the segments go stale the moment I'm done.
+    A targeted campaign — say, customers who bought twice in the last 90 days but who
+    haven't opened our last three emails — requires me to do real work. I export the
+    customer list and run VLOOKUPs against purchase history. Then I filter on engagement
+    and upload the result back into Mailchimp. Half a day every campaign, and the segments
+    go stale the moment I'm done.
 - pain_body_es: |
-    Para mandar una campana enfocada — por ejemplo, clientes que compraron dos veces en los
-    ultimos 90 dias pero no abrieron mis tres ultimos correos — exporto la lista, hago
-    VLOOKUPs contra el historial de compras, filtro por engagement y subo el resultado a
-    Mailchimp. Medio dia por campana, y los segmentos se quedan viejos en cuanto termino.
+    Una campana enfocada — por ejemplo, clientes que compraron dos veces en los ultimos
+    90 dias pero que no abrieron mis tres ultimos correos — me obliga a hacer trabajo
+    real. Exporto la lista y hago VLOOKUPs contra el historial de compras. Despues filtro
+    por engagement y subo el resultado a Mailchimp. Medio dia por campana, y los segmentos
+    se quedan viejos en cuanto termino.
 - impact_label_en: "~3 hrs/week saved"
 - impact_label_es: "~3 hrs/semana ahorradas"
 - templates:
@@ -504,15 +506,16 @@
 - pain_headline_en: "I find out my competitor launched a new product from a customer, not from monitoring."
 - pain_headline_es: "Me entero que mi competidor saco un producto por un cliente, no por monitoreo."
 - pain_body_en: |
-    My biggest competitor announced a new pricing tier on LinkedIn and I didn't see it for
-    five weeks — until a customer asked why our pricing wasn't matching. I want a daily
-    digest of competitor news, pricing changes, hires, and social posts, but I'm not going
-    to manually scroll three LinkedIn pages every morning.
+    My biggest competitor announced a new pricing tier on LinkedIn last quarter. I didn't
+    see it for five weeks — until a customer asked why our pricing wasn't matching theirs.
+    I want a daily digest of competitor news, pricing changes, hires, and social posts. But
+    I'm not going to manually scroll three LinkedIn pages every morning to get one.
 - pain_body_es: |
-    Mi competidor mas grande anuncio un nuevo nivel de precios en LinkedIn y no lo vi por
-    cinco semanas — hasta que un cliente pregunto por que mi precio no coincidia. Quiero un
-    resumen diario de noticias, cambios de precio, contrataciones y posts sociales de
-    competidores, pero no voy a scrollear tres paginas de LinkedIn cada manana.
+    Mi competidor mas grande anuncio un nuevo nivel de precios en LinkedIn el trimestre
+    pasado. No lo vi por cinco semanas, hasta que un cliente pregunto por que mi precio no
+    coincidia. Quiero un resumen diario de noticias, cambios de precio, contrataciones y
+    posts sociales. Pero no voy a scrollear tres paginas de LinkedIn cada manana para
+    armarlo.
 - impact_label_en: "~2 hrs/week saved"
 - impact_label_es: "~2 hrs/semana ahorradas"
 - templates:
