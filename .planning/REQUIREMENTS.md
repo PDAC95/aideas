@@ -28,9 +28,9 @@ Requirements for the Public Funnel & Factory Reskin milestone. Each maps to exac
 
 ### Scenario Content Seed
 
-- [ ] **SCEN-01**: Seed 50 client-language scenarios across 7 functional areas with EN/ES pain copy
-- [ ] **SCEN-02**: Map ~135 n8n templates (from awesome-n8n-templates + custom) to scenarios via `scenario_templates`
-- [ ] **SCEN-03**: Each scenario carries a typical-impact estimate (hours/week or tasks/month) used by the ROI calculator
+- [x] **SCEN-01**: Seed 50 client-language scenarios across 7 functional areas with EN/ES pain copy
+- [x] **SCEN-02**: Map ~135 n8n templates (from awesome-n8n-templates + custom) to scenarios via `scenario_templates`
+- [x] **SCEN-03**: Each scenario carries a typical-impact estimate (hours/week or tasks/month) used by the ROI calculator
 - [x] **SCEN-04**: Seed re-runnable / idempotent so dev environments can re-seed without manual cleanup
 
 ### Public Landing Page
@@ -151,9 +151,9 @@ Every v1.3 requirement maps to exactly one phase. Verified 100% coverage.
 | CAT-03 | Phase 26 — Catalog Data Model | Complete |
 | CAT-04 | Phase 26 — Catalog Data Model | Complete |
 | CAT-05 | Phase 26 — Catalog Data Model | Complete |
-| SCEN-01 | Phase 27 — Scenario Content Seed | Pending |
-| SCEN-02 | Phase 27 — Scenario Content Seed | Pending |
-| SCEN-03 | Phase 27 — Scenario Content Seed | Pending |
+| SCEN-01 | Phase 27 — Scenario Content Seed | Complete |
+| SCEN-02 | Phase 27 — Scenario Content Seed | Complete |
+| SCEN-03 | Phase 27 — Scenario Content Seed | Complete |
 | SCEN-04 | Phase 27 — Scenario Content Seed | Complete |
 | LAND-01 | Phase 28 — Public Landing Page | Pending |
 | LAND-02 | Phase 28 — Public Landing Page | Pending |

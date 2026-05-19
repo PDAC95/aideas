@@ -4,21 +4,24 @@ milestone: v1.3
 milestone_name: Public Funnel & Factory Reskin
 phase: 27
 phase_name: Scenario Content Seed
-current_plan: 3
+current_plan: 4
 total_plans_in_phase: 4
 status: executing
-stopped_at: "Completed 27-02-PLAN.md (50 bilingual scenarios drafted with 150 DB-validated template mappings; Patrick approved draft at human-verify checkpoint on 2026-05-19; 27-SCENARIO-DRAFT.md locked as source-of-truth for Plan 27-03 SQL transform; SCEN-01/02/03 contractually addressed, physical DB realization deferred to 27-03)"
-last_updated: "2026-05-19T00:00:00Z"
+stopped_at: "Completed 27-03-PLAN.md (50 scenarios + 150 scenario_templates rows appended to supabase/seed.sql via idempotent ON CONFLICT block; full-reset + double-reset + in-place psql replay all proven idempotent; all 8 content-integrity assertions A-H pass against live DB; anon RLS chain returns full dataset end-to-end; web build exit 0; SCEN-01/02/03/04 physically realized in DB)"
+last_updated: "2026-05-19T14:50:51Z"
 last_activity: 2026-05-19
 progress:
   total_phases: 21
   completed_phases: 20
   total_plans: 67
-  completed_plans: 65
+  completed_plans: 66
 decisions:
   - "Plan 27-02 draft authored as Markdown intermediate format (not direct SQL) so reviewer edits don't require SQL diffing — Plan 27-03 transforms the locked draft"
   - "Template slug validation uses live-DB query (docker exec psql SELECT slug FROM automation_templates), not seed.sql regex scrape — avoids false-positive matches on category/industry array values"
   - "Hour estimates stored as whole integers despite DOUBLE PRECISION schema column — CONTEXT.md restricts 1-20 int, enforced at seed-time validator; hardening migration deferred to a future plan"
+  - "Scenarios + scenario_templates seed lives in supabase/seed.sql (not a migration) because scenario_templates.template_id FKs automation_templates which is itself seeded by seed.sql — migration-based seed would resolve template_id from an empty table and violate NOT NULL"
+  - "ON CONFLICT (slug) DO UPDATE on scenarios + ON CONFLICT (scenario_id, template_id) DO UPDATE on the pivot — both replay contracts (db reset and in-place psql pipe) proven idempotent with stable counts and advancing updated_at"
+  - "Mechanical Markdown-to-SQL transform pattern: ephemeral transformer reads locked draft, validates against live DB, emits idempotent SQL, deletes itself — only the deterministic artifact ships to git"
 ---
 
 ---
