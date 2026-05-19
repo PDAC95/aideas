@@ -28,7 +28,7 @@ Requirements for the Public Funnel & Factory Reskin milestone. Each maps to exac
 
 ### Scenario Content Seed
 
-- [x] **SCEN-01**: Seed 50 client-language scenarios across 7 functional areas with EN/ES pain copy
+- [x] **SCEN-01**: Seed 50 client-language scenarios across 8 functional areas with EN/ES pain copy
 - [x] **SCEN-02**: Map ~135 n8n templates (from awesome-n8n-templates + custom) to scenarios via `scenario_templates`
 - [x] **SCEN-03**: Each scenario carries a typical-impact estimate (hours/week or tasks/month) used by the ROI calculator
 - [x] **SCEN-04**: Seed re-runnable / idempotent so dev environments can re-seed without manual cleanup
