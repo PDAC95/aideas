@@ -65,7 +65,7 @@ Full details: [milestones/v1.2-ROADMAP.md](milestones/v1.2-ROADMAP.md)
 
 - [x] **Phase 25: Design System Migration** — Replace OKLCH theme with Factory.ai tokens (light bg #eeeeee, cards #fafafa, Code Orange #ef6f2e accent, Geist Sans/Mono, 4px/6px radii, no shadows) (completed 2026-05-15)
 - [x] **Phase 26: Catalog Data Model** — Add `functional_areas` + `scenarios` + `scenario_templates` schema with anonymous-read RLS, preserving current 66+ template back-compat (completed 2026-05-15)
-- [ ] **Phase 27: Scenario Content Seed** — Seed 50 client-language scenarios mapped to ~135 n8n templates across 8 functional areas with EN/ES pain copy and typical-impact estimates
+- [x] **Phase 27: Scenario Content Seed** — Seed 50 client-language scenarios mapped to ~135 n8n templates across 8 functional areas with EN/ES pain copy and typical-impact estimates (completed 2026-05-19)
 - [ ] **Phase 28: Public Landing Page** — SSR `/` route with Hero, Working Process, Services, Pricing, FAQ, CTA sections, SEO essentials, and EN/ES parity
 - [ ] **Phase 29: Public Catalog Navigation** — SSR `/catalog` with functional-area landing pages, scenario detail pages, cross-linking, and SEO essentials
 - [ ] **Phase 30: Scenario Selector + ROI Calculator** — Multi-select UI, persistent selection state, plan view with hours-saved aggregation and CAD employee-cost equivalent
@@ -206,7 +206,7 @@ Full details: [milestones/v1.2-ROADMAP.md](milestones/v1.2-ROADMAP.md)
 |-------|----------------|--------|-----------|
 | 25. Design System Migration | 7/7 | Complete    | 2026-05-15 |
 | 26. Catalog Data Model | 3/3 | Complete    | 2026-05-15 |
-| 27. Scenario Content Seed | 3/4 | In Progress|  |
+| 27. Scenario Content Seed | 4/4 | Complete   | 2026-05-19 |
 | 28. Public Landing Page | 0/? | Not started | - |
 | 29. Public Catalog Navigation | 0/? | Not started | - |
 | 30. Scenario Selector + ROI Calculator | 0/? | Not started | - |

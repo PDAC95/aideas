@@ -6,22 +6,31 @@ phase: 27
 phase_name: Scenario Content Seed
 current_plan: 4
 total_plans_in_phase: 4
-status: executing
-stopped_at: "Completed 27-03-PLAN.md (50 scenarios + 150 scenario_templates rows appended to supabase/seed.sql via idempotent ON CONFLICT block; full-reset + double-reset + in-place psql replay all proven idempotent; all 8 content-integrity assertions A-H pass against live DB; anon RLS chain returns full dataset end-to-end; web build exit 0; SCEN-01/02/03/04 physically realized in DB)"
-last_updated: "2026-05-19T14:50:51Z"
+status: ready_for_verifier
+stopped_at: "Completed 27-04-PLAN.md (ROADMAP+REQUIREMENTS corrected from 7 to 8 functional areas; end-to-end phase verification V1-V7 all PASS — 8 areas, 50 scenarios, 150 mappings, 0 orphans, full bilingual coverage, integer hours 1-20, anon RLS chain returns full dataset; web build exit 0; SCEN-01/02/03/04 confirmed shipped; constraint gap on scenarios.typical_hours_per_week documented for future admin-CRUD phase). Phase 27 ready for /gsd:verify-work and /gsd:complete-phase."
+last_updated: "2026-05-19T15:06:00Z"
 last_activity: 2026-05-19
 progress:
   total_phases: 21
-  completed_phases: 20
+  completed_phases: 21
   total_plans: 67
-  completed_plans: 66
+  completed_plans: 67
 decisions:
+  - "ROADMAP+REQUIREMENTS '7 functional areas' placeholder corrected to '8' inline at phase close (per CONTEXT.md decision to fix in-phase, not as follow-up) — preserves success-criteria consistency with shipped reality"
+  - "End-of-phase verification V1-V7 SQL block established as reusable harness for future content-seed phases (count per layer + per-parent distribution + bilingual-completeness FILTER + integer-range CHECK simulation + anon-role RLS chain SET/RESET)"
+  - "scenarios.typical_hours_per_week schema CHECK gap (DB allows >=0, seed-time enforces integer 1-20) deferred to future admin-CRUD-for-scenarios phase — out of Phase 27 scope, low urgency since Patrick controls writes"
   - "Plan 27-02 draft authored as Markdown intermediate format (not direct SQL) so reviewer edits don't require SQL diffing — Plan 27-03 transforms the locked draft"
   - "Template slug validation uses live-DB query (docker exec psql SELECT slug FROM automation_templates), not seed.sql regex scrape — avoids false-positive matches on category/industry array values"
-  - "Hour estimates stored as whole integers despite DOUBLE PRECISION schema column — CONTEXT.md restricts 1-20 int, enforced at seed-time validator; hardening migration deferred to a future plan"
   - "Scenarios + scenario_templates seed lives in supabase/seed.sql (not a migration) because scenario_templates.template_id FKs automation_templates which is itself seeded by seed.sql — migration-based seed would resolve template_id from an empty table and violate NOT NULL"
   - "ON CONFLICT (slug) DO UPDATE on scenarios + ON CONFLICT (scenario_id, template_id) DO UPDATE on the pivot — both replay contracts (db reset and in-place psql pipe) proven idempotent with stable counts and advancing updated_at"
   - "Mechanical Markdown-to-SQL transform pattern: ephemeral transformer reads locked draft, validates against live DB, emits idempotent SQL, deletes itself — only the deterministic artifact ships to git"
+metrics:
+  - phase: 27
+    plan: 04
+    duration_min: 10
+    tasks: 2
+    files_modified: 2
+    completed: 2026-05-19
 ---
 
 ---
