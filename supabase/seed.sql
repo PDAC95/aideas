@@ -4045,6 +4045,2693 @@ ON CONFLICT (template_id, locale, field) DO NOTHING;
 
 COMMIT;
 
+
+-- =============================================================================
+-- 14. scenarios + scenario_templates (Phase 27 — scenario-first catalog content)
+-- =============================================================================
+-- Source:    .planning/phases/27-scenario-content-seed/27-SCENARIO-DRAFT.md
+-- Generator: .planning/phases/27-scenario-content-seed/27-03-PLAN.md
+--
+-- WHY here (and not in a migration): scenario_templates.template_id FKs
+-- automation_templates, which is seeded by THIS file (section 6 above), not
+-- by any migration. Supabase CLI runs migrations BEFORE seed.sql, so a
+-- migration-based seed would resolve template_id from an empty table and
+-- violate NOT NULL. functional_area_id FKs functional_areas, which IS
+-- seeded by migration 20260517000001 — that resolves fine in either order.
+--
+-- Idempotency: scenarios use ON CONFLICT (slug) DO UPDATE; pivot uses
+-- ON CONFLICT (scenario_id, template_id) DO UPDATE. The Section 0 TRUNCATE
+-- already CASCADEs scenario_templates via the automation_templates parent,
+-- so pivot rows are cleared then re-inserted on every db reset. scenarios
+-- rows persist across resets (functional_areas FK is RESTRICT), and the
+-- ON CONFLICT clause refreshes them in place.
+
+BEGIN;
+
+-- Area: ventas (10 scenarios)
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'ventas'),
+    'lead-followup-after-trade-show',
+    'I lose half my trade-show leads because I don''t follow up fast enough.',
+    'Pierdo la mitad de mis leads de feria porque no doy seguimiento a tiempo.',
+    $body_en$After every trade show I come back with a stack of business cards and the best intentions. By the time I've typed them into the CRM and drafted a first email, two weeks have gone by and the lead has gone cold. The leads I do reach get one generic email and never hear from me again. Competitors who respond inside 24 hours are eating my lunch.$body_en$,
+    $body_es$Despues de cada feria regreso con una pila de tarjetas de presentacion y muchas ganas. Para cuando las capturo en el CRM y redacto un primer correo, ya pasaron dos semanas y el lead se enfrio. A los que si contacto, les mando un correo generico y nunca vuelven a saber de mi. Mis competidores que responden en 24 horas se estan llevando mis ventas.$body_es$,
+    4::double precision,
+    '~4 hrs/week saved',
+    '~4 hrs/semana ahorradas',
+    10,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'ventas'),
+    'cold-lead-reengagement',
+    'I have hundreds of cold leads sitting in my CRM that nobody is touching.',
+    'Tengo cientos de leads frios en el CRM y nadie les esta dando seguimiento.',
+    $body_en$Every quarter I export my CRM and find 400+ leads that went silent six months ago. I know a percentage of them are still buying — just not from me. Manually writing a re-engagement note to each one takes a full week of my time, so it never happens. Those leads sit there rotting while we burn fresh ad spend on cold traffic.$body_en$,
+    $body_es$Cada trimestre exporto mi CRM y encuentro mas de 400 leads que dejaron de contestar hace seis meses. Se que un porcentaje sigue comprando, solo que no a mi. Escribir un mensaje de reactivacion personalizado a cada uno me llevaria una semana entera, asi que nunca lo hago. Esos leads se quedan ahi mientras gastamos en trafico nuevo.$body_es$,
+    3::double precision,
+    '~3 hrs/week saved',
+    '~3 hrs/semana ahorradas',
+    20,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'ventas'),
+    'manual-crm-form-entry',
+    'My team retypes every web-form lead into the CRM by hand.',
+    'Mi equipo recaptura cada lead del formulario web a mano en el CRM.',
+    $body_en$Our website forms drop submissions into an email inbox, and someone on the sales team copy-pastes the fields into HubSpot one record at a time. We make typos, we miss fields, and worst of all the leads sit in the inbox for hours before they even get into the pipeline. A 2-person team loses almost a full day a week to this.$body_en$,
+    $body_es$Nuestros formularios web envian las respuestas a un correo, y alguien del equipo de ventas copia y pega los campos uno por uno en HubSpot. Cometemos errores, omitimos datos, y peor aun los leads se quedan en el inbox horas antes de entrar al pipeline. Un equipo de 2 personas pierde casi un dia completo a la semana en esto.$body_es$,
+    5::double precision,
+    '~5 hrs/week saved',
+    '~5 hrs/semana ahorradas',
+    30,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'ventas'),
+    'stalled-deal-pipeline-alerts',
+    'Deals slip through the cracks because nobody flags them when they stall.',
+    'Se nos escapan negocios porque nadie nos avisa cuando se estancan.',
+    $body_en$Last month a $40K deal sat untouched in 'Proposal Sent' for three weeks because the rep forgot about it. I only noticed during the monthly pipeline review, and by then the prospect had signed with someone else. I need somebody to poke me the moment a deal has been idle longer than expected, but I don't have time to babysit the CRM every day.$body_en$,
+    $body_es$El mes pasado un negocio de $40K se quedo tres semanas sin avanzar en 'Propuesta Enviada' porque el vendedor lo olvido. Solo lo note en la revision mensual del pipeline, y para entonces el prospecto ya habia firmado con otro. Necesito que alguien me alerte cuando un deal lleva mas tiempo del normal sin movimiento, pero no puedo estar revisando el CRM todos los dias.$body_es$,
+    2::double precision,
+    '~2 hrs/week saved',
+    '~2 hrs/semana ahorradas',
+    40,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'ventas'),
+    'lead-scoring-by-gut',
+    'My reps prioritize leads by gut feeling and miss the ones most likely to buy.',
+    'Mis vendedores priorizan leads por intuicion y se les escapan los que mas compran.',
+    $body_en$Every Monday my reps pick which 20 leads to call based on whichever names they recognize. The result is predictable: they chase the loudest leads, not the warmest ones. We have behavior data (page visits, opens, replies) sitting in our tools, but nobody combines it into a score we can act on. The leads most ready to buy go to voicemail.$body_en$,
+    $body_es$Cada lunes mis vendedores escogen 20 leads para llamar segun los nombres que reconocen. El resultado es predecible: persiguen a los mas ruidosos, no a los mas tibios. Tenemos datos de comportamiento (visitas, aperturas, respuestas) regados en herramientas, pero nadie los combina en una calificacion accionable. Los leads listos para comprar quedan sin contestar.$body_es$,
+    3::double precision,
+    '~3 hrs/week saved',
+    '~3 hrs/semana ahorradas',
+    50,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'ventas'),
+    'proposal-drafting-from-scratch',
+    'Every proposal starts from a blank document — even when 80% is boilerplate.',
+    'Cada propuesta arranca desde cero, aun cuando el 80% es texto repetido.',
+    $body_en$For each new prospect I rebuild the proposal: copy the last one, swap the client name, adjust pricing, hunt down the right case studies. A 6-page proposal swallows half a day, and on a good week I send three. I know most of it is reusable boilerplate, but I don't have a clean way to drop in client-specific facts and pricing without breaking the layout.$body_en$,
+    $body_es$Por cada prospecto nuevo reconstruyo la propuesta: copio la anterior, cambio el nombre, ajusto precios, busco los casos de exito correctos. Una propuesta de 6 paginas me toma medio dia, y en buena semana mando tres. La mayoria es texto reusable, pero no tengo una manera limpia de inyectar datos y precios especificos sin romper el formato.$body_es$,
+    5::double precision,
+    '~5 hrs/week saved',
+    '~5 hrs/semana ahorradas',
+    60,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'ventas'),
+    'quote-calculation-in-spreadsheets',
+    'Building a quote means juggling three spreadsheets and praying I got the math right.',
+    'Armar una cotizacion significa malabarear tres hojas de calculo y rezar que el calculo este bien.',
+    $body_en$Pricing depends on product mix, volume tiers, shipping zone, and current promos. I keep all of that in spreadsheets that one wrong cell can blow up. When I send the wrong quote we either lose money or look unprofessional. Customers also wait 24-48 hours for a quote that should take 5 minutes.$body_en$,
+    $body_es$El precio depende del mix de productos, escalones de volumen, zona de envio y promos del momento. Todo eso vive en hojas de calculo donde una celda mal puesta lo arruina todo. Cuando mando una cotizacion mal, perdemos dinero o quedamos mal. El cliente ademas espera 24-48 horas por algo que deberia tardar 5 minutos.$body_es$,
+    3::double precision,
+    '~3 hrs/week saved',
+    '~3 hrs/semana ahorradas',
+    70,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'ventas'),
+    'monthly-sales-forecast-by-hand',
+    'I rebuild my sales forecast by hand every month and it''s still half wrong.',
+    'Reconstruyo el pronostico de ventas a mano cada mes y aun asi sale a medias.',
+    $body_en$On the first of every month I pull CRM exports, weight each deal by stage, multiply by historical close rates, and assemble a forecast in Excel. It takes a full day and the moment a rep updates a stage the model is stale. My board asks for confidence intervals I can't produce because I'm modeling by hand.$body_en$,
+    $body_es$El primer dia del mes exporto el CRM, pondero cada negocio por etapa, multiplico por tasas historicas de cierre y armo el pronostico en Excel. Me lleva un dia completo y en cuanto un vendedor cambia una etapa el modelo queda desactualizado. La direccion me pide intervalos de confianza que no puedo dar porque modelo a mano.$body_es$,
+    2::double precision,
+    '~2 hrs/week saved',
+    '~2 hrs/semana ahorradas',
+    80,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'ventas'),
+    'territory-performance-buried',
+    'I have no clean view of how each territory is performing this month.',
+    'No tengo una vista clara de como va cada territorio este mes.',
+    $body_en$My reps cover four regions and I need to know who's hitting quota and who's slipping — weekly, not at quarter-end. The CRM has the data but the canned reports are useless: I end up exporting to Excel, pivoting by territory, comparing to last month. Two hours every Monday, and by Wednesday the numbers have moved.$body_en$,
+    $body_es$Mis vendedores cubren cuatro regiones y necesito saber quien va arriba o abajo de cuota cada semana, no al cierre del trimestre. El CRM tiene la data pero los reportes preconfi son inutiles: termino exportando a Excel, pivoteando por territorio y comparando contra el mes anterior. Dos horas cada lunes, y para el miercoles los numeros ya cambiaron.$body_es$,
+    2::double precision,
+    '~2 hrs/week saved',
+    '~2 hrs/semana ahorradas',
+    90,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'ventas'),
+    'win-loss-debrief-undocumented',
+    'We keep losing for the same reasons but nobody documents the losses.',
+    'Perdemos por las mismas razones pero nadie documenta las perdidas.',
+    $body_en$When a deal closes 'Lost' the rep updates one dropdown and moves on. Three months later the head of sales asks why win rate dropped and we have nothing to point at. The patterns are probably obvious if somebody bothered to look — pricing pushback in Q2, slow demos in enterprise, whatever — but the data was never captured in a usable shape.$body_en$,
+    $body_es$Cuando un negocio se cierra 'Perdido', el vendedor actualiza un dropdown y sigue. Tres meses despues el director de ventas pregunta por que bajo el win rate y no tenemos nada que mostrar. Los patrones probablemente son obvios si alguien revisara — objeciones de precio en Q2, demos lentas en enterprise, lo que sea — pero la data nunca quedo en una forma usable.$body_es$,
+    2::double precision,
+    '~2 hrs/week saved',
+    '~2 hrs/semana ahorradas',
+    100,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+-- Area: marketing (10 scenarios)
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'marketing'),
+    'email-campaign-build-takes-days',
+    'Every email campaign is a three-day fire drill from copy to send.',
+    'Cada campana de correo es una urgencia de tres dias entre redaccion y envio.',
+    $body_en$Building one campaign takes my marketer most of a week: write the copy, design the template, segment the list, set up A/B variants, schedule the send, hand-write the follow-up. The deadline always slips, the design always breaks on mobile, and we ship fewer campaigns per quarter than we planned. We're leaving revenue on the table.$body_en$,
+    $body_es$Armar una campana le toma a mi marketer casi una semana: escribir el copy, disenar la plantilla, segmentar la lista, configurar variantes A/B, programar el envio y armar el seguimiento. La fecha siempre se mueve, el diseno siempre se rompe en mobile, y mandamos menos campanas de las planeadas por trimestre. Dejamos ingreso en la mesa.$body_es$,
+    5::double precision,
+    '~5 hrs/week saved',
+    '~5 hrs/semana ahorradas',
+    10,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'marketing'),
+    'social-posts-one-platform-at-a-time',
+    'Posting to four channels means logging into four different tools.',
+    'Publicar en cuatro canales significa entrar a cuatro herramientas distintas.',
+    $body_en$My marketing person uploads the same image to Instagram, LinkedIn, Facebook, and X — each with its own caption format, character limit, and hashtag rules. A single post cycle takes 90 minutes. Worse, when we want to repurpose a top-performing post next month, we re-do all the work from scratch because nobody saved the variants.$body_en$,
+    $body_es$Mi encargada de marketing sube la misma imagen a Instagram, LinkedIn, Facebook y X, cada una con su formato de caption, limite de caracteres y reglas de hashtags. Un ciclo de post toma 90 minutos. Peor: cuando queremos reutilizar un post exitoso el mes que viene, rehacemos todo el trabajo porque nadie guardo las variantes.$body_es$,
+    4::double precision,
+    '~4 hrs/week saved',
+    '~4 hrs/semana ahorradas',
+    20,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'marketing'),
+    'content-briefs-on-whiteboards',
+    'My content calendar lives on a whiteboard and almost everything ships late.',
+    'Mi calendario de contenido vive en un pizarron y casi todo sale tarde.',
+    $body_en$We brainstorm content topics in a meeting, write them on the whiteboard, and then realize three weeks later that nobody actually drafted anything. Half the topics need a research pass we never make time for. Our blog has three posts this quarter and our competitors have twenty.$body_en$,
+    $body_es$En junta hacemos lluvia de temas, los anotamos en el pizarron, y tres semanas despues nos damos cuenta de que nadie escribio nada. La mitad de los temas necesitan investiga que nunca hacemos. Nuestro blog tiene tres posts este trimestre y la competencia tiene veinte.$body_es$,
+    4::double precision,
+    '~4 hrs/week saved',
+    '~4 hrs/semana ahorradas',
+    30,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'marketing'),
+    'newsletter-copy-paste',
+    'Our monthly newsletter is built by copy-pasting from Slack and old emails.',
+    'El newsletter mensual lo armamos copiando y pegando de Slack y correos viejos.',
+    $body_en$The newsletter takes a full afternoon: scroll Slack for product wins, pull links from last month's case studies, ask the team for headshots, format it all in Mailchimp, test on three email clients. Every month I tell myself this should be automated and every month it isn't. Open rates are fine — we just hate making it.$body_en$,
+    $body_es$El newsletter mensual toma una tarde completa: revisar Slack por logros, sacar links de casos del mes pasado, pedir fotos al equipo, formatear todo en Mailchimp, probar en tres clientes de correo. Cada mes me digo que esto deberia automatizarse y cada mes no pasa. Las aperturas estan bien — solo odiamos hacerlo.$body_es$,
+    3::double precision,
+    '~3 hrs/week saved',
+    '~3 hrs/semana ahorradas',
+    40,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'marketing'),
+    'audience-segmentation-spreadsheets',
+    'I segment my customer list in Excel because my email tool can''t do it.',
+    'Segmento mi lista de clientes en Excel porque mi herramienta de correo no puede.',
+    $body_en$A targeted campaign — say, customers who bought twice in the last 90 days but who haven't opened our last three emails — requires me to do real work. I export the customer list and run VLOOKUPs against purchase history. Then I filter on engagement and upload the result back into Mailchimp. Half a day every campaign, and the segments go stale the moment I'm done.$body_en$,
+    $body_es$Una campana enfocada — por ejemplo, clientes que compraron dos veces en los ultimos 90 dias pero que no abrieron mis tres ultimos correos — me obliga a hacer trabajo real. Exporto la lista y hago VLOOKUPs contra el historial de compras. Despues filtro por engagement y subo el resultado a Mailchimp. Medio dia por campana, y los segmentos se quedan viejos en cuanto termino.$body_es$,
+    3::double precision,
+    '~3 hrs/week saved',
+    '~3 hrs/semana ahorradas',
+    50,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'marketing'),
+    'ad-performance-reviewed-too-late',
+    'I find out an ad campaign is bleeding money two weeks after it started.',
+    'Me entero que una campana esta perdiendo dinero dos semanas tarde.',
+    $body_en$My agency sends a PDF performance report on the 15th of the next month. By then a bad creative has already burned through $3K and my best variant is exhausted. I want to see daily CPL and ROAS across all my ad platforms in one place, but logging into Meta, Google Ads, and LinkedIn each morning isn't going to happen.$body_en$,
+    $body_es$Mi agencia me manda un PDF de desempeno el dia 15 del mes siguiente. Para ese punto un creativo malo ya quemo $3K y mi mejor variante ya se agoto. Quiero ver CPL y ROAS diarios de todas mis plataformas en un solo lugar, pero entrar a Meta, Google Ads y LinkedIn cada manana no va a pasar.$body_es$,
+    3::double precision,
+    '~3 hrs/week saved',
+    '~3 hrs/semana ahorradas',
+    60,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'marketing'),
+    'seo-regressions-caught-late',
+    'We lose ranking on a key page and don''t notice until traffic drops 30%.',
+    'Perdemos ranking en una pagina clave y no lo notamos hasta que el trafico cae 30%.',
+    $body_en$Last quarter a single broken canonical tag knocked our top product page off the first page of Google. We caught it after a month of declining sessions because nobody is monitoring SEO health daily. Manual audits with Screaming Frog take a full afternoon so we run them once a quarter, not weekly.$body_en$,
+    $body_es$El trimestre pasado un canonical roto saco nuestra pagina principal de producto de la primera pagina de Google. Lo notamos despues de un mes de sesiones cayendo porque nadie monitorea la salud SEO a diario. Las auditorias manuales con Screaming Frog toman una tarde, asi que las hacemos trimestral, no semanal.$body_es$,
+    2::double precision,
+    '~2 hrs/week saved',
+    '~2 hrs/semana ahorradas',
+    70,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'marketing'),
+    'marketing-roi-guessed',
+    'I can''t tell the board which marketing channel actually drives revenue.',
+    'No le puedo decir al consejo cual canal de marketing si trae ingreso.',
+    $body_en$At quarter-end I sit down to attribute revenue back to source and immediately get stuck: Google Analytics says one thing, the CRM says another, and 30% of deals have no tracked source at all. I end up presenting gut estimates labeled 'directional'. The CEO has stopped trusting the slide.$body_en$,
+    $body_es$Al cierre de trimestre me siento a atribuir ingreso a canal y me atoro: Google Analytics dice una cosa, el CRM dice otra, y el 30% de los negocios no tiene fuente registrada. Al final presento estimados rotulados 'direccionales'. El CEO ya no confia en esa lamina.$body_es$,
+    2::double precision,
+    '~2 hrs/week saved',
+    '~2 hrs/semana ahorradas',
+    80,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'marketing'),
+    'fresh-copy-under-deadline',
+    'I need fresh copy for blog, ads, and social and there''s never enough hours.',
+    'Necesito copy fresco para blog, ads y social y nunca alcanza el tiempo.',
+    $body_en$Between blog posts, ad variants, landing page hero copy, and social captions, my one-person marketing team writes 12-15 distinct pieces a week. Every one needs research, brand-voice review, and rounds of edits. The team ships maybe half of what we plan and burns out doing it. We need a faster first draft.$body_en$,
+    $body_es$Entre posts de blog, variantes de ads, copy de landing y captions sociales, mi equipo de una persona escribe 12-15 piezas por semana. Cada una necesita investigacion, revision de voz de marca y rondas de edicion. El equipo entrega quizas la mitad de lo planeado y se quema haciendolo. Necesitamos un primer draft mas rapido.$body_es$,
+    4::double precision,
+    '~4 hrs/week saved',
+    '~4 hrs/semana ahorradas',
+    90,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'marketing'),
+    'competitor-moves-spotted-late',
+    'I find out my competitor launched a new product from a customer, not from monitoring.',
+    'Me entero que mi competidor saco un producto por un cliente, no por monitoreo.',
+    $body_en$My biggest competitor announced a new pricing tier on LinkedIn last quarter. I didn't see it for five weeks — until a customer asked why our pricing wasn't matching theirs. I want a daily digest of competitor news, pricing changes, hires, and social posts. But I'm not going to manually scroll three LinkedIn pages every morning to get one.$body_en$,
+    $body_es$Mi competidor mas grande anuncio un nuevo nivel de precios en LinkedIn el trimestre pasado. No lo vi por cinco semanas, hasta que un cliente pregunto por que mi precio no coincidia. Quiero un resumen diario de noticias, cambios de precio, contrataciones y posts sociales. Pero no voy a scrollear tres paginas de LinkedIn cada manana para armarlo.$body_es$,
+    2::double precision,
+    '~2 hrs/week saved',
+    '~2 hrs/semana ahorradas',
+    100,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+-- Area: atencion-al-cliente (8 scenarios)
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'atencion-al-cliente'),
+    'tickets-bouncing-between-teams',
+    'Every support ticket gets reassigned three times before anyone owns it.',
+    'Cada ticket de soporte se reasigna tres veces antes de que alguien lo tome.',
+    $body_en$A customer asks about billing and the ticket lands in tech support. Tech support reassigns it to sales. Sales bounces it back to billing. By the time the right person has it, two days have passed and the customer is furious. My team spends as much time routing tickets as they do solving them.$body_en$,
+    $body_es$Un cliente pregunta sobre facturacion y el ticket cae en soporte tecnico. Soporte tecnico lo reasigna a ventas. Ventas lo regresa a facturacion. Para cuando le llega a la persona correcta, ya pasaron dos dias y el cliente esta furioso. Mi equipo gasta tanto tiempo enrutando tickets como resolviendolos.$body_es$,
+    8::double precision,
+    '~8 hrs/week saved',
+    '~8 hrs/semana ahorradas',
+    10,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'atencion-al-cliente'),
+    'same-questions-fifty-times-week',
+    'My team answers the same 10 questions over and over while real issues wait.',
+    'Mi equipo contesta las mismas 10 preguntas una y otra vez mientras los problemas reales esperan.',
+    $body_en$'How do I reset my password.' 'Where is my order.' 'What's your return policy.' My team answers these 50+ times a week, typing the same paragraph each time. Meanwhile a customer with a real escalation is waiting in the queue. We have a help center, but customers email instead of reading it.$body_en$,
+    $body_es$'Como reseteo mi password.' 'Donde esta mi pedido.' 'Cual es su politica de devolucion.' Mi equipo contesta esto mas de 50 veces a la semana, escribiendo el mismo parrafo. Mientras tanto un cliente con un escalamiento real esta esperando. Tenemos un centro de ayuda, pero los clientes prefieren mandar correo en vez de leer.$body_es$,
+    10::double precision,
+    '~10 hrs/week saved',
+    '~10 hrs/semana ahorradas',
+    20,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'atencion-al-cliente'),
+    'no-after-hours-coverage',
+    'Customers who write after 6pm wait until morning for any response.',
+    'Los clientes que escriben despues de las 6pm esperan hasta la manana para cualquier respuesta.',
+    $body_en$Half my customer base is in time zones where our 9-to-5 means business hours overlap by two hours. They write us at 7pm Pacific and get nothing until 9am Eastern the next day. Tickets pile up overnight and Monday mornings are an avalanche. I can't afford to staff a graveyard shift but I can't keep losing customers to slow responses.$body_en$,
+    $body_es$La mitad de mis clientes esta en zonas horarias donde nuestro 9-a-5 solo coincide dos horas. Nos escriben a las 7pm Pacifico y no reciben nada hasta las 9am Este al dia siguiente. Los tickets se acumulan de noche y los lunes son una avalancha. No puedo pagar un turno nocturno, pero tampoco puedo seguir perdiendo clientes por respuestas lentas.$body_es$,
+    5::double precision,
+    '~5 hrs/week saved',
+    '~5 hrs/semana ahorradas',
+    30,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'atencion-al-cliente'),
+    'sla-breaches-discovered-late',
+    'We breach SLAs and only find out when the customer escalates to my inbox.',
+    'Incumplimos SLAs y solo nos enteramos cuando el cliente escala a mi inbox.',
+    $body_en$Our contracts promise a 4-hour first-response SLA. We meet it most of the time but the misses go unnoticed until an angry customer copies my CEO. I want to know the moment a ticket is 30 minutes from breaching, not 30 minutes after. Manual queue-checking by my team-lead doesn't scale past 50 open tickets.$body_en$,
+    $body_es$Nuestros contratos prometen primer respuesta en 4 horas. La mayoria del tiempo lo cumplimos, pero los incumplimientos pasan desapercibidos hasta que un cliente molesto copia al CEO. Quiero saber en el momento en que un ticket esta a 30 minutos de incumplir, no 30 minutos despues. La revision manual del lider de equipo no escala arriba de 50 tickets abiertos.$body_es$,
+    3::double precision,
+    '~3 hrs/week saved',
+    '~3 hrs/semana ahorradas',
+    40,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'atencion-al-cliente'),
+    'negative-reviews-fester',
+    'We let negative Google reviews sit for weeks because nobody owns review response.',
+    'Dejamos resenas negativas de Google ahi semanas porque nadie es duenio de responderlas.',
+    $body_en$A 2-star review from last month is still the first thing new prospects see. We meant to respond but the link to the review platform sits in a Slack message that scrolled off. Even when we do respond, the reply is canned because we don't have time to write a real answer. Our rating is slipping and we're not doing the basic work to defend it.$body_en$,
+    $body_es$Una resena de 2 estrellas del mes pasado sigue siendo lo primero que ven los prospectos. Pensabamos contestar, pero el link a la plataforma quedo sepultado en Slack. Y cuando si contestamos, la respuesta es enlatada porque no nos da tiempo de redactar algo real. Nuestra calificacion va bajando y no estamos haciendo ni lo basico para defenderla.$body_es$,
+    3::double precision,
+    '~3 hrs/week saved',
+    '~3 hrs/semana ahorradas',
+    50,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'atencion-al-cliente'),
+    'satisfaction-surveys-nobody-sends',
+    'We keep saying we''ll send a CSAT survey after every ticket and never do.',
+    'Llevamos meses diciendo que mandaremos encuestas CSAT despues de cada ticket y nunca pasa.',
+    $body_en$Customers leave support interactions and we have no idea if they were happy. We discussed setting up a post-resolution survey but it kept slipping behind firefighting work. Without CSAT data, I can't tell my team where they're succeeding or failing, and I can't tell my board whether the support team is improving.$body_en$,
+    $body_es$Los clientes terminan una interaccion de soporte y no tenemos idea si quedaron contentos. Hablamos de configurar una encuesta posterior pero siempre la atropella el firefighting. Sin datos de CSAT no puedo decirle a mi equipo donde estan bien o mal, ni mostrarle al consejo si el equipo de soporte esta mejorando.$body_es$,
+    2::double precision,
+    '~2 hrs/week saved',
+    '~2 hrs/semana ahorradas',
+    60,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'atencion-al-cliente'),
+    'help-center-stale-articles',
+    'Half my help center articles are out of date and customers complain about it.',
+    'La mitad de los articulos de mi centro de ayuda estan desactualizados y los clientes se quejan.',
+    $body_en$Last week a customer followed our setup guide and the third screenshot showed a button that hasn't existed since the v2 release. The article hadn't been updated in 18 months. My team knows what's stale because they answer the same misdirections by email, but nobody owns rewriting the articles.$body_en$,
+    $body_es$La semana pasada un cliente siguio nuestra guia de setup y la tercera captura mostraba un boton que dejo de existir desde la version 2. El articulo no se habia actualizado en 18 meses. Mi equipo sabe que esta desactualizado porque contestan las mismas confusiones por correo, pero nadie es duenio de reescribir los articulos.$body_es$,
+    3::double precision,
+    '~3 hrs/week saved',
+    '~3 hrs/semana ahorradas',
+    70,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'atencion-al-cliente'),
+    'escalations-never-reach-manager',
+    'Customers ask for a manager and the request dies inside the ticket thread.',
+    'Los clientes piden hablar con un gerente y la peticion muere en el ticket.',
+    $body_en$A customer writes 'I need to speak with a manager' in the third reply of a ticket and nothing happens — the agent keeps replying, the manager never gets pinged. We only learn about it when the customer cancels their account citing 'manager never reached out'. The keyword is right there in the ticket, but nobody is watching for it.$body_en$,
+    $body_es$Un cliente escribe 'necesito hablar con un gerente' en la tercera respuesta del ticket y no pasa nada — el agente sigue contestando, al gerente nunca le llega un ping. Nos enteramos cuando el cliente cancela y dice 'nunca me contacto un gerente'. La palabra clave esta ahi en el ticket, pero nadie la esta monitoreando.$body_es$,
+    3::double precision,
+    '~3 hrs/week saved',
+    '~3 hrs/semana ahorradas',
+    80,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+-- Area: documentos (6 scenarios)
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'documentos'),
+    'invoices-typed-one-line-at-a-time',
+    'My bookkeeper retypes every vendor invoice into QuickBooks by hand.',
+    'Mi contadora recaptura cada factura de proveedor en QuickBooks a mano.',
+    $body_en$We get 40-60 vendor invoices a month as PDFs in email. My bookkeeper opens each one, types the vendor, amount, GL code, and due date into QuickBooks, then files the PDF in Dropbox. It's six hours a week of work that's all transcription, and a typo on a five-digit number can blow up the month-end reconciliation.$body_en$,
+    $body_es$Recibimos 40-60 facturas de proveedores al mes por correo en PDF. Mi contadora abre cada una, captura el proveedor, monto, codigo contable y fecha en QuickBooks, y guarda el PDF en Dropbox. Son seis horas a la semana de pura transcripcion, y un error en un numero de cinco digitos puede arruinar la conciliacion de fin de mes.$body_es$,
+    6::double precision,
+    '~6 hrs/week saved',
+    '~6 hrs/semana ahorradas',
+    10,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'documentos'),
+    'receipt-mountain-at-month-end',
+    'Expense reports are a paper-bag dump at the end of every month.',
+    'Los reportes de gastos son una bolsa de papel volteada al final del mes.',
+    $body_en$Sales reps come back from the field with crumpled receipts in their pockets. End of month they hand the whole bag to admin, who spends a day scanning each one, typing amounts, matching to the corporate card statement. Half the receipts are illegible thermal-paper fades. Reimbursements are always late.$body_en$,
+    $body_es$Los vendedores regresan del campo con recibos arrugados en los bolsillos. Fin de mes entregan la bolsa al admin, que pasa un dia escaneando cada uno, capturando montos y cruzando contra el estado de cuenta. La mitad son recibos termicos ilegibles. Los reembolsos siempre salen tarde.$body_es$,
+    3::double precision,
+    '~3 hrs/week saved',
+    '~3 hrs/semana ahorradas',
+    20,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'documentos'),
+    'contract-review-bottleneck',
+    'Every customer contract waits a week for legal to flag the risk clauses.',
+    'Cada contrato de cliente espera una semana a que legal marque las clausulas de riesgo.',
+    $body_en$My one outside counsel is the bottleneck on every new deal. We send her the customer's paper, she reads it line by line, flags the indemnity and IP and termination clauses, and emails back a redline three to five days later. That delay loses us deals to faster competitors. The first-pass review is mostly the same patterns over and over.$body_en$,
+    $body_es$Mi unica abogada externa es el cuello de botella en cada negocio nuevo. Le mandamos el papel del cliente, ella lo lee linea por linea, marca clausulas de indemnizacion, IP y terminacion, y devuelve un redline en tres a cinco dias. Esa demora nos hace perder negocios contra competidores mas rapidos. La revision inicial es casi siempre los mismos patrones.$body_es$,
+    5::double precision,
+    '~5 hrs/week saved',
+    '~5 hrs/semana ahorradas',
+    30,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'documentos'),
+    'compliance-documents-reactive',
+    'We only check our compliance docs are current when a customer audit forces us to.',
+    'Solo revisamos que nuestros documentos de cumplimiento esten al dia cuando un cliente nos audita.',
+    $body_en$Twice a year a customer demands proof we have current insurance, SOC certs, data processing agreements, the works. Each time we panic, dig through Dropbox, discover one cert expired three months ago, scramble to renew it. We should know what's expiring 60 days out, not be ambushed by it.$body_en$,
+    $body_es$Dos veces al ano un cliente nos pide pruebas de seguro vigente, certificados SOC, acuerdos de procesamiento de datos, todo. Cada vez nos asustamos, escarbamos Dropbox, descubrimos que un certificado vencio hace tres meses y corremos a renovarlo. Deberiamos saber que se vence con 60 dias de anticipacion, no que nos embosque.$body_es$,
+    3::double precision,
+    '~3 hrs/week saved',
+    '~3 hrs/semana ahorradas',
+    40,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'documentos'),
+    'documents-multiple-signoffs',
+    'A doc that needs three signatures takes two weeks to get approved.',
+    'Un documento que necesita tres firmas tarda dos semanas en aprobarse.',
+    $body_en$Our purchase orders over $5K need ops, finance, and CEO sign-off. The current process is forward-this-email three times, with each person sitting on it for days. We've lost vendor pricing twice because the PO didn't close before the quote expired. There's no visibility into who's blocking what.$body_en$,
+    $body_es$Nuestras ordenes de compra arriba de $5K necesitan visto bueno de operaciones, finanzas y CEO. El proceso actual es reenviar-este-correo tres veces, y cada persona lo deja sentado dias. Hemos perdido precios de proveedor dos veces porque la PO no cerro antes de que venciera la cotizacion. No hay visibilidad de quien esta bloqueando que.$body_es$,
+    3::double precision,
+    '~3 hrs/week saved',
+    '~3 hrs/semana ahorradas',
+    50,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'documentos'),
+    'templates-filled-by-hand',
+    'We fill out the same client onboarding packet by hand 30 times a month.',
+    'Llenamos el mismo paquete de onboarding a mano 30 veces al mes.',
+    $body_en$New client onboarding requires a 12-page packet: master agreement, scope, billing setup, IT access form, escalation contacts. We have templates, but our admin opens each one in Word and types in the client name, contact email, billing address, NDA party — once per template. Same data, six places, every single new client.$body_en$,
+    $body_es$El onboarding de un cliente nuevo requiere un paquete de 12 paginas: contrato maestro, alcance, datos de facturacion, formulario de acceso IT, contactos de escalacion. Tenemos plantillas, pero nuestro admin abre cada una en Word y captura el nombre, correo, direccion, parte del NDA — una vez por plantilla. La misma data, en seis lugares, por cada cliente nuevo.$body_es$,
+    4::double precision,
+    '~4 hrs/week saved',
+    '~4 hrs/semana ahorradas',
+    60,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+-- Area: productividad (6 scenarios)
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'productividad'),
+    'meeting-notes-nobody-captures',
+    'Half our meetings end with no notes and we re-debate the same decisions next week.',
+    'La mitad de nuestras juntas termina sin notas y volvemos a debatir las mismas decisiones la otra semana.',
+    $body_en$The person who took notes last meeting is on vacation, the assigned note-taker forgot, and the next person to look for the action items finds nothing. We re-litigate the same decisions every standup. I want a clean searchable record of every meeting with the decisions and owners flagged, without somebody losing half their day to scribing.$body_en$,
+    $body_es$La persona que tomo notas la semana pasada esta de vacaciones, el note-taker asignado se le olvido, y la siguiente persona que busca los action items no encuentra nada. Volvemos a debatir las mismas decisiones cada standup. Quiero un registro limpio y buscable de cada junta con decisiones y duenios marcados, sin que alguien pierda medio dia transcribiendo.$body_es$,
+    4::double precision,
+    '~4 hrs/week saved',
+    '~4 hrs/semana ahorradas',
+    10,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'productividad'),
+    'standups-that-drag',
+    'Daily standup is supposed to be 15 minutes and it''s always 45.',
+    'El standup diario deberia durar 15 minutos y siempre dura 45.',
+    $body_en$Five people, fifteen minutes, three questions — that was the plan. Reality: someone rambles, someone joins late, someone uses it for an unrelated discussion. The team loses three hours a week to standup overhead alone. Async written updates would work, but they need to actually get written by everyone every day, which doesn't happen.$body_en$,
+    $body_es$Cinco personas, quince minutos, tres preguntas — ese era el plan. Realidad: alguien se enrolla, alguien llega tarde, alguien lo usa para una discusion no relacionada. El equipo pierde tres horas a la semana solo en el overhead del standup. Updates escritos asincronos funcionarian, pero necesitan que todos los escriban cada dia, lo cual no pasa.$body_es$,
+    3::double precision,
+    '~3 hrs/week saved',
+    '~3 hrs/semana ahorradas',
+    20,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'productividad'),
+    'slack-channels-firehose',
+    'I have 40 Slack channels and miss the messages that actually mattered.',
+    'Tengo 40 canales de Slack y me pierdo los mensajes que si importaban.',
+    $body_en$My morning starts with an hour of Slack catch-up, scrolling overnight messages across dozens of channels. I still miss the one in #sales-flag where my biggest customer asked for an urgent quote. I need a daily digest that surfaces the high-signal messages and lets me ignore the rest, instead of all-or-nothing notification noise.$body_en$,
+    $body_es$Mi manana empieza con una hora de catch-up en Slack, scrolleando mensajes de noche en docenas de canales. Aun asi se me escapa el mensaje en #sales-flag donde mi cliente mas grande pidio una cotizacion urgente. Necesito un resumen diario que destaque los mensajes de alta senal y me deje ignorar el resto, en vez del ruido todo-o-nada.$body_es$,
+    3::double precision,
+    '~3 hrs/week saved',
+    '~3 hrs/semana ahorradas',
+    30,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'productividad'),
+    'calendar-war-zone',
+    'My calendar is double-booked half the time and no one defends my focus blocks.',
+    'Mi calendario esta doble agendado la mitad del tiempo y nadie defiende mis bloques de enfoque.',
+    $body_en$My week has 'focus' blocks that get overwritten by anyone who can see my calendar. Internal recurring meetings I should have left a year ago still own 6 hours of my week. I want my calendar to enforce the boundaries I set instead of me having to manually decline invites that violate them.$body_en$,
+    $body_es$Mi semana tiene bloques de 'enfoque' que cualquiera con acceso a mi calendario sobre escribe. Juntas recurrentes internas que debi dejar hace un ano siguen ocupando 6 horas de mi semana. Quiero que mi calendario defienda los limites que puse en vez de yo tener que rechazar invitaciones manualmente.$body_es$,
+    3::double precision,
+    '~3 hrs/week saved',
+    '~3 hrs/semana ahorradas',
+    40,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'productividad'),
+    'tasks-scattered-everywhere',
+    'My to-do list lives in email, Slack, Asana, and a notebook — nothing is the source of truth.',
+    'Mi lista de pendientes vive en correo, Slack, Asana y un cuaderno — nada es la fuente de verdad.',
+    $body_en$A task gets assigned to me three ways: a Slack mention, a forwarded email, an Asana card. I forget the ones I didn't write down, miss commitments I made verbally, and spend Friday afternoons reconciling. I want every commitment captured into one queue automatically, regardless of where it came from.$body_en$,
+    $body_es$Una tarea me llega de tres formas: mencion en Slack, correo reenviado, tarjeta de Asana. Olvido las que no anote, fallo en compromisos verbales, y paso los viernes en la tarde reconciliando. Quiero que cada compromiso quede capturado automaticamente en una sola cola, sin importar de donde vino.$body_es$,
+    4::double precision,
+    '~4 hrs/week saved',
+    '~4 hrs/semana ahorradas',
+    50,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'productividad'),
+    'time-tracking-friday-scramble',
+    'We bill by the hour and reconstruct our timesheet from memory every Friday.',
+    'Cobramos por hora y reconstruimos el timesheet de memoria cada viernes.',
+    $body_en$My team is supposed to log billable hours daily but everyone fills the timesheet on Friday at 4pm. The result is generic 'project work, 6 hours' entries that customers push back on. We probably under-bill by 10-15% because nobody remembers the call they took at 8am Monday. We need passive capture, not manual entry.$body_en$,
+    $body_es$Mi equipo deberia registrar horas facturables a diario, pero todos llenan el timesheet el viernes a las 4pm. El resultado son entradas genericas tipo 'trabajo de proyecto, 6 horas' que los clientes rebaten. Probablemente subfacturamos 10-15% porque nadie recuerda la llamada del lunes a las 8am. Necesitamos captura pasiva, no entrada manual.$body_es$,
+    2::double precision,
+    '~2 hrs/week saved',
+    '~2 hrs/semana ahorradas',
+    60,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+-- Area: reportes (4 scenarios)
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'reportes'),
+    'weekly-sales-report-rebuild',
+    'Building the weekly sales report eats my Monday morning every single week.',
+    'Armar el reporte de ventas semanal se traga mi lunes en la manana cada semana.',
+    $body_en$Every Monday I export CRM data to CSV, pivot it by rep and product, calculate week-over-week deltas, format the slide, send it to the leadership group. Three hours minimum. The minute I finish, a deal updates and the slide is wrong. I just want this to land in everyone's inbox at 8am Monday without me touching anything.$body_en$,
+    $body_es$Cada lunes exporto datos del CRM a CSV, los pivoteo por vendedor y producto, calculo diferencias semana contra semana, formateo la lamina y la mando al grupo de direccion. Tres horas minimo. En cuanto termino, un negocio se actualiza y la lamina ya esta mal. Solo quiero que esto llegue al inbox de todos los lunes 8am sin que yo toque nada.$body_es$,
+    3::double precision,
+    '~3 hrs/week saved',
+    '~3 hrs/semana ahorradas',
+    10,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'reportes'),
+    'dashboard-always-one-day-behind',
+    'My exec dashboard runs on yesterday''s data and the team has stopped trusting it.',
+    'Mi dashboard ejecutivo corre con datos de ayer y el equipo ya no le cree.',
+    $body_en$The BI tool refreshes nightly from a brittle ETL job that breaks once a week. By the time I'm in the Tuesday standup with the dashboard open, the numbers don't match what the sales team is saying. We've started ignoring the dashboard and asking people for their numbers verbally, which defeats the whole point.$body_en$,
+    $body_es$La herramienta BI se actualiza de noche con un ETL fragil que se rompe una vez por semana. Para cuando estoy en el standup del martes con el dashboard abierto, los numeros no cuadran con lo que dice el equipo. Empezamos a ignorar el dashboard y a preguntar verbalmente, lo cual rompe todo el sentido.$body_es$,
+    2::double precision,
+    '~2 hrs/week saved',
+    '~2 hrs/semana ahorradas',
+    20,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'reportes'),
+    'kpis-no-agreement',
+    'Ask three people for ''churn rate'' and you''ll get three different numbers.',
+    'Preguntale a tres personas por ''tasa de churn'' y te daran tres numeros distintos.',
+    $body_en$Marketing measures churn one way, finance another, customer success a third. The leadership meeting devolves into arguing about definitions instead of decisions. I need a single shared KPI definition that updates in one place and everybody reads from the same source. Right now my reality is a folder of conflicting spreadsheets.$body_en$,
+    $body_es$Marketing mide churn de una forma, finanzas de otra, exito del cliente de una tercera. La junta de direccion se convierte en pelear por definiciones en vez de tomar decisiones. Necesito una definicion unica y compartida de KPIs que se actualice en un solo lugar y todos lean de la misma fuente. Mi realidad actual es una carpeta de hojas de calculo en conflicto.$body_es$,
+    2::double precision,
+    '~2 hrs/week saved',
+    '~2 hrs/semana ahorradas',
+    30,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'reportes'),
+    'custom-client-report-full-day',
+    'Each agency client gets a custom monthly report that takes a day to build.',
+    'Cada cliente de mi agencia recibe un reporte mensual a la medida que toma un dia armar.',
+    $body_en$We run paid ads and social for 12 agency clients. Each one wants their report in their template, with their KPIs, in their brand colors. Building 12 reports a month eats 30% of one person's time. The data sources are the same — Meta, Google, GA4 — but the output formats are bespoke and we hand-assemble each one.$body_en$,
+    $body_es$Manejamos ads pagados y social para 12 clientes de agencia. Cada uno quiere su reporte en su plantilla, con sus KPIs, en sus colores. Armar 12 reportes al mes se come el 30% del tiempo de una persona. Las fuentes son las mismas — Meta, Google, GA4 — pero los formatos son a la medida y los ensamblamos a mano cada uno.$body_es$,
+    3::double precision,
+    '~3 hrs/week saved',
+    '~3 hrs/semana ahorradas',
+    40,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+-- Area: agentes-ia (3 scenarios)
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'agentes-ia'),
+    'first-draft-research-piles-up',
+    'Background research on prospects, vendors, and topics never gets done.',
+    'La investigacion de fondo sobre prospectos, proveedores y temas nunca se hace.',
+    $body_en$Before a sales call I should know the prospect's funding history, recent press, key hires, and competitive landscape. In practice I dial in cold because I never made time to research. Same with vendor evaluations, market trends, anything that needs a first-pass scan of public information. The work is well-defined but unglamorous.$body_en$,
+    $body_es$Antes de una llamada de venta deberia saber el historial de funding del prospecto, prensa reciente, contrataciones clave y panorama competitivo. En la practica entro a ciegas porque nunca me dio tiempo investigar. Lo mismo con evaluaciones de proveedores, tendencias de mercado, cualquier cosa que requiera una primera pasada a info publica. El trabajo esta definido pero no es glamuroso.$body_es$,
+    5::double precision,
+    '~5 hrs/week saved',
+    '~5 hrs/semana ahorradas',
+    10,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'agentes-ia'),
+    'sales-rep-no-copilot',
+    'On every sales call I''m fumbling for the right pricing page mid-conversation.',
+    'En cada llamada de venta estoy buscando la pagina de precios correcta a media conversacion.',
+    $body_en$A prospect asks 'what's your enterprise tier' and I'm scrolling through three browser tabs trying to find the latest price card. They ask for a case study in their industry and I promise to follow up because I can't locate one live. I want an agent that surfaces the right collateral as the conversation moves, instead of me losing the room.$body_en$,
+    $body_es$Un prospecto pregunta 'cual es su tier enterprise' y estoy scrolleando tres pestanas buscando la lista de precios mas reciente. Piden un caso en su industria y prometo seguimiento porque no lo encuentro al vuelo. Quiero un agente que surfee el material correcto mientras la conversacion avanza, en vez de yo perder a la sala.$body_es$,
+    3::double precision,
+    '~3 hrs/week saved',
+    '~3 hrs/semana ahorradas',
+    20,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'agentes-ia'),
+    'onboarding-from-scratch-every-time',
+    'Every new hire onboarding eats a week of my senior people''s time.',
+    'Cada onboarding de empleado nuevo se come una semana de mi gente senior.',
+    $body_en$We hire 1-2 people a quarter. Each one means hours of '101' calls — what the product does, who the customers are, where the documentation lives, how the team works. The same 20 questions every time, answered live, with no recording or written record. My senior team is drained and the new hire learns inconsistently.$body_en$,
+    $body_es$Contratamos 1-2 personas por trimestre. Cada una significa horas de llamadas '101' — que hace el producto, quienes son los clientes, donde vive la documentacion, como trabaja el equipo. Las mismas 20 preguntas cada vez, respondidas en vivo, sin grabacion ni registro. Mi equipo senior queda exhausto y el nuevo aprende de forma inconsistente.$body_es$,
+    4::double precision,
+    '~4 hrs/week saved',
+    '~4 hrs/semana ahorradas',
+    30,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+-- Area: integraciones-seguridad (3 scenarios)
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'integraciones-seguridad'),
+    'systems-that-dont-talk',
+    'My CRM, accounting, and inventory tools each think they''re the source of truth.',
+    'Mi CRM, contabilidad e inventario, cada uno cree ser la fuente de verdad.',
+    $body_en$A sale closes in HubSpot. Someone manually creates an invoice in QuickBooks. Inventory drops in Shopify only if someone remembers to update it. By the time we reconcile end of month, the three systems disagree on every customer's balance and we spend two days making them match. The data lives in three places and not one is right.$body_en$,
+    $body_es$Una venta cierra en HubSpot. Alguien crea manualmente la factura en QuickBooks. El inventario baja en Shopify solo si alguien se acuerda de actualizarlo. Para cuando reconciliamos fin de mes, los tres sistemas no coinciden en el saldo de ningun cliente y pasamos dos dias haciendo que cuadren. La data vive en tres lugares y ninguno tiene la razon.$body_es$,
+    5::double precision,
+    '~5 hrs/week saved',
+    '~5 hrs/semana ahorradas',
+    10,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'integraciones-seguridad'),
+    'backups-nobody-verifies',
+    'Our nightly backups run automatically — and nobody has tested a restore in a year.',
+    'Nuestros respaldos nocturnos corren solos — y nadie ha probado una restauracion en un ano.',
+    $body_en$Last time we needed a backup we discovered three months of files had silently failed to copy. Our IT contractor 'sets up' backups but verification is a manual project nobody owns. I want daily proof the backups completed and a monthly restore test against a sample, without it being a Tuesday afternoon someone has to remember.$body_en$,
+    $body_es$La ultima vez que necesitamos un respaldo descubrimos que tres meses de archivos no se habian copiado, en silencio. Nuestro contratista de IT 'configura' respaldos pero la verificacion es un proyecto manual del que nadie es duenio. Quiero prueba diaria de que los respaldos se completaron y una restauracion mensual de muestra, sin que sea una tarde de martes que alguien tiene que recordar.$body_es$,
+    2::double precision,
+    '~2 hrs/week saved',
+    '~2 hrs/semana ahorradas',
+    20,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+INSERT INTO public.scenarios (
+    functional_area_id, slug, pain_headline_en, pain_headline_es,
+    pain_body_en, pain_body_es, typical_hours_per_week,
+    impact_label_en, impact_label_es, sort_order, is_active
+) VALUES (
+    (SELECT id FROM public.functional_areas WHERE slug = 'integraciones-seguridad'),
+    'silent-system-failures',
+    'Our checkout has been broken for hours and we only find out from a customer email.',
+    'Nuestro checkout lleva horas roto y nos enteramos por correo de un cliente.',
+    $body_en$Last month Stripe rotated a key and our webhook started failing. We didn't notice for six hours because nothing is monitoring the integration health. A customer finally emailed asking why their payment was being declined. I want every critical integration monitored with alerts the moment it stops behaving normally, not the moment a customer complains.$body_en$,
+    $body_es$El mes pasado Stripe roto una llave y nuestro webhook empezo a fallar. No lo notamos por seis horas porque nada monitorea la salud de la integracion. Un cliente termino escribiendo para preguntar por que su pago era rechazado. Quiero cada integracion critica monitoreada con alertas en el momento que deja de comportarse normal, no en el momento que un cliente se queja.$body_es$,
+    3::double precision,
+    '~3 hrs/week saved',
+    '~3 hrs/semana ahorradas',
+    30,
+    true
+)
+ON CONFLICT (slug) DO UPDATE SET
+    functional_area_id     = EXCLUDED.functional_area_id,
+    pain_headline_en       = EXCLUDED.pain_headline_en,
+    pain_headline_es       = EXCLUDED.pain_headline_es,
+    pain_body_en           = EXCLUDED.pain_body_en,
+    pain_body_es           = EXCLUDED.pain_body_es,
+    typical_hours_per_week = EXCLUDED.typical_hours_per_week,
+    impact_label_en        = EXCLUDED.impact_label_en,
+    impact_label_es        = EXCLUDED.impact_label_es,
+    sort_order             = EXCLUDED.sort_order,
+    is_active              = true,
+    updated_at             = NOW();
+
+-- ----- scenario_templates mappings -----
+
+-- Mappings for scenario: lead-followup-after-trade-show
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'lead-followup-after-trade-show'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'lead-followup-email'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'lead-followup-after-trade-show'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'crm-data-sync'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'lead-followup-after-trade-show'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'pipeline-alerts'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: cold-lead-reengagement
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'cold-lead-reengagement'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'lead-followup-email'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'cold-lead-reengagement'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'lead-scoring'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'cold-lead-reengagement'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'email-campaigns'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: manual-crm-form-entry
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'manual-crm-form-entry'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'crm-data-sync'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'manual-crm-form-entry'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'lead-followup-email'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'manual-crm-form-entry'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'lead-scoring'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: stalled-deal-pipeline-alerts
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'stalled-deal-pipeline-alerts'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'pipeline-alerts'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'stalled-deal-pipeline-alerts'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'lead-scoring'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'stalled-deal-pipeline-alerts'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'sales-forecasting'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: lead-scoring-by-gut
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'lead-scoring-by-gut'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'lead-scoring'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'lead-scoring-by-gut'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'pipeline-alerts'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'lead-scoring-by-gut'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'sales-copilot'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: proposal-drafting-from-scratch
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'proposal-drafting-from-scratch'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'proposal-generator'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'proposal-drafting-from-scratch'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'quote-builder'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'proposal-drafting-from-scratch'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'template-filling'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: quote-calculation-in-spreadsheets
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'quote-calculation-in-spreadsheets'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'quote-builder'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'quote-calculation-in-spreadsheets'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'proposal-generator'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'quote-calculation-in-spreadsheets'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'crm-data-sync'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: monthly-sales-forecast-by-hand
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'monthly-sales-forecast-by-hand'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'sales-forecasting'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'monthly-sales-forecast-by-hand'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'pipeline-alerts'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'monthly-sales-forecast-by-hand'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'executive-dashboard'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: territory-performance-buried
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'territory-performance-buried'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'territory-report'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'territory-performance-buried'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'sales-forecasting'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'territory-performance-buried'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'executive-dashboard'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: win-loss-debrief-undocumented
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'win-loss-debrief-undocumented'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'win-loss-analysis'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'win-loss-debrief-undocumented'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'sales-forecasting'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'win-loss-debrief-undocumented'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'client-performance'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: email-campaign-build-takes-days
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'email-campaign-build-takes-days'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'email-campaigns'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'email-campaign-build-takes-days'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'content-generation'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'email-campaign-build-takes-days'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'audience-segmentation'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: social-posts-one-platform-at-a-time
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'social-posts-one-platform-at-a-time'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'social-scheduler'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'social-posts-one-platform-at-a-time'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'content-generation'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'social-posts-one-platform-at-a-time'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'content-strategist-agent'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: content-briefs-on-whiteboards
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'content-briefs-on-whiteboards'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'content-generation'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'content-briefs-on-whiteboards'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'content-strategist-agent'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'content-briefs-on-whiteboards'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'newsletter-automation'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: newsletter-copy-paste
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'newsletter-copy-paste'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'newsletter-automation'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'newsletter-copy-paste'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'content-generation'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'newsletter-copy-paste'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'email-campaigns'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: audience-segmentation-spreadsheets
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'audience-segmentation-spreadsheets'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'audience-segmentation'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'audience-segmentation-spreadsheets'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'lead-scoring'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'audience-segmentation-spreadsheets'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'email-campaigns'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: ad-performance-reviewed-too-late
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'ad-performance-reviewed-too-late'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'ad-performance'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'ad-performance-reviewed-too-late'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'marketing-roi'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'ad-performance-reviewed-too-late'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'executive-dashboard'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: seo-regressions-caught-late
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'seo-regressions-caught-late'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'seo-monitoring'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'seo-regressions-caught-late'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'ad-performance'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'seo-regressions-caught-late'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'marketing-roi'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: marketing-roi-guessed
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'marketing-roi-guessed'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'marketing-roi'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'marketing-roi-guessed'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'ad-performance'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'marketing-roi-guessed'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'executive-dashboard'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: fresh-copy-under-deadline
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'fresh-copy-under-deadline'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'content-generation'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'fresh-copy-under-deadline'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'content-strategist-agent'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'fresh-copy-under-deadline'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'social-scheduler'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: competitor-moves-spotted-late
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'competitor-moves-spotted-late'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'competitive-intel-agent'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'competitor-moves-spotted-late'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'seo-monitoring'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'competitor-moves-spotted-late'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'content-strategist-agent'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: tickets-bouncing-between-teams
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'tickets-bouncing-between-teams'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'ticket-routing'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'tickets-bouncing-between-teams'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'escalation-manager'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'tickets-bouncing-between-teams'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'multichannel-support-agent'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: same-questions-fifty-times-week
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'same-questions-fifty-times-week'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'faq-bot'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'same-questions-fifty-times-week'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'ai-chatbot-24-7'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'same-questions-fifty-times-week'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'auto-response-email'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: no-after-hours-coverage
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'no-after-hours-coverage'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'ai-chatbot-24-7'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'no-after-hours-coverage'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'auto-response-email'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'no-after-hours-coverage'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'multichannel-support-agent'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: sla-breaches-discovered-late
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'sla-breaches-discovered-late'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'sla-monitoring'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'sla-breaches-discovered-late'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'escalation-manager'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'sla-breaches-discovered-late'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'ticket-routing'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: negative-reviews-fester
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'negative-reviews-fester'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'review-response'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'negative-reviews-fester'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'satisfaction-surveys'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'negative-reviews-fester'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'faq-bot'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: satisfaction-surveys-nobody-sends
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'satisfaction-surveys-nobody-sends'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'satisfaction-surveys'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'satisfaction-surveys-nobody-sends'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'review-response'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'satisfaction-surveys-nobody-sends'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'knowledge-base-updater'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: help-center-stale-articles
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'help-center-stale-articles'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'knowledge-base-updater'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'help-center-stale-articles'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'faq-bot'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'help-center-stale-articles'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'satisfaction-surveys'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: escalations-never-reach-manager
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'escalations-never-reach-manager'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'escalation-manager'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'escalations-never-reach-manager'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'sla-monitoring'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'escalations-never-reach-manager'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'multichannel-support-agent'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: invoices-typed-one-line-at-a-time
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'invoices-typed-one-line-at-a-time'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'invoice-processing'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'invoices-typed-one-line-at-a-time'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'data-extraction'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'invoices-typed-one-line-at-a-time'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'receipt-scanning'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: receipt-mountain-at-month-end
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'receipt-mountain-at-month-end'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'receipt-scanning'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'receipt-mountain-at-month-end'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'invoice-processing'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'receipt-mountain-at-month-end'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'data-extraction'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: contract-review-bottleneck
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'contract-review-bottleneck'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'contract-analysis'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'contract-review-bottleneck'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'compliance-checker'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'contract-review-bottleneck'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'document-approval'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: compliance-documents-reactive
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'compliance-documents-reactive'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'compliance-checker'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'compliance-documents-reactive'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'compliance-agent'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'compliance-documents-reactive'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'document-approval'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: documents-multiple-signoffs
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'documents-multiple-signoffs'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'document-approval'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'documents-multiple-signoffs'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'template-filling'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'documents-multiple-signoffs'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'contract-analysis'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: templates-filled-by-hand
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'templates-filled-by-hand'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'template-filling'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'templates-filled-by-hand'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'document-approval'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'templates-filled-by-hand'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'data-extraction'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: meeting-notes-nobody-captures
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'meeting-notes-nobody-captures'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'meeting-notes-ai'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'meeting-notes-nobody-captures'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'daily-standup-bot'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'meeting-notes-nobody-captures'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'slack-digest'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: standups-that-drag
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'standups-that-drag'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'daily-standup-bot'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'standups-that-drag'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'slack-digest'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'standups-that-drag'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'task-assignment'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: slack-channels-firehose
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'slack-channels-firehose'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'slack-digest'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'slack-channels-firehose'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'daily-standup-bot'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'slack-channels-firehose'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'meeting-notes-ai'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: calendar-war-zone
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'calendar-war-zone'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'calendar-optimizer'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'calendar-war-zone'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'task-assignment'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'calendar-war-zone'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'meeting-notes-ai'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: tasks-scattered-everywhere
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'tasks-scattered-everywhere'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'task-assignment'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'tasks-scattered-everywhere'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'slack-digest'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'tasks-scattered-everywhere'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'calendar-optimizer'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: time-tracking-friday-scramble
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'time-tracking-friday-scramble'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'time-tracking-sync'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'time-tracking-friday-scramble'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'task-assignment'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'time-tracking-friday-scramble'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'resource-planner'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: weekly-sales-report-rebuild
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'weekly-sales-report-rebuild'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'executive-dashboard'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'weekly-sales-report-rebuild'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'kpi-tracker'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'weekly-sales-report-rebuild'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'custom-analytics'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: dashboard-always-one-day-behind
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'dashboard-always-one-day-behind'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'executive-dashboard'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'dashboard-always-one-day-behind'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'kpi-tracker'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'dashboard-always-one-day-behind'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'data-reconciliation'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: kpis-no-agreement
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'kpis-no-agreement'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'kpi-tracker'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'kpis-no-agreement'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'executive-dashboard'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'kpis-no-agreement'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'data-reconciliation'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: custom-client-report-full-day
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'custom-client-report-full-day'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'client-performance'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'custom-client-report-full-day'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'custom-analytics'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'custom-client-report-full-day'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'marketing-roi'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: first-draft-research-piles-up
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'first-draft-research-piles-up'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'research-assistant'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'first-draft-research-piles-up'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'competitive-intel-agent'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'first-draft-research-piles-up'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'data-analyst-agent'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: sales-rep-no-copilot
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'sales-rep-no-copilot'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'sales-copilot'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'sales-rep-no-copilot'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'research-assistant'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'sales-rep-no-copilot'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'knowledge-base-updater'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: onboarding-from-scratch-every-time
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'onboarding-from-scratch-every-time'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'hr-onboarding-agent'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'onboarding-from-scratch-every-time'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'knowledge-base-updater'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'onboarding-from-scratch-every-time'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'research-assistant'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: systems-that-dont-talk
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'systems-that-dont-talk'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'data-reconciliation'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'systems-that-dont-talk'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'workflow-orchestrator'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'systems-that-dont-talk'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'crm-data-sync'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: backups-nobody-verifies
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'backups-nobody-verifies'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'backup-verification'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'backups-nobody-verifies'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'system-health-monitor'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'backups-nobody-verifies'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'compliance-checker'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+-- Mappings for scenario: silent-system-failures
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'silent-system-failures'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'system-health-monitor'),
+    10
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'silent-system-failures'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'workflow-orchestrator'),
+    20
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+INSERT INTO public.scenario_templates (scenario_id, template_id, display_order) VALUES (
+    (SELECT id FROM public.scenarios WHERE slug = 'silent-system-failures'),
+    (SELECT id FROM public.automation_templates WHERE slug = 'sla-monitoring'),
+    30
+)
+ON CONFLICT (scenario_id, template_id) DO UPDATE SET
+    display_order = EXCLUDED.display_order;
+
+COMMIT;
+
+-- End of Section 14 (Phase 27 scenarios + scenario_templates)
+
 -- ===========================================
 -- END OF SEED DATA
 -- ===========================================
