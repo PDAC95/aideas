@@ -118,8 +118,8 @@ Full details: [milestones/v1.2-ROADMAP.md](milestones/v1.2-ROADMAP.md)
   3. Each scenario carries a typical-impact estimate (hours/week or tasks/month) that the ROI calculator can read.
   4. `supabase db reset` (or equivalent re-seed) can be run repeatedly in dev without manual cleanup or duplicate-key errors.
 **Plans**: 4 plans
-- [ ] 27-01-PLAN.md — Seed 8 functional_areas with idempotent ON CONFLICT migration
-- [ ] 27-02-PLAN.md — Draft 50 bilingual scenarios + ~135 template mappings (Patrick review checkpoint)
+- [x] 27-01-PLAN.md — Seed 8 functional_areas with idempotent ON CONFLICT migration (completed 2026-05-15)
+- [x] 27-02-PLAN.md — Draft 50 bilingual scenarios + 150 template mappings (Patrick approved 2026-05-19; locked as source-of-truth for 27-03) (completed 2026-05-19)
 - [ ] 27-03-PLAN.md — Transform approved draft into idempotent scenarios + scenario_templates seed migration
 - [ ] 27-04-PLAN.md — Correct ROADMAP 7-to-8 areas + REQUIREMENTS sync + end-to-end phase verification
 
@@ -206,7 +206,7 @@ Full details: [milestones/v1.2-ROADMAP.md](milestones/v1.2-ROADMAP.md)
 |-------|----------------|--------|-----------|
 | 25. Design System Migration | 7/7 | Complete    | 2026-05-15 |
 | 26. Catalog Data Model | 3/3 | Complete    | 2026-05-15 |
-| 27. Scenario Content Seed | 1/4 | In Progress|  |
+| 27. Scenario Content Seed | 2/4 | In Progress|  |
 | 28. Public Landing Page | 0/? | Not started | - |
 | 29. Public Catalog Navigation | 0/? | Not started | - |
 | 30. Scenario Selector + ROI Calculator | 0/? | Not started | - |

@@ -1,5 +1,28 @@
 ---
 gsd_state_version: 1.0
+milestone: v1.3
+milestone_name: Public Funnel & Factory Reskin
+phase: 27
+phase_name: Scenario Content Seed
+current_plan: 3
+total_plans_in_phase: 4
+status: executing
+stopped_at: "Completed 27-02-PLAN.md (50 bilingual scenarios drafted with 150 DB-validated template mappings; Patrick approved draft at human-verify checkpoint on 2026-05-19; 27-SCENARIO-DRAFT.md locked as source-of-truth for Plan 27-03 SQL transform; SCEN-01/02/03 contractually addressed, physical DB realization deferred to 27-03)"
+last_updated: "2026-05-19T00:00:00Z"
+last_activity: 2026-05-19
+progress:
+  total_phases: 21
+  completed_phases: 20
+  total_plans: 67
+  completed_plans: 65
+decisions:
+  - "Plan 27-02 draft authored as Markdown intermediate format (not direct SQL) so reviewer edits don't require SQL diffing — Plan 27-03 transforms the locked draft"
+  - "Template slug validation uses live-DB query (docker exec psql SELECT slug FROM automation_templates), not seed.sql regex scrape — avoids false-positive matches on category/industry array values"
+  - "Hour estimates stored as whole integers despite DOUBLE PRECISION schema column — CONTEXT.md restricts 1-20 int, enforced at seed-time validator; hardening migration deferred to a future plan"
+---
+
+---
+gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Public Funnel & Factory Reskin
 current_plan: Not started
