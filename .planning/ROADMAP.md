@@ -65,7 +65,7 @@ Full details: [milestones/v1.2-ROADMAP.md](milestones/v1.2-ROADMAP.md)
 
 - [x] **Phase 25: Design System Migration** — Replace OKLCH theme with Factory.ai tokens (light bg #eeeeee, cards #fafafa, Code Orange #ef6f2e accent, Geist Sans/Mono, 4px/6px radii, no shadows) (completed 2026-05-15)
 - [x] **Phase 26: Catalog Data Model** — Add `functional_areas` + `scenarios` + `scenario_templates` schema with anonymous-read RLS, preserving current 66+ template back-compat (completed 2026-05-15)
-- [ ] **Phase 27: Scenario Content Seed** — Seed 50 client-language scenarios mapped to ~135 n8n templates across 7 functional areas with EN/ES pain copy and typical-impact estimates
+- [ ] **Phase 27: Scenario Content Seed** — Seed 50 client-language scenarios mapped to ~135 n8n templates across 8 functional areas with EN/ES pain copy and typical-impact estimates
 - [ ] **Phase 28: Public Landing Page** — SSR `/` route with Hero, Working Process, Services, Pricing, FAQ, CTA sections, SEO essentials, and EN/ES parity
 - [ ] **Phase 29: Public Catalog Navigation** — SSR `/catalog` with functional-area landing pages, scenario detail pages, cross-linking, and SEO essentials
 - [ ] **Phase 30: Scenario Selector + ROI Calculator** — Multi-select UI, persistent selection state, plan view with hours-saved aggregation and CAD employee-cost equivalent
@@ -109,18 +109,18 @@ Full details: [milestones/v1.2-ROADMAP.md](milestones/v1.2-ROADMAP.md)
 - [x] 26-03-PLAN.md — Anon SELECT policy on `automation_templates` + Phase 26 holistic verification (db reset, 4-table join, build check) (completed 2026-05-15)
 
 ### Phase 27: Scenario Content Seed
-**Goal**: Populate the new schema with 50 client-language scenarios across 7 functional areas, mapped to ~135 n8n templates, ready for the public funnel to consume.
+**Goal**: Populate the new schema with 50 client-language scenarios across 8 functional areas, mapped to ~135 n8n templates, ready for the public funnel to consume.
 **Depends on**: Phase 26
 **Requirements**: SCEN-01, SCEN-02, SCEN-03, SCEN-04
 **Success Criteria** (what must be TRUE):
-  1. Querying `scenarios` returns 50 rows distributed across 7 functional areas, each with EN/ES pain copy.
+  1. Querying `scenarios` returns 50 rows distributed across 8 functional areas, each with EN/ES pain copy.
   2. Querying `scenario_templates` returns ~135 mappings linking scenarios to existing `automation_templates`, with no orphaned scenarios.
   3. Each scenario carries a typical-impact estimate (hours/week or tasks/month) that the ROI calculator can read.
   4. `supabase db reset` (or equivalent re-seed) can be run repeatedly in dev without manual cleanup or duplicate-key errors.
 **Plans**: 4 plans
 - [x] 27-01-PLAN.md — Seed 8 functional_areas with idempotent ON CONFLICT migration (completed 2026-05-15)
 - [x] 27-02-PLAN.md — Draft 50 bilingual scenarios + 150 template mappings (Patrick approved 2026-05-19; locked as source-of-truth for 27-03) (completed 2026-05-19)
-- [ ] 27-03-PLAN.md — Transform approved draft into idempotent scenarios + scenario_templates seed migration
+- [x] 27-03-PLAN.md — Transform approved draft into idempotent scenarios + scenario_templates seed (completed 2026-05-19)
 - [ ] 27-04-PLAN.md — Correct ROADMAP 7-to-8 areas + REQUIREMENTS sync + end-to-end phase verification
 
 ### Phase 28: Public Landing Page
