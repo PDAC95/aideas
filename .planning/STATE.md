@@ -1,5 +1,21 @@
 ---
 gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: Public Funnel & Factory Reskin
+current_plan: Not started
+status: completed
+stopped_at: Completed 27-01-PLAN.md (8 functional_areas seeded with idempotent ON CONFLICT migration; full-reset + in-place re-apply both proven; SCEN-04 demonstrated at functional_areas layer; web build exit 0)
+last_updated: "2026-05-19T15:13:43.765Z"
+last_activity: 2026-05-19
+progress:
+  total_phases: 21
+  completed_phases: 21
+  total_plans: 67
+  completed_plans: 67
+---
+
+---
+gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Public Funnel & Factory Reskin
 phase: 27
@@ -253,7 +269,7 @@ progress:
 **Current Plan:** Not started
 **Total Plans in Phase:** 3
 **Status:** Milestone complete
-**Last Activity:** 2026-05-15
+**Last Activity:** 2026-05-19
 
 **Phase pipeline (10 phases):**
 - Phase 25 — Design System Migration (DESIGN-01..05)

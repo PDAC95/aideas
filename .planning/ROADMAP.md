@@ -206,7 +206,7 @@ Full details: [milestones/v1.2-ROADMAP.md](milestones/v1.2-ROADMAP.md)
 |-------|----------------|--------|-----------|
 | 25. Design System Migration | 7/7 | Complete    | 2026-05-15 |
 | 26. Catalog Data Model | 3/3 | Complete    | 2026-05-15 |
-| 27. Scenario Content Seed | 4/4 | Complete   | 2026-05-19 |
+| 27. Scenario Content Seed | 4/4 | Complete    | 2026-05-19 |
 | 28. Public Landing Page | 0/? | Not started | - |
 | 29. Public Catalog Navigation | 0/? | Not started | - |
 | 30. Scenario Selector + ROI Calculator | 0/? | Not started | - |
