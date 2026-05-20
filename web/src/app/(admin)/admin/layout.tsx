@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 import { createAdminServerClient } from "@/lib/supabase/admin-server";
 import { assertPlatformStaff } from "@/lib/auth/assert-platform-staff";
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
@@ -29,6 +29,7 @@ export default async function AdminLayout({
   }
 
   const t = await getTranslations("admin");
+  const locale = (await getLocale()) as "en" | "es";
 
   return (
     <div className="min-h-screen bg-background">
@@ -43,7 +44,13 @@ export default async function AdminLayout({
         }}
       />
       <main className="lg:pl-60">
-        <AdminHeader badgeLabel={t("badge")} subtitle={t("shell.subtitle")} />
+        <AdminHeader
+          badgeLabel={t("badge")}
+          subtitle={t("shell.subtitle")}
+          locale={locale}
+          localeSwitcherAriaLabel={t("shell.localeSwitcherAriaLabel")}
+          themeToggleAriaLabel={t("shell.themeToggleAriaLabel")}
+        />
         <div className="p-6 lg:px-10 lg:pb-8">{children}</div>
       </main>
     </div>
