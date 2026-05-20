@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { rejectRequest } from "@/lib/actions/admin-requests";
 import {
   REJECT_REASON_MIN,
@@ -18,6 +19,7 @@ interface RejectRequestModalProps {
     cancel: string;
     confirm: string;
     confirming: string;
+    successRejected: string;
     errorTooShort: string;
     errorTooLong: string;
     errorStateChanged: string;
@@ -70,7 +72,12 @@ export function RejectRequestModal({
       const result = await rejectRequest({ requestId, reason });
       if (!result.ok) {
         if (result.error === "state_changed") {
-          setError(translations.errorStateChanged);
+          // Race condition: another admin already processed this. The toast
+          // outlives the router.refresh() that closes/rerenders the modal,
+          // so the operator actually sees the explanation.
+          toast.error(translations.errorStateChanged);
+          setOpen(false);
+          reset();
           router.refresh();
           return;
         }
@@ -84,11 +91,13 @@ export function RejectRequestModal({
             return;
           }
         }
+        // Generic failures stay inline so the operator can fix the input and retry.
         setError(translations.errorGeneric);
         console.error("[RejectRequestModal] failed", result.error);
         return;
       }
-      // Success — close + refresh
+      // Success — close + refresh + confirmation toast.
+      toast.success(translations.successRejected);
       setOpen(false);
       reset();
       router.refresh();

@@ -93,6 +93,7 @@ export default async function AdminRequestDetailPage({
   const approveTranslations = {
     approve: t("actions.approve"),
     approving: t("actions.approving"),
+    successApproved: t("actions.successApproved"),
     errorStateChanged: t("actions.errorStateChanged"),
     errorGeneric: t("actions.errorGeneric"),
   };
@@ -105,6 +106,7 @@ export default async function AdminRequestDetailPage({
     cancel: t("rejectModal.cancel"),
     confirm: t("rejectModal.confirm"),
     confirming: t("rejectModal.confirming"),
+    successRejected: t("rejectModal.successRejected"),
     errorTooShort: t("rejectModal.errorTooShort"),
     errorTooLong: t("rejectModal.errorTooLong"),
     errorStateChanged: t("rejectModal.errorStateChanged"),

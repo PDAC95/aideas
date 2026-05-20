@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   activateAutomation,
   pauseAutomation,
@@ -20,6 +21,9 @@ interface AutomationTransitionButtonsProps {
     resume: string;
     resuming: string;
     archive: string;
+    successActivated: string;
+    successPaused: string;
+    successResumed: string;
     errorStateChanged: string;
     errorGeneric: string;
     archiveModal: {
@@ -28,6 +32,7 @@ interface AutomationTransitionButtonsProps {
       cancel: string;
       confirm: string;
       confirming: string;
+      successArchived: string;
       errorStateChanged: string;
       errorGeneric: string;
     };
@@ -47,20 +52,22 @@ export function AutomationTransitionButtons({
       | typeof activateAutomation
       | typeof pauseAutomation
       | typeof resumeAutomation,
-    expectedStatus: "in_setup" | "active" | "paused"
+    expectedStatus: "in_setup" | "active" | "paused",
+    successMessage: string
   ) => {
     startTransition(async () => {
       const result = await action({ automationId, expectedStatus });
       if (!result.ok) {
         if (result.error === "state_changed") {
-          alert(translations.errorStateChanged);
+          toast.error(translations.errorStateChanged);
           router.refresh();
           return;
         }
-        alert(translations.errorGeneric);
+        toast.error(translations.errorGeneric);
         console.error("[AutomationTransitionButtons] failed", result.error);
         return;
       }
+      toast.success(successMessage);
       router.refresh();
     });
   };
@@ -70,7 +77,13 @@ export function AutomationTransitionButtons({
     return (
       <button
         type="button"
-        onClick={() => runTransition(activateAutomation, "in_setup")}
+        onClick={() =>
+          runTransition(
+            activateAutomation,
+            "in_setup",
+            translations.successActivated
+          )
+        }
         disabled={isPending}
         className="inline-flex items-center justify-center rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
       >
@@ -85,7 +98,13 @@ export function AutomationTransitionButtons({
       <>
         <button
           type="button"
-          onClick={() => runTransition(pauseAutomation, "active")}
+          onClick={() =>
+            runTransition(
+              pauseAutomation,
+              "active",
+              translations.successPaused
+            )
+          }
           disabled={isPending}
           className="inline-flex items-center justify-center rounded-lg bg-amber-600 px-4 py-2 text-sm font-medium text-white hover:bg-amber-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
         >
@@ -109,7 +128,13 @@ export function AutomationTransitionButtons({
       <>
         <button
           type="button"
-          onClick={() => runTransition(resumeAutomation, "paused")}
+          onClick={() =>
+            runTransition(
+              resumeAutomation,
+              "paused",
+              translations.successResumed
+            )
+          }
           disabled={isPending}
           className="inline-flex items-center justify-center rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
         >

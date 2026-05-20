@@ -1178,6 +1178,9 @@
           "resume": "Resume",
           "resuming": "Resuming...",
           "archive": "Archive",
+          "successActivated": "Automation activated.",
+          "successPaused": "Automation paused.",
+          "successResumed": "Automation resumed.",
           "errorStateChanged": "This automation was already updated by another staff member. Reloading.",
           "errorGeneric": "Something went wrong. Please try again."
         },
@@ -1187,6 +1190,7 @@
           "cancel": "Cancel",
           "confirm": "Archive",
           "confirming": "Archiving...",
+          "successArchived": "Automation archived.",
           "errorStateChanged": "This automation was already updated by another staff member. Reloading.",
           "errorGeneric": "Something went wrong. Please try again."
         }
@@ -1278,6 +1282,7 @@
           "approve": "Approve",
           "approving": "Approving...",
           "reject": "Reject",
+          "successApproved": "Request approved. Automation provisioned in setup mode.",
           "errorStateChanged": "This request was already processed by another staff member. Reloading.",
           "errorGeneric": "Something went wrong. Please try again."
         },
@@ -1288,6 +1293,7 @@
           "cancel": "Cancel",
           "confirm": "Reject request",
           "confirming": "Rejecting...",
+          "successRejected": "Request rejected. Customer has been notified.",
           "errorTooShort": "Reason must be at least 10 characters.",
           "errorTooLong": "Reason must be 500 characters or fewer.",
           "errorStateChanged": "This request was already processed by another staff member. Reloading.",

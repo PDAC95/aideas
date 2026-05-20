@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { approveRequest } from "@/lib/actions/admin-requests";
 
 interface ApproveRequestButtonProps {
@@ -9,6 +10,7 @@ interface ApproveRequestButtonProps {
   translations: {
     approve: string;
     approving: string;
+    successApproved: string;
     errorStateChanged: string;
     errorGeneric: string;
   };
@@ -26,14 +28,17 @@ export function ApproveRequestButton({
       const result = await approveRequest({ requestId });
       if (!result.ok) {
         if (result.error === "state_changed") {
-          alert(translations.errorStateChanged);
+          // Toast persists for its full duration (5s) before the route refreshes,
+          // so the operator actually reads the race-condition explanation.
+          toast.error(translations.errorStateChanged);
           router.refresh();
           return;
         }
-        alert(translations.errorGeneric);
+        toast.error(translations.errorGeneric);
         console.error("[ApproveRequestButton] failed", result.error);
         return;
       }
+      toast.success(translations.successApproved);
       router.refresh();
     });
   };
