@@ -1178,6 +1178,9 @@
           "resume": "Reanudar",
           "resuming": "Reanudando...",
           "archive": "Archivar",
+          "successActivated": "Automatizacion activada.",
+          "successPaused": "Automatizacion pausada.",
+          "successResumed": "Automatizacion reanudada.",
           "errorStateChanged": "Esta automatizacion ya fue actualizada por otro miembro del equipo. Recargando.",
           "errorGeneric": "Algo salio mal. Intentalo de nuevo."
         },
@@ -1187,6 +1190,7 @@
           "cancel": "Cancelar",
           "confirm": "Archivar",
           "confirming": "Archivando...",
+          "successArchived": "Automatizacion archivada.",
           "errorStateChanged": "Esta automatizacion ya fue actualizada por otro miembro del equipo. Recargando.",
           "errorGeneric": "Algo salio mal. Intentalo de nuevo."
         }
@@ -1278,6 +1282,7 @@
           "approve": "Aprobar",
           "approving": "Aprobando...",
           "reject": "Rechazar",
+          "successApproved": "Solicitud aprobada. Automatizacion creada en modo de configuracion.",
           "errorStateChanged": "Esta solicitud ya fue procesada por otro miembro del equipo. Recargando.",
           "errorGeneric": "Algo salio mal. Intentalo de nuevo."
         },
@@ -1288,6 +1293,7 @@
           "cancel": "Cancelar",
           "confirm": "Rechazar solicitud",
           "confirming": "Rechazando...",
+          "successRejected": "Solicitud rechazada. Se notifico al cliente.",
           "errorTooShort": "El motivo debe tener al menos 10 caracteres.",
           "errorTooLong": "El motivo debe tener 500 caracteres o menos.",
           "errorStateChanged": "Esta solicitud ya fue procesada por otro miembro del equipo. Recargando.",

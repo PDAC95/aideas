@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { archiveAutomation } from "@/lib/actions/admin-automations";
 
 interface ArchiveAutomationModalProps {
@@ -14,6 +15,7 @@ interface ArchiveAutomationModalProps {
     cancel: string;
     confirm: string;
     confirming: string;
+    successArchived: string;
     errorStateChanged: string;
     errorGeneric: string;
   };
@@ -44,14 +46,20 @@ export function ArchiveAutomationModal({
       });
       if (!result.ok) {
         if (result.error === "state_changed") {
-          setError(translations.errorStateChanged);
+          // Race condition: another admin already changed status. Toast
+          // outlives the router.refresh() that closes/rerenders the modal.
+          toast.error(translations.errorStateChanged);
+          setOpen(false);
           router.refresh();
           return;
         }
+        // Generic failures stay inline so the operator sees them inside the
+        // modal and can retry without losing context.
         setError(translations.errorGeneric);
         console.error("[ArchiveAutomationModal] failed", result.error);
         return;
       }
+      toast.success(translations.successArchived);
       setOpen(false);
       router.refresh();
     });

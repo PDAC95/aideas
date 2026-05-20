@@ -77,6 +77,9 @@ export default async function AdminAutomationDetailPage({
     resume: t("actions.resume"),
     resuming: t("actions.resuming"),
     archive: t("actions.archive"),
+    successActivated: t("actions.successActivated"),
+    successPaused: t("actions.successPaused"),
+    successResumed: t("actions.successResumed"),
     errorStateChanged: t("actions.errorStateChanged"),
     errorGeneric: t("actions.errorGeneric"),
     archiveModal: {
@@ -85,6 +88,7 @@ export default async function AdminAutomationDetailPage({
       cancel: t("archiveModal.cancel"),
       confirm: t("archiveModal.confirm"),
       confirming: t("archiveModal.confirming"),
+      successArchived: t("archiveModal.successArchived"),
       errorStateChanged: t("archiveModal.errorStateChanged"),
       errorGeneric: t("archiveModal.errorGeneric"),
     },
