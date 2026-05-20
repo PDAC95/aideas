@@ -874,7 +874,9 @@
   "admin": {
     "badge": "ADMIN",
     "shell": {
-      "subtitle": "Consola interna del equipo AIDEAS"
+      "subtitle": "Consola interna del equipo AIDEAS",
+      "localeSwitcherAriaLabel": "Cambiar idioma",
+      "themeToggleAriaLabel": "Cambiar tema"
     },
     "nav": {
       "home": "Inicio",
