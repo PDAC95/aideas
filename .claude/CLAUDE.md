@@ -37,30 +37,22 @@
 - SETT-05: Change password
 - SETT-06: Active sessions management
 
-### Known Tech Debt (8 items)
+### Known Tech Debt (3 items — audited 2026-05-20)
 
 **Phase 08:**
-- Hardcoded KPI trend values (+12%, +8%, +15%) in `dashboard/page.tsx:137-143`
-- Hardcoded `avgResponseTime = "< 1 min"` placeholder
-- Redundant notifications query in `fetchDashboardData`
-
-**Phase 09:**
-- `updateAutomationStatus` server action lacks org ownership check (security)
-- Hardcoded `"Just now"` string bypasses i18n in `[id]/page.tsx:41`
-
-**Phase 10:**
-- `operations` category in seed data has no UI tab or i18n key
-- `agencias` industry in seed data has no UI chip or i18n key
+- Redundant notifications query in `fetchDashboardData` (low priority)
 
 **Phase 19:**
 - Race-condition error toast disappears too fast — when Tab B hits `state_changed`, `router.refresh()` replaces the toast almost immediately. UX polish: persist toast ~3-5s before refresh. Surface: `web/src/components/admin/requests/approve-request-button.tsx`, `reject-request-modal.tsx`.
-- Language switcher missing in admin layout — Phase 17 cross-cutting gap blocking I18N runtime UAT for all admin surfaces (17-22). Surface: `web/src/app/(admin)/admin/layout.tsx` or admin header component.
-- Dark mode toggle missing in admin layout — admin components already have `dark:` Tailwind classes wired (Phase 22 verified), but no UI control exists to activate dark mode. Cross-cutting gap, same surface as the language switcher above.
+- Language switcher + dark mode toggle missing in admin layout — Phase 17 cross-cutting gap blocking I18N runtime UAT for all admin surfaces (17-22). Admin components already have `dark:` Tailwind classes wired (Phase 22 verified), but no UI controls exist. Surface: `web/src/app/(admin)/admin/layout.tsx` or admin header component.
 
-### Known Integration Issues
+### Resolved Tech Debt (verified 2026-05-20)
 
-- `activity-feed.tsx:63` links to `/dashboard/reports` (now resolved — Phase 11 shipped)
-- Missing `operations` catalog tab and `agencias` industry chip (need i18n keys + UI)
+- ✅ Phase 08 hardcoded KPI trends — `dashboard/page.tsx` now uses real `totalExecs`, `successRate`, `activeAutomations`
+- ✅ Phase 08 `avgResponseTime = "< 1 min"` — placeholder removed
+- ✅ Phase 09 `updateAutomationStatus` ownership check — `assertOrgMembership` enforced with role allowlist (owner|admin|operator), service-role write after validation, treat-as-forbidden for missing automations
+- ✅ Phase 09 `"Just now"` i18n — `nowLabel` from translations replaces the `nowIso` sentinel in `buildTimeAgo`
+- ✅ Phase 10 `operations` category + `agencias` industry — both have i18n keys in EN/ES and render in catalog UI
 
 ---
 
