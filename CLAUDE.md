@@ -37,22 +37,20 @@
 - SETT-05: Change password
 - SETT-06: Active sessions management
 
-### Known Tech Debt (3 items — audited 2026-05-20)
+### Known Tech Debt
 
-**Phase 08:**
-- Redundant notifications query in `fetchDashboardData` (low priority)
-
-**Phase 19:**
-- Race-condition error toast disappears too fast — when Tab B hits `state_changed`, `router.refresh()` replaces the toast almost immediately. UX polish: persist toast ~3-5s before refresh. Surface: `web/src/components/admin/requests/approve-request-button.tsx`, `reject-request-modal.tsx`.
-- Language switcher + dark mode toggle missing in admin layout — Phase 17 cross-cutting gap blocking I18N runtime UAT for all admin surfaces (17-22). Admin components already have `dark:` Tailwind classes wired (Phase 22 verified), but no UI controls exist. Surface: `web/src/app/(admin)/admin/layout.tsx` or admin header component.
+All known items resolved as of 2026-05-20. See section below.
 
 ### Resolved Tech Debt (verified 2026-05-20)
 
 - ✅ Phase 08 hardcoded KPI trends — `dashboard/page.tsx` now uses real `totalExecs`, `successRate`, `activeAutomations`
 - ✅ Phase 08 `avgResponseTime = "< 1 min"` — placeholder removed
+- ✅ Phase 08 redundant notifications query — `(dashboard)/layout.tsx` fetches once and passes to both header + nav
 - ✅ Phase 09 `updateAutomationStatus` ownership check — `assertOrgMembership` enforced with role allowlist (owner|admin|operator), service-role write after validation, treat-as-forbidden for missing automations
 - ✅ Phase 09 `"Just now"` i18n — `nowLabel` from translations replaces the `nowIso` sentinel in `buildTimeAgo`
 - ✅ Phase 10 `operations` category + `agencias` industry — both have i18n keys in EN/ES and render in catalog UI
+- ✅ Phase 17 admin locale switcher + dark mode toggle — added to `AdminHeader` via `AdminLocaleSwitcher` (EN|ES) + `ThemeToggle` powered by `next-themes` and a `ThemeProvider` in root layout
+- ✅ Phase 19 race-condition toast disappears too fast — migrated `approve-request-button`, `reject-request-modal`, `automation-transition-buttons`, and `archive-automation-modal` from `alert()`/inline `setError` to `sonner` toasts that outlive `router.refresh()`
 
 ---
 
