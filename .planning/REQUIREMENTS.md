@@ -33,17 +33,24 @@ Requirements for the Public Funnel & Factory Reskin milestone. Each maps to exac
 - [x] **SCEN-03**: Each scenario carries a typical-impact estimate (hours/week or tasks/month) used by the ROI calculator
 - [x] **SCEN-04**: Seed re-runnable / idempotent so dev environments can re-seed without manual cleanup
 
-### Public Landing Page
+### Public Landing Page — DESCARTED 2026-05-20
 
-- [ ] **LAND-01**: Public route `/` serves SSR landing page (no login gate) — replaces current root redirect for unauthenticated users
-- [ ] **LAND-02**: Hero section with main value prop, primary CTA "Ver qué puedo automatizar" → `/catalog`
-- [ ] **LAND-03**: Working Process section (how AIDEAS delivers as managed service)
-- [ ] **LAND-04**: Services / functional areas overview section with link into catalog
-- [ ] **LAND-05**: Pricing transparency section (setup fee + monthly, cancel anytime, no DIY)
-- [ ] **LAND-06**: FAQ section addressing common Ontario SMB-owner objections
-- [ ] **LAND-07**: Final CTA section pointing into the funnel
-- [ ] **LAND-08**: SEO essentials — meta tags, Open Graph image, structured data, sitemap entry, mobile-responsive
-- [ ] **LAND-09**: EN/ES parity on all landing copy via next-intl
+> Phase 28 cancelled. Keeping the existing static landing under `web/public/landing/`. LAND-01..LAND-09 are NOT being satisfied by a new Next.js SSR route. Disposition below:
+>
+> - LAND-01..LAND-07 (sections / route): the static landing already covers the structural sections via plain HTML/CSS. Marked DESCARTED — no Next.js route will be built.
+> - LAND-02 (Hero CTA → `/catalog`): folded into Phase 29 as criterion #5. The static landing's CTA must point to `/catalog` once the public catalog ships.
+> - LAND-08 (SEO essentials, OG, sitemap): owned by Phase 34 (Launch Polish) as a static-asset task.
+> - LAND-09 (EN/ES parity): already handled by the static landing's separate language variants.
+
+- [~] **LAND-01**: ~~Public route `/` serves SSR landing page~~ — DESCARTED. Static landing kept.
+- [~] **LAND-02**: ~~Hero CTA on SSR `/`~~ — DESCARTED as SSR; static-landing CTA → `/catalog` carried into Phase 29 criterion #5.
+- [~] **LAND-03**: ~~Working Process section (SSR)~~ — DESCARTED. Static landing already has this content.
+- [~] **LAND-04**: ~~Services overview (SSR)~~ — DESCARTED. Static landing already has this content.
+- [~] **LAND-05**: ~~Pricing section (SSR)~~ — DESCARTED. Static landing already has this content.
+- [~] **LAND-06**: ~~FAQ (SSR)~~ — DESCARTED. Static landing already has this content.
+- [~] **LAND-07**: ~~Final CTA (SSR)~~ — DESCARTED. Static landing already has this content.
+- [~] **LAND-08**: ~~SEO essentials on SSR `/`~~ — DESCARTED as SSR; static-landing SEO/OG/sitemap carried into Phase 34.
+- [~] **LAND-09**: ~~EN/ES parity via next-intl~~ — DESCARTED. Static landing already has EN/ES variants.
 
 ### Public Catalog Navigation
 
@@ -155,15 +162,15 @@ Every v1.3 requirement maps to exactly one phase. Verified 100% coverage.
 | SCEN-02 | Phase 27 — Scenario Content Seed | Complete |
 | SCEN-03 | Phase 27 — Scenario Content Seed | Complete |
 | SCEN-04 | Phase 27 — Scenario Content Seed | Complete |
-| LAND-01 | Phase 28 — Public Landing Page | Pending |
-| LAND-02 | Phase 28 — Public Landing Page | Pending |
-| LAND-03 | Phase 28 — Public Landing Page | Pending |
-| LAND-04 | Phase 28 — Public Landing Page | Pending |
-| LAND-05 | Phase 28 — Public Landing Page | Pending |
-| LAND-06 | Phase 28 — Public Landing Page | Pending |
-| LAND-07 | Phase 28 — Public Landing Page | Pending |
-| LAND-08 | Phase 28 — Public Landing Page | Pending |
-| LAND-09 | Phase 28 — Public Landing Page | Pending |
+| LAND-01 | Phase 28 (DESCARTED) — static landing kept | Descarted |
+| LAND-02 | Phase 28 (DESCARTED) → carried into Phase 29 (CTA → `/catalog`) | Descarted |
+| LAND-03 | Phase 28 (DESCARTED) — static landing kept | Descarted |
+| LAND-04 | Phase 28 (DESCARTED) — static landing kept | Descarted |
+| LAND-05 | Phase 28 (DESCARTED) — static landing kept | Descarted |
+| LAND-06 | Phase 28 (DESCARTED) — static landing kept | Descarted |
+| LAND-07 | Phase 28 (DESCARTED) — static landing kept | Descarted |
+| LAND-08 | Phase 28 (DESCARTED) → carried into Phase 34 (SEO/OG/sitemap for static asset) | Descarted |
+| LAND-09 | Phase 28 (DESCARTED) — static landing already EN/ES | Descarted |
 | PUBCAT-01 | Phase 29 — Public Catalog Navigation | Pending |
 | PUBCAT-02 | Phase 29 — Public Catalog Navigation | Pending |
 | PUBCAT-03 | Phase 29 — Public Catalog Navigation | Pending |
@@ -199,8 +206,9 @@ Every v1.3 requirement maps to exactly one phase. Verified 100% coverage.
 | OPS-05 | Phase 34 — Launch Polish | Pending |
 
 **Coverage:**
-- v1.3 requirements: 58 total
-- Mapped to phases: 58 (100%) ✓
+- v1.3 requirements: 58 total (49 active + 9 descarted)
+- Active requirements: 49 (LAND-01..09 descarted with Phase 28 on 2026-05-20 — keeping static landing)
+- Mapped to phases: 49/49 active (100%) ✓
 - Unmapped: 0 ✓
 - Duplicate mappings: 0 ✓
 
@@ -210,18 +218,18 @@ Every v1.3 requirement maps to exactly one phase. Verified 100% coverage.
 | Phase 25 — Design System Migration | DESIGN-01..05 | 5 |
 | Phase 26 — Catalog Data Model | CAT-01..05 | 5 |
 | Phase 27 — Scenario Content Seed | SCEN-01..04 | 4 |
-| Phase 28 — Public Landing Page | LAND-01..09 | 9 |
+| Phase 28 — Public Landing Page (DESCARTED 2026-05-20) | LAND-01..09 (all descarted) | 0 |
 | Phase 29 — Public Catalog Navigation | PUBCAT-01..06 | 6 |
 | Phase 30 — Scenario Selector + ROI Calculator | ROI-01..06 | 6 |
 | Phase 31 — Lead Capture Flow | LEAD-01..07 | 7 |
 | Phase 32 — Reskin Customer Dashboard | RESKIN-01..04 | 4 |
 | Phase 33 — Reskin Admin Dashboard | RESKIN-05..09 | 5 |
 | Phase 34 — Launch Polish | OPS-01..05 | 5 |
-| **Total** | | **58** |
+| **Total** | | **58** (49 active + 9 descarted) |
 
 ---
 
 *Requirements defined: 2026-05-14*
 *Source: .planning/milestones/v1.3-INTENT-archive.md (strategy conversation 2026-05-14)*
 *Traceability populated: 2026-05-14 by /gsd:new-project roadmapper*
-*Last updated: 2026-05-14 — phase mapping complete*
+*Last updated: 2026-05-20 — Phase 28 descarted; LAND-01..09 re-scoped to static landing (carry-overs in Phase 29 and Phase 34)*

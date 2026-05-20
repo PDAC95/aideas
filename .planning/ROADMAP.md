@@ -66,7 +66,7 @@ Full details: [milestones/v1.2-ROADMAP.md](milestones/v1.2-ROADMAP.md)
 - [x] **Phase 25: Design System Migration** — Replace OKLCH theme with Factory.ai tokens (light bg #eeeeee, cards #fafafa, Code Orange #ef6f2e accent, Geist Sans/Mono, 4px/6px radii, no shadows) (completed 2026-05-15)
 - [x] **Phase 26: Catalog Data Model** — Add `functional_areas` + `scenarios` + `scenario_templates` schema with anonymous-read RLS, preserving current 66+ template back-compat (completed 2026-05-15)
 - [x] **Phase 27: Scenario Content Seed** — Seed 50 client-language scenarios mapped to ~135 n8n templates across 8 functional areas with EN/ES pain copy and typical-impact estimates (completed 2026-05-19)
-- [ ] **Phase 28: Public Landing Page** — SSR `/` route with Hero, Working Process, Services, Pricing, FAQ, CTA sections, SEO essentials, and EN/ES parity
+- [~] **Phase 28: Public Landing Page** — DESCARTED 2026-05-20. Keeping the existing static landing under `web/public/landing/` instead of building an SSR `/` route. Static landing will be updated to CTA into `/catalog` as part of Phase 29. LAND-01..LAND-09 requirements re-scoped to the static asset (no Next.js route, no next-intl). See dependency graph below.
 - [ ] **Phase 29: Public Catalog Navigation** — SSR `/catalog` with functional-area landing pages, scenario detail pages, cross-linking, and SEO essentials
 - [ ] **Phase 30: Scenario Selector + ROI Calculator** — Multi-select UI, persistent selection state, plan view with hours-saved aggregation and CAD employee-cost equivalent
 - [ ] **Phase 31: Lead Capture Flow** — Email gate at peak intent, transactional plan email, pre-call context form (4-5 structured questions), `leads` table, reCAPTCHA spam protection, `/admin/leads` surface
@@ -123,26 +123,25 @@ Full details: [milestones/v1.2-ROADMAP.md](milestones/v1.2-ROADMAP.md)
 - [x] 27-03-PLAN.md — Transform approved draft into idempotent scenarios + scenario_templates seed (completed 2026-05-19)
 - [ ] 27-04-PLAN.md — Correct ROADMAP 7-to-8 areas + REQUIREMENTS sync + end-to-end phase verification
 
-### Phase 28: Public Landing Page
-**Goal**: Ship a public, SSR-rendered landing page at `/` that introduces AIDEAS to anonymous Ontario SMB visitors and routes them into the catalog funnel.
-**Depends on**: Phase 25
-**Requirements**: LAND-01, LAND-02, LAND-03, LAND-04, LAND-05, LAND-06, LAND-07, LAND-08, LAND-09
-**Success Criteria** (what must be TRUE):
-  1. Visiting `/` while logged-out renders a server-rendered landing page (no client-side flash, no login redirect) with all 6 sections (Hero, Working Process, Services, Pricing, FAQ, CTA).
-  2. Clicking the primary Hero CTA ("Ver qué puedo automatizar") routes the visitor to `/catalog`.
-  3. View-source on `/` shows complete meta tags, Open Graph image, structured data, and a sitemap entry; layout is mobile-responsive at 360px width.
-  4. Switching the locale cookie between `en` and `es` swaps all landing copy via next-intl with zero hardcoded strings.
-**Plans**: TBD
+### Phase 28: Public Landing Page — DESCARTED 2026-05-20
+**Status**: Cancelled — keeping the existing static landing under `web/public/landing/` (HTML/CSS/JS served by Vercel as-is). Phase 28 was originally scoped to build an SSR Next.js `/` route with full i18n + SEO; that effort was de-scoped after the static landing was deemed sufficient for v1.3 lead capture.
+**Original Goal**: Ship a public, SSR-rendered landing page at `/` that introduces AIDEAS to anonymous Ontario SMB visitors and routes them into the catalog funnel.
+**Resolution**:
+  - LAND-01..LAND-09 are NOT being satisfied by a new Next.js route. The static landing already covers the structural requirements (Hero, sections, EN/ES parity via separate static files).
+  - The single behavioural carry-over — Hero CTA routes into `/catalog` — is folded into Phase 29 acceptance criteria: the static landing's primary CTA must link to `/catalog` once the public catalog ships.
+  - Vercel Analytics + sitemap + OG metadata for the static landing are owned by Phase 34 (Launch Polish) as a static-asset task, not a Next.js task.
+**Plans**: None — phase cancelled. No `28-XX-PLAN.md` files will be created.
 
 ### Phase 29: Public Catalog Navigation
 **Goal**: Ship the public, SSR-rendered scenario catalog so anonymous visitors can browse the 8 functional areas and individual scenarios with full SEO support.
-**Depends on**: Phase 27, Phase 28
+**Depends on**: Phase 27 (Phase 28 descarted 2026-05-20 — dependency removed)
 **Requirements**: PUBCAT-01, PUBCAT-02, PUBCAT-03, PUBCAT-04, PUBCAT-05, PUBCAT-06
 **Success Criteria** (what must be TRUE):
   1. Visiting `/catalog` while logged-out renders an SSR page listing all 8 functional areas, each with a pain-language headline and link into its area page.
   2. Visiting a functional-area page (e.g. `/catalog/marketing`) lists every scenario in that area, and each scenario detail page shows mapped n8n templates and the typical-impact estimate.
   3. Every catalog page exposes a unique title, meta description, canonical URL, and appears in the generated sitemap.
   4. Locale switching swaps every catalog string (areas, scenarios, headlines) without leaving English text in Spanish mode or vice-versa.
+  5. The existing static landing at `web/public/landing/` has its primary CTA(s) updated to link into `/catalog` (EN + ES variants) so anonymous visitors flow from landing into the funnel.
 **Plans**: TBD
 
 ### Phase 30: Scenario Selector + ROI Calculator
@@ -191,13 +190,13 @@ Full details: [milestones/v1.2-ROADMAP.md](milestones/v1.2-ROADMAP.md)
 
 ### Phase 34: Launch Polish
 **Goal**: Make the v1.3 funnel production-launch ready — analytics, SEO surface area, and lint debt triage.
-**Depends on**: Phase 28, Phase 29, Phase 31 (all public surfaces shipped)
+**Depends on**: Phase 29, Phase 31 (Phase 28 descarted 2026-05-20 — dependency removed; static landing OG/analytics handled as a static-asset task inside this phase)
 **Requirements**: OPS-01, OPS-02, OPS-03, OPS-04, OPS-05
 **Success Criteria** (what must be TRUE):
-  1. Vercel Analytics is wired on every public page and custom events fire for the catalog → plan → email gate → pre-call form funnel (visible in the analytics dashboard).
-  2. `/sitemap.xml` and `/robots.txt` are served by the app and the sitemap enumerates every public catalog and scenario route.
-  3. View-source on landing and every scenario page exposes complete Open Graph + Twitter card metadata.
-  4. A Lighthouse run against a production build of `/` and `/catalog` returns ≥ 90 for performance, accessibility, and SEO; no new lint errors have been introduced relative to the start of v1.3.
+  1. Vercel Analytics is wired on every public page (static landing + `/catalog` + scenario pages) and custom events fire for the landing → catalog → plan → email gate → pre-call form funnel (visible in the analytics dashboard).
+  2. `/sitemap.xml` and `/robots.txt` are served by the app and the sitemap enumerates every public catalog and scenario route (static landing entry included).
+  3. View-source on the static landing and every scenario page exposes complete Open Graph + Twitter card metadata.
+  4. A Lighthouse run against the production static landing and `/catalog` returns ≥ 90 for performance, accessibility, and SEO; no new lint errors have been introduced relative to the start of v1.3.
 **Plans**: TBD
 
 ## Progress Table
@@ -207,7 +206,7 @@ Full details: [milestones/v1.2-ROADMAP.md](milestones/v1.2-ROADMAP.md)
 | 25. Design System Migration | 7/7 | Complete    | 2026-05-15 |
 | 26. Catalog Data Model | 3/3 | Complete    | 2026-05-15 |
 | 27. Scenario Content Seed | 4/4 | Complete    | 2026-05-19 |
-| 28. Public Landing Page | 0/? | Not started | - |
+| 28. Public Landing Page | 0/0 | DESCARTED   | 2026-05-20 |
 | 29. Public Catalog Navigation | 0/? | Not started | - |
 | 30. Scenario Selector + ROI Calculator | 0/? | Not started | - |
 | 31. Lead Capture Flow | 0/? | Not started | - |
@@ -221,21 +220,22 @@ Full details: [milestones/v1.2-ROADMAP.md](milestones/v1.2-ROADMAP.md)
 Phase 25 (Design System)
    ├── Phase 26 (Catalog Data Model)
    │      └── Phase 27 (Scenario Seed)
-   │             └── Phase 29 (Public Catalog) ← Phase 28 (Landing)
+   │             └── Phase 29 (Public Catalog)
    │                    └── Phase 30 (Selector + ROI)
    │                           └── Phase 31 (Lead Capture)
    │                                  └── Phase 34 (Launch Polish)
-   ├── Phase 28 (Landing) ──────────────────────┘
+   ├── Phase 28 (Landing) — DESCARTED 2026-05-20 (keeping static landing)
    ├── Phase 32 (Reskin Customer)
    └── Phase 33 (Reskin Admin) ← Phase 32
 ```
 
 Critical path: 25 → 26 → 27 → 29 → 30 → 31 → 34 (7 sequential phases).
-Parallelizable: Phase 28 can run alongside 26+27; Phase 32 can run alongside 26-31; Phase 33 must wait on 32 for shared primitives.
+Parallelizable: Phase 32 can run alongside 26–31; Phase 33 must wait on 32 for shared primitives. Phase 28 cancelled — static landing already serves the funnel entry point.
 
 ## Coverage Summary
 
-- **v1.3 requirements:** 58 total
-- **Mapped to phases:** 58 (100%) ✓
-- **Orphaned requirements:** 0 ✓
+- **v1.3 requirements:** 58 total (49 active + 9 descarted on 2026-05-20)
+- **Active requirements:** 49 — mapped to phases 25-27, 29-34 (100% of active) ✓
+- **Descarted:** LAND-01..LAND-09 (Phase 28 cancelled — static landing kept)
+- **Orphaned active requirements:** 0 ✓
 - **Duplicate mappings:** 0 ✓
