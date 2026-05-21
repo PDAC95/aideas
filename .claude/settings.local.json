@@ -275,11 +275,18 @@
       "Bash(git stash *)",
       "Bash(xxd)",
       "Bash(git mv *)",
-      "Bash(git rm *)"
+      "Bash(git rm *)",
+      "Bash(npm audit *)",
+      "Bash(bash /tmp/audit-imports.sh)",
+      "Bash(awk -F/ '{print $4}')",
+      "Bash(bash /tmp/audit-imports.sh 2>/dev/null | grep \"^src/\" > /tmp/keep-set.txt *)",
+      "Bash(cd /c/dev/12ai/landing && cat package.json | grep -A 2 scripts)",
+      "Read(//c/c/dev/12ai/landing/**)"
     ],
     "additionalDirectories": [
       "c:\\dev\\12ai\\.planning\\debug",
-      "c:\\dev\\12ai\\.planning\\phases"
+      "c:\\dev\\12ai\\.planning\\phases",
+      "\\tmp"
     ]
   }
 }
