@@ -1,314 +1,133 @@
 # AIDEAS
 
-## Quick Start (desarrollo local)
+AI automation as a service for Ontario small and medium businesses. Customers describe what they need, AIDEAS designs, builds, and runs the automation — managed service, not DIY.
 
-### Prerequisitos
+This repository is organized as **three independent paralel modules** under a single root:
 
-- **Docker Desktop** instalado y corriendo
-- **Node.js 20+**
-- **Python 3.12+** (solo si necesitas el API backend)
+```
+12ai/
+├── landing/   → Public marketing site (Vite + React + Bootstrap)   → aideas.ca
+├── web/       → Dashboard (Next.js + React + Tailwind + shadcn)    → app.aideas.ca
+├── api/       → Backend (FastAPI + Python)                          → api.aideas.ca
+├── supabase/  → Shared database (migrations + seed)
+├── scripts/   → Cross-module tooling (sync-tokens.js, etc.)
+└── .planning/ → GSD planning artifacts (PROJECT, ROADMAP, phases)
+```
 
-### Paso 1: Base de datos (Supabase local)
+Each module has its own `README.md`, `package.json`/`requirements/`, and deploy. They are not a monorepo with shared packages — they are independent projects living in the same git repo, glued together by `tokens.json` (visual parity) and the FastAPI contract.
+
+## Quick start (full stack locally)
+
+You need **Docker Desktop**, **Node.js 20+**, and **Python 3.12+**.
 
 ```bash
-cd c:\dev\12ai
-
-# Levanta PostgreSQL, Auth, Storage en Docker (primera vez tarda ~5 min)
+# 1. Database (Supabase local — first run takes ~5 min)
 npx supabase start
-
-# Crea tablas y carga datos de prueba
 npx supabase db reset
-```
 
-> Los warnings de `SUPABASE_AUTH_EXTERNAL_GOOGLE_*` se pueden ignorar (solo afectan login con Google).
+# 2. Landing (Vite — http://localhost:5173)
+cd landing && npm install && npm run dev
 
-### Paso 2: Frontend (Next.js)
+# 3. Dashboard (Next.js — http://localhost:3000)
+cd web && npm install && cp .env.example .env.local && npm run dev
 
-```bash
-cd c:\dev\12ai\web
-npm run dev
-```
-
-Abre http://localhost:3000
-
-### Paso 3 (opcional): Backend API (FastAPI)
-
-Solo necesario si trabajas con las rutas del API Python. El dashboard y auth funcionan sin esto.
-
-```bash
-cd c:\dev\12ai\api
-venv\Scripts\activate
+# 4. Backend (FastAPI — http://localhost:8000)
+cd api && python -m venv venv && source venv/Scripts/activate
+pip install -r requirements/dev.txt
+cp .env.example .env
 uvicorn src.main:app --reload
 ```
 
-### Usuarios de prueba
+You don't need all four running at once. Most dashboard work needs `web/` + `supabase/`. Landing work needs `landing/` alone (unless you're testing the contact form, then add `api/`).
 
-Todos usan password: `Password123@`
+## Module READMEs
 
-| Email | Organizacion | Rol |
-|-------|-------------|-----|
-| alice@acmecorp.com | Acme Corp | Admin (mas datos de prueba) |
-| bob@acmecorp.com | Acme Corp | Member |
-| carol@globaltech.io | GlobalTech | Admin |
-| dave@globaltech.io | GlobalTech | Member |
-| dev@jappi.ca | Dev | Dev |
-
-### Herramientas utiles
-
-| Herramienta | URL | Para que sirve |
-|-------------|-----|----------------|
-| App | http://localhost:3000 | Frontend Next.js |
-| Supabase Studio | http://127.0.0.1:54323 | Explorar DB, ver tablas, editar datos |
-| Mailpit | http://127.0.0.1:54324 | Ver emails enviados (verificacion, recovery) |
-| API Docs | http://localhost:8000/docs | Swagger del backend Python (si esta corriendo) |
-
-### Problemas comunes
-
-- **"fetch failed" en consola**: Supabase no esta corriendo. Abre Docker Desktop y corre `npx supabase start`
-- **"Invalid login credentials"**: Corre `npx supabase db reset` para recargar los usuarios seed
-- **Pagina en blanco despues de login**: Limpia cookies del navegador o abre en incognito
-
----
-
-AI-powered automation solutions for small and medium businesses.
-
-## Overview
-
-AIDEAS provides managed AI automation services that help businesses eliminate repetitive tasks, reduce operational waste, and optimize processes. Unlike DIY platforms, AIDEAS handles everything - customers describe their needs, and we implement the solution.
+- [`landing/README.md`](landing/README.md) — Vite + Orisa template, 6 public routes, design tokens source.
+- [`web/README.md`](web/README.md) — Next.js dashboard + admin, Tailwind 4 + shadcn/ui, Supabase server components.
+- [`api/README.md`](api/README.md) — FastAPI with `public/`, `client/`, `admin/` namespaces and hybrid API strategy.
 
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    AIDEAS PLATFORM                           │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  🌐 Landing (aideas.com)      👤 App (app.aideas.com)      │
-│  ┌─────────────────┐          ┌─────────────────┐          │
-│  │ Static HTML     │          │ Next.js 14      │          │
-│  │ Bootstrap 5     │          │ React 18 + TS   │          │
-│  │ SCSS + GSAP     │          │ Tailwind CSS    │          │
-│  └─────────────────┘          └─────────────────┘          │
-│         │                              │                    │
-│         └──────────┬───────────────────┘                    │
-│                    ▼                                        │
-│           ┌─────────────────┐                               │
-│           │ 🔌 API Backend  │                               │
-│           │ api.aideas.com  │                               │
-│           │ FastAPI/Python  │                               │
-│           └─────────────────┘                               │
-│                    │                                        │
-│                    ▼                                        │
-│           ┌─────────────────┐                               │
-│           │ 🗄️ Supabase     │                               │
-│           │ PostgreSQL      │                               │
-│           │ Auth + Realtime │                               │
-│           └─────────────────┘                               │
-└─────────────────────────────────────────────────────────────┘
+                    aideas.ca                  app.aideas.ca
+                  ┌──────────────┐            ┌──────────────┐
+                  │   landing/   │  Log in →  │     web/     │
+                  │  (Vite SPA)  │            │  (Next.js)   │
+                  └──────┬───────┘            └──────┬───────┘
+                         │                           │
+            POST /public │      GET/POST /client     │
+                         │      GET/POST /admin      │
+                         ▼                           ▼
+                       ┌──────────────────────────────┐
+                       │            api/              │
+                       │  FastAPI — single backend    │
+                       │  Namespaces: public, client, │
+                       │              admin           │
+                       └─────────────┬────────────────┘
+                                     │
+                                     ▼
+                       ┌──────────────────────────────┐
+                       │         Supabase             │
+                       │  Postgres + Auth + Realtime  │
+                       │  + Storage                   │
+                       └──────────────────────────────┘
 ```
 
-## Project Structure
+**API strategy (hybrid pragmatic):** the dashboard (`web/`) reads Supabase directly from Server Components for queries already shipped. FastAPI handles **all** public endpoints (the landing must never touch Supabase directly), webhooks, long-running jobs, and secret-bearing integrations. New features default to FastAPI; existing Server Components stay. See "API Strategy" in [`CLAUDE.md`](CLAUDE.md).
 
-```
-12ai/
-├── landing/              # Static landing page (aideas.com)
-│   ├── index.html
-│   ├── pages/            # Additional pages (pricing, features, contact)
-│   └── assets/
-│       ├── css/          # Compiled CSS
-│       ├── scss/         # SCSS source
-│       ├── js/           # JavaScript
-│       ├── images/       # Images
-│       └── vendor/       # Third-party libraries
-│
-├── web/                  # Next.js frontend (app.aideas.com)
-│   ├── app/              # App Router pages
-│   ├── components/       # React components
-│   ├── lib/              # Utilities
-│   └── public/           # Static assets
-│
-├── api/                  # FastAPI backend (api.aideas.com)
-│   ├── src/
-│   │   ├── main.py
-│   │   ├── routes/
-│   │   ├── services/
-│   │   └── models/
-│   └── requirements/
-│
-├── supabase/             # Database migrations
-│   └── migrations/
-│
-├── docs/                 # Documentation
-│   ├── ARCHITECTURE.md
-│   ├── PRD-aideas.md
-│   ├── PRODUCT-BACKLOG.md
-│   └── DEPLOYMENT.md
-│
-└── .github/              # CI/CD workflows
-    └── workflows/
-```
+## Tech stack
 
-## Tech Stack
+| Module | Stack |
+|--------|-------|
+| `landing/` | Vite 6, React 19, TypeScript, Bootstrap 5.3, GSAP 3.12, Swiper 11, DM Sans, Orisa template |
+| `web/` | Next.js 16, React 19, TypeScript, Tailwind CSS 4, shadcn/ui, next-intl, Supabase SSR, Recharts |
+| `api/` | FastAPI, Python 3.12, supabase-py, pydantic-settings, slowapi |
+| Database | Supabase (managed Postgres + Auth + Realtime + Storage) |
+| Hosting | Vercel (`landing/` + `web/`), Railway or Fly (`api/`), Supabase (DB) |
 
-| Component | Technology | Hosting |
-|-----------|------------|---------|
-| Landing | HTML/CSS/JS + Bootstrap 5 + GSAP | Vercel |
-| Frontend | Next.js 14 + React 18 + TypeScript | Vercel |
-| Backend | FastAPI + Python 3.12 | Railway |
-| Database | PostgreSQL | Supabase |
-| Auth | Supabase Auth | Supabase |
-| Realtime | Supabase Realtime | Supabase |
-| Storage | Supabase Storage | Supabase |
-| Payments | Stripe | - |
-| Email | Resend | - |
-| DNS/CDN | Cloudflare | - |
+## Seed users (local dev)
 
-## Getting Started
+All use password `Password123@`.
 
-### Prerequisites
+| Email | Org | Role |
+|-------|-----|------|
+| alice@acmecorp.com | Acme Corp | Owner (most seed data) |
+| bob@acmecorp.com | Acme Corp | Member |
+| carol@globaltech.io | GlobalTech | Owner |
+| dave@globaltech.io | GlobalTech | Member |
+| dev@jappi.ca | Dev | Platform staff (admin) |
 
-- Node.js 20+
-- Python 3.12+
-- Supabase CLI
-- Vercel CLI (optional)
-- Railway CLI (optional)
+## Useful URLs (local)
 
-### Landing Page
+| URL | What |
+|-----|------|
+| http://localhost:5173 | landing/ — public marketing site |
+| http://localhost:3000 | web/ — dashboard (login required) |
+| http://localhost:8000/docs | api/ — Swagger UI |
+| http://127.0.0.1:54323 | Supabase Studio — DB explorer |
+| http://127.0.0.1:54324 | Mailpit — captured outgoing emails |
 
-```bash
-cd landing
+## Design tokens
 
-# If using SCSS compilation
-npm install
-npm run scss:watch
+`landing/tokens.json` is the single source of truth for design tokens (colors, typography, spacing, radii, breakpoints). It is copied byte-identical to `web/tokens.json` via `node scripts/sync-tokens.js`. `node scripts/check-tokens-sync.js` is the CI guard. The dashboard does NOT consume tokens yet — it keeps its own Factory.ai palette in `web/src/app/globals.css` until a future reskin phase reconciles the two systems.
 
-# Otherwise, just open index.html in browser
-```
+## Methodology
 
-### Frontend (Next.js)
+This project uses the GSD (Get Stuff Done) planning methodology. Every phase lives in `.planning/phases/XX-name/` with `CONTEXT.md`, `XX-NN-PLAN.md`, `XX-NN-SUMMARY.md`, and a `VERIFICATION.md`. The current state is always summarised in `.planning/ROADMAP.md`.
 
-```bash
-cd web
+## Common issues
 
-# Install dependencies
-npm install
-
-# Create .env.local
-cp .env.example .env.local
-# Edit with your Supabase credentials
-
-# Run development server
-npm run dev
-
-# Open http://localhost:3000
-```
-
-### Backend (FastAPI)
-
-```bash
-cd api
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # or venv\Scripts\activate on Windows
-
-# Install dependencies
-pip install -r requirements/dev.txt
-
-# Create .env
-cp .env.example .env
-# Edit with your credentials
-
-# Run development server
-uvicorn src.main:app --reload
-
-# Open http://localhost:8000/docs
-```
-
-### Database
-
-```bash
-# Install Supabase CLI
-npm install -g supabase
-
-# Login
-supabase login
-
-# Link to project
-supabase link --project-ref your-project-ref
-
-# Push migrations
-supabase db push
-```
-
-## Environment Variables
-
-### Frontend (.env.local)
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
-NEXT_PUBLIC_API_URL=http://localhost:8000
-```
-
-### Backend (.env)
-
-```env
-SUPABASE_URL=https://xxx.supabase.co
-SUPABASE_KEY=eyJ...
-SUPABASE_SERVICE_KEY=eyJ...
-STRIPE_SECRET_KEY=sk_test_...
-STRIPE_WEBHOOK_SECRET=whsec_...
-RESEND_API_KEY=re_...
-ENVIRONMENT=development
-ALLOWED_ORIGINS=http://localhost:3000
-```
-
-## Deployment
-
-See [DEPLOYMENT.md](docs/DEPLOYMENT.md) for detailed deployment instructions.
-
-### Quick Deploy
-
-```bash
-# Landing (Vercel)
-cd landing && vercel --prod
-
-# Frontend (Vercel)
-cd web && vercel --prod
-
-# Backend (Railway)
-cd api && railway up
-```
+- **"fetch failed" in console** — Supabase is not running. Start Docker Desktop and run `npx supabase start`.
+- **"Invalid login credentials"** — Run `npx supabase db reset` to re-seed users.
+- **Blank page after login** — Clear browser cookies or open in incognito.
+- **Landing styles broken** — `cd landing && npm install` may not have completed; re-run.
 
 ## Documentation
 
-- [Architecture](docs/ARCHITECTURE.md) - Technical architecture details
-- [PRD](docs/PRD-aideas.md) - Product requirements document
-- [Backlog](docs/PRODUCT-BACKLOG.md) - Product backlog with user stories
-- [Deployment](docs/DEPLOYMENT.md) - Deployment guide
-
-## Development
-
-### Code Style
-
-- **Frontend:** ESLint + Prettier (Next.js defaults)
-- **Backend:** Black + isort + ruff
-
-### Testing
-
-```bash
-# Frontend
-cd web && npm run test
-
-# Backend
-cd api && pytest
-```
+- [`CLAUDE.md`](CLAUDE.md) — global rules for AI-assisted work (language policy, conventions, sensitive areas, architecture patterns, API strategy).
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — technical architecture details.
+- [`.planning/REORG-V2-PLAN.md`](.planning/REORG-V2-PLAN.md) — the v1.3 three-module reorganization plan (current milestone).
 
 ## License
 
-Proprietary - All rights reserved.
-
----
-
-*Built with Claude Code*
+Proprietary — all rights reserved.
