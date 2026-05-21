@@ -69,4 +69,54 @@ async def get_current_user(
         )
 
 
-__all__ = ["get_supabase", "get_current_user"]
+async def get_platform_staff(
+    user: dict = Depends(get_current_user),
+    request: Request = None,
+) -> dict:
+    """Validates the authenticated user is in `platform_staff` and returns their role.
+
+    Used by the admin/ namespace router. Layered on top of get_current_user
+    so the JWT is verified first; only then do we hit the platform_staff
+    table.
+
+    Returns: dict with 'id', 'email', 'role' (super_admin | operator).
+    Raises: HTTPException 403 if user is authenticated but not staff.
+
+    Note: this dependency expects `user` from get_current_user. Because
+    FastAPI dedupes dependencies by callable identity, attaching both at
+    the router level only runs get_current_user once per request.
+    """
+    supabase: Client = request.app.state.supabase
+
+    try:
+        result = (
+            supabase.table("platform_staff")
+            .select("role")
+            .eq("user_id", user["id"])
+            .single()
+            .execute()
+        )
+    except Exception:
+        # `.single()` raises when zero rows match; treat as not_staff.
+        raise HTTPException(
+            status_code=403,
+            detail={"error": "forbidden", "message": "Not authorized for admin endpoints", "status": 403},
+        )
+
+    if not result.data:
+        raise HTTPException(
+            status_code=403,
+            detail={"error": "forbidden", "message": "Not authorized for admin endpoints", "status": 403},
+        )
+
+    role = result.data.get("role")
+    if role not in ("super_admin", "operator"):
+        raise HTTPException(
+            status_code=403,
+            detail={"error": "forbidden", "message": "Invalid staff role", "status": 403},
+        )
+
+    return {"id": user["id"], "email": user["email"], "role": role}
+
+
+__all__ = ["get_supabase", "get_current_user", "get_platform_staff"]

@@ -196,15 +196,18 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Root path: authenticated → dashboard, unauthenticated → static landing
+  // Root path: authenticated → dashboard, unauthenticated → landing module
+  // (a separate Vite app deployed at NEXT_PUBLIC_LANDING_URL — defaults to
+  //  http://localhost:5173 in dev, https://aideas.ca in prod).
   if (pathname === "/") {
     if (customerUser) {
       const url = request.nextUrl.clone();
       url.pathname = "/dashboard";
       return NextResponse.redirect(url);
     }
-    // Rewrite to static landing page (keeps "/" in URL bar)
-    return NextResponse.rewrite(new URL("/landing/index.html", request.url));
+    const landingUrl =
+      process.env.NEXT_PUBLIC_LANDING_URL ?? "https://aideas.ca";
+    return NextResponse.redirect(landingUrl);
   }
 
   return supabaseResponse;

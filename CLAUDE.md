@@ -18,24 +18,32 @@
 
 ## CURRENT MILESTONE CONTEXT
 
-### Milestone v1.1 — Core Dashboard Experience
+### Milestone v1.3 — Three-Module Repo Reorganization
 
-- **Status:** 5 of 6 phases complete
-- **Requirements:** 24/34 satisfied
-- **Completed Phases:** 7 (Schema & Seed), 8 (Dashboard Home & Notifications), 9 (My Automations), 10 (Catalog), 11 (Reports & Billing)
-- **Remaining:** Phase 12 (Settings)
+- **Status:** In progress on `feature/v1.3-three-module-reorg`
+- **Pivot date:** 2026-05-21 — replaced original v1.3 (Public Funnel + Factory Reskin)
+- **Goal:** Reorganize the repo into three independent paralel modules — `landing/`, `web/`, `api/` — and lock the hybrid API strategy.
 
-### Phase 12: Settings (Not Started)
+**Phases (in execution order):**
+- Phase 25 — Design System Migration (complete, stays on main)
+- Phase 26 — Catalog Data Model (complete, stays on main)
+- Phase 27 — Scenario Content Seed (complete, stays on main)
+- Phase 28 — Landing Module: bootstrap `landing/` from Orisa template, reduce to 6 routes (Home + Index 7 hero swap, Services, Catalog, Pricing, FAQ, Contact)
+- Phase 29 — Design Tokens Sync: `landing/tokens.json` extracted, mirrored to `web/tokens.json`, `scripts/sync-tokens.js` + CI guard
+- Phase 30 — API Restructure: `api/src/routes/` split into `public/`, `client/`, `admin/` with auth deps at namespace level
+- Phase 31 — Wire-up + Cleanup: page.tsx redirect, READMEs per module, delete old static landing + raw template + orphan planning folder
 
-**Goal:** Users can manage their profile, preferences, and security from a single settings page
+**Deferred (post-reorg, separate milestones):**
+- Original Phase 28 (SSR funnel) — descarted, see `.planning/milestones/v1.3-original-archive/`
+- Phase 32 (Customer Dashboard Reskin) — deferred until reorg stabilizes
+- Phase 33 (Admin Dashboard Reskin) — deferred
+- Phase 34 (Launch Polish — Vercel Analytics, sitemap, OG, Lighthouse ≥ 90) — deferred
 
-**Requirements:**
-- SETT-01: Avatar upload (Supabase Storage)
-- SETT-02: Edit name and company name
-- SETT-03: Language switch (Espanol/English)
-- SETT-04: Hourly cost setting (used in Reports estimated value)
-- SETT-05: Change password
-- SETT-06: Active sessions management
+### Previous milestones (shipped)
+
+- **v1.0** (Foundation): Phases 1-6 — Supabase setup, auth, base dashboard. Archived in `.planning/milestones/v1.0-*`.
+- **v1.1** (Core Dashboard Experience): Phases 7-12 — Schema, Notifications, Automations, Catalog, Reports, Settings. All 6/6 complete.
+- **v1.2** (Admin Portal): Phases 13-24 — Admin foundation, catalog admin, requests inbox, automations admin, clients admin, admin home, cross-link fix. Archived.
 
 ### Known Tech Debt
 
@@ -133,62 +141,95 @@ All known items resolved as of 2026-05-20. See section below.
 
 ## REPOSITORY STRUCTURE
 
+Three independent modules at the repo root, deployed separately, sharing only the Supabase database and design tokens (via `scripts/sync-tokens.js`).
+
 ```
 12ai/
-├── web/                          # Next.js frontend (app.aideas.com)
+├── landing/                      # Public marketing site (aideas.ca)
+│   ├── public/assets/            # Orisa template CSS, fonts, imgs, scripts
 │   ├── src/
-│   │   ├── app/
-│   │   │   ├── (auth)/           # Auth routes (login, signup, verify-email, etc.)
-│   │   │   ├── (dashboard)/      # Protected routes (dashboard, automations, catalog, etc.)
-│   │   │   ├── (legal)/          # Terms, privacy
-│   │   │   ├── layout.tsx        # Root layout (fonts, i18n provider)
-│   │   │   ├── page.tsx          # Root redirect (auth→dashboard, unauth→landing)
-│   │   │   └── globals.css       # Tailwind + CSS variables (OKLCH theme)
-│   │   ├── components/
-│   │   │   ├── auth/             # Auth components (12 files)
-│   │   │   ├── dashboard/        # Dashboard components (28+ files)
-│   │   │   ├── landing/          # Landing page components
-│   │   │   └── ui/               # shadcn/ui primitives (Button, Card, Input, Label, Form)
-│   │   ├── lib/
-│   │   │   ├── actions/          # Server actions (auth.ts)
-│   │   │   ├── dashboard/        # Queries (queries.ts) + Types (types.ts)
-│   │   │   ├── supabase/         # Client configs (client.ts, server.ts, middleware.ts)
-│   │   │   ├── validations/      # Zod schemas (login.ts, signup.ts, etc.)
-│   │   │   └── utils.ts          # cn() utility (clsx + twMerge)
-│   │   └── i18n/                 # next-intl config (request.ts)
-│   ├── messages/
-│   │   ├── en.json               # English translations
-│   │   └── es.json               # Spanish translations
-│   ├── public/
-│   │   └── landing/              # Static landing page (HTML/CSS/JS)
-│   ├── next.config.ts
-│   ├── tsconfig.json
+│   │   ├── App.tsx               # 7 routes (Home, Services, Catalog, Pricing, FAQ, Contact, 404)
+│   │   ├── main.tsx
+│   │   ├── layouts/MainLayout.tsx
+│   │   ├── pages/                # HomePage, CatalogPage, ServicesPage, etc.
+│   │   ├── shared/
+│   │   │   ├── header/Header2.tsx
+│   │   │   ├── footer/Footer2.tsx
+│   │   │   ├── sections/         # Reduced set of Orisa sections (about-1/4, about-3/5+7,
+│   │   │   │                     # contact-1, faqs, index-1, index-2, index-7, portfolio-1,
+│   │   │   │                     # portfolio-3, services-1, services-details)
+│   │   │   ├── components/, effects/, elements/, hooks/, ...
+│   │   ├── seo/PageMeta.tsx
+│   │   └── types/
+│   ├── tokens.json               # SINGLE SOURCE OF TRUTH for design tokens
+│   ├── index.html
+│   ├── vite.config.ts
 │   └── package.json
 │
-├── api/                          # FastAPI backend (api.aideas.com)
+├── web/                          # Dashboard (app.aideas.ca)
 │   ├── src/
-│   │   ├── main.py               # App entry (CORS, rate limiting)
+│   │   ├── app/
+│   │   │   ├── page.tsx          # Root redirect (auth→/dashboard, unauth→NEXT_PUBLIC_LANDING_URL)
+│   │   │   ├── globals.css       # Tailwind 4 @theme inline + Factory.ai palette
+│   │   │   ├── (auth)/           # login, signup, verify-email, forgot-password, reset-password
+│   │   │   ├── (dashboard)/      # 7 customer surfaces
+│   │   │   ├── (admin)/          # 5 platform_staff surfaces
+│   │   │   └── (legal)/          # terms, privacy
+│   │   ├── components/
+│   │   │   ├── ui/               # shadcn primitives
+│   │   │   ├── auth/, dashboard/, admin/
+│   │   ├── lib/
+│   │   │   ├── actions/          # Server Actions
+│   │   │   ├── supabase/         # client.ts, server.ts, middleware.ts
+│   │   │   ├── dashboard/        # queries.ts + types.ts
+│   │   │   ├── admin/, auth/
+│   │   │   ├── validations/      # Zod schemas
+│   │   │   └── utils.ts          # cn()
+│   │   ├── i18n/                 # next-intl config
+│   │   └── middleware.ts         # auth gates + dashboard/admin split
+│   ├── messages/en.json + es.json
+│   ├── tokens.json               # Byte-identical mirror of landing/tokens.json
+│   ├── next.config.ts, postcss.config.mjs, tsconfig.json, package.json
+│
+├── api/                          # FastAPI backend (api.aideas.ca)
+│   ├── src/
+│   │   ├── main.py               # CORS + lifespan + namespace router include
 │   │   ├── config.py             # Pydantic settings
-│   │   ├── routes/               # Auth, health endpoints
-│   │   └── services/
-│   ├── requirements/             # Python deps (base, dev, prod)
-│   └── Dockerfile
+│   │   ├── dependencies.py       # get_supabase, get_current_user, get_platform_staff
+│   │   ├── middleware.py         # slowapi limiter
+│   │   ├── logging_config.py
+│   │   ├── routes/
+│   │   │   ├── health.py         # GET /api/v1/health
+│   │   │   ├── public/           # contact + waitlist (no auth)
+│   │   │   ├── client/           # auth + future customer endpoints (JWT at router level)
+│   │   │   └── admin/            # future staff endpoints (JWT + role at router level)
+│   │   ├── services/
+│   │   └── models/
+│   ├── requirements/             # base.txt, dev.txt, prod.txt
+│   ├── Dockerfile
+│   └── .env.example
 │
 ├── supabase/
-│   ├── migrations/               # 5 migration files
-│   ├── seed.sql                  # Demo data (2 orgs, 66+ templates, 500+ executions)
-│   └── config.toml               # Supabase local config
+│   ├── migrations/
+│   ├── seed.sql
+│   └── config.toml
+│
+├── scripts/
+│   ├── sync-tokens.js            # landing/tokens.json → web/tokens.json
+│   └── check-tokens-sync.js      # CI guard against token drift
 │
 ├── docs/
 │   └── ARCHITECTURE.md
 │
-├── .planning/                    # GSD methodology planning files
+├── .planning/                    # GSD methodology
 │   ├── PROJECT.md
 │   ├── ROADMAP.md
-│   ├── phases/                   # Phase planning (07-12)
-│   └── milestones/               # v1.0 archived phases (01-06)
+│   ├── REORG-V2-PLAN.md          # v1.3 reorg execution plan
+│   ├── phases/                   # active milestone phases
+│   └── milestones/               # archived milestones (v1.0..v1.3-original)
 │
-└── CLAUDE.md                     # This file
+├── README.md                     # Top-level overview + quick start
+└── CLAUDE.md                     # This file — global rules for AI-assisted work
 ```
 
 ---
@@ -250,6 +291,43 @@ refactor(auth): simplify middleware redirect logic
 3. **Parallel Queries** — `Promise.all()` for independent data fetches
 4. **No React Query/SWR** — Supabase Realtime handles live updates
 
+### API Strategy (locked 2026-05-21, v1.3 reorg)
+
+Hybrid pragmatic — two backends coexist on purpose.
+
+**Next.js Server Components / Server Actions handle:**
+
+1. Reading data to render dashboard pages (queries simple enough to fit in a server component)
+2. Mutating the authenticated user's own state (profile edits, automation status toggles, etc.)
+3. Zod-validated form submissions that map cleanly to one Supabase write
+4. Anything already implemented today — do NOT migrate working code without a reason
+
+**FastAPI (`api/`) handles:**
+
+1. **All public endpoints.** The landing module (`landing/`) is forbidden from talking to Supabase directly. Anything the landing site posts (contact form, waitlist, lead capture) MUST go through `POST /api/v1/public/*`.
+2. **External webhooks.** Stripe, n8n, Resend, any third-party callback.
+3. **Long-running jobs** (anything that might take more than ~5 seconds). PDF generation, scraping, batch operations, automation execution triggers.
+4. **Secret-bearing integrations.** When an operation needs an API key the browser must never see, the endpoint lives in FastAPI.
+5. **Operations a future mobile or B2B client would need.** When designing a new feature, ask: "would an iOS app need this endpoint?" If yes → FastAPI from the start.
+
+**Rule of thumb:** if in doubt, FastAPI. Migrating from Server Action → FastAPI later is trivial (rewrite 20 lines). Migrating away from FastAPI is harder.
+
+**Namespace layout in `api/`:**
+
+```
+api/src/routes/
+├── health.py                  → GET  /api/v1/health
+├── public/                    → no auth, per-endpoint rate limit
+│   ├── contact.py             → POST /api/v1/public/contact
+│   └── waitlist.py            → POST /api/v1/public/waitlist
+├── client/                    → Supabase JWT required (attached at namespace level)
+│   └── auth.py                → GET  /api/v1/client/auth/status
+└── admin/                     → JWT + platform_staff role required
+    └── (sub-routers as needed)
+```
+
+The `dependencies=[Depends(get_current_user)]` and `dependencies=[Depends(get_platform_staff)]` attachments live in the namespace `__init__.py` files — never duplicate them in individual route files.
+
 ### Component Architecture
 
 1. **Server-first rendering** — RSC by default, `"use client"` only when needed (forms, state, browser APIs)
@@ -287,15 +365,32 @@ refactor(auth): simplify middleware redirect logic
 
 ## ENVIRONMENT VARIABLES
 
-### Frontend (`web/.env.local`)
+Each module has its own `.env.example`. Never commit `.env`, `.env.local`, or any file with real keys.
+
+### Landing (`landing/.env.local`)
+
+```bash
+VITE_APP_URL=                     # Dashboard URL — "Log in" / "Sign up" CTAs
+                                  #   dev:  http://localhost:4000
+                                  #   prod: https://app.aideas.ca
+VITE_API_URL=                     # FastAPI backend URL — public contact + waitlist
+                                  #   dev:  http://localhost:8000
+                                  #   prod: https://api.aideas.ca
+```
+
+### Dashboard (`web/.env.local`)
 
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=         # Supabase project URL
 NEXT_PUBLIC_SUPABASE_ANON_KEY=    # Supabase anonymous key (public)
 SUPABASE_SERVICE_ROLE_KEY=        # Admin key (server-only, NEVER expose)
-NEXT_PUBLIC_SITE_URL=             # App URL for auth redirects
+NEXT_PUBLIC_SITE_URL=             # This app's URL (OAuth callbacks)
+NEXT_PUBLIC_LANDING_URL=          # Where the landing module is served — unauth `/` redirects here
+                                  #   dev:  http://localhost:5173
+                                  #   prod: https://aideas.ca
 NEXT_PUBLIC_API_URL=              # FastAPI backend URL
-NEXT_PUBLIC_RECAPTCHA_SITE_KEY=   # reCAPTCHA v3 (optional, dev bypass available)
+NEXT_PUBLIC_RECAPTCHA_SITE_KEY=   # reCAPTCHA v3 (optional, dev bypass)
+RECAPTCHA_SECRET_KEY=             # Server-side reCAPTCHA verification
 ```
 
 ### Backend (`api/.env`)
@@ -303,13 +398,16 @@ NEXT_PUBLIC_RECAPTCHA_SITE_KEY=   # reCAPTCHA v3 (optional, dev bypass available
 ```bash
 SUPABASE_URL=                     # Supabase project URL
 SUPABASE_KEY=                     # Supabase anonymous key
-SUPABASE_SERVICE_KEY=             # Service role key
-STRIPE_SECRET_KEY=                # Stripe secret (Phase 3, not yet wired)
-STRIPE_WEBHOOK_SECRET=            # Stripe webhook secret
-RESEND_API_KEY=                   # Resend email service
+SUPABASE_SERVICE_KEY=             # Service role key (server-only)
+ALLOWED_ORIGINS=                  # Comma-separated CORS list — must include both frontends
+                                  #   dev:  http://localhost:5173,http://localhost:4000
+                                  #   prod: https://aideas.ca,https://app.aideas.ca
+STRIPE_SECRET_KEY=                # Stripe secret (v1.4+)
+STRIPE_WEBHOOK_SECRET=            # Stripe webhook secret (v1.4+)
+RESEND_API_KEY=                   # Resend email service (Phase 31+)
 ```
 
-**CRITICAL:** Never commit `.env` files. Use `.env.example` as template.
+**CRITICAL:** Never commit `.env` files. Use each module's `.env.example` as template.
 
 ---
 
@@ -558,15 +656,18 @@ For hotfixes outside the phase flow:
 
 ## QUICK REFERENCE
 
-**Stack:** Next.js 16 + React 19 + TypeScript + Tailwind 4 + shadcn/ui + Supabase + FastAPI
-**Auth:** Supabase Auth (email + Google OAuth)
-**i18n:** next-intl (EN/ES, cookie-based)
-**Charts:** Recharts via shadcn/ui
-**State:** Server Components + Supabase Realtime (no React Query)
-**Hosting:** Vercel + Railway + Supabase
-**Methodology:** GSD with phase-based planning
+**Architecture:** Three-module repo — `landing/` (Vite + React + Bootstrap, aideas.ca) + `web/` (Next.js + Tailwind + shadcn, app.aideas.ca) + `api/` (FastAPI, api.aideas.ca).
+**Database:** Shared Supabase project (managed Postgres + Auth + Realtime + Storage).
+**Auth:** Supabase Auth (email + Google OAuth, cookies via @supabase/ssr).
+**i18n:** next-intl in `web/` (EN/ES, cookie-based). `landing/` is English-only for now.
+**Charts:** Recharts via shadcn/ui in `web/`.
+**State:** Next.js Server Components + Supabase Realtime (no React Query).
+**API strategy:** Hybrid pragmatic — existing dashboard Server Components keep reading Supabase directly; all new public/webhook/long-job/secret work goes to FastAPI. Rule: "if in doubt, FastAPI."
+**Hosting:** Vercel (`landing/` + `web/`), Railway or Fly (`api/`), Supabase (DB).
+**Design tokens:** `landing/tokens.json` → `web/tokens.json` via `scripts/sync-tokens.js` (CI guard: `scripts/check-tokens-sync.js`). Dashboard does not consume tokens yet — Factory.ai palette stays in `web/src/app/globals.css` until a future reskin phase.
+**Methodology:** GSD with phase-based planning under `.planning/`.
 
-**Current Focus:** Phase 12 (Settings) — last phase of v1.1
+**Current focus:** v1.3 three-module reorg (phases 28-31). See `.planning/ROADMAP.md` and `.planning/REORG-V2-PLAN.md`.
 **Monthly Infra Cost:** ~$30-65
 
 ---

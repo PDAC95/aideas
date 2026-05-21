@@ -1,6 +1,19 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/*
+ * AIDEAS dashboard CSS variables — Factory.ai design system.
+ *
+ * NOTE on token sync (v1.3 reorg Phase 29, 2026-05-21):
+ *   `/web/tokens.json` mirrors `/landing/tokens.json` and holds the
+ *   public-site (Orisa) design tokens. The dashboard does NOT consume
+ *   `tokens.json` yet — it keeps its own Factory.ai palette below to
+ *   avoid visual regressions across the 12 already-shipped phases.
+ *   A future reskin phase will reconcile the two palettes (or pick one
+ *   as authoritative). For now `tokens.json` exists for tooling parity
+ *   and to give the next reskin phase a clear migration target.
+ */
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

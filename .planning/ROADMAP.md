@@ -57,22 +57,30 @@ Full details: [milestones/v1.2-ROADMAP.md](milestones/v1.2-ROADMAP.md)
 
 </details>
 
-### 🚧 v1.3 Public Funnel & Factory Reskin (Phases 25-34)
+### 🚧 v1.3 Three-Module Repo Reorganization (Phases 25-31)
 
-**Goal:** Convert the login-gated catalog into a public lead-generation funnel — SSR/SEO, anonymous browsing, scenario-based ROI calculator, email + pre-call form capture — and reskin both dashboards with the Factory.ai design system.
+**Goal:** Reorganize the repo into three independent paralel modules (`landing/` Vite + React + Bootstrap using the Orisa template, `web/` Next.js dashboard unchanged, `api/` FastAPI with public/client/admin namespaces). Replaces the abandoned SSR funnel approach.
 
-**Depth:** standard (10 phases) — matches natural delivery boundaries between data model, public surfaces, lead funnel, and reskins.
+**Pivoted:** 2026-05-21 from "Public Funnel & Factory Reskin" to "Three-Module Reorg". The original public-funnel scope (phases 28-34) and dashboard reskins are deferred — see `.planning/milestones/v1.3-original-archive/` for the original plan and `.planning/REORG-V2-PLAN.md` for the new execution plan.
+
+**Depth:** 7 phases total. Phases 25-27 already complete. Phases 28-31 are the reorg itself.
+
+**Domain split (locked 2026-05-21):**
+- `aideas.ca` → landing module (public marketing, SEO)
+- `app.aideas.ca` → web module (login, dashboards, admin)
+- `api.aideas.ca` (or path on app) → FastAPI
+
+**API strategy (locked 2026-05-21, see CLAUDE.md):** Hybrid pragmatic. Next.js Server Components continue to read Supabase directly for existing dashboard queries. FastAPI handles all NEW server-side logic (public forms, external webhooks, long-running jobs, secret-bearing integrations). "If in doubt, FastAPI."
 
 - [x] **Phase 25: Design System Migration** — Replace OKLCH theme with Factory.ai tokens (light bg #eeeeee, cards #fafafa, Code Orange #ef6f2e accent, Geist Sans/Mono, 4px/6px radii, no shadows) (completed 2026-05-15)
 - [x] **Phase 26: Catalog Data Model** — Add `functional_areas` + `scenarios` + `scenario_templates` schema with anonymous-read RLS, preserving current 66+ template back-compat (completed 2026-05-15)
 - [x] **Phase 27: Scenario Content Seed** — Seed 50 client-language scenarios mapped to ~135 n8n templates across 8 functional areas with EN/ES pain copy and typical-impact estimates (completed 2026-05-19)
-- [~] **Phase 28: Public Landing Page** — DESCARTED 2026-05-20. Keeping the existing static landing under `web/public/landing/` instead of building an SSR `/` route. Static landing will be updated to CTA into `/catalog` as part of Phase 29. LAND-01..LAND-09 requirements re-scoped to the static asset (no Next.js route, no next-intl). See dependency graph below.
-- [ ] **Phase 29: Public Catalog Navigation** — SSR `/catalog` with functional-area landing pages, scenario detail pages, cross-linking, and SEO essentials
-- [ ] **Phase 30: Scenario Selector + ROI Calculator** — Multi-select UI, persistent selection state, plan view with hours-saved aggregation and CAD employee-cost equivalent
-- [ ] **Phase 31: Lead Capture Flow** — Email gate at peak intent, transactional plan email, pre-call context form (4-5 structured questions), `leads` table, reCAPTCHA spam protection, `/admin/leads` surface
-- [ ] **Phase 32: Reskin Customer Dashboard** — Apply Factory tokens across all 7 customer-side sections without regression in EN/ES, light/dark, mobile/desktop
-- [ ] **Phase 33: Reskin Admin Dashboard** — Apply Factory tokens across all 5 admin surfaces + AdminLayout/Sidebar/Header; close v1.2 carry-over by shipping admin language switcher + dark-mode toggle
-- [ ] **Phase 34: Launch Polish** — Analytics wiring, sitemap/robots, OG/Twitter cards, Lighthouse ≥ 90, lint debt triage
+- [ ] **Phase 28: Landing Module** — Create top-level `landing/` (Vite + React + Bootstrap, Orisa template). Reduce template to 6 pages (Home from Index 2 + Hero from Index 7, Catalog from Portfolio 3, Services 1, Pricing, FAQ, Contact 1). Header 2 + Footer 2. Light/dark mode preserved.
+- [ ] **Phase 29: Design Tokens Sync** — Extract `landing/tokens.json` from Orisa CSS variables (colors, typography, spacing, radius, shadows, breakpoints). Copy to `web/tokens.json`. Add `scripts/sync-tokens.js` + `scripts/check-tokens-sync.js` (CI guard). **Note:** dashboard does NOT consume tokens in this phase — that's a future reskin phase. tokens.json provides parity-for-tooling only.
+- [ ] **Phase 30: API Restructure** — Reorganize `api/src/routes/` into 3 namespaces: `public/` (no auth, landing forms), `client/` (auth, customer dashboard), `admin/` (auth + platform_staff). Update CORS for both frontends. Document rule in CLAUDE.md: "all NEW data access goes through FastAPI; existing Supabase server components stay until they need to change."
+- [ ] **Phase 31: Wire-up + Cleanup** — Update `web/src/app/page.tsx` to redirect unauth users to `process.env.NEXT_PUBLIC_LANDING_URL`. Delete `web/public/landing/` (old static HTML) and `web/src/components/landing/` stubs. Delete raw Orisa template folder. Add READMEs to each module. Update root `README.md` and `CLAUDE.md` for three-module architecture. Verify end-to-end: landing → click "Log in" → web `/login`.
+
+**Deferred (post-reorg, separate milestone):** original Phase 28 (SSR funnel), Phase 32 (customer dashboard reskin), Phase 33 (admin dashboard reskin), Phase 34 (launch polish — analytics, SEO, OG, sitemap, Lighthouse). Archived in `.planning/milestones/v1.3-original-archive/README.md`.
 
 ## Phase Details
 
@@ -123,81 +131,100 @@ Full details: [milestones/v1.2-ROADMAP.md](milestones/v1.2-ROADMAP.md)
 - [x] 27-03-PLAN.md — Transform approved draft into idempotent scenarios + scenario_templates seed (completed 2026-05-19)
 - [ ] 27-04-PLAN.md — Correct ROADMAP 7-to-8 areas + REQUIREMENTS sync + end-to-end phase verification
 
-### Phase 28: Public Landing Page — DESCARTED 2026-05-20
-**Status**: Cancelled — keeping the existing static landing under `web/public/landing/` (HTML/CSS/JS served by Vercel as-is). Phase 28 was originally scoped to build an SSR Next.js `/` route with full i18n + SEO; that effort was de-scoped after the static landing was deemed sufficient for v1.3 lead capture.
-**Original Goal**: Ship a public, SSR-rendered landing page at `/` that introduces AIDEAS to anonymous Ontario SMB visitors and routes them into the catalog funnel.
-**Resolution**:
-  - LAND-01..LAND-09 are NOT being satisfied by a new Next.js route. The static landing already covers the structural requirements (Hero, sections, EN/ES parity via separate static files).
-  - The single behavioural carry-over — Hero CTA routes into `/catalog` — is folded into Phase 29 acceptance criteria: the static landing's primary CTA must link to `/catalog` once the public catalog ships.
-  - Vercel Analytics + sitemap + OG metadata for the static landing are owned by Phase 34 (Launch Polish) as a static-asset task, not a Next.js task.
-**Plans**: None — phase cancelled. No `28-XX-PLAN.md` files will be created.
-
-### Phase 29: Public Catalog Navigation
-**Goal**: Ship the public, SSR-rendered scenario catalog so anonymous visitors can browse the 8 functional areas and individual scenarios with full SEO support.
-**Depends on**: Phase 27 (Phase 28 descarted 2026-05-20 — dependency removed)
-**Requirements**: PUBCAT-01, PUBCAT-02, PUBCAT-03, PUBCAT-04, PUBCAT-05, PUBCAT-06
-**Success Criteria** (what must be TRUE):
-  1. Visiting `/catalog` while logged-out renders an SSR page listing all 8 functional areas, each with a pain-language headline and link into its area page.
-  2. Visiting a functional-area page (e.g. `/catalog/marketing`) lists every scenario in that area, and each scenario detail page shows mapped n8n templates and the typical-impact estimate.
-  3. Every catalog page exposes a unique title, meta description, canonical URL, and appears in the generated sitemap.
-  4. Locale switching swaps every catalog string (areas, scenarios, headlines) without leaving English text in Spanish mode or vice-versa.
-  5. The existing static landing at `web/public/landing/` has its primary CTA(s) updated to link into `/catalog` (EN + ES variants) so anonymous visitors flow from landing into the funnel.
+### Phase 28: Landing Module (Vite + Orisa template)
+**Goal**: Spin up a new top-level `landing/` module using the Orisa React template, reduced to the 6 pages AIDEAS needs. Light + dark mode preserved.
+**Depends on**: Phase 25 (tokens), Phase 27 (catalog data available — even if Phase 28 doesn't yet wire it, content must be compatible)
+**Pages kept**:
+  - `/` Home — Orisa **Index 2** layout BUT with the **Hero from Index 7** swapped as Section1
+  - `/catalog` — Orisa **Portfolio 3** layout
+  - `/services` — Orisa **Services 1** layout
+  - `/pricing` — Orisa **PricingPage** layout (uses index-2/Section12, services-details/Section4, about-3/Section7)
+  - `/faq` — Orisa **FaqsPage** layout
+  - `/contact` — Orisa **Contact 1** layout
+  - `*` 404 (NotFoundPage)
+**Header/Footer**: style 2 for all routes. Light/dark via Orisa's `data-bs-theme` mechanism + `theme-init.js`.
+**Success Criteria**:
+  1. `cd landing && npm run dev` serves the 6 reduced routes on port 5173 with no console errors.
+  2. `cd landing && npm run build` produces a clean dist/ with no unresolved imports.
+  3. Light/dark toggle works on every page (via ThemeSwitcher).
+  4. Every page renders without TypeScript errors and without broken images/CSS.
+  5. All deleted pages, headers, footers, and sections are removed from disk; the remaining "keep set" was derived by an import audit (not guesswork).
+  6. Nav links point to `app.aideas.ca/login`, `app.aideas.ca/signup`, `app.aideas.ca/dashboard` (env-driven for dev: `localhost:3000`).
 **Plans**: TBD
 
-### Phase 30: Scenario Selector + ROI Calculator
-**Goal**: Let anonymous visitors select the scenarios that match their pain and see a personalized plan view with a CAD employee-cost equivalent.
-**Depends on**: Phase 29
-**Requirements**: ROI-01, ROI-02, ROI-03, ROI-04, ROI-05, ROI-06
-**Success Criteria** (what must be TRUE):
-  1. A visitor can tick checkboxes next to scenarios across multiple area pages and the selection persists as they navigate the catalog (cookie or localStorage, no auth required).
-  2. Clicking "See my plan" produces a plan view that lists every selected scenario and shows a total estimated hours/week saved.
-  3. The plan view converts hours saved into a CAD employee-cost equivalent (anchored to ~$60-80K/yr, editable on the page).
-  4. Copying the plan-view URL and opening it in a fresh browser session reproduces the same plan (selection encoded in the URL).
+### Phase 29: Design Tokens Sync
+**Goal**: Extract design tokens from the Orisa template into `landing/tokens.json`, replicate to `web/tokens.json`, and document them as the single source of truth — without modifying the dashboard's existing CSS variables (the dashboard reskin is a separate future phase).
+**Depends on**: Phase 28
+**Tokens extracted** (sourced from `landing/public/assets/css/main.css` `:root` block):
+  - Colors: theme-primary `#F0460E`, neutrals (light + dark scales), common (white/black/bubbles), grey (1-5), gradient.
+  - Typography: families (DM Sans), font weights (light → black), display + body + heading size scales, line-heights.
+  - Spacing scale (Bootstrap default rem-based).
+  - Border-radius (Bootstrap defaults + `rounded-3` = 12px).
+  - Shadows (single shadow `0px 20px 60px 0px rgba(0,0,0,0.08)`).
+  - Breakpoints (Bootstrap: sm 576, md 768, lg 992, xl 1200, xxl 1400).
+  - Motion (basic ease cubic-bezier, duration scale).
+**Scope decision (2026-05-21):** dashboard does NOT consume `tokens.json` in this phase. The dashboard already has its own working Factory palette across 12 shipped phases; pisar that palette to import Orisa values would cause visual regressions across 12 customer sections and 5 admin sections. `tokens.json` is shipped for **tooling parity** — it exists so any future reskin phase has an authoritative target.
+**Success Criteria**:
+  1. `landing/tokens.json` exists with all token sections; values match the CSS variables in `landing/public/assets/css/main.css`.
+  2. `web/tokens.json` is byte-identical to `landing/tokens.json`.
+  3. `scripts/sync-tokens.js` copies landing → web; `scripts/check-tokens-sync.js` exits 1 on drift (suitable for CI).
+  4. `web/src/app/globals.css` has a header comment documenting the token-sync arrangement so future contributors understand why the file exists but isn't consumed.
+  5. `web/` still builds successfully (`npm run build` → no regressions).
+**Plans**: TBD (this phase shipped without a discuss-phase, direct execution)
+
+### Phase 30: API Restructure (3 namespaces + CORS)
+**Goal**: Reorganize `api/src/routes/` into `public/`, `client/`, `admin/` so the FastAPI service has a clear contract for each audience. Update CORS to allow both frontends.
+**Depends on**: Phase 28 (need both frontend URLs to set CORS).
+**Structure**:
+```
+api/src/routes/
+  __init__.py
+  health.py
+  public/
+    __init__.py
+    contact.py     # POST /api/public/contact (landing form)
+    waitlist.py    # POST /api/public/waitlist
+  client/
+    __init__.py
+    (existing auth routes moved here; future endpoints land here)
+  admin/
+    __init__.py
+    (future admin endpoints)
+```
+**Success Criteria**:
+  1. The 3-namespace structure exists; existing endpoints still respond at the same external paths (no breaking change for `web/`).
+  2. `client/` and `admin/` routers attach an auth dependency; `public/` does not.
+  3. CORS allows `http://localhost:5173`, `http://localhost:3000`, `https://aideas.ca`, `https://app.aideas.ca`.
+  4. CLAUDE.md documents the rule: "all NEW server-side logic goes through FastAPI; existing Next.js Server Components reading Supabase stay until they need substantive change." (Hybrid pragmatic API strategy.)
+  5. A smoke test POST to `/api/public/contact` from `landing/` succeeds (even if the body is a stub).
 **Plans**: TBD
 
-### Phase 31: Lead Capture Flow
-**Goal**: Convert plan-view intent into enriched, admin-visible leads via an email gate plus a structured pre-call form (not a chat).
-**Depends on**: Phase 30
-**Requirements**: LEAD-01, LEAD-02, LEAD-03, LEAD-04, LEAD-05, LEAD-06, LEAD-07
-**Success Criteria** (what must be TRUE):
-  1. After seeing their ROI, a visitor sees an email gate that captures email + locale + selected scenarios and, on submit, receives a transactional email (Resend) containing the plan and a schedule-call CTA.
-  2. Clicking the email CTA lands the visitor on a pre-call form with 4-5 structured questions (company size, role, current pain, deadline, budget range); submitting persists an enriched lead row with email + plan + answers + UTM.
-  3. Both the email gate and pre-call form reject submissions when reCAPTCHA v3 fails (with the existing dev-bypass pattern when keys are absent).
-  4. A platform_staff user can open `/admin/leads`, see the new lead in a list, view its detail (scenarios + form answers), and use a "convert to org" affordance to provision a manual customer record.
+### Phase 31: Wire-up + Cleanup
+**Goal**: Make the three modules visibly cooperate end-to-end and remove all leftover artifacts from the prior architecture.
+**Depends on**: Phase 28, Phase 29, Phase 30.
+**Tasks**:
+  - Update `web/src/app/page.tsx`: unauthenticated visitors redirect to `process.env.NEXT_PUBLIC_LANDING_URL` (defaults to `http://localhost:5173` in dev, `https://aideas.ca` in prod).
+  - Delete `web/public/landing/` (the old static HTML site).
+  - Delete `web/src/components/landing/` (Next.js stubs that were never wired).
+  - Delete the raw Orisa template folder (`orisa-creative-agency-portfolio-react-template-...`) once Phase 28 copied what it needed.
+  - Create `landing/README.md`, `web/README.md`, `api/README.md` each describing: purpose, dev command, deploy target, env vars.
+  - Update root `README.md` and `CLAUDE.md` to document the three-module layout, the hybrid API rule, and the deploy URLs.
+**Success Criteria**:
+  1. Manual smoke test: run all 3 services locally (`landing` :5173, `web` :3000, `api` :8000). Visit `localhost:5173` → click "Log in" → land on `localhost:3000/login`. Then unauthenticated visit to `localhost:3000` → redirect to `localhost:5173`.
+  2. `git status` is clean after the deletions; no orphaned imports anywhere.
+  3. `npm run build` works in `landing/` and `web/`; FastAPI starts without import errors.
+  4. Repo root has no leftover artifacts (no raw Orisa folder, no `seed` file, no `web/public/landing/`).
+  5. The three READMEs exist and accurately describe how to run each module.
 **Plans**: TBD
 
-### Phase 32: Reskin Customer Dashboard
-**Goal**: Apply Factory tokens across every customer-side surface so the post-login experience visually matches the new public funnel.
-**Depends on**: Phase 25
-**Requirements**: RESKIN-01, RESKIN-02, RESKIN-03, RESKIN-04
-**Success Criteria** (what must be TRUE):
-  1. Each of the 7 customer-side sections (Home, Automations, Catalog, Reports, Billing, Settings, Notifications) renders against Factory tokens with no broken layouts, contrast issues, or color regressions.
-  2. KPI cards, Recharts visualizations, tables, forms, and modals all render correctly in both EN and ES.
-  3. Mobile (≤640px) and desktop (≥1280px) snapshots of every customer section match expectations, with no overflow or stacking regressions.
-  4. Toggling `.dark` on the customer dashboard still produces a usable dark variant under the new palette.
-**Plans**: TBD
+### Deferred (not in this reorg)
 
-### Phase 33: Reskin Admin Dashboard
-**Goal**: Apply Factory tokens across every admin surface, close the v1.2 carry-over by adding the language switcher and dark-mode toggle to the admin header, and unblock I18N runtime UAT on admin.
-**Depends on**: Phase 25, Phase 32 (shared primitives stable before admin reskin)
-**Requirements**: RESKIN-05, RESKIN-06, RESKIN-07, RESKIN-08, RESKIN-09
-**Success Criteria** (what must be TRUE):
-  1. AdminLayout, AdminSidebar, AdminHeader, and all 5 admin surfaces (Home, Catalog, Requests, Automations, Clients) render against Factory tokens with no regressions.
-  2. The "ADMIN" badge remains visually distinct (Code Orange) while harmonizing with the new neutral palette.
-  3. A platform_staff user can toggle EN↔ES from the AdminHeader and see every admin surface re-render in the chosen language without losing route or filters.
-  4. A platform_staff user can toggle light↔dark from the AdminHeader and see admin components render correctly under both palettes.
-**Plans**: TBD
+- **Original Phase 28 (SSR funnel)** — Cancelled 2026-05-20. Drafts archived in `.planning/milestones/v1.3-original-archive/`.
+- **Original Phase 32 (Customer Dashboard Reskin)** — Deferred. The dashboard keeps its current OKLCH theme until a future explicit reskin phase.
+- **Original Phase 33 (Admin Dashboard Reskin + admin EN/ES + dark mode toggle)** — Deferred.
+- **Original Phase 34 (Launch Polish — Vercel Analytics, sitemap, OG, Lighthouse ≥ 90)** — Deferred to a post-reorg polish milestone.
 
-### Phase 34: Launch Polish
-**Goal**: Make the v1.3 funnel production-launch ready — analytics, SEO surface area, and lint debt triage.
-**Depends on**: Phase 29, Phase 31 (Phase 28 descarted 2026-05-20 — dependency removed; static landing OG/analytics handled as a static-asset task inside this phase)
-**Requirements**: OPS-01, OPS-02, OPS-03, OPS-04, OPS-05
-**Success Criteria** (what must be TRUE):
-  1. Vercel Analytics is wired on every public page (static landing + `/catalog` + scenario pages) and custom events fire for the landing → catalog → plan → email gate → pre-call form funnel (visible in the analytics dashboard).
-  2. `/sitemap.xml` and `/robots.txt` are served by the app and the sitemap enumerates every public catalog and scenario route (static landing entry included).
-  3. View-source on the static landing and every scenario page exposes complete Open Graph + Twitter card metadata.
-  4. A Lighthouse run against the production static landing and `/catalog` returns ≥ 90 for performance, accessibility, and SEO; no new lint errors have been introduced relative to the start of v1.3.
-**Plans**: TBD
+These are not lost — see `.planning/milestones/v1.3-original-archive/README.md`.
 
 ## Progress Table
 
@@ -206,36 +233,39 @@ Full details: [milestones/v1.2-ROADMAP.md](milestones/v1.2-ROADMAP.md)
 | 25. Design System Migration | 7/7 | Complete    | 2026-05-15 |
 | 26. Catalog Data Model | 3/3 | Complete    | 2026-05-15 |
 | 27. Scenario Content Seed | 4/4 | Complete    | 2026-05-19 |
-| 28. Public Landing Page | 0/0 | DESCARTED   | 2026-05-20 |
-| 29. Public Catalog Navigation | 0/? | Not started | - |
-| 30. Scenario Selector + ROI Calculator | 0/? | Not started | - |
-| 31. Lead Capture Flow | 0/? | Not started | - |
-| 32. Reskin Customer Dashboard | 0/? | Not started | - |
-| 33. Reskin Admin Dashboard | 0/? | Not started | - |
-| 34. Launch Polish | 0/? | Not started | - |
+| 28. Landing Module (Orisa) | 0/? | Not started | — |
+| 29. Design Tokens Sync | 0/? | Not started | — |
+| 30. API Restructure | 0/? | Not started | — |
+| 31. Wire-up + Cleanup | 0/? | Not started | — |
 
 ## Dependency Graph
 
 ```
-Phase 25 (Design System)
-   ├── Phase 26 (Catalog Data Model)
-   │      └── Phase 27 (Scenario Seed)
-   │             └── Phase 29 (Public Catalog)
-   │                    └── Phase 30 (Selector + ROI)
-   │                           └── Phase 31 (Lead Capture)
-   │                                  └── Phase 34 (Launch Polish)
-   ├── Phase 28 (Landing) — DESCARTED 2026-05-20 (keeping static landing)
-   ├── Phase 32 (Reskin Customer)
-   └── Phase 33 (Reskin Admin) ← Phase 32
+Phase 25 (Design System) ─┐
+Phase 26 (Catalog Data) ──┼─► Phase 28 (Landing Module)
+Phase 27 (Scenario Seed) ─┘         │
+                                     ├─► Phase 29 (Design Tokens Sync)
+                                     │         │
+                                     │         └─► Phase 30 (API Restructure)
+                                     │                   │
+                                     └─────────────────► Phase 31 (Wire-up + Cleanup)
 ```
 
-Critical path: 25 → 26 → 27 → 29 → 30 → 31 → 34 (7 sequential phases).
-Parallelizable: Phase 32 can run alongside 26–31; Phase 33 must wait on 32 for shared primitives. Phase 28 cancelled — static landing already serves the funnel entry point.
+Critical path: 25/26/27 (done) → 28 → 29 → 30 → 31 (4 sequential reorg phases).
+Old phases 28-34 (SSR funnel + reskins + polish) — archived as historical reference; replaced by the 4 reorg phases above.
 
 ## Coverage Summary
 
-- **v1.3 requirements:** 58 total (49 active + 9 descarted on 2026-05-20)
-- **Active requirements:** 49 — mapped to phases 25-27, 29-34 (100% of active) ✓
-- **Descarted:** LAND-01..LAND-09 (Phase 28 cancelled — static landing kept)
-- **Orphaned active requirements:** 0 ✓
-- **Duplicate mappings:** 0 ✓
+**Re-scoped 2026-05-21.** The original v1.3 requirements list (58 total: DESIGN-XX, CAT-XX, SCEN-XX, LAND-XX, PUBCAT-XX, ROI-XX, LEAD-XX, RESKIN-XX, OPS-XX) targeted phases 25-34. After the reorg pivot:
+
+- **Completed and stays on main (14 reqs):** DESIGN-01..05, CAT-01..05, SCEN-01..04 — fully satisfied by phases 25-27.
+- **Deferred to post-reorg milestones (35 reqs):** PUBCAT-01..06, ROI-01..06, LEAD-01..07, RESKIN-01..09, OPS-01..05 — re-homed when the public-funnel and reskin work is resumed.
+- **Descarted (9 reqs):** LAND-01..LAND-09 — superseded by Phase 28 (Orisa landing module) which doesn't follow the SSR-route requirement format.
+
+**New v1.3 reorg requirements (to be authored as phases 28-31 are planned):**
+- REORG-01..N (Phase 28: Landing module structure & routing)
+- REORG-XX (Phase 29: Tokens sync)
+- REORG-XX (Phase 30: API namespaces)
+- REORG-XX (Phase 31: Wire-up & cleanup)
+
+REQUIREMENTS.md will be updated as each new phase is planned (`/gsd:discuss-phase` / `/gsd:plan-phase`).
