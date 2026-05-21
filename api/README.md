@@ -67,7 +67,7 @@ Default dev origins:
 
 ```
 http://localhost:5173    landing/
-http://localhost:3000    web/
+http://localhost:4000    web/
 ```
 
 Production:

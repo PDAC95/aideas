@@ -28,7 +28,7 @@ npx supabase db reset
 # 2. Landing (Vite — http://localhost:5173)
 cd landing && npm install && npm run dev
 
-# 3. Dashboard (Next.js — http://localhost:3000)
+# 3. Dashboard (Next.js — http://localhost:4000)
 cd web && npm install && cp .env.example .env.local && npm run dev
 
 # 4. Backend (FastAPI — http://localhost:8000)
@@ -102,7 +102,7 @@ All use password `Password123@`.
 | URL | What |
 |-----|------|
 | http://localhost:5173 | landing/ — public marketing site |
-| http://localhost:3000 | web/ — dashboard (login required) |
+| http://localhost:4000 | web/ — dashboard (login required) |
 | http://localhost:8000/docs | api/ — Swagger UI |
 | http://127.0.0.1:54323 | Supabase Studio — DB explorer |
 | http://127.0.0.1:54324 | Mailpit — captured outgoing emails |

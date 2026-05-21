@@ -13,7 +13,7 @@ AIDEAS dashboard. Next.js 16 app that serves all authenticated surfaces: custome
 cd web
 npm install
 cp .env.example .env.local            # fill in Supabase URL + keys
-npm run dev                           # → http://localhost:3000
+npm run dev                           # → http://localhost:4000
 ```
 
 Build: `npm run build` → `npm run start` (production server).

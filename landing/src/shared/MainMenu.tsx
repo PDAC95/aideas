@@ -4,7 +4,7 @@ import { MainMenuRootList } from "@/shared/mobile-menu/MobileMenuCloneContext";
 /**
  * AIDEAS landing nav. Six public routes + external links to the dashboard.
  *
- * Dashboard URL is read from `VITE_APP_URL` so dev (`http://localhost:3000`)
+ * Dashboard URL is read from `VITE_APP_URL` so dev (`http://localhost:4000`)
  * and prod (`https://app.aideas.ca`) can both work without code changes.
  */
 const APP_URL = import.meta.env.VITE_APP_URL ?? "https://app.aideas.ca";

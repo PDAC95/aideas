@@ -371,7 +371,7 @@ Each module has its own `.env.example`. Never commit `.env`, `.env.local`, or an
 
 ```bash
 VITE_APP_URL=                     # Dashboard URL — "Log in" / "Sign up" CTAs
-                                  #   dev:  http://localhost:3000
+                                  #   dev:  http://localhost:4000
                                   #   prod: https://app.aideas.ca
 VITE_API_URL=                     # FastAPI backend URL — public contact + waitlist
                                   #   dev:  http://localhost:8000
@@ -400,7 +400,7 @@ SUPABASE_URL=                     # Supabase project URL
 SUPABASE_KEY=                     # Supabase anonymous key
 SUPABASE_SERVICE_KEY=             # Service role key (server-only)
 ALLOWED_ORIGINS=                  # Comma-separated CORS list — must include both frontends
-                                  #   dev:  http://localhost:5173,http://localhost:3000
+                                  #   dev:  http://localhost:5173,http://localhost:4000
                                   #   prod: https://aideas.ca,https://app.aideas.ca
 STRIPE_SECRET_KEY=                # Stripe secret (v1.4+)
 STRIPE_WEBHOOK_SECRET=            # Stripe webhook secret (v1.4+)
