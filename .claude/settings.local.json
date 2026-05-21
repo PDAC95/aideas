@@ -283,7 +283,11 @@
       "Bash(cd /c/dev/12ai/landing && cat package.json | grep -A 2 scripts)",
       "Read(//c/c/dev/12ai/landing/**)",
       "Bash(mkdir -p public client admin)",
-      "Bash(touch public/__init__.py client/__init__.py admin/__init__.py)"
+      "Bash(touch public/__init__.py client/__init__.py admin/__init__.py)",
+      "PowerShell(Get-NetTCPConnection -LocalPort 5173 -ErrorAction SilentlyContinue)",
+      "Bash(venv/Scripts/pip.exe install *)",
+      "Bash(venv/Scripts/python.exe -c \"import email_validator; print\\('email_validator', email_validator.__version__\\)\")",
+      "Bash(venv/Scripts/python.exe -c \"from src.main import app; print\\('api imports OK, routes:', len\\(app.routes\\)\\)\")"
     ],
     "additionalDirectories": [
       "c:\\dev\\12ai\\.planning\\debug",
