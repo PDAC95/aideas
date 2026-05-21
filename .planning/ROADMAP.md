@@ -76,7 +76,7 @@ Full details: [milestones/v1.2-ROADMAP.md](milestones/v1.2-ROADMAP.md)
 - [x] **Phase 26: Catalog Data Model** — Add `functional_areas` + `scenarios` + `scenario_templates` schema with anonymous-read RLS, preserving current 66+ template back-compat (completed 2026-05-15)
 - [x] **Phase 27: Scenario Content Seed** — Seed 50 client-language scenarios mapped to ~135 n8n templates across 8 functional areas with EN/ES pain copy and typical-impact estimates (completed 2026-05-19)
 - [ ] **Phase 28: Landing Module** — Create top-level `landing/` (Vite + React + Bootstrap, Orisa template). Reduce template to 6 pages (Home from Index 2 + Hero from Index 7, Catalog from Portfolio 3, Services 1, Pricing, FAQ, Contact 1). Header 2 + Footer 2. Light/dark mode preserved.
-- [ ] **Phase 29: Design Tokens Sync** — Extract `landing/tokens.json` from Orisa CSS variables (colors, typography, spacing, radius, shadows, breakpoints). Copy to `web/tokens.json`. Update `web/tailwind.config.ts` to consume tokens. Add `scripts/sync-tokens.js` with CI guard.
+- [ ] **Phase 29: Design Tokens Sync** — Extract `landing/tokens.json` from Orisa CSS variables (colors, typography, spacing, radius, shadows, breakpoints). Copy to `web/tokens.json`. Add `scripts/sync-tokens.js` + `scripts/check-tokens-sync.js` (CI guard). **Note:** dashboard does NOT consume tokens in this phase — that's a future reskin phase. tokens.json provides parity-for-tooling only.
 - [ ] **Phase 30: API Restructure** — Reorganize `api/src/routes/` into 3 namespaces: `public/` (no auth, landing forms), `client/` (auth, customer dashboard), `admin/` (auth + platform_staff). Update CORS for both frontends. Document rule in CLAUDE.md: "all NEW data access goes through FastAPI; existing Supabase server components stay until they need to change."
 - [ ] **Phase 31: Wire-up + Cleanup** — Update `web/src/app/page.tsx` to redirect unauth users to `process.env.NEXT_PUBLIC_LANDING_URL`. Delete `web/public/landing/` (old static HTML) and `web/src/components/landing/` stubs. Delete raw Orisa template folder. Add READMEs to each module. Update root `README.md` and `CLAUDE.md` for three-module architecture. Verify end-to-end: landing → click "Log in" → web `/login`.
 
@@ -153,22 +153,24 @@ Full details: [milestones/v1.2-ROADMAP.md](milestones/v1.2-ROADMAP.md)
 **Plans**: TBD
 
 ### Phase 29: Design Tokens Sync
-**Goal**: Extract design tokens from the Orisa template into `landing/tokens.json`, replicate to `web/tokens.json`, and rewire `web/tailwind.config.ts` to consume them — so landing and dashboard share one visual language.
+**Goal**: Extract design tokens from the Orisa template into `landing/tokens.json`, replicate to `web/tokens.json`, and document them as the single source of truth — without modifying the dashboard's existing CSS variables (the dashboard reskin is a separate future phase).
 **Depends on**: Phase 28
-**Tokens extracted**:
-  - Colors: theme-primary `#F0460E`, neutrals (light + dark scales), system (success/info/warning/danger).
-  - Typography: families (DM Sans), sizes (`ds-1..6`, `fs-1..8`, h1..h6), weights (100..1000).
-  - Spacing scale (Bootstrap default).
-  - Border-radius (Bootstrap + `rounded-3` = 12px).
-  - Shadows (`--tc-shadow-1`).
+**Tokens extracted** (sourced from `landing/public/assets/css/main.css` `:root` block):
+  - Colors: theme-primary `#F0460E`, neutrals (light + dark scales), common (white/black/bubbles), grey (1-5), gradient.
+  - Typography: families (DM Sans), font weights (light → black), display + body + heading size scales, line-heights.
+  - Spacing scale (Bootstrap default rem-based).
+  - Border-radius (Bootstrap defaults + `rounded-3` = 12px).
+  - Shadows (single shadow `0px 20px 60px 0px rgba(0,0,0,0.08)`).
   - Breakpoints (Bootstrap: sm 576, md 768, lg 992, xl 1200, xxl 1400).
+  - Motion (basic ease cubic-bezier, duration scale).
+**Scope decision (2026-05-21):** dashboard does NOT consume `tokens.json` in this phase. The dashboard already has its own working Factory palette across 12 shipped phases; pisar that palette to import Orisa values would cause visual regressions across 12 customer sections and 5 admin sections. `tokens.json` is shipped for **tooling parity** — it exists so any future reskin phase has an authoritative target.
 **Success Criteria**:
-  1. `landing/tokens.json` exists with the 6 token sections; values match the CSS variables in `landing/public/assets/css/main.css`.
-  2. `web/tokens.json` is a byte-identical copy.
-  3. `web/tailwind.config.ts` reads `tokens.json` and exposes the tokens in `theme.extend.{colors,fontFamily,borderRadius,boxShadow}`.
-  4. `scripts/sync-tokens.js` exists at repo root and copies `landing/tokens.json` → `web/tokens.json`; CI fails if they differ.
-  5. The existing `web/` OKLCH dark mode remains untouched (dashboard reskin is OUT of scope here).
-**Plans**: TBD
+  1. `landing/tokens.json` exists with all token sections; values match the CSS variables in `landing/public/assets/css/main.css`.
+  2. `web/tokens.json` is byte-identical to `landing/tokens.json`.
+  3. `scripts/sync-tokens.js` copies landing → web; `scripts/check-tokens-sync.js` exits 1 on drift (suitable for CI).
+  4. `web/src/app/globals.css` has a header comment documenting the token-sync arrangement so future contributors understand why the file exists but isn't consumed.
+  5. `web/` still builds successfully (`npm run build` → no regressions).
+**Plans**: TBD (this phase shipped without a discuss-phase, direct execution)
 
 ### Phase 30: API Restructure (3 namespaces + CORS)
 **Goal**: Reorganize `api/src/routes/` into `public/`, `client/`, `admin/` so the FastAPI service has a clear contract for each audience. Update CORS to allow both frontends.
