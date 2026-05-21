@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Request
 
-from ..dependencies import get_current_user
-from ..middleware import limiter
+from ...dependencies import get_current_user
+from ...middleware import limiter
 
 router = APIRouter()
 

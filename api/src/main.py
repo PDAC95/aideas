@@ -10,7 +10,10 @@ from supabase import create_client, Client
 from .config import get_settings
 from .logging_config import setup_logging, logger
 from .middleware import limiter
-from .routes import health, auth
+from .routes import health
+from .routes.public import public_router
+from .routes.client import client_router
+from .routes.admin import admin_router
 
 
 @asynccontextmanager
@@ -60,11 +63,20 @@ async def log_requests(request: Request, call_next):
 
 
 # Routes — all under /api/v1/
-app.include_router(health.router, prefix="/api/v1", tags=["Health"])
-app.include_router(auth.router, prefix="/api/v1/auth", tags=["Auth"])
-# Future protected routers will use router-level dependency:
-# protected_router = APIRouter(dependencies=[Depends(get_current_user)])
-# app.include_router(protected_router, prefix="/api/v1/...", tags=["..."])
+#
+# Three audience-scoped namespaces (per .planning/REORG-V2-PLAN.md):
+#
+#   /api/v1/health          — system health (no auth, no rate limit)
+#   /api/v1/public/*        — landing-site forms (no auth, per-endpoint rate limit)
+#   /api/v1/client/*        — customer dashboard (Supabase JWT required, applied at namespace)
+#   /api/v1/admin/*         — platform_staff only (JWT + role check, applied at namespace)
+#
+# Auth dependencies are attached at the namespace router level inside each
+# package's __init__.py, NOT here, so the wiring at this file stays flat.
+app.include_router(health.router, prefix="/api/v1", tags=["health"])
+app.include_router(public_router, prefix="/api/v1/public")
+app.include_router(client_router, prefix="/api/v1/client")
+app.include_router(admin_router, prefix="/api/v1/admin")
 
 
 @app.get("/")

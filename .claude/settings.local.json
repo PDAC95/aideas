@@ -281,7 +281,9 @@
       "Bash(awk -F/ '{print $4}')",
       "Bash(bash /tmp/audit-imports.sh 2>/dev/null | grep \"^src/\" > /tmp/keep-set.txt *)",
       "Bash(cd /c/dev/12ai/landing && cat package.json | grep -A 2 scripts)",
-      "Read(//c/c/dev/12ai/landing/**)"
+      "Read(//c/c/dev/12ai/landing/**)",
+      "Bash(mkdir -p public client admin)",
+      "Bash(touch public/__init__.py client/__init__.py admin/__init__.py)"
     ],
     "additionalDirectories": [
       "c:\\dev\\12ai\\.planning\\debug",

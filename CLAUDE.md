@@ -250,6 +250,43 @@ refactor(auth): simplify middleware redirect logic
 3. **Parallel Queries** — `Promise.all()` for independent data fetches
 4. **No React Query/SWR** — Supabase Realtime handles live updates
 
+### API Strategy (locked 2026-05-21, v1.3 reorg)
+
+Hybrid pragmatic — two backends coexist on purpose.
+
+**Next.js Server Components / Server Actions handle:**
+
+1. Reading data to render dashboard pages (queries simple enough to fit in a server component)
+2. Mutating the authenticated user's own state (profile edits, automation status toggles, etc.)
+3. Zod-validated form submissions that map cleanly to one Supabase write
+4. Anything already implemented today — do NOT migrate working code without a reason
+
+**FastAPI (`api/`) handles:**
+
+1. **All public endpoints.** The landing module (`landing/`) is forbidden from talking to Supabase directly. Anything the landing site posts (contact form, waitlist, lead capture) MUST go through `POST /api/v1/public/*`.
+2. **External webhooks.** Stripe, n8n, Resend, any third-party callback.
+3. **Long-running jobs** (anything that might take more than ~5 seconds). PDF generation, scraping, batch operations, automation execution triggers.
+4. **Secret-bearing integrations.** When an operation needs an API key the browser must never see, the endpoint lives in FastAPI.
+5. **Operations a future mobile or B2B client would need.** When designing a new feature, ask: "would an iOS app need this endpoint?" If yes → FastAPI from the start.
+
+**Rule of thumb:** if in doubt, FastAPI. Migrating from Server Action → FastAPI later is trivial (rewrite 20 lines). Migrating away from FastAPI is harder.
+
+**Namespace layout in `api/`:**
+
+```
+api/src/routes/
+├── health.py                  → GET  /api/v1/health
+├── public/                    → no auth, per-endpoint rate limit
+│   ├── contact.py             → POST /api/v1/public/contact
+│   └── waitlist.py            → POST /api/v1/public/waitlist
+├── client/                    → Supabase JWT required (attached at namespace level)
+│   └── auth.py                → GET  /api/v1/client/auth/status
+└── admin/                     → JWT + platform_staff role required
+    └── (sub-routers as needed)
+```
+
+The `dependencies=[Depends(get_current_user)]` and `dependencies=[Depends(get_platform_staff)]` attachments live in the namespace `__init__.py` files — never duplicate them in individual route files.
+
 ### Component Architecture
 
 1. **Server-first rendering** — RSC by default, `"use client"` only when needed (forms, state, browser APIs)
